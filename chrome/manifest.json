@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Bird of the Day",
+  "version": "1.0",
+  "description": "Displays a beautiful bird image and information every day.",
+  "permissions": [
+    "storage",
+    "geolocation"
+  ],
+  "host_permissions": [
+    "https://api.unsplash.com/*",
+    "https://api.ebird.org/*",
+    "https://search.macaulaylibrary.org/*"
+  ],
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "19": "icons/icon19.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
