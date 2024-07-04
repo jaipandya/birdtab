@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bird of the Day",
+  "name": "BirdTab",
   "version": "1.0",
   "description": "Displays a beautiful bird image and information every day.",
   "permissions": [

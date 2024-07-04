@@ -1,6 +1,6 @@
 function log(message) {
   if (!('update_url' in chrome.runtime.getManifest())) {
-    console.log(`[Bird of the Day]: ${message}`);
+    console.log(`[BirdTab]: ${message}`);
   }
 }
 
@@ -21,7 +21,7 @@ function setLoadingState() {
   log('Setting loading state');
   document.body.innerHTML = `
     <div class="loading">
-      <h1>Bird of the Day</h1>
+      <h1>BirdTab</h1>
       <p id="loading-message">${getRandomLoadingMessage()}</p>
     </div>
   `;

@@ -6,7 +6,7 @@ let lastFetchDate = null;
 
 function log(message) {
   if (!('update_url' in chrome.runtime.getManifest())) {
-    console.log(`[Bird of the Day]: ${message}`);
+    console.log(`[BirdTab]: ${message}`);
   }
 }
 
