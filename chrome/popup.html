@@ -6,71 +6,97 @@
     <title>Bird of the Day Settings</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            width: 250px;
+            font-family: Arial, sans-serif;
+            width: 300px;
             padding: 20px;
-            background-color: #f0f7ff;
-            color: #333;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
         }
         h1 {
-            font-size: 18px;
-            margin-bottom: 15px;
             color: #2c3e50;
-        }
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #bdc3c7;
-            border-radius: 4px;
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-        #save-button {
-            background-color: #3498db;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin-top: 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        #save-button:hover {
-            background-color: #2980b9;
-        }
-        #status {
-            margin-top: 10px;
-            font-style: italic;
-            color: #27ae60;
+            margin-bottom: 20px;
+            font-size: 20px;
         }
         .setting {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #save-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #save-button:hover {
+            background-color: #45a049;
+        }
+        #delete-cache-button {
+            background-color: #f44336;
+            color: white;
+        }
+        #delete-cache-button:hover {
+            background-color: #da190b;
+        }
+        #status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #2980b9;
         }
     </style>
 </head>
 <body>
     <h1>Bird of the Day Settings</h1>
     <div class="setting">
-        <label for="image-source">Choose Image Source:</label>
+        <label for="region">Region:</label>
+        <select id="region"></select>
+    </div>
+    <div class="setting">
+        <label for="image-source">Image Source:</label>
         <select id="image-source">
             <option value="unsplash">Unsplash</option>
             <option value="macaulay">Macaulay Library</option>
         </select>
     </div>
-    <div class="setting">
-        <label for="auto-play">
-            <input type="checkbox" id="auto-play"> Auto-play audio
-        </label>
+    <div class="setting checkbox-container">
+        <input type="checkbox" id="auto-play">
+        <label for="auto-play">Auto-play audio</label>
     </div>
-    <button id="save-button">Save Settings</button>
+    <div class="button-group">
+        <button id="save-button">Save Settings</button>
+        <button id="delete-cache-button">Delete Cache</button>
+    </div>
     <p id="status"></p>
     <script src="popup.js"></script>
 </body>

@@ -4,8 +4,7 @@
   "version": "1.0",
   "description": "Displays a beautiful bird image and information every day.",
   "permissions": [
-    "storage",
-    "geolocation"
+    "storage"
   ],
   "host_permissions": [
     "https://api.unsplash.com/*",

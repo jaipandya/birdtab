@@ -139,7 +139,7 @@ p {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .play-button:hover {
@@ -149,8 +149,7 @@ p {
 .play-button svg {
   width: 24px;
   height: 24px;
-  color: white;
-  transition: transform 0.3s ease;
+  fill: white;
 }
 
 .play-button.loading svg {

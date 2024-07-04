@@ -35,14 +35,14 @@ function updateLoadingMessage() {
   }
 }
 
-async function getBirdInfo(lat, lng, forceRefresh = false) {
-  log(`Requesting bird info for lat: ${lat}, lng: ${lng}, forceRefresh: ${forceRefresh}`);
+async function getBirdInfo() {
+  log(`Requesting bird info`);
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(new Error('Request timed out'));
     }, 30000); // 30 seconds timeout
 
-    chrome.runtime.sendMessage({action: 'getBirdInfo', lat, lng, forceRefresh}, response => {
+    chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
       clearTimeout(timeout);
       if (response.error) {
         log(`Error getting bird info: ${response.error}`);
@@ -81,35 +81,12 @@ function generateLocationDescription(birdName, location) {
   return description;
 }
 
-async function getUserLocation() {
-  log('Getting user location');
-  return new Promise((resolve, reject) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          log(`User location obtained: lat ${position.coords.latitude}, lng ${position.coords.longitude}`);
-          resolve(position.coords);
-        },
-        error => {
-          log(`Error getting user location: ${error.message}`);
-          resolve(null);
-        }
-      );
-    } else {
-      log('Geolocation not supported');
-      resolve(null);
-    }
-  });
-}
-
 function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
-  log(`Creating audio player with URL: ${audioUrl}`);
-  const audio = new Audio();
+  log(`Creating audio player with URL: ${audioUrl}, auto-play: ${autoPlay}`);
+  const audio = new Audio(audioUrl);
   let isPlaying = false;
-  let isLoading = true;
 
   const togglePlay = () => {
-      if (isLoading) return;
       if (isPlaying) {
           audio.pause();
       } else {
@@ -122,31 +99,23 @@ function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
   const updatePlayButton = () => {
       const playButton = document.getElementById('play-button');
       if (playButton) {
-          if (isLoading) {
-              playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
-          } else if (isPlaying) {
-              playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
-          } else {
-              playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
-          }
+          playButton.innerHTML = isPlaying ? 
+              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
+              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
       }
   };
 
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
   playButton.classList.add('play-button');
+  playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
   playButton.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       togglePlay();
   });
 
-  updatePlayButton(); // Set initial state (loading)
-
-  audio.src = audioUrl;
   audio.oncanplaythrough = () => {
-      isLoading = false;
-      updatePlayButton();
       if (autoPlay) {
           audio.play();
           isPlaying = true;
@@ -154,7 +123,6 @@ function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
       }
   };
 
-  // Add this event listener
   audio.onended = () => {
       isPlaying = false;
       updatePlayButton();
@@ -178,19 +146,7 @@ async function updatePage() {
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
-    log('Getting user location');
-    const coords = await getUserLocation();
-    let birdInfo;
-    if (coords) {
-      log(`User location obtained: lat=${coords.latitude}, lng=${coords.longitude}`);
-      birdInfo = await getBirdInfo(coords.latitude, coords.longitude, true);
-    } else {
-      log('Using random location');
-      const randomLat = (Math.random() * 180) - 90;
-      const randomLng = (Math.random() * 360) - 180;
-      log(`Random location generated: lat=${randomLat}, lng=${randomLng}`);
-      birdInfo = await getBirdInfo(randomLat, randomLng, true);
-    }
+    const birdInfo = await getBirdInfo();
 
     clearInterval(loadingInterval);
     log('Bird info received, updating page content');
@@ -214,11 +170,8 @@ async function updatePage() {
 
     if (birdInfo.audioUrl) {
       log(`Audio URL found: ${birdInfo.audioUrl}`);
-      chrome.storage.sync.get(['autoPlay'], function (result) {
-        const autoPlay = result.autoPlay || false;
-        const audioPlayer = createAudioPlayer(birdInfo.audioUrl, birdInfo.recordist, birdInfo.recordistUrl, autoPlay);
-        document.body.appendChild(audioPlayer);
-      });
+      const audioPlayer = createAudioPlayer(birdInfo.audioUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
+      document.body.appendChild(audioPlayer);
     } else {
       log('No audio URL found in bird info');
     }
