@@ -20,9 +20,10 @@ async function getUnsplashImage(birdName) {
   const data = await response.json();
   if (data.results && data.results.length > 0) {
     const image = data.results[0];
+    console.log("image", image);
     log(`Unsplash image found for ${birdName}`);
     return {
-      imageUrl: image.urls.regular,
+      imageUrl: image.urls.full,
       photographer: image.user.name,
       photographerUrl: image.user.links.html
     };
@@ -39,7 +40,7 @@ async function getMacaulayImage(speciesCode) {
     const image = data.results.content[0];
     log(`Macaulay image found for species code ${speciesCode}`);
     return {
-      imageUrl: image.previewUrl,
+      imageUrl: image.mediaUrl,
       photographer: image.userDisplayName,
       photographerUrl: `https://macaulaylibrary.org/asset/${image.assetId}`
     };
