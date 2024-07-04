@@ -69,12 +69,15 @@ function generateFunFact(birdName) {
 }
 
 function generateLocationDescription(birdName, location) {
+  if (!location) {
+      location = "an undisclosed location";
+  }
   const descriptions = [
-    `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
-    `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
-    `${location} just got a visit from a charming ${birdName}.`,
-    `The skies of ${location} were graced by a ${birdName} not long ago.`,
-    `A ${birdName} decided to make ${location} its runway for a bird fashion show.`,
+      `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
+      `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
+      `${location} just got a visit from a charming ${birdName}.`,
+      `The skies of ${location} were graced by a ${birdName} not long ago.`,
+      `A ${birdName} decided to make ${location} its runway for a bird fashion show.`,
   ];
   const description = descriptions[Math.floor(Math.random() * descriptions.length)];
   log(`Generated location description: ${description}`);
@@ -152,6 +155,12 @@ async function updatePage() {
     log('Bird info received, updating page content');
 
     document.body.innerHTML = `
+      <button id="refresh-button" class="icon-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 4v6h-6"></path>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+      </button>
       <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-link">
         <img src="${birdInfo.imageUrl}" alt="${birdInfo.name}" class="background-image">
       </a>
@@ -162,7 +171,7 @@ async function updatePage() {
         <p id="fun-fact"></p>
         <p class="credits">
           Photo: <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank"></a> 
-          ${birdInfo.imageSource === 'unsplash' ? 'on Unsplash' : 'via Macaulay Library'} | 
+          via Macaulay Library | 
           Info: <a href="https://ebird.org" target="_blank">eBird</a>
         </p>
       </div>
@@ -182,6 +191,16 @@ async function updatePage() {
     document.getElementById('fun-fact').textContent = generateFunFact(birdInfo.name);
     document.getElementById('photographer').textContent = birdInfo.photographer;
 
+    document.getElementById('refresh-button').addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      chrome.runtime.sendMessage({action: 'deleteCache'}, function(response) {
+        if (response.message === 'Cache deleted') {
+          window.location.reload(true); // Force a full page reload
+        }
+      });
+    });
+
     log('Page updated successfully');
   } catch (error) {
     clearInterval(loadingInterval);
@@ -192,8 +211,10 @@ async function updatePage() {
         <h1>Oops! Our birds flew the coop!</h1>
         <p>Seems like our feathered friends are camera shy today. Try again later!</p>
         <p class="error-details">${error.message}</p>
+        <button id="refresh-button">Try Again</button>
       </div>
     `;
+    document.getElementById('refresh-button').addEventListener('click', updatePage);
   }
 }
 

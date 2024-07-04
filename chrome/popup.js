@@ -2,7 +2,6 @@ const countries = [{ "code": "AF", "name": "Afghanistan" }, { "code": "AL", "nam
 
 document.addEventListener('DOMContentLoaded', function () {
   const regionSelect = document.getElementById('region');
-  const imageSourceSelect = document.getElementById('image-source');
   const autoPlayCheckbox = document.getElementById('auto-play');
   const saveButton = document.getElementById('save-button');
   const deleteCacheButton = document.getElementById('delete-cache-button');
@@ -17,9 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Load current settings
-  chrome.storage.sync.get(['region', 'imageSource', 'autoPlay'], function (result) {
+  chrome.storage.sync.get(['region', 'autoPlay'], function (result) {
     regionSelect.value = result.region || 'US';
-    imageSourceSelect.value = result.imageSource || 'macaulay';
     autoPlayCheckbox.checked = result.autoPlay || false;
   });
 
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
   saveButton.addEventListener('click', function () {
     const settings = {
       region: regionSelect.value,
-      imageSource: imageSourceSelect.value,
       autoPlay: autoPlayCheckbox.checked
     };
     chrome.storage.sync.set(settings, function () {

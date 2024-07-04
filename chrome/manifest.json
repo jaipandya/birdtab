@@ -7,9 +7,7 @@
     "storage"
   ],
   "host_permissions": [
-    "https://api.unsplash.com/*",
-    "https://api.ebird.org/*",
-    "https://search.macaulaylibrary.org/*"
+    "https://birdtab-proxy.vercel.app/*"
   ],
   "chrome_url_overrides": {
     "newtab": "index.html"
