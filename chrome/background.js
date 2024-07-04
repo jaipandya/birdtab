@@ -3,6 +3,11 @@ console.log('Background script starting...');
 const UNSPLASH_ACCESS_KEY = 'mH0pX0bna9zgxESECadRUMSnrUPloNDaGN4rjEf5A9s';
 const EBIRD_API_KEY = '40hmhkcjeb5r';
 
+let lastFetchDate = null;
+let cachedRegion = null;
+let lastRegionFetchDate = null;
+const REGION_CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+
 function log(message) {
   if (!('update_url' in chrome.runtime.getManifest())) {
     console.log(`[Bird of the Day]: ${message}`);
@@ -108,8 +113,13 @@ async function getMacaulayAudio(speciesCode) {
 
 async function fetchBirdInfo(lat, lng, imageSource) {
   log(`Fetching bird info for lat: ${lat}, lng: ${lng}, source: ${imageSource}`);
-  const url = `https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}&maxResults=1&back=30&dist=50`;
+  
   try {
+    // Get the user's region based on lat/lng
+    const region = await getRegionFromCoords(lat, lng);
+    
+    // Use the region to fetch a random bird observation
+    const url = `https://api.ebird.org/v2/data/obs/${region}/recent?maxResults=20`;
     log(`Sending request to eBird API: ${url}`);
     const response = await fetch(url, {
       headers: {
@@ -120,11 +130,20 @@ async function fetchBirdInfo(lat, lng, imageSource) {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
+    const responseText = await response.text();
+    log(`Raw eBird API response: ${responseText}`);
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      throw new Error(`Failed to parse eBird API response: ${parseError.message}`);
+    }
     log(`Parsed eBird API response: ${JSON.stringify(data)}`);
 
     if (data.length > 0) {
-      const bird = data[0];
+      // Select a random bird from the results
+      const randomIndex = Math.floor(Math.random() * data.length);
+      const bird = data[randomIndex];
       log(`Bird found: ${bird.comName}`);
       let imageInfo;
       let audioInfo;
@@ -165,8 +184,7 @@ async function fetchBirdInfo(lat, lng, imageSource) {
         throw new Error(`Failed to fetch image or audio: ${error.message}`);
       }
     } else {
-      log(`No bird sightings found for the given location`);
-      throw new Error('No recent bird sightings in your area');
+      throw new Error('No bird data returned from eBird API');
     }
   } catch (error) {
     log(`Error in fetchBirdInfo: ${error.message}`);
@@ -174,23 +192,42 @@ async function fetchBirdInfo(lat, lng, imageSource) {
   }
 }
 
+async function getRegionFromCoords(lat, lng) {
+  const now = new Date().getTime();
+  if (cachedRegion && lastRegionFetchDate && (now - lastRegionFetchDate < REGION_CACHE_DURATION)) {
+    log(`Using cached region: ${cachedRegion}`);
+    return cachedRegion;
+  }
+
+  log(`Fetching region for coordinates: lat=${lat}, lng=${lng}`);
+  const response = await fetch(`https://api.ebird.org/v2/ref/region/find?lat=${lat}&lng=${lng}`, {
+    headers: {
+      'X-eBirdApiToken': EBIRD_API_KEY
+    }
+  });
+  const data = await response.json();
+  cachedRegion = data[0].code;
+  lastRegionFetchDate = now;
+  log(`Fetched and cached new region: ${cachedRegion}`);
+  return cachedRegion;
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Received message:', request);
   if (request.action === 'getBirdInfo') {
-    log(`Received request for bird info: lat=${request.lat}, lng=${request.lng}`);
-    chrome.storage.sync.get(['imageSource'], async function (result) {
+    log(`Received request for bird info`);
+    chrome.storage.sync.get(['imageSource'], async function(result) {
       const imageSource = result.imageSource || 'macaulay';
       log(`Using image source: ${imageSource}`);
       try {
-        log('Checking for cached bird info');
+        const currentDate = new Date().toDateString();
         const cachedInfo = await getCachedBirdInfo();
-        if (cachedInfo && cachedInfo.imageSource === imageSource) {
-          log(`Using cached bird info: ${JSON.stringify(cachedInfo)}`);
+        if (cachedInfo && cachedInfo.imageSource === imageSource && lastFetchDate === currentDate) {
+          log(`Using cached bird info`);
           sendResponse(cachedInfo);
         } else {
-          log('No valid cache found, fetching new bird info');
+          log(`Fetching new bird info`);
           const birdInfo = await fetchBirdInfo(request.lat, request.lng, imageSource);
-          log(`New bird info fetched: ${JSON.stringify(birdInfo)}`);
+          lastFetchDate = currentDate;
           sendResponse(birdInfo);
         }
       } catch (error) {
@@ -203,11 +240,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-chrome.storage.onChanged.addListener(function (changes, namespace) {
+chrome.storage.onChanged.addListener(function(changes, namespace) {
   if (namespace === 'sync' && changes.imageSource) {
     log(`Image source changed to ${changes.imageSource.newValue}`);
-    chrome.storage.local.remove(['cachedBirdInfo', 'cacheDate'], function () {
+    chrome.storage.local.remove(['cachedBirdInfo', 'cacheDate'], function() {
       log(`Cache cleared due to image source change`);
+      lastFetchDate = null;
     });
   }
 });

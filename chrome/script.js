@@ -35,14 +35,14 @@ function updateLoadingMessage() {
   }
 }
 
-async function getBirdInfo(lat, lng) {
-  log(`Requesting bird info for lat: ${lat}, lng: ${lng}`);
+async function getBirdInfo(lat, lng, forceRefresh = false) {
+  log(`Requesting bird info for lat: ${lat}, lng: ${lng}, forceRefresh: ${forceRefresh}`);
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(new Error('Request timed out'));
     }, 30000); // 30 seconds timeout
 
-    chrome.runtime.sendMessage({ action: 'getBirdInfo', lat, lng }, response => {
+    chrome.runtime.sendMessage({action: 'getBirdInfo', lat, lng, forceRefresh}, response => {
       clearTimeout(timeout);
       if (response.error) {
         log(`Error getting bird info: ${response.error}`);
@@ -183,13 +183,13 @@ async function updatePage() {
     let birdInfo;
     if (coords) {
       log(`User location obtained: lat=${coords.latitude}, lng=${coords.longitude}`);
-      birdInfo = await getBirdInfo(coords.latitude, coords.longitude);
+      birdInfo = await getBirdInfo(coords.latitude, coords.longitude, true);
     } else {
       log('Using random location');
       const randomLat = (Math.random() * 180) - 90;
       const randomLng = (Math.random() * 360) - 180;
       log(`Random location generated: lat=${randomLat}, lng=${randomLng}`);
-      birdInfo = await getBirdInfo(randomLat, randomLng);
+      birdInfo = await getBirdInfo(randomLat, randomLng, true);
     }
 
     clearInterval(loadingInterval);
