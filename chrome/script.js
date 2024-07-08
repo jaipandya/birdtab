@@ -1,3 +1,6 @@
+let isMuted = false;
+let audio;
+
 function log(message) {
   if (!('update_url' in chrome.runtime.getManifest())) {
     console.log(`[BirdTab]: ${message}`);
@@ -86,7 +89,8 @@ function generateLocationDescription(birdName, location) {
 
 function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
   log(`Creating audio player with URL: ${audioUrl}, auto-play: ${autoPlay}`);
-  const audio = new Audio(audioUrl);
+  audio = new Audio(audioUrl);
+  audio.muted = isMuted;
   let isPlaying = false;
 
   const togglePlay = () => {
@@ -161,6 +165,13 @@ async function updatePage() {
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
         </svg>
       </button>
+      <button id="mute-button" class="icon-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
       <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-link">
         <img src="${birdInfo.imageUrl}" alt="${birdInfo.name}" class="background-image">
       </a>
@@ -201,6 +212,18 @@ async function updatePage() {
       });
     });
 
+    document.getElementById('mute-button').addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      isMuted = !isMuted;
+      updateMuteButton();
+      if (audio) {
+        audio.muted = isMuted;
+      }
+    });
+
+    updateMuteButton();
+
     log('Page updated successfully');
   } catch (error) {
     clearInterval(loadingInterval);
@@ -215,6 +238,28 @@ async function updatePage() {
       </div>
     `;
     document.getElementById('refresh-button').addEventListener('click', updatePage);
+  }
+}
+
+function updateMuteButton() {
+  const muteButton = document.getElementById('mute-button');
+  if (muteButton) {
+    if (isMuted) {
+      muteButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      `;
+    } else {
+      muteButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      `;
+    }
   }
 }
 

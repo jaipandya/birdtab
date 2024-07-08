@@ -80,6 +80,11 @@ body {
   left: 20px;
 }
 
+#mute-button {
+  top: 20px;
+  right: 20px;
+}
+
 .bird-link:hover .background-image {
   transform: scale(1.05);
 }

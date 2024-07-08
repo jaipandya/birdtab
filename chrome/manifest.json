@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "BirdTab",
   "version": "1.0",
-  "description": "Displays a beautiful bird image and information every day.",
+  "description": "Transform your new tabs into a vibrant birding experience. Discover stunning birds daily with high-quality images and fascinating facts.",
   "permissions": [
     "storage"
   ],
