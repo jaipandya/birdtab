@@ -7,7 +7,8 @@
     "storage"
   ],
   "host_permissions": [
-    "https://birdtab-proxy.vercel.app/*"
+    "https://birdtab-proxy.vercel.app/*",
+    "https://search.macaulaylibrary.org/*"
   ],
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -24,5 +25,21 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "commands": {
+    "refresh-bird": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B",
+        "mac": "Command+Shift+B"
+      },
+      "description": "Refresh bird information"
+    },
+    "toggle-mute": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Toggle audio mute"
+    }
   }
 }

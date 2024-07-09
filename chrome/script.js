@@ -20,14 +20,21 @@ function getRandomLoadingMessage() {
   return loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
 }
 
-function setLoadingState() {
-  log('Setting loading state');
-  document.body.innerHTML = `
-    <div class="loading">
-      <h1>BirdTab</h1>
-      <p id="loading-message">${getRandomLoadingMessage()}</p>
-    </div>
+function showLoadingIndicator() {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  loadingDiv.innerHTML = `
+    <div class="spinner"></div>
+    <p id="loading-message">${getRandomLoadingMessage()}</p>
   `;
+  document.body.appendChild(loadingDiv);
+}
+
+function hideLoadingIndicator() {
+  const loadingDiv = document.getElementById('loading');
+  if (loadingDiv) {
+    loadingDiv.remove();
+  }
 }
 
 function updateLoadingMessage() {
@@ -36,6 +43,15 @@ function updateLoadingMessage() {
     loadingMessage.textContent = getRandomLoadingMessage();
     log(`Updated loading message: ${loadingMessage.textContent}`);
   }
+}
+
+function preloadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
 }
 
 async function getBirdInfo() {
@@ -73,43 +89,43 @@ function generateFunFact(birdName) {
 
 function generateLocationDescription(birdName, location) {
   if (!location) {
-      location = "an undisclosed location";
+    location = "an undisclosed location";
   }
   const descriptions = [
-      `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
-      `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
-      `${location} just got a visit from a charming ${birdName}.`,
-      `The skies of ${location} were graced by a ${birdName} not long ago.`,
-      `A ${birdName} decided to make ${location} its runway for a bird fashion show.`,
+    `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
+    `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
+    `${location} just got a visit from a charming ${birdName}.`,
+    `The skies of ${location} were graced by a ${birdName} not long ago.`,
+    `A ${birdName} decided to make ${location} its runway for a bird fashion show.`,
   ];
   const description = descriptions[Math.floor(Math.random() * descriptions.length)];
   log(`Generated location description: ${description}`);
   return description;
 }
 
-function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
-  log(`Creating audio player with URL: ${audioUrl}, auto-play: ${autoPlay}`);
-  audio = new Audio(audioUrl);
+function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
+  log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
+  audio = new Audio(mediaUrl);
   audio.muted = isMuted;
   let isPlaying = false;
 
   const togglePlay = () => {
-      if (isPlaying) {
-          audio.pause();
-      } else {
-          audio.play();
-      }
-      isPlaying = !isPlaying;
-      updatePlayButton();
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    isPlaying = !isPlaying;
+    updatePlayButton();
   };
 
   const updatePlayButton = () => {
-      const playButton = document.getElementById('play-button');
-      if (playButton) {
-          playButton.innerHTML = isPlaying ? 
-              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
-              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
-      }
+    const playButton = document.getElementById('play-button');
+    if (playButton) {
+      playButton.innerHTML = isPlaying ?
+        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
+        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+    }
   };
 
   const playButton = document.createElement('button');
@@ -117,22 +133,22 @@ function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
   playButton.classList.add('play-button');
   playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
   playButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      togglePlay();
+    e.preventDefault();
+    e.stopPropagation();
+    togglePlay();
   });
 
   audio.oncanplaythrough = () => {
-      if (autoPlay) {
-          audio.play();
-          isPlaying = true;
-          updatePlayButton();
-      }
+    if (autoPlay) {
+      audio.play();
+      isPlaying = true;
+      updatePlayButton();
+    }
   };
 
   audio.onended = () => {
-      isPlaying = false;
-      updatePlayButton();
+    isPlaying = false;
+    updatePlayButton();
   };
 
   const audioCredit = document.createElement('p');
@@ -149,13 +165,17 @@ function createAudioPlayer(audioUrl, recordist, recordistUrl, autoPlay) {
 
 async function updatePage() {
   log('Updating page');
-  setLoadingState();
+  showLoadingIndicator();
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
     const birdInfo = await getBirdInfo();
 
+    // Preload the image
+    await preloadImage(birdInfo.imageUrl);
+
     clearInterval(loadingInterval);
+    hideLoadingIndicator();
     log('Bird info received, updating page content');
 
     document.body.innerHTML = `
@@ -188,9 +208,9 @@ async function updatePage() {
       </div>
     `;
 
-    if (birdInfo.audioUrl) {
-      log(`Audio URL found: ${birdInfo.audioUrl}`);
-      const audioPlayer = createAudioPlayer(birdInfo.audioUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
+    if (birdInfo.mediaUrl) {
+      log(`Audio URL found: ${birdInfo.mediaUrl}`);
+      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
       document.body.appendChild(audioPlayer);
     } else {
       log('No audio URL found in bird info');
@@ -202,17 +222,22 @@ async function updatePage() {
     document.getElementById('fun-fact').textContent = generateFunFact(birdInfo.name);
     document.getElementById('photographer').textContent = birdInfo.photographer;
 
-    document.getElementById('refresh-button').addEventListener('click', function(e) {
+    document.getElementById('refresh-button').addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      chrome.runtime.sendMessage({action: 'deleteCache'}, function(response) {
-        if (response.message === 'Cache deleted') {
-          window.location.reload(true); // Force a full page reload
-        }
-      });
+      window.location.reload();
     });
 
-    document.getElementById('mute-button').addEventListener('click', function(e) {
+    // Ensure the mute state is correctly set
+    chrome.storage.sync.get(['isMuted'], function (result) {
+      isMuted = result.isMuted || false;
+      updateMuteButton();
+      if (audio) {
+        audio.muted = isMuted;
+      }
+    });
+
+    document.getElementById('mute-button').addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       isMuted = !isMuted;
@@ -220,6 +245,7 @@ async function updatePage() {
       if (audio) {
         audio.muted = isMuted;
       }
+      saveMuteState();
     });
 
     updateMuteButton();
@@ -227,17 +253,18 @@ async function updatePage() {
     log('Page updated successfully');
   } catch (error) {
     clearInterval(loadingInterval);
+    hideLoadingIndicator();
     console.error('Error updating page:', error);
     log(`Error updating page: ${error.message}`);
     document.body.innerHTML = `
       <div class="error">
-        <h1>Oops! Our birds flew the coop!</h1>
-        <p>Seems like our feathered friends are camera shy today. Try again later!</p>
+        <h1>Oops! Something went wrong</h1>
+        <p>We're having trouble fetching bird information. Please check your internet connection and try again.</p>
         <p class="error-details">${error.message}</p>
-        <button id="refresh-button">Try Again</button>
+        <button id="retry-button">Retry</button>
       </div>
     `;
-    document.getElementById('refresh-button').addEventListener('click', updatePage);
+    document.getElementById('retry-button').addEventListener('click', updatePage);
   }
 }
 
@@ -262,6 +289,20 @@ function updateMuteButton() {
     }
   }
 }
+
+function saveMuteState() {
+  chrome.storage.sync.set({ isMuted: isMuted }, function () {
+    log(`Mute state saved: ${isMuted}`);
+  });
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "refreshBird") {
+    location.reload();
+  } else if (request.action === "toggleMute") {
+    toggleMute();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   log('DOM content loaded, starting page update');
