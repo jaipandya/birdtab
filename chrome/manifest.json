@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BirdTab",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Transform your new tabs into a vibrant birding experience. Discover stunning birds daily with high-quality images and fascinating facts.",
   "permissions": [
     "storage"
@@ -44,7 +44,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["images/default-bird.webp"],
+      "resources": ["images/default-bird.webp", "images/birdtab-demo.png", "shared.js"],
       "matches": ["<all_urls>"]
     }
   ]

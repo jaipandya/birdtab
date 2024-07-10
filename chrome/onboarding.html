@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BirdTab</title>
+    <link rel="stylesheet" href="onboarding.css">
+    <script src="shared.js"></script>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div id="step1" class="step active">
+            <h1>Welcome to BirdTab!</h1>
+            <img src="images/birdtab-demo.png" alt="BirdTab demo" class="demo-image">
+            <p>Get ready for a daily dose of avian wonder! Every new tab brings you face-to-face with a stunning bird photograph and fascinating facts.</p>
+            <p><strong>It's like having a window to the bird world right in your browser!</strong></p>
+            <button class="next-btn">Next</button>
+        </div>
+        
+        <div id="step2" class="step">
+            <h2>Choose Your Birding Region</h2>
+            <p>Select your preferred region to see birds commonly found in your area. Don't worry, you'll still get to explore birds from around the world!</p>
+            <select id="region-select">
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="IN">India</option>
+                <!-- Add more options as needed -->
+            </select>
+            <p class="help-text">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
+            <button class="next-btn">Next</button>
+        </div>
+        
+        <div id="step3" class="step">
+            <h2>Bird Calls: Music to Your Ears?</h2>
+            <p>Want to hear the chirps and tweets? Enable auto-play for an immersive birding experience!</p>
+            <div class="toggle-container">
+                <span>Auto-play bird calls</span>
+                <label class="switch">
+                    <input type="checkbox" id="autoplay-toggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <p class="help-text">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior.</p>
+            <button id="finish-btn">Start Birding!</button>
+        </div>
+    </div>
+    <div class="progress-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+    <script src="onboarding.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #333333;
+  width: 300px;
+}
+
+h1 {
+  font-size: 18px;
+  color: #202124;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 14px;
+  color: #5f6368;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.setting {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #3c4043;
+  font-size: 14px;
+}
+
+select, button {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #dadce0;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 12px top 50%;
+  background-size: 10px auto;
+  padding-right: 30px;
+}
+
+button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background-color: #1765cc;
+}
+
+.button-text {
+  transition: opacity 0.3s ease;
+}
+
+.checkmark-container {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #5f6368;
+  margin-top: 5px;
+}
+
+.toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 14px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: -4px;
+  bottom: -3px;
+  background-color: white;
+  transition: .4s;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.4);
+}
+
+input:checked + .slider {
+  background-color: #8ab4f8;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+  background-color: #1a73e8;
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#debug-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #dadce0;
+}
+
+.debug-button {
+  background-color: #ea4335;
+  margin-top: 10px;
+}
+
+.debug-button:hover {
+  background-color: #d33828;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px #1a73e8;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #fff;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+      stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scale {
+  0%, 100% {
+      transform: none;
+  }
+  50% {
+      transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@keyframes fill {
+  100% {
+      box-shadow: inset 0px 0px 0px 30px #1a73e8;
+  }
+}
+
+.saving .checkmark {
+  opacity: 1;
+}
+
+.saving span {
+  opacity: 0;
+}
+
+.save-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.save-notification.show {
+  opacity: 1;
+}

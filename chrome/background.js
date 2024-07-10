@@ -251,4 +251,21 @@ chrome.storage.sync.get(['region'], result => {
   preloadNextBird(region);
 });
 
+// Add this function to check if onboarding is necessary
+function checkOnboarding() {
+  chrome.storage.sync.get(['onboardingComplete'], function(result) {
+      if (!result.onboardingComplete) {
+          chrome.tabs.create({ url: 'onboarding.html' });
+      }
+  });
+}
+
+// Listen for installation or update events
+chrome.runtime.onInstalled.addListener(function(details) {
+  if (details.reason === 'install' || details.reason === 'update') {
+      checkOnboarding();
+  }
+});
+
+
 log('Background script loaded');
