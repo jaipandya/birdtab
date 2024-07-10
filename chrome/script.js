@@ -1,12 +1,14 @@
 let isMuted = false;
 let audio;
 
+// Helper function for logging messages (only in development)
 function log(message) {
   if (!('update_url' in chrome.runtime.getManifest())) {
     console.log(`[BirdTab]: ${message}`);
   }
 }
 
+// Array of loading messages for a more engaging user experience
 const loadingMessages = [
   "Fluffing feathers...",
   "Tuning bird calls...",
@@ -16,10 +18,10 @@ const loadingMessages = [
   "Polishing binoculars...",
 ];
 
-function getRandomLoadingMessage() {
-  return loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-}
+// Get a random loading message
+const getRandomLoadingMessage = () => loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
 
+// Show loading indicator with a random message
 function showLoadingIndicator() {
   const loadingDiv = document.createElement('div');
   loadingDiv.id = 'loading';
@@ -30,13 +32,13 @@ function showLoadingIndicator() {
   document.body.appendChild(loadingDiv);
 }
 
+// Hide loading indicator
 function hideLoadingIndicator() {
   const loadingDiv = document.getElementById('loading');
-  if (loadingDiv) {
-    loadingDiv.remove();
-  }
+  if (loadingDiv) loadingDiv.remove();
 }
 
+// Update loading message
 function updateLoadingMessage() {
   const loadingMessage = document.getElementById('loading-message');
   if (loadingMessage) {
@@ -45,21 +47,11 @@ function updateLoadingMessage() {
   }
 }
 
-function preloadImage(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = url;
-  });
-}
-
+// Fetch bird information from background script
 async function getBirdInfo() {
   log(`Requesting bird info`);
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error('Request timed out'));
-    }, 30000); // 30 seconds timeout
+    const timeout = setTimeout(() => reject(new Error('Request timed out')), 30000);
 
     chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
       clearTimeout(timeout);
@@ -67,13 +59,13 @@ async function getBirdInfo() {
         log(`Error getting bird info: ${response.error}`);
         reject(new Error(response.error));
       } else {
-        log(`Bird info received: ${JSON.stringify(response)}`);
         resolve(response);
       }
     });
   });
 }
 
+// Generate a fun fact about the bird
 function generateFunFact(birdName) {
   const funFacts = [
     `Did you know? If ${birdName}s could take selfies, they'd always get their best angle!`,
@@ -87,10 +79,9 @@ function generateFunFact(birdName) {
   return fact;
 }
 
+// Generate a description of the bird's location
 function generateLocationDescription(birdName, location) {
-  if (!location) {
-    location = "an undisclosed location";
-  }
+  location = location || "an undisclosed location";
   const descriptions = [
     `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
     `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
@@ -103,6 +94,7 @@ function generateLocationDescription(birdName, location) {
   return description;
 }
 
+// Create audio player for bird calls
 function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
   audio = new Audio(mediaUrl);
@@ -110,11 +102,7 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   let isPlaying = false;
 
   const togglePlay = () => {
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
+    isPlaying ? audio.pause() : audio.play();
     isPlaying = !isPlaying;
     updatePlayButton();
   };
@@ -163,6 +151,7 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   return audioContainer;
 }
 
+// Main function to update the page with new bird information
 async function updatePage() {
   log('Updating page');
   showLoadingIndicator();
@@ -170,9 +159,6 @@ async function updatePage() {
 
   try {
     const birdInfo = await getBirdInfo();
-
-    // Preload the image
-    await preloadImage(birdInfo.imageUrl);
 
     clearInterval(loadingInterval);
     hideLoadingIndicator();
@@ -222,29 +208,24 @@ async function updatePage() {
     document.getElementById('fun-fact').textContent = generateFunFact(birdInfo.name);
     document.getElementById('photographer').textContent = birdInfo.photographer;
 
-    document.getElementById('refresh-button').addEventListener('click', function (e) {
+    document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       window.location.reload();
     });
 
-    // Ensure the mute state is correctly set
-    chrome.storage.sync.get(['isMuted'], function (result) {
+    chrome.storage.sync.get(['isMuted'], (result) => {
       isMuted = result.isMuted || false;
       updateMuteButton();
-      if (audio) {
-        audio.muted = isMuted;
-      }
+      if (audio) audio.muted = isMuted;
     });
 
-    document.getElementById('mute-button').addEventListener('click', function (e) {
+    document.getElementById('mute-button').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       isMuted = !isMuted;
       updateMuteButton();
-      if (audio) {
-        audio.muted = isMuted;
-      }
+      if (audio) audio.muted = isMuted;
       saveMuteState();
     });
 
@@ -268,42 +249,43 @@ async function updatePage() {
   }
 }
 
+// Update mute button UI
 function updateMuteButton() {
   const muteButton = document.getElementById('mute-button');
   if (muteButton) {
-    if (isMuted) {
-      muteButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <line x1="23" y1="9" x2="17" y2="15"></line>
-          <line x1="17" y1="9" x2="23" y2="15"></line>
-        </svg>
-      `;
-    } else {
-      muteButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-      `;
-    }
+    muteButton.innerHTML = isMuted ?
+      `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>` :
+      `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>`;
   }
 }
 
+// Save mute state to chrome storage
 function saveMuteState() {
-  chrome.storage.sync.set({ isMuted: isMuted }, function () {
+  chrome.storage.sync.set({ isMuted }, () => {
     log(`Mute state saved: ${isMuted}`);
   });
 }
 
+// Listen for messages from background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
     location.reload();
   } else if (request.action === "toggleMute") {
-    toggleMute();
+    isMuted = !isMuted;
+    updateMuteButton();
+    if (audio) audio.muted = isMuted;
+    saveMuteState();
   }
 });
 
+// Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
   log('DOM content loaded, starting page update');
   updatePage();

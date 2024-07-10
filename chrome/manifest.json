@@ -41,5 +41,11 @@
       },
       "description": "Toggle audio mute"
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["images/default-bird.webp"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
