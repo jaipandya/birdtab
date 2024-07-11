@@ -130,7 +130,6 @@ async function fetchBirdInfo(region) {
   try {
     const observations = await getRecentObservations(region);
     const bird = observations[Math.floor(Math.random() * observations.length)];
-    console.log("BIRD:", bird);
     log(`Bird found: ${bird.comName}`);
 
     let imageInfo = await getMacaulayImage(bird.speciesCode).catch(error => {

@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
       shared: './src/shared.js'
     },
     output: {
-      filename: isProduction ? '[name].[contenthash].js' : '[name].js',
+      filename: '[name].js',
       path: path.resolve(__dirname, isProduction ? 'dist' : 'dev'),
       clean: true,
     },
@@ -51,7 +51,7 @@ module.exports = (env, argv) => {
         ],
       }),
       new MiniCssExtractPlugin({
-        filename: isProduction ? '[name].[contenthash].css' : '[name].css',
+        filename: '[name].css',
       }),
       new HtmlWebpackPlugin({
         template: './src/popup.html',

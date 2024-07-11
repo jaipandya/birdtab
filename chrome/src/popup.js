@@ -13,27 +13,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Load current settings
   chrome.storage.sync.get(['region', 'autoPlay'], function (result) {
-      regionSelect.value = result.region || 'US';
-      autoPlayCheckbox.checked = result.autoPlay || false;
+    regionSelect.value = result.region || 'US';
+    autoPlayCheckbox.checked = result.autoPlay || false;
   });
 
   // Function to save settings
   function saveSettings() {
-      const settings = {
-          region: regionSelect.value,
-          autoPlay: autoPlayCheckbox.checked
-      };
-      chrome.storage.sync.set(settings, function () {
-          showSaveNotification();
-      });
+    const settings = {
+      region: regionSelect.value,
+      autoPlay: autoPlayCheckbox.checked
+    };
+    chrome.storage.sync.set(settings, function () {
+      showSaveNotification();
+    });
   }
 
   // Function to show save notification
   function showSaveNotification() {
-      saveNotification.classList.add('show');
-      setTimeout(() => {
-          saveNotification.classList.remove('show');
-      }, 2000);
+    saveNotification.classList.add('show');
+    setTimeout(() => {
+      saveNotification.classList.remove('show');
+    }, 2000);
   }
 
   // Add event listeners for auto-save
@@ -42,15 +42,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Reset onboarding
   resetOnboardingButton.addEventListener('click', function () {
-      chrome.storage.sync.set({onboardingComplete: false}, function() {
-          alert('Onboarding reset. Open a new tab to see it.');
-      });
+    chrome.storage.sync.set({ onboardingComplete: false }, function () {
+      alert('Onboarding reset. Open a new tab to see it.');
+    });
   });
 
   // Delete cache
   deleteCacheButton.addEventListener('click', function () {
-      chrome.storage.local.remove(['cachedBirdInfo', 'cacheDate'], function () {
-          alert('Cache deleted!');
-      });
+    chrome.storage.local.remove(['cachedBirdInfo', 'cacheDate'], function () {
+      alert('Cache deleted!');
+    });
   });
+  if (process.env.NODE_ENV === 'development') {
+    document.getElementById('debug-section').style.display = 'block';
+  }
 });
