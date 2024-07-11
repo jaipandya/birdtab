@@ -3,6 +3,7 @@ import './styles.css';
 
 let isMuted = false;
 let audio;
+let isPlaying = false;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -97,26 +98,39 @@ function generateLocationDescription(birdName, location) {
   return description;
 }
 
+const updatePlayButton = () => {
+  const playButton = document.getElementById('play-button');
+  if (playButton) {
+    playButton.innerHTML = isPlaying ?
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+  }
+};
+
 // Create audio player for bird calls
 function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
   audio = new Audio(mediaUrl);
   audio.muted = isMuted;
-  let isPlaying = false;
 
   const togglePlay = () => {
-    isPlaying ? audio.pause() : audio.play();
-    isPlaying = !isPlaying;
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      playAudio();
+    }
+  };
+
+  const playAudio = () => {
+    audio.play();
+    isPlaying = true;
     updatePlayButton();
   };
 
-  const updatePlayButton = () => {
-    const playButton = document.getElementById('play-button');
-    if (playButton) {
-      playButton.innerHTML = isPlaying ?
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
-    }
+  const pauseAudio = () => {
+    audio.pause();
+    isPlaying = false;
+    updatePlayButton();
   };
 
   const playButton = document.createElement('button');
@@ -131,9 +145,7 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
 
   audio.oncanplaythrough = () => {
     if (autoPlay) {
-      audio.play();
-      isPlaying = true;
-      updatePlayButton();
+      playAudio();
     }
   };
 
@@ -297,6 +309,18 @@ function saveMuteState() {
     log(`Mute state saved: ${isMuted}`);
   });
 }
+
+// Add this function to handle messages from the background script
+function handleBackgroundMessages(request, sender, sendResponse) {
+  if (request.action === "pauseAudio" && audio && !audio.paused) {
+    audio.pause();
+    isPlaying = false;
+    updatePlayButton();
+  }
+}
+
+// Add this line to start listening for messages
+chrome.runtime.onMessage.addListener(handleBackgroundMessages);
 
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

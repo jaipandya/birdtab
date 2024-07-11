@@ -3,6 +3,7 @@ import { CONFIG } from './config.js';
 log('Background script starting...');
 
 let preloadedBirdInfo = null;
+let lastNewTabId = null;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -19,11 +20,11 @@ async function getMacaulayImage(speciesCode) {
 
   const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=photo`;
   const data = await fetchJson(url);
-  
+
   if (data.results?.content?.[0]) {
     const image = data.results.content[0];
     if (!image.mediaUrl) throw new Error('No image found in Macaulay Library');
-    
+
     const imageInfo = {
       imageUrl: image.mediaUrl,
       photographer: image.userDisplayName,
@@ -199,6 +200,25 @@ function clearCache() {
   });
 }
 
+// Add this function to handle new tab creation
+function handleNewTab(tab) {
+  // Check if it's a new tab page or if the URL is not set yet
+  if (lastNewTabId && lastNewTabId !== tab.id) {
+    chrome.tabs.sendMessage(lastNewTabId, { action: "pauseAudio" });
+  }
+  lastNewTabId = tab.id;
+}
+
+// Add these listeners
+chrome.tabs.onCreated.addListener(handleNewTab);
+
+// We'll keep this listener to handle cases where the URL might change after creation
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url === 'chrome://newtab/') {
+    handleNewTab(tab);
+  }
+});
+
 // Message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getBirdInfo') {
@@ -252,17 +272,17 @@ chrome.storage.sync.get(['region'], result => {
 
 // Add this function to check if onboarding is necessary
 function checkOnboarding() {
-  chrome.storage.sync.get(['onboardingComplete'], function(result) {
-      if (!result.onboardingComplete) {
-          chrome.tabs.create({ url: 'onboarding.html' });
-      }
+  chrome.storage.sync.get(['onboardingComplete'], function (result) {
+    if (!result.onboardingComplete) {
+      chrome.tabs.create({ url: 'onboarding.html' });
+    }
   });
 }
 
 // Listen for installation or update events
-chrome.runtime.onInstalled.addListener(function(details) {
+chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason === 'install' || details.reason === 'update') {
-      checkOnboarding();
+    checkOnboarding();
   }
 });
 
