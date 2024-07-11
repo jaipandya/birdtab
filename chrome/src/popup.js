@@ -1,3 +1,6 @@
+import { populateRegionSelect } from './shared.js';
+import './popup.css';
+
 document.addEventListener('DOMContentLoaded', function () {
   const regionSelect = document.getElementById('region');
   const autoPlayCheckbox = document.getElementById('auto-play');

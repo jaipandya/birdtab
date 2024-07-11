@@ -1,3 +1,7 @@
+import './onboarding.css';
+
+import { populateRegionSelect } from './shared.js';
+
 document.addEventListener('DOMContentLoaded', function () {
   let currentStep = 1;
   const totalSteps = 3;

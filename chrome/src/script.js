@@ -1,3 +1,6 @@
+import './styles.css';
+
+
 let isMuted = false;
 let audio;
 

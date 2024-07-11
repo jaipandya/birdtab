@@ -1,12 +1,12 @@
-importScripts('config.js');
+import { CONFIG } from './config.js';
 
-console.log('Background script starting...');
+log('Background script starting...');
 
 let preloadedBirdInfo = null;
 
 // Helper function for logging messages (only in development)
 function log(message) {
-  if (!('update_url' in chrome.runtime.getManifest())) {
+  if (process.env.NODE_ENV !== 'production') {
     console.log(`[BirdTab]: ${message}`);
   }
 }
