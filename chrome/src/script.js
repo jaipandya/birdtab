@@ -111,6 +111,9 @@ const updatePlayButton = () => {
 function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
   audio = new Audio(mediaUrl);
+  // Skip the first 4 seconds of the audio
+  // because it's usually recordist commentary
+  audio.currentTime = 4;
   audio.muted = isMuted;
 
   const togglePlay = () => {
@@ -125,6 +128,14 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
     audio.play();
     isPlaying = true;
     updatePlayButton();
+    audio.volume = 0;
+    let fadeAudioIn = setInterval(function () {
+      if (audio.volume < 0.9) {
+        audio.volume += 0.1;
+      } else {
+        clearInterval(fadeAudioIn);
+      }
+    }, 200);
   };
 
   const pauseAudio = () => {
@@ -214,8 +225,8 @@ async function updatePage() {
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank"></a> 
-          via Macaulay Library | 
-          Info: <a href="https://ebird.org" target="_blank">eBird</a>
+          via
+          <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
       </p>
       </div>
     `;

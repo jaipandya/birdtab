@@ -2,12 +2,12 @@
   "manifest_version": 3,
   "name": "BirdTab",
   "version": "1.1",
-  "description": "Transform your new tabs into a vibrant birding experience. Discover stunning birds daily with high-quality images and fascinating facts.",
+  "description": "Transform your new tabs into a vibrant birding experience. Discover stunning birds with high-quality images and fascinating facts.",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
-    "https://birdtab-proxy.vercel.app/*",
+    "https://api.birdtab.app/*",
     "https://search.macaulaylibrary.org/*"
   ],
   "chrome_url_overrides": {
@@ -22,7 +22,6 @@
   },
   "icons": {
     "16": "icons/icon16.png",
-    "19": "icons/icon19.png",
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
