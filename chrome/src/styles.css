@@ -318,3 +318,84 @@ p {
 .hidden {
   display: none;
 }
+
+/* Styles for the review prompt */
+
+.review-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  max-width: 320px;
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.review-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-prompt h2 {
+  color: #333;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.review-prompt p {
+  color: #666;
+  font-size: 1em;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.review-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.review-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.review-btn.primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.review-btn.primary:hover {
+  background-color: #45a049;
+}
+
+.review-btn.secondary {
+  background-color: #f1f3f4;
+  color: #333;
+}
+
+.review-btn.secondary:hover {
+  background-color: #e8eaed;
+}
+
+.review-btn.tertiary {
+  background-color: transparent;
+  color: #666;
+}
+
+.review-btn.tertiary:hover {
+  background-color: #f1f3f4;
+}

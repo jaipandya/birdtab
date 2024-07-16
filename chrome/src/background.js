@@ -286,5 +286,17 @@ chrome.runtime.onInstalled.addListener(function (details) {
   }
 });
 
+// This helps in tracking the number of new tabs opened by the user
+// which is used in the review prompt
+chrome.runtime.onInstalled.addListener(function(details) {
+  if (details.reason === "install") {
+    chrome.storage.local.set({
+      installTime: Date.now(),
+      newTabCount: 0
+    });
+  }
+});
+
+
 
 log('Background script loaded');

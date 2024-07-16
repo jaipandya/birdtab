@@ -1,9 +1,11 @@
 import './styles.css';
+import CONFIG from './config.js';
 
 
 let isMuted = false;
 let audio;
 let isPlaying = false;
+let shouldShowReviewPrompt = false;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -177,8 +179,73 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
   return audioContainer;
 }
 
+
+// Review section
+
+function incrementNewTabCount() {
+  chrome.storage.local.get(['newTabCount', 'installTime'], function(result) {
+    const now = Date.now();
+    const installTime = result.installTime || now;
+    
+    if (now - installTime <= 28 * 24 * 60 * 60 * 1000) {
+      chrome.storage.local.set({
+        newTabCount: (result.newTabCount || 0) + 1
+      });
+    }
+  });
+}
+
+function checkAndPrepareReviewPrompt() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft'], function(result) {
+      const now = Date.now();
+      const installTime = result.installTime || now;
+      const newTabCount = result.newTabCount || 0;
+      const lastReviewPrompt = result.lastReviewPrompt || 0;
+      const reviewDismissed = result.reviewDismissed || false;
+      const reviewLeft = result.reviewLeft || false;
+
+      if (reviewLeft || reviewDismissed) {
+        resolve(false);
+        return;
+      }
+
+      const isDev = process.env.NODE_ENV !== 'production';
+      const timeDelay = isDev ? CONFIG.DEV_TIME_DELAY : CONFIG.PROD_TIME_DELAY;
+      const tabCountThreshold = isDev ? CONFIG.DEV_TAB_COUNT : CONFIG.PROD_TAB_COUNT;
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+      const timeCondition = now - installTime > timeDelay;
+      const activityCondition = newTabCount >= tabCountThreshold;
+      const frequencyCondition = now - lastReviewPrompt > timeDelay;
+
+      shouldShowReviewPrompt = timeCondition && activityCondition && frequencyCondition;
+      resolve(shouldShowReviewPrompt);
+    });
+  });
+}
+
+function getReviewPromptHTML() {
+  return `
+    <div id="review-prompt" class="review-prompt">
+      <div class="review-content">
+        <h2>Enjoying BirdTab?</h2>
+        <p>Your review would mean the world to us and help other bird enthusiasts discover our extension!</p>
+        <div class="review-buttons">
+          <button id="leave-review" class="review-btn primary">Leave a Review</button>
+          <button id="maybe-later" class="review-btn secondary">Maybe Later</button>
+          <button id="no-thanks" class="review-btn tertiary">No, Thanks</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
 // Main function to update the page with new bird information
 async function updatePage() {
+  incrementNewTabCount();
+  await checkAndPrepareReviewPrompt();
   log('Updating page');
   showLoadingIndicator();
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
@@ -278,6 +345,11 @@ async function updatePage() {
     });
 
     updateMuteButton();
+    // After updating the page content, add the review prompt if needed
+    if (shouldShowReviewPrompt) {
+      document.body.insertAdjacentHTML('beforeend', getReviewPromptHTML());
+      addReviewPromptListeners();
+    }
 
     log('Page updated successfully');
   } catch (error) {
@@ -294,6 +366,32 @@ async function updatePage() {
       </div>
     `;
     document.getElementById('retry-button').addEventListener('click', updatePage);
+  }
+}
+
+function addReviewPromptListeners() {
+  document.getElementById('leave-review').addEventListener('click', () => {
+    chrome.tabs.create({url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn'});
+    chrome.storage.local.set({reviewLeft: true});
+    dismissPrompt();
+  });
+
+  document.getElementById('maybe-later').addEventListener('click', () => {
+    chrome.storage.local.set({lastReviewPrompt: Date.now()});
+    dismissPrompt();
+  });
+
+  document.getElementById('no-thanks').addEventListener('click', () => {
+    chrome.storage.local.set({reviewDismissed: true});
+    dismissPrompt();
+  });
+}
+
+function dismissPrompt() {
+  const prompt = document.getElementById('review-prompt');
+  if (prompt) {
+    prompt.style.opacity = '0';
+    setTimeout(() => prompt.remove(), 300);
   }
 }
 
@@ -350,5 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
   log('DOM content loaded, starting page update');
   updatePage();
 });
+
 
 log('Main script loaded');
