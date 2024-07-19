@@ -26,22 +26,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "commands": {
-    "refresh-bird": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+B",
-        "mac": "Command+Shift+B"
-      },
-      "description": "Refresh bird information"
-    },
-    "toggle-mute": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+M",
-        "mac": "Command+Shift+M"
-      },
-      "description": "Toggle audio mute"
-    }
-  },
   "web_accessible_resources": [
     {
       "resources": ["images/default-bird.webp", "images/birdtab-demo.png"],

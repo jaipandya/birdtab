@@ -200,11 +200,15 @@ function clearCache() {
   });
 }
 
-// Add this function to handle new tab creation
+// Modify this function to handle new tab creation
 function handleNewTab(tab) {
-  // Check if it's a new tab page or if the URL is not set yet
   if (lastNewTabId && lastNewTabId !== tab.id) {
-    chrome.tabs.sendMessage(lastNewTabId, { action: "pauseAudio" });
+    chrome.tabs.sendMessage(lastNewTabId, { action: "pauseAudio" }, response => {
+      if (chrome.runtime.lastError) {
+        // Handle the error silently
+        log(`Error sending message to tab ${lastNewTabId}: ${chrome.runtime.lastError.message}`);
+      }
+    });
   }
   lastNewTabId = tab.id;
 }
@@ -248,7 +252,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Command listener
+// This listener responds to keyboard commands defined in the manifest.
+// It checks for commands like "refresh-bird" and "toggleMute".
+// When a command is received, it queries the currently active tab in the current window.
+// Once the active tab is found, it sends a message to that tab with the appropriate action.
 chrome.commands.onCommand.addListener(command => {
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     chrome.tabs.sendMessage(tabs[0].id, { action: command === "refresh-bird" ? "refreshBird" : "toggleMute" });
@@ -284,11 +291,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason === 'install' || details.reason === 'update') {
     checkOnboarding();
   }
-});
-
-// This helps in tracking the number of new tabs opened by the user
-// which is used in the review prompt
-chrome.runtime.onInstalled.addListener(function(details) {
+  
+  // This helps in tracking the number of new tabs opened by the user
+  // which is used in the review prompt
   if (details.reason === "install") {
     chrome.storage.local.set({
       installTime: Date.now(),

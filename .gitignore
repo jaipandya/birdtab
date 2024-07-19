@@ -1,11 +1,13 @@
 node_modules/
+# Ignore the dist folder and its contents in the current directory only
 dist/
+dist/*
 *.log
 .DS_Store
 *.crx
 *.pem
 *.zip
-chrome/dev
-chrome/dev/*
-chrome/prod
-chrome/prod/*
+dev
+dev/*
+prod
+prod/*
