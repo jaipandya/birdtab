@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "background.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch",
-    "clean": "node -e \"require('rimraf').sync('dist'); require('rimraf').sync('dev');\""
+    "build:chrome": "webpack --mode production --env BROWSER=chrome",
+    "build:edge": "webpack --mode production --env BROWSER=edge",
+    "dev:chrome": "webpack --mode development --watch --env BROWSER=chrome",
+    "dev:edge": "webpack --mode development --watch --env BROWSER=edge",
+    "clean": "node -e \"require('rimraf').sync('dist-chrome'); require('rimraf').sync('dist-edge'); require('rimraf').sync('dev-chrome'); require('rimraf').sync('dev-edge');\""
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
     "css-minimizer-webpack-plugin": "^7.0.0",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
+    "replace-in-file-webpack-plugin": "^1.0.6",
     "rimraf": "^6.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",

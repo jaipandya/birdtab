@@ -1,0 +1,8 @@
+{
+  "search.exclude": {
+    "**/dev-chrome": true,
+    "**/dev-edge": true,
+    "**/dist-chrome": true,
+    "**/dist-edge": true
+  }
+}

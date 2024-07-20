@@ -252,16 +252,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// This listener responds to keyboard commands defined in the manifest.
-// It checks for commands like "refresh-bird" and "toggleMute".
-// When a command is received, it queries the currently active tab in the current window.
-// Once the active tab is found, it sends a message to that tab with the appropriate action.
-chrome.commands.onCommand.addListener(command => {
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-    chrome.tabs.sendMessage(tabs[0].id, { action: command === "refresh-bird" ? "refreshBird" : "toggleMute" });
-  });
-});
-
 // Storage change listener
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'sync' && changes.region) {

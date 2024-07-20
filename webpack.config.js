@@ -4,10 +4,15 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  
+  const isEdge = env.BROWSER === 'edge';
+  const outputDir = isProduction ? (isEdge ? 'dist-edge' : 'dist-chrome') : (isEdge ? 'dev-edge' : 'dev-chrome');
+
   return {
     mode: isProduction ? 'production' : 'development',
     entry: {
@@ -20,7 +25,7 @@ module.exports = (env, argv) => {
     },
     output: {
       filename: '[name].js',
-      path: path.resolve(__dirname, isProduction ? 'dist' : 'dev'),
+      path: path.resolve(__dirname, outputDir),
       clean: true,
     },
     devtool: isProduction ? false : 'inline-source-map',
@@ -50,6 +55,9 @@ module.exports = (env, argv) => {
           { from: 'src/icons', to: 'icons' },
         ],
       }),
+      new DefinePlugin({
+        'process.env.BROWSER': JSON.stringify(isEdge ? 'edge' : 'chrome'),
+      }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
       }),
@@ -68,6 +76,7 @@ module.exports = (env, argv) => {
         filename: 'onboarding.html',
         chunks: ['onboarding', 'shared'],
       }),
+      new ReplaceManifestPlugin(),
     ],
     module: {
       rules: [
@@ -95,3 +104,26 @@ module.exports = (env, argv) => {
     },
   };
 };
+
+class ReplaceManifestPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tapAsync('ReplaceManifestPlugin', (compilation, callback) => {
+      const outputDir = compilation.options.output.path;
+      const isEdge = compilation.options.mode === 'production' 
+        ? outputDir.endsWith('dist-edge')
+        : outputDir.endsWith('dev-edge');
+      console.log(`Replacing manifest for ${isEdge ? 'Edge' : 'Chrome'}`);
+      const replacePlugin = new ReplaceInFileWebpackPlugin([{
+        dir: outputDir,
+        files: ['manifest.json'],
+        rules: [{
+          search: /Chrome/g,
+          replace: isEdge ? 'Microsoft Edge' : 'Chrome'
+        }]
+      }]);
+
+      replacePlugin.apply(compiler);
+      callback();
+    });
+  }
+}

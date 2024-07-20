@@ -1,8 +1,17 @@
 node_modules/
 # Ignore the dist folder and its contents in the current directory only
-dist/
-dist/*
-*.log
+dist-edge/
+dist-edge/*
+dist-edge.log
+dist-chrome/
+dist-chrome/*
+dist-chrome.log
+dev-edge/
+dev-edge/*
+dev-edge.log
+dev-chrome/
+dev-chrome/*
+dev-chrome.log
 .DS_Store
 *.crx
 *.pem

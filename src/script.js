@@ -2,6 +2,7 @@ import './styles.css';
 import CONFIG from './config.js';
 
 
+
 let isMuted = false;
 let audio;
 let isPlaying = false;
@@ -371,7 +372,11 @@ async function updatePage() {
 
 function addReviewPromptListeners() {
   document.getElementById('leave-review').addEventListener('click', () => {
-    chrome.tabs.create({url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn'});
+    if (process.env.BROWSER === 'edge') {
+        chrome.tabs.create({url: 'https://microsoftedge.microsoft.com/addons/search/birdtab'});
+    } else {
+        chrome.tabs.create({url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn'});
+    }
     chrome.storage.local.set({reviewLeft: true});
     dismissPrompt();
   });
