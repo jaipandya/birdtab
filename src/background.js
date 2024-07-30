@@ -156,7 +156,7 @@ async function fetchBirdInfo(region) {
     let imageInfo = await getMacaulayImage(bird.speciesCode).catch(error => {
       log(`Error fetching image: ${error.message}`);
       return {
-        imageUrl: chrome.runtime.getURL('images/default-bird.webp'),
+        imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
         photographer: 'Unknown',
         photographerUrl: '#'
       };

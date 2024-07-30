@@ -90,7 +90,7 @@ const updatePlayButton = () => {
 };
 
 // Create audio player for bird calls
-function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
+function createAudioPlayer(mediaUrl, autoPlay) {
   log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
   audio = new Audio(mediaUrl);
   // Skip the first 4 seconds of the audio
@@ -268,10 +268,12 @@ async function updatePage() {
             <img src="images/svg/camera.svg" alt="Camera" width="16" height="16">
             <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
           </span>
+          ${birdInfo.mediaUrl ? `
           <span class="credit-item">
             <img src="images/svg/waveform.svg" alt="Audio" width="16" height="16">
             <a id="recordist" href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
           </span>
+          ` : ''}
           <span class="credit-item">
             via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
           </span>
@@ -281,9 +283,11 @@ async function updatePage() {
         <button id="refresh-button" class="icon-button">
           <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
         </button>
+        ${birdInfo.mediaUrl ? `
         <button id="mute-button" class="icon-button">
           <img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">
         </button>
+        ` : ''}
       </div>
     `;
 
@@ -293,6 +297,23 @@ async function updatePage() {
       log(`Audio URL found: ${birdInfo.mediaUrl}`);
       const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
       document.querySelector('.control-buttons').appendChild(audioPlayer);
+
+      chrome.storage.sync.get(['isMuted'], (result) => {
+        isMuted = result.isMuted || false;
+        updateMuteButton();
+        if (audio) audio.muted = isMuted;
+      });
+
+      document.getElementById('mute-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isMuted = !isMuted;
+        updateMuteButton();
+        if (audio) audio.muted = isMuted;
+        saveMuteState();
+      });
+
+      updateMuteButton();
     } else {
       log('No audio URL found in bird info');
     }
@@ -307,22 +328,6 @@ async function updatePage() {
       window.location.reload();
     });
 
-    chrome.storage.sync.get(['isMuted'], (result) => {
-      isMuted = result.isMuted || false;
-      updateMuteButton();
-      if (audio) audio.muted = isMuted;
-    });
-
-    document.getElementById('mute-button').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      isMuted = !isMuted;
-      updateMuteButton();
-      if (audio) audio.muted = isMuted;
-      saveMuteState();
-    });
-
-    updateMuteButton();
     // After updating the page content, add the review prompt if needed
     if (shouldShowReviewPrompt) {
       document.body.insertAdjacentHTML('beforeend', getReviewPromptHTML());
