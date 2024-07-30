@@ -12,11 +12,25 @@ function log(message) {
   }
 }
 
+// new async delay function to simulate a slow loading experience
+async function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Fetch image information from Macaulay Library
 async function getMacaulayImage(speciesCode) {
+
+  // simulate a slow loading experience
+  // await delay(4000);
+
   const cacheKey = `image_${speciesCode}`;
   const cachedData = await getCachedData(cacheKey);
-  if (cachedData) return cachedData;
+  if (cachedData) {
+    log(`[CACHE HIT]: ${speciesCode}`);
+    return cachedData;
+  } else {
+    log(`[CACHE MISS]: ${speciesCode}`);
+  }
 
   const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=photo`;
   const data = await fetchJson(url);
@@ -38,6 +52,10 @@ async function getMacaulayImage(speciesCode) {
 
 // Fetch audio information from Macaulay Library
 async function getMacaulayAudio(speciesCode) {
+  
+  // simulate a slow loading experience
+  // await delay(4000);
+
   const cacheKey = `audio_${speciesCode}`;
   const cachedData = await getCachedData(cacheKey);
   if (cachedData) return cachedData;
@@ -56,37 +74,6 @@ async function getMacaulayAudio(speciesCode) {
     return audioInfo;
   }
   return null;
-}
-
-// Fetch recent bird observations for a given region
-async function getRecentObservations(region) {
-  const cacheKey = `observations_${region}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    log(`Using cached observations for region: ${region}`);
-    return cachedData;
-  }
-
-  try {
-    const url = `${CONFIG.PROXY_SERVER_URL}/recent-observations?region=${region}`;
-    log(`Sending request to proxy server: ${url}`);
-    const data = await fetchJson(url);
-    log(`Parsed proxy server response: ${JSON.stringify(data)}`);
-
-    if (data.observations?.length > 0) {
-      await cacheData(cacheKey, data.observations, CONFIG.CACHE_DURATION.RECENT_OBSERVATIONS);
-      return data.observations;
-    }
-    throw new Error('No observations found in the response');
-  } catch (error) {
-    log(`Error fetching recent observations: ${error.message}`);
-    const cachedData = await getCachedData(cacheKey);
-    if (cachedData) {
-      log(`Using cached observations due to error: ${error.message}`);
-      return cachedData;
-    }
-    throw error;
-  }
 }
 
 // Helper function to fetch and parse JSON from a URL
@@ -124,14 +111,47 @@ function formatLocation(locName, subnational1Name, countryName) {
   return [locName, subnational1Name, countryName].filter(Boolean).join(', ');
 }
 
-// Main function to fetch bird information
+// Get birds by the specified region from redis
+async function getBirdsByRegion(region) {
+  const cacheKey = `birds_${region}`;
+  const cachedData = await getCachedData(cacheKey);
+  if (cachedData) {
+    log(`[CACHE HIT]: ${region}`);
+    return cachedData;
+  } else {
+    log(`[CACHE MISS]: ${region}`);
+  }
+
+  try {
+    const url = `${CONFIG.API_SERVER_URL}/birds-by-region?region=${region}`;
+    log(`Sending request to server: ${url}`);
+    const data = await fetchJson(url);
+    log(`Parsed server response: ${JSON.stringify(data)}`);
+
+    if (data.birds?.length > 0) {
+      await cacheData(cacheKey, data.birds, CONFIG.CACHE_DURATION.BIRDS_BY_REGION);
+      return data.birds;
+    }
+    throw new Error('No birds found in the response');
+  } catch (error) {
+    log(`Error fetching birds: ${error.message}`);
+    const cachedData = await getCachedData(cacheKey);
+    if (cachedData) {
+      log(`Using cached birds due to error: ${error.message}`);
+      return cachedData;
+    }
+    throw error;
+  }
+}
+
+// Update fetchBirdInfo function
 async function fetchBirdInfo(region) {
   log(`Fetching bird info for region: ${region}`);
 
   try {
-    const observations = await getRecentObservations(region);
-    const bird = observations[Math.floor(Math.random() * observations.length)];
-    log(`Bird found: ${bird.comName}`);
+    const birds = await getBirdsByRegion(region);
+    const bird = birds[Math.floor(Math.random() * birds.length)];
+    log(`Bird found: ${bird.primaryComName}`);
 
     let imageInfo = await getMacaulayImage(bird.speciesCode).catch(error => {
       log(`Error fetching image: ${error.message}`);
@@ -148,16 +168,18 @@ async function fetchBirdInfo(region) {
     });
 
     const birdInfo = {
-      name: bird.comName,
-      scientificName: bird.sciName,
-      location: formatLocation(bird.locName, bird.subnational1Name, bird.countryName),
+      name: bird.primaryComName,
+      scientificName: bird.scientificName,
+      location: region, // We don't have specific location data anymore
       ebirdUrl: `https://ebird.org/species/${bird.speciesCode}`,
-      imageUrl: imageInfo.imageUrl || imageInfo.mediaUrl,
+      imageUrl: imageInfo.imageUrl,
       photographer: imageInfo.photographer,
       photographerUrl: imageInfo.photographerUrl,
       mediaUrl: audioInfo?.mediaUrl,
       recordist: audioInfo?.recordist,
-      recordistUrl: audioInfo?.recordistUrl
+      recordistUrl: audioInfo?.recordistUrl,
+      description: bird.description,
+      conservationStatus: bird.conservationStatus
     };
 
     log(`Bird info compiled: ${JSON.stringify(birdInfo)}`);
@@ -194,7 +216,7 @@ async function preloadNextBird(region) {
 function clearCache() {
   chrome.storage.local.get(null, items => {
     const keysToRemove = Object.keys(items).filter(key =>
-      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('observations_')
+      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('birds_')
     );
     chrome.storage.local.remove(keysToRemove, () => log('Relevant cache keys cleared'));
   });

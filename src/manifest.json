@@ -25,11 +25,5 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["images/default-bird.webp", "images/birdtab-demo.png"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

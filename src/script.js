@@ -1,8 +1,6 @@
 import './styles.css';
 import CONFIG from './config.js';
 
-
-
 let isMuted = false;
 let audio;
 let isPlaying = false;
@@ -23,6 +21,16 @@ const loadingMessages = [
   "Peeking into nests...",
   "Filling bird feeders...",
   "Polishing binoculars...",
+  "Preening tail feathers...",
+  "Warming up chirps...",
+  "Adjusting wing spans...",
+  "Cleaning bird baths...",
+  "Preparing migration routes...",
+  "Sorting seeds and berries...",
+  "Practicing flight patterns...",
+  "Dusting off field guides...",
+  "Setting up bird houses...",
+  "Sharpening beaks...",
 ];
 
 // Get a random loading message
@@ -72,41 +80,12 @@ async function getBirdInfo() {
   });
 }
 
-// Generate a fun fact about the bird
-function generateFunFact(birdName) {
-  const funFacts = [
-    `Did you know? If ${birdName}s could take selfies, they'd always get their best angle!`,
-    `${birdName}s don't need GPS. They were into migration before it was cool.`,
-    `If ${birdName}s had thumbs, they'd definitely be into bird-watching humans.`,
-    `${birdName}s are nature's alarm clocks, except you can't hit snooze!`,
-    `${birdName}s: Proving that dinosaurs didn't all go extinct, they just got adorable!`,
-  ];
-  const fact = funFacts[Math.floor(Math.random() * funFacts.length)];
-  log(`Generated fun fact: ${fact}`);
-  return fact;
-}
-
-// Generate a description of the bird's location
-function generateLocationDescription(birdName, location) {
-  location = location || "an undisclosed location";
-  const descriptions = [
-    `A ${birdName} was recently spotted in ${location}. Lucky birders!`,
-    `Birders in ${location} were thrilled to see a ${birdName} in their area.`,
-    `${location} just got a visit from a charming ${birdName}.`,
-    `The skies of ${location} were graced by a ${birdName} not long ago.`,
-    `A ${birdName} decided to make ${location} its runway for a bird fashion show.`,
-  ];
-  const description = descriptions[Math.floor(Math.random() * descriptions.length)];
-  log(`Generated location description: ${description}`);
-  return description;
-}
-
 const updatePlayButton = () => {
   const playButton = document.getElementById('play-button');
   if (playButton) {
     playButton.innerHTML = isPlaying ?
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' :
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+      '<img src="images/svg/pause.svg" alt="Pause" width="24" height="24">' :
+      '<img src="images/svg/play.svg" alt="Play" width="24" height="24">';
   }
 };
 
@@ -149,8 +128,8 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
 
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
-  playButton.classList.add('play-button');
-  playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+  playButton.classList.add('icon-button', 'play-button');
+  playButton.innerHTML = '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
   playButton.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -168,26 +147,17 @@ function createAudioPlayer(mediaUrl, recordist, recordistUrl, autoPlay) {
     updatePlayButton();
   };
 
-  const audioCredit = document.createElement('p');
-  audioCredit.classList.add('audio-credit');
-  audioCredit.innerHTML = `Audio: <a href="${recordistUrl}" target="_blank">${recordist}</a> via Macaulay Library`;
-
-  const audioContainer = document.createElement('div');
-  audioContainer.classList.add('audio-container');
-  audioContainer.appendChild(playButton);
-  audioContainer.appendChild(audioCredit);
-
-  return audioContainer;
+  return playButton;
 }
 
 
 // Review section
 
 function incrementNewTabCount() {
-  chrome.storage.local.get(['newTabCount', 'installTime'], function(result) {
+  chrome.storage.local.get(['newTabCount', 'installTime'], function (result) {
     const now = Date.now();
     const installTime = result.installTime || now;
-    
+
     if (now - installTime <= 28 * 24 * 60 * 60 * 1000) {
       chrome.storage.local.set({
         newTabCount: (result.newTabCount || 0) + 1
@@ -198,7 +168,7 @@ function incrementNewTabCount() {
 
 function checkAndPrepareReviewPrompt() {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft'], function(result) {
+    chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft'], function (result) {
       const now = Date.now();
       const installTime = result.installTime || now;
       const newTabCount = result.newTabCount || 0;
@@ -242,6 +212,14 @@ function getReviewPromptHTML() {
   `;
 }
 
+// New function to set image source and show it when loaded
+function setImageSource(imageUrl) {
+  const img = document.querySelector('.background-image');
+  img.onload = function () {
+    img.classList.remove('hidden');
+  };
+  img.src = imageUrl;
+}
 
 // Main function to update the page with new bird information
 async function updatePage() {
@@ -254,74 +232,73 @@ async function updatePage() {
   try {
     const birdInfo = await getBirdInfo();
 
+    // add artificial delay of about 4 seconds to simulate a slow loading experience
+    // await new Promise(resolve => setTimeout(resolve, 4000));
+    
+    // force an error to test error handling
+    // throw new Error('Simulated error');
+
     clearInterval(loadingInterval);
     hideLoadingIndicator();
     log('Bird info received, updating page content');
 
-    document.body.innerHTML = `
-      <button id="refresh-button" class="icon-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 4v6h-6"></path>
-          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-        </svg>
-      </button>
-      <button id="mute-button" class="icon-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <line x1="23" y1="9" x2="17" y2="15"></line>
-          <line x1="17" y1="9" x2="23" y2="15"></line>
-        </svg>
-      </button>
+    const contentContainer = document.getElementById('content-container');
+    contentContainer.innerHTML = `
       <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-link">
         <img src="" alt="${birdInfo.name}" class="background-image">
       </a>
       <div class="info-panel">
-      <div class="info-panel-header">
-      <h1 id="bird-name"></h1>
-      <span id="scientific-name"></span>
+        <div class="external-links">
+          <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
+            <img src="images/svg/bing-default.svg" alt="Bing Search" width="24" height="24">
+          </a>
+          <a href="${birdInfo.ebirdUrl}" target="_blank" class="external-link ebird-link">
+            <img src="images/svg/ebird-default.svg" alt="eBird Page" width="24" height="24">
+          </a>
+        </div>
+        <div class="info-panel-header">
+          <h1 id="bird-name"></h1>
+          <span id="scientific-name"></span>
+          <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
+            <img src="images/svg/info.svg" alt="Info" width="16" height="16">
+          </span>
+        </div>
+        <p class="credits">
+          <span class="credit-item">
+            <img src="images/svg/camera.svg" alt="Camera" width="16" height="16">
+            <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+          </span>
+          <span class="credit-item">
+            <img src="images/svg/waveform.svg" alt="Audio" width="16" height="16">
+            <a id="recordist" href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+          </span>
+          <span class="credit-item">
+            via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+          </span>
+        </p>
       </div>
-      <p id="description"></p>
-      <p id="fun-fact"></p>
-      <p class="credits">
-      <svg class="camera-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <path
-          d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank"></a> 
-          via
-          <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
-      </p>
+      <div class="control-buttons">
+        <button id="refresh-button" class="icon-button">
+          <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
+        </button>
+        <button id="mute-button" class="icon-button">
+          <img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">
+        </button>
       </div>
     `;
-
-    // New function to set image source and show it when loaded
-    function setImageSource(imageUrl) {
-      const img = document.querySelector('.background-image');
-      img.onload = function () {
-        img.classList.remove('hidden');
-      };
-      img.src = imageUrl;
-    }
 
     setImageSource(birdInfo.imageUrl);
 
     if (birdInfo.mediaUrl) {
       log(`Audio URL found: ${birdInfo.mediaUrl}`);
       const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
-      document.body.appendChild(audioPlayer);
+      document.querySelector('.control-buttons').appendChild(audioPlayer);
     } else {
       log('No audio URL found in bird info');
     }
 
     document.getElementById('bird-name').textContent = birdInfo.name;
     document.getElementById('scientific-name').textContent = "(" + birdInfo.scientificName + ")";
-    document.getElementById('description').textContent = generateLocationDescription(birdInfo.name, birdInfo.location);
-    document.getElementById('fun-fact').textContent = generateFunFact(birdInfo.name);
     document.getElementById('photographer').textContent = birdInfo.photographer;
 
     document.getElementById('refresh-button').addEventListener('click', (e) => {
@@ -352,42 +329,54 @@ async function updatePage() {
       addReviewPromptListeners();
     }
 
+    setupExternalLinks();
+
     log('Page updated successfully');
   } catch (error) {
     clearInterval(loadingInterval);
     hideLoadingIndicator();
     console.error('Error updating page:', error);
     log(`Error updating page: ${error.message}`);
-    document.body.innerHTML = `
-      <div class="error">
-        <h1>Oops! Something went wrong</h1>
-        <p>We're having trouble fetching bird information. Please check your internet connection and try again.</p>
-        <p class="error-details">${error.message}</p>
-        <button id="retry-button">Retry</button>
-      </div>
-    `;
-    document.getElementById('retry-button').addEventListener('click', updatePage);
+    showErrorModal(error.message);
   }
+}
+
+function showErrorModal(errorMessage) {
+  const errorModal = document.getElementById('error-modal');
+  const errorDetails = errorModal.querySelector('.error-details');
+  errorDetails.textContent = `Error details: ${errorMessage}`;
+  errorModal.classList.remove('hidden');
+  
+  const retryButton = document.getElementById('retry-button');
+  // Remove existing event listeners to prevent multiple bindings
+  retryButton.removeEventListener('click', retryHandler);
+  retryButton.addEventListener('click', retryHandler);
+}
+
+function retryHandler() {
+  const errorModal = document.getElementById('error-modal');
+  errorModal.classList.add('hidden');
+  updatePage();
 }
 
 function addReviewPromptListeners() {
   document.getElementById('leave-review').addEventListener('click', () => {
     if (process.env.BROWSER === 'edge') {
-        chrome.tabs.create({url: 'https://microsoftedge.microsoft.com/addons/search/birdtab'});
+      chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
     } else {
-        chrome.tabs.create({url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn'});
+      chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn' });
     }
-    chrome.storage.local.set({reviewLeft: true});
+    chrome.storage.local.set({ reviewLeft: true });
     dismissPrompt();
   });
 
   document.getElementById('maybe-later').addEventListener('click', () => {
-    chrome.storage.local.set({lastReviewPrompt: Date.now()});
+    chrome.storage.local.set({ lastReviewPrompt: Date.now() });
     dismissPrompt();
   });
 
   document.getElementById('no-thanks').addEventListener('click', () => {
-    chrome.storage.local.set({reviewDismissed: true});
+    chrome.storage.local.set({ reviewDismissed: true });
     dismissPrompt();
   });
 }
@@ -405,15 +394,8 @@ function updateMuteButton() {
   const muteButton = document.getElementById('mute-button');
   if (muteButton) {
     muteButton.innerHTML = isMuted ?
-      `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <line x1="23" y1="9" x2="17" y2="15"></line>
-        <line x1="17" y1="9" x2="23" y2="15"></line>
-      </svg>` :
-      `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-      </svg>`;
+      `<img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">` :
+      `<img src="images/svg/sound-on.svg" alt="Mute" width="24" height="24">`;
   }
 }
 
@@ -452,7 +434,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 document.addEventListener('DOMContentLoaded', () => {
   log('DOM content loaded, starting page update');
   updatePage();
+  document.body.classList.add('loaded');
 });
 
+function setupExternalLinks() {
+  const bingLink = document.querySelector('.bing-link');
+  const ebirdLink = document.querySelector('.ebird-link');
+
+  bingLink.addEventListener('mouseenter', () => {
+    bingLink.querySelector('img').src = 'images/svg/bing-hover.svg';
+  });
+
+  bingLink.addEventListener('mouseleave', () => {
+    bingLink.querySelector('img').src = 'images/svg/bing-default.svg';
+  });
+
+  ebirdLink.addEventListener('mouseenter', () => {
+    ebirdLink.querySelector('img').src = 'images/svg/ebird-hover.svg';
+  });
+
+  ebirdLink.addEventListener('mouseleave', () => {
+    ebirdLink.querySelector('img').src = 'images/svg/ebird-default.svg';
+  });
+}
 
 log('Main script loaded');

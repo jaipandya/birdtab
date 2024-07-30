@@ -4,7 +4,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
 
@@ -50,7 +49,14 @@ module.exports = (env, argv) => {
     plugins: [
       new CopyPlugin({
         patterns: [
-          { from: 'src/manifest.json', to: 'manifest.json' },
+          { 
+            from: 'src/manifest.json', 
+            to: 'manifest.json',
+            transform(content, path) {
+              const isEdge = outputDir.includes('edge');
+              return content.toString().replace(/Chrome/g, isEdge ? 'Microsoft Edge' : 'Chrome');
+            },
+          },
           { from: 'src/images', to: 'images' },
           { from: 'src/icons', to: 'icons' },
         ],
@@ -76,7 +82,6 @@ module.exports = (env, argv) => {
         filename: 'onboarding.html',
         chunks: ['onboarding', 'shared'],
       }),
-      new ReplaceManifestPlugin(),
     ],
     module: {
       rules: [
@@ -104,26 +109,3 @@ module.exports = (env, argv) => {
     },
   };
 };
-
-class ReplaceManifestPlugin {
-  apply(compiler) {
-    compiler.hooks.afterEmit.tapAsync('ReplaceManifestPlugin', (compilation, callback) => {
-      const outputDir = compilation.options.output.path;
-      const isEdge = compilation.options.mode === 'production' 
-        ? outputDir.endsWith('dist-edge')
-        : outputDir.endsWith('dev-edge');
-      console.log(`Replacing manifest for ${isEdge ? 'Edge' : 'Chrome'}`);
-      const replacePlugin = new ReplaceInFileWebpackPlugin([{
-        dir: outputDir,
-        files: ['manifest.json'],
-        rules: [{
-          search: /Chrome/g,
-          replace: isEdge ? 'Microsoft Edge' : 'Chrome'
-        }]
-      }]);
-
-      replacePlugin.apply(compiler);
-      callback();
-    });
-  }
-}
