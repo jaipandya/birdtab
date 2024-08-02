@@ -295,7 +295,7 @@ async function updatePage() {
 
     if (birdInfo.mediaUrl) {
       log(`Audio URL found: ${birdInfo.mediaUrl}`);
-      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.recordist, birdInfo.recordistUrl, birdInfo.autoPlay);
+      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.autoPlay);
       document.querySelector('.control-buttons').appendChild(audioPlayer);
 
       chrome.storage.sync.get(['isMuted'], (result) => {
