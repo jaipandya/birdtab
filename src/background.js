@@ -318,9 +318,16 @@ chrome.runtime.onInstalled.addListener(function (details) {
       installTime: Date.now(),
       newTabCount: 0
     });
+
+    // Set the uninstall URL
+    chrome.runtime.setUninstallURL('https://tally.so/r/wzZyDR', () => {
+      if (chrome.runtime.lastError) {
+        log('Error setting uninstall URL: ' + chrome.runtime.lastError.message);
+      } else {
+        log('Uninstall URL set successfully');
+      }
+    });
   }
 });
-
-
 
 log('Background script loaded');
