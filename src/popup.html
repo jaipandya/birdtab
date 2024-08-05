@@ -7,13 +7,15 @@
 </head>
 <body>
     <h1>BirdTab Settings</h1>
+    
     <div class="setting">
         <label for="region">Birding Region</label>
-        <select id="region" title="Choose the region where you'd like to see birds from. Don't worry, you'll still see birds from around the world!">
+        <select id="region" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
             <!-- Options will be populated by JavaScript -->
         </select>
         <p class="help-text">This helps us show birds you might spot in your area.</p>
     </div>
+    
     <div class="setting">
         <div class="toggle-container">
             <span>Auto-play bird calls</span>
@@ -22,7 +24,18 @@
                 <span class="slider round"></span>
             </label>
         </div>
-        <p class="help-text">Immerse yourself in bird songs with each new tab.</p>
+        <p class="help-text">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
+    </div>
+    
+    <div class="setting">
+        <div class="toggle-container">
+            <span>Quiet Hours <span id="quiet-hours-text"></span></span>
+            <label class="switch" title="Enable to automatically turn off auto-play during quiet hours">
+                <input type="checkbox" id="quiet-hours">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <p class="help-text">Mute bird songs during specified quiet hours.</p>
     </div>
     
     <div id="save-notification" class="save-notification">Settings saved</div>

@@ -1,28 +1,37 @@
 import { populateRegionSelect } from './shared.js';
 import './popup.css';
+import { getQuietHoursText } from './quietHours.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   const regionSelect = document.getElementById('region');
   const autoPlayCheckbox = document.getElementById('auto-play');
+  const quietHoursCheckbox = document.getElementById('quiet-hours');
   const resetOnboardingButton = document.getElementById('reset-onboarding');
   const deleteCacheButton = document.getElementById('delete-cache');
   const saveNotification = document.getElementById('save-notification');
+  const quietHoursTextElement = document.getElementById('quiet-hours-text');
 
   // Populate the region select
   populateRegionSelect(regionSelect);
 
   // Load current settings
-  chrome.storage.sync.get(['region', 'autoPlay'], function (result) {
+  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours'], function (result) {
     regionSelect.value = result.region || 'US';
     autoPlayCheckbox.checked = result.autoPlay || false;
+    quietHoursCheckbox.checked = result.quietHours || false;
   });
+
+  // Update quiet hours text
+  quietHoursTextElement.textContent = `(${getQuietHoursText()})`;
 
   // Function to save settings
   function saveSettings() {
     const settings = {
       region: regionSelect.value,
-      autoPlay: autoPlayCheckbox.checked
+      autoPlay: autoPlayCheckbox.checked,
+      quietHours: quietHoursCheckbox.checked
     };
+    
     chrome.storage.sync.set(settings, function () {
       showSaveNotification();
     });
@@ -39,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Add event listeners for auto-save
   regionSelect.addEventListener('change', saveSettings);
   autoPlayCheckbox.addEventListener('change', saveSettings);
+  quietHoursCheckbox.addEventListener('change', saveSettings);
 
   // Reset onboarding
   resetOnboardingButton.addEventListener('click', function () {
@@ -53,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Cache deleted!');
     });
   });
+
   if (process.env.NODE_ENV === 'development') {
     document.getElementById('debug-section').style.display = 'block';
   }

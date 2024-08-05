@@ -23,7 +23,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  opacity: 0;
+  opacity: 0.4;
   transition: opacity 0.3s ease;
 }
 
@@ -164,6 +164,10 @@ body.loaded {
   height: 40px;
   margin-bottom: 20px;
   filter: invert(0.5);
+}
+
+.invert {
+  filter: invert(0.9);
 }
 
 .error-content h2 {

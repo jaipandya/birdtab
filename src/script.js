@@ -1,10 +1,13 @@
 import './styles.css';
 import CONFIG from './config.js';
+import { getAutoPlayState } from './quietHours.js';
+import { isQuietHoursActive } from './quietHours.js';
 
 let isMuted = false;
 let audio;
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
+let birdInfo;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -80,36 +83,126 @@ async function getBirdInfo() {
   });
 }
 
-const updatePlayButton = () => {
+// Update play/pause button UI
+const updatePlayPauseButton = () => {
   const playButton = document.getElementById('play-button');
   if (playButton) {
     playButton.innerHTML = isPlaying ?
       '<img src="images/svg/pause.svg" alt="Pause" width="24" height="24">' :
-      '<img src="images/svg/play.svg" alt="Play" width="24" height="24">';
+      '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
   }
 };
 
+// Initialize audio based on auto-play settings
+async function initializeAudio() {
+  const isQuietHour = await isQuietHoursActive();
+  const shouldAutoPlay = await getAutoPlayState();
+
+  if (isQuietHour) {
+    hideAudioControls();
+    showQuietHoursIcon();
+  } else {
+    if (birdInfo && birdInfo.mediaUrl) {
+      showAudioControls();
+      if (shouldAutoPlay) {
+        await playAudio();
+      } else {
+        loadAudioWithoutPlaying();
+      }
+    }
+  }
+}
+
+function hideAudioControls() {
+  const playButton = document.getElementById('play-button');
+  const muteButton = document.getElementById('mute-button');
+  if (playButton) playButton.style.display = 'none';
+  if (muteButton) muteButton.style.display = 'none';
+}
+
+function showAudioControls() {
+  const playButton = document.getElementById('play-button');
+  const muteButton = document.getElementById('mute-button');
+  if (playButton) playButton.style.display = 'inline-flex';
+  if (muteButton) muteButton.style.display = 'inline-flex';
+}
+
+function showQuietHoursIcon() {
+  const button = document.createElement('button');
+  button.id = 'quiet-hours-button';
+  button.className = 'icon-button';
+  button.innerHTML = '<img src="images/svg/moon.svg" class="invert" alt="Quiet Hours" width="24" height="24">';
+  button.title = 'Quiet Hours Active';
+
+  document.querySelector('.control-buttons').appendChild(button);
+}
+
+// Load audio without playing it
+function loadAudioWithoutPlaying() {
+  if (audio) {
+    audio.pause();
+    audio = null;
+  }
+  audio = new Audio(birdInfo.mediaUrl);
+  audio.load();
+  updatePlayPauseButton();
+}
+
 // Create audio player for bird calls
-function createAudioPlayer(mediaUrl, autoPlay) {
-  log(`Creating audio player with URL: ${mediaUrl}, auto-play: ${autoPlay}`);
+function createAudioPlayer(mediaUrl) {
+  if (!mediaUrl) {
+    log('No media URL provided, skipping audio player creation');
+    return null;
+  }
+
+  log(`Creating audio player with URL: ${mediaUrl}`);
   audio = new Audio(mediaUrl);
   // Skip the first 4 seconds of the audio
   // because it's usually recordist commentary
   audio.currentTime = 4;
   audio.muted = isMuted;
 
-  const togglePlay = () => {
-    if (isPlaying) {
-      pauseAudio();
-    } else {
-      playAudio();
-    }
+  const playButton = document.createElement('button');
+  playButton.id = 'play-button';
+  playButton.classList.add('icon-button', 'play-button');
+  playButton.innerHTML = '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
+  playButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await togglePlay();
+  });
+
+  audio.onended = () => {
+    isPlaying = false;
+    updatePlayPauseButton();
   };
 
-  const playAudio = () => {
-    audio.play();
+  return playButton;
+}
+
+// Toggle play/pause
+async function togglePlay() {
+  if (isPlaying) {
+    pauseAudio();
+  } else {
+    await playAudio();
+  }
+}
+
+// Play audio
+async function playAudio() {
+  if (!birdInfo || !birdInfo.mediaUrl) {
+    log('No media URL available, cannot play audio');
+    return;
+  }
+
+  if (!audio) {
+    audio = new Audio(birdInfo.mediaUrl);
+  }
+  try {
+    await audio.play();
     isPlaying = true;
-    updatePlayButton();
+    updatePlayPauseButton();
     audio.volume = 0;
     let fadeAudioIn = setInterval(function () {
       if (audio.volume < 0.9) {
@@ -118,38 +211,19 @@ function createAudioPlayer(mediaUrl, autoPlay) {
         clearInterval(fadeAudioIn);
       }
     }, 200);
-  };
-
-  const pauseAudio = () => {
-    audio.pause();
-    isPlaying = false;
-    updatePlayButton();
-  };
-
-  const playButton = document.createElement('button');
-  playButton.id = 'play-button';
-  playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
-  playButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    togglePlay();
-  });
-
-  audio.oncanplaythrough = () => {
-    if (autoPlay) {
-      playAudio();
-    }
-  };
-
-  audio.onended = () => {
-    isPlaying = false;
-    updatePlayButton();
-  };
-
-  return playButton;
+  } catch (error) {
+    console.error('Error playing audio:', error);
+  }
 }
 
+// Pause audio
+function pauseAudio() {
+  if (audio) {
+    audio.pause();
+    isPlaying = false;
+    updatePlayPauseButton();
+  }
+}
 
 // Review section
 
@@ -222,7 +296,7 @@ function setImageSource(imageUrl) {
 }
 
 // Main function to update the page with new bird information
-async function updatePage() {
+async function initializePage() {
   incrementNewTabCount();
   await checkAndPrepareReviewPrompt();
   log('Updating page');
@@ -230,7 +304,7 @@ async function updatePage() {
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
-    const birdInfo = await getBirdInfo();
+    birdInfo = await getBirdInfo();
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
@@ -240,6 +314,10 @@ async function updatePage() {
 
     clearInterval(loadingInterval);
     hideLoadingIndicator();
+
+    // add a class to the body to trigger the fade-in animation
+    document.body.classList.add('loaded');
+
     log('Bird info received, updating page content');
 
     const contentContainer = document.getElementById('content-container');
@@ -295,8 +373,10 @@ async function updatePage() {
 
     if (birdInfo.mediaUrl) {
       log(`Audio URL found: ${birdInfo.mediaUrl}`);
-      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl, birdInfo.autoPlay);
-      document.querySelector('.control-buttons').appendChild(audioPlayer);
+      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
+      if (audioPlayer) {
+        document.querySelector('.control-buttons').appendChild(audioPlayer);
+      }
 
       chrome.storage.sync.get(['isMuted'], (result) => {
         isMuted = result.isMuted || false;
@@ -316,6 +396,7 @@ async function updatePage() {
       updateMuteButton();
     } else {
       log('No audio URL found in bird info');
+      hideAudioControls();
     }
 
     document.getElementById('bird-name').textContent = birdInfo.name;
@@ -335,6 +416,7 @@ async function updatePage() {
     }
 
     setupExternalLinks();
+    await initializeAudio();
 
     log('Page updated successfully');
   } catch (error) {
@@ -361,7 +443,7 @@ function showErrorModal(errorMessage) {
 function retryHandler() {
   const errorModal = document.getElementById('error-modal');
   errorModal.classList.add('hidden');
-  updatePage();
+  initializePage();
 }
 
 function addReviewPromptListeners() {
@@ -411,20 +493,8 @@ function saveMuteState() {
   });
 }
 
-// Add this function to handle messages from the background script
-function handleBackgroundMessages(request, sender, sendResponse) {
-  if (request.action === "pauseAudio" && audio && !audio.paused) {
-    audio.pause();
-    isPlaying = false;
-    updatePlayButton();
-  }
-}
-
-// Add this line to start listening for messages
-chrome.runtime.onMessage.addListener(handleBackgroundMessages);
-
-// Listen for messages from background script
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+// Combined message listener to handle all background messages
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
     location.reload();
   } else if (request.action === "toggleMute") {
@@ -432,14 +502,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     updateMuteButton();
     if (audio) audio.muted = isMuted;
     saveMuteState();
+  } else if (request.action === "quietHoursChanged") {
+    if (request.quietHoursEnabled) {
+      const isQuietHour = await isQuietHoursActive();
+      if (isQuietHour && isPlaying) {
+        pauseAudio();
+      }
+    }
+  } else if (request.action === "pauseAudio" && audio && !audio.paused) {
+    pauseAudio();
   }
 });
 
 // Initialize page when DOM content is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   log('DOM content loaded, starting page update');
-  updatePage();
-  document.body.classList.add('loaded');
+  await initializePage();
 });
 
 function setupExternalLinks() {

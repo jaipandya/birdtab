@@ -237,3 +237,8 @@ input:checked + .slider:before {
 .save-notification.show {
   opacity: 1;
 }
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
