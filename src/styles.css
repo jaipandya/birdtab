@@ -337,7 +337,7 @@ p {
   flex-shrink: 0;
 }
 
-#photographer {
+#photographer, #recordist {
   font-weight: bold;
 }
 
