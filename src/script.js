@@ -514,12 +514,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
 });
 
-// Initialize page when DOM content is loaded
-document.addEventListener('DOMContentLoaded', async () => {
-  log('DOM content loaded, starting page update');
-  await initializePage();
-});
-
 function setupExternalLinks() {
   const bingLink = document.querySelector('.bing-link');
   const ebirdLink = document.querySelector('.ebird-link');
@@ -541,4 +535,76 @@ function setupExternalLinks() {
   });
 }
 
+function initializeSearch() {
+  const searchContainer = document.getElementById('search-container');
+  
+  chrome.permissions.contains({
+    permissions: ['search']
+  }, (hasPermission) => {
+    if (hasPermission) {
+      chrome.storage.sync.get(['searchEnabled'], (result) => {
+        if (result.searchEnabled) {
+          searchContainer.style.display = 'block';
+          setupSearchListeners();
+        } else {
+          searchContainer.style.display = 'none';
+        }
+      });
+    } else {
+      searchContainer.style.display = 'none';
+    }
+  });
+}
+
+function setupSearchListeners() {
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (query) {
+      // Use Chrome's search API
+      chrome.search.query({
+        text: query,
+        disposition: 'CURRENT_TAB'
+      });
+    }
+  });
+  // Add keyboard shortcut to focus search (Ctrl/Cmd + K)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
+
+  // Clear search on Escape key
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      searchInput.blur();
+    }
+  });
+}
+
+// Initialize page when DOM content is loaded
+document.addEventListener('DOMContentLoaded', async () => {
+  log('DOM content loaded, starting page update');
+  await initializePage();
+  initializeSearch();
+});
+
 log('Main script loaded');
+
+// Add storage change listener
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'sync' && changes.searchEnabled) {
+    const searchContainer = document.getElementById('search-container');
+    searchContainer.style.display = changes.searchEnabled.newValue ? 'block' : 'none';
+    
+    if (changes.searchEnabled.newValue) {
+      setupSearchListeners();
+    }
+  }
+});

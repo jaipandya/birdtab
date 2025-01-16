@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const deleteCacheButton = document.getElementById('delete-cache');
   const saveNotification = document.getElementById('save-notification');
   const quietHoursTextElement = document.getElementById('quiet-hours-text');
+  const enableSearchCheckbox = document.getElementById('enable-search');
 
   // Populate the region select
   populateRegionSelect(regionSelect);
@@ -62,6 +63,16 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.local.remove(['cachedBirdInfo', 'cacheDate'], function () {
       alert('Cache deleted!');
     });
+  });
+
+  // Check search enabled state
+  chrome.storage.sync.get(['searchEnabled'], (result) => {
+    enableSearchCheckbox.checked = result.searchEnabled || false;
+  });
+
+  // Handle search toggle
+  enableSearchCheckbox.addEventListener('change', function() {
+    chrome.storage.sync.set({ searchEnabled: this.checked });
   });
 
   if (process.env.NODE_ENV === 'development') {
