@@ -72,7 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Handle search toggle
   enableSearchCheckbox.addEventListener('change', function() {
-    chrome.storage.sync.set({ searchEnabled: this.checked });
+    chrome.storage.sync.set({ searchEnabled: this.checked }, function() {
+      showSaveNotification();
+    });
   });
 
   if (process.env.NODE_ENV === 'development') {

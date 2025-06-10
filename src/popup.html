@@ -18,34 +18,40 @@
     
     <div class="setting">
         <div class="toggle-container">
-            <span>Auto-play bird calls</span>
+            <div class="toggle-text">
+                <span>Auto-play bird calls</span>
+                <p class="help-text">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
+            </div>
             <label class="switch" title="Enable to automatically play bird calls when you open a new tab">
                 <input type="checkbox" id="auto-play">
                 <span class="slider round"></span>
             </label>
         </div>
-        <p class="help-text">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
     </div>
     
     <div class="setting">
         <div class="toggle-container">
-            <span>Quiet Hours <span id="quiet-hours-text"></span></span>
+            <div class="toggle-text">
+                <span>Quiet Hours <span id="quiet-hours-text"></span></span>
+                <p class="help-text">Mute bird songs during specified quiet hours.</p>
+            </div>
             <label class="switch" title="Enable to automatically turn off auto-play during quiet hours">
                 <input type="checkbox" id="quiet-hours">
                 <span class="slider round"></span>
             </label>
         </div>
-        <p class="help-text">Mute bird songs during specified quiet hours.</p>
     </div>
     <div class="setting">
         <div class="toggle-container">
-            <span>Display Search Box</span>
+            <div class="toggle-text">
+                <span>Display Search Box</span>
+                <p class="help-text">Add a convenient search box to your new tab page.</p>
+            </div>
             <label class="switch" title="Show a search box in new tabs">
                 <input type="checkbox" id="enable-search">
                 <span class="slider round"></span>
             </label>
         </div>
-        <p class="help-text">Add a convenient search box to your new tab page.</p>
     </div>
     
     <div id="save-notification" class="save-notification">Settings saved</div>

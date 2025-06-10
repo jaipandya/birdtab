@@ -2,6 +2,7 @@ import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
+import SettingsModal from './settingsModal.js';
 
 let isMuted = false;
 let audio;
@@ -358,6 +359,9 @@ async function initializePage() {
         </p>
       </div>
       <div class="control-buttons">
+        <button id="settings-button" class="icon-button" aria-label="Open settings">
+          <img src="images/svg/settings.svg" alt="Settings" width="24" height="24">
+        </button>
         <button id="refresh-button" class="icon-button">
           <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
         </button>
@@ -417,6 +421,15 @@ async function initializePage() {
 
     setupExternalLinks();
     await initializeAudio();
+    
+    // Initialize settings modal after DOM elements are available
+    requestAnimationFrame(() => {
+      try {
+        new SettingsModal();
+      } catch (error) {
+        console.error('Failed to initialize settings modal:', error);
+      }
+    });
 
     log('Page updated successfully');
   } catch (error) {
