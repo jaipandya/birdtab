@@ -1,11 +1,15 @@
 {
   "manifest_version": 3,
   "name": "BirdTab - Discover Bird Pictures & Songs in New Tabs",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Enhance your Chrome new tab with beautiful bird photos and soothing sounds. Enjoy a refreshing bird background every time.",
   "permissions": [
     "storage",
     "search"
+  ],
+  "optional_permissions": [
+    "topSites",
+    "favicon"
   ],
   "host_permissions": [
     "https://api.birdtab.app/*",

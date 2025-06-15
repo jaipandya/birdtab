@@ -4,6 +4,15 @@ import { getQuietHoursText } from './quietHours.js';
 // Module-level singleton instance
 let instance = null;
 
+// Helper function for logging messages (only in development)
+function log(message) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`[BirdTab Settings]: ${message}`);
+  }
+}
+
+
+
 /**
  * Settings modal component for managing user preferences
  * Provides a consistent UI for settings across the extension
@@ -112,11 +121,11 @@ class SettingsModal {
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span>Display Search Box</span>
-                  <p class="help-text">Add a convenient search box to your new tab page.</p>
+                  <span>Quick Access Features</span>
+                  <p class="help-text" id="modal-productivity-help">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
                 </div>
-                <label class="switch" title="Show a search box in new tabs">
-                  <input type="checkbox" id="modal-enable-search">
+                <label class="switch" title="Show search box, most visited sites, and allow custom shortcuts">
+                  <input type="checkbox" id="modal-enable-productivity" aria-describedby="modal-productivity-help">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -139,7 +148,7 @@ class SettingsModal {
     this.regionSelect = document.getElementById('modal-region');
     this.autoPlayCheckbox = document.getElementById('modal-auto-play');
     this.quietHoursCheckbox = document.getElementById('modal-quiet-hours');
-    this.enableSearchCheckbox = document.getElementById('modal-enable-search');
+    this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
     // Populate the region select
@@ -215,8 +224,11 @@ class SettingsModal {
     if (this.quietHoursCheckbox) {
       this.quietHoursCheckbox.addEventListener('change', () => this.saveSettings());
     }
-    if (this.enableSearchCheckbox) {
-      this.enableSearchCheckbox.addEventListener('change', () => this.saveSettings());
+    // Special handler for productivity features with permission request
+    if (this.enableProductivityCheckbox) {
+      this.enableProductivityCheckbox.addEventListener('change', async (e) => {
+        await this.handleProductivityToggle(e.target.checked);
+      });
     }
   }
 
@@ -271,11 +283,7 @@ class SettingsModal {
       return;
     }
     
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'searchEnabled'], (result) => {
-      if (chrome.runtime.lastError) {
-        console.error('Error loading settings:', chrome.runtime.lastError);
-        return;
-      }
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled'], (result) => {
       
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
@@ -286,8 +294,8 @@ class SettingsModal {
       if (this.quietHoursCheckbox) {
         this.quietHoursCheckbox.checked = result.quietHours || false;
       }
-      if (this.enableSearchCheckbox) {
-        this.enableSearchCheckbox.checked = result.searchEnabled || false;
+      if (this.enableProductivityCheckbox) {
+        this.enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
       }
     });
   }
@@ -309,18 +317,50 @@ class SettingsModal {
     if (this.quietHoursCheckbox) {
       settings.quietHours = this.quietHoursCheckbox.checked;
     }
-    if (this.enableSearchCheckbox) {
-      settings.searchEnabled = this.enableSearchCheckbox.checked;
+    if (this.enableProductivityCheckbox) {
+      settings.quickAccessEnabled = this.enableProductivityCheckbox.checked;
     }
     
     chrome.storage.sync.set(settings, () => {
-      if (chrome.runtime.lastError) {
-        console.error('Error saving settings:', chrome.runtime.lastError);
-        return;
-      }
       // Settings saved successfully - show notification
       this.showSaveNotification();
     });
+  }
+
+  async handleProductivityToggle(isEnabled) {
+    try {
+      if (isEnabled) {
+        // Request permissions when enabling productivity features
+        const granted = await chrome.permissions.request({
+          permissions: ['topSites', 'favicon']
+        });
+        
+        if (granted) {
+          // Permission granted, save the setting
+          this.saveSettings();
+        } else {
+          // Permission denied, revert the toggle
+          this.enableProductivityCheckbox.checked = false;
+          alert('🔒 Permission Required\n\nTo use productivity features (search box, most visited sites, and custom shortcuts), BirdTab needs access to your browser\'s top sites.\n\nYou can enable this anytime by toggling the setting again.');
+        }
+      } else {
+        // Save settings first, then try to remove permissions
+        this.saveSettings();
+        
+        // Try to remove permissions (non-blocking, failure is OK)
+        try {
+          await chrome.permissions.remove({
+            permissions: ['topSites', 'favicon']
+          });
+        } catch (error) {
+          log('Could not remove permissions (this is usually harmless): ' + error.message);
+        }
+      }
+    } catch (error) {
+      log('Error with productivity toggle: ' + error.message);
+      this.enableProductivityCheckbox.checked = !isEnabled; // Revert on error
+      alert('⚠️ Something went wrong\n\nWe couldn\'t update your productivity settings. This might be a temporary issue.\n\nPlease try again in a moment. If the problem continues, try restarting your browser.');
+    }
   }
 
   showSaveNotification() {
@@ -338,10 +378,10 @@ class SettingsModal {
     // Add to document
     document.body.appendChild(notification);
     
-    // Show notification with animation
+    // Show notification with animation after processing delay
     setTimeout(() => {
       notification.classList.add('show');
-    }, 10);
+    }, 200);
     
     // Hide and remove notification after 2 seconds
     setTimeout(() => {

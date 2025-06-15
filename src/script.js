@@ -3,6 +3,7 @@ import CONFIG from './config.js';
 import { getAutoPlayState } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
 import SettingsModal from './settingsModal.js';
+import TopSites from './topSites.js';
 
 let isMuted = false;
 let audio;
@@ -551,21 +552,18 @@ function setupExternalLinks() {
 function initializeSearch() {
   const searchContainer = document.getElementById('search-container');
   
-  chrome.permissions.contains({
-    permissions: ['search']
-  }, (hasPermission) => {
-    if (hasPermission) {
-      chrome.storage.sync.get(['searchEnabled'], (result) => {
-        if (result.searchEnabled) {
-          searchContainer.style.display = 'block';
-          setupSearchListeners();
-        } else {
-          searchContainer.style.display = 'none';
-        }
-      });
-    } else {
-      searchContainer.style.display = 'none';
-    }
+  // Check settings synchronously first to show/hide immediately
+  chrome.storage.sync.get(['quickAccessEnabled'], (result) => {
+    chrome.permissions.contains({
+      permissions: ['search']
+    }, (hasPermission) => {
+      if (hasPermission && result.quickAccessEnabled) {
+        searchContainer.style.display = 'block';
+        setupSearchListeners();
+      } else {
+        searchContainer.style.display = 'none';
+      }
+    });
   });
 }
 
@@ -601,23 +599,74 @@ function setupSearchListeners() {
   });
 }
 
+// Check if onboarding is complete before initializing
+function checkOnboardingStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['onboardingComplete'], (result) => {
+      if (!result.onboardingComplete) {
+        // Redirect to onboarding
+        window.location.href = 'onboarding.html';
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
+
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
-  log('DOM content loaded, starting page update');
-  await initializePage();
+  log('DOM content loaded, checking onboarding status');
+  
+  // Check if onboarding is complete first
+  const shouldContinue = await checkOnboardingStatus();
+  if (!shouldContinue) {
+    log('Redirecting to onboarding');
+    return;
+  }
+  
+  log('Onboarding complete, initializing UI components first');
+  
+  // Initialize search box and top sites immediately for better UX
   initializeSearch();
+  
+  // Initialize top sites
+  try {
+    window.topSitesInstance = new TopSites();
+    await window.topSitesInstance.initialize();
+  } catch (error) {
+    console.error('Failed to initialize top sites:', error);
+  }
+  
+  // Start page update after UI elements are initialized
+  log('Starting page update');
+  await initializePage();
 });
 
 log('Main script loaded');
 
 // Add storage change listener
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === 'sync' && changes.searchEnabled) {
-    const searchContainer = document.getElementById('search-container');
-    searchContainer.style.display = changes.searchEnabled.newValue ? 'block' : 'none';
+  if (namespace === 'sync') {
+    // Handle quick access toggle
+    if (changes.quickAccessEnabled) {
+      const searchContainer = document.getElementById('search-container');
+      searchContainer.style.display = changes.quickAccessEnabled.newValue ? 'block' : 'none';
+      
+      if (changes.quickAccessEnabled.newValue) {
+        setupSearchListeners();
+      }
+    }
     
-    if (changes.searchEnabled.newValue) {
-      setupSearchListeners();
+    // Handle top sites and shortcuts toggle - update existing TopSites instance
+    if (changes.quickAccessEnabled || changes.customShortcuts) {
+      if (window.topSitesInstance) {
+        try {
+          window.topSitesInstance.updateVisibility();
+        } catch (error) {
+          console.error('Failed to update top sites:', error);
+        }
+      }
     }
   }
 });

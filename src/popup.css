@@ -283,10 +283,12 @@ input:checked + .slider:before {
   z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  pointer-events: none;
 }
 
 .save-notification.show {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .save-notification::before {

@@ -573,18 +573,24 @@ p {
   width: 100%;
   padding: 16px 48px 16px 20px;
   font-size: 16px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: none;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
 }
 
 #search-input:focus {
-  background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(255, 255, 255, 0.15);
   outline: none;
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .search-button {
@@ -596,12 +602,406 @@ p {
   border: none;
   cursor: pointer;
   padding: 8px;
-  opacity: 0.7;
+  opacity: 0.9;
   transition: opacity 0.3s ease;
 }
 
 .search-button:hover {
   opacity: 1;
+}
+
+.search-button img {
+  filter: brightness(0) invert(1);
+}
+
+/* Top Sites Container Styles */
+.top-sites-container {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  width: 90%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.top-sites-container.hidden {
+  display: none;
+}
+
+.top-sites-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  justify-content: center;
+  max-width: 700px;
+}
+
+.top-site {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.top-site .remove-shortcut {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid white;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.top-site .remove-shortcut:hover {
+  background: rgba(255, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.top-site.custom-shortcut:hover .remove-shortcut {
+  display: flex;
+}
+
+.top-site-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  min-width: 80px;
+  width: 100%;
+  box-sizing: border-box;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.top-site-link:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.top-site-favicon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.top-site-favicon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.top-site-favicon svg {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.top-site-title {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  opacity: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments for top sites */
+@media (max-width: 768px) {
+  .top-sites-container {
+    width: 95%;
+    margin-top: 15px;
+  }
+  
+  .top-sites-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  .top-site-link {
+    padding: 10px;
+    min-width: 70px;
+  }
+  
+  .top-site-favicon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 6px;
+  }
+  
+  .top-site-title {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-sites-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  
+  .top-site-link {
+    padding: 8px;
+    min-width: 60px;
+  }
+  
+  .top-site-favicon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .top-site-title {
+    font-size: 10px;
+  }
+}
+
+/* Context Menu Styles */
+.top-site-context-menu {
+  position: fixed;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px 0;
+  z-index: 10000;
+  min-width: 120px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.context-menu-item {
+  padding: 8px 12px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.context-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Shortcut Indicator */
+.top-site.custom-shortcut .top-site-link {
+  border-color: rgba(52, 199, 89, 0.3);
+}
+
+.top-site.custom-shortcut .top-site-link:hover {
+  border-color: rgba(52, 199, 89, 0.5);
+}
+
+
+/* Add shortcut button */
+.add-shortcut-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  min-width: 80px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  min-height: 80px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.add-shortcut-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.add-shortcut-btn .plus-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.add-shortcut-btn .add-text {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Shortcut Modal Styles */
+.shortcut-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.shortcut-modal-content {
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: modalContentSlideIn 0.2s ease;
+}
+
+.shortcut-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shortcut-modal-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.shortcut-modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.shortcut-modal-close:hover {
+  color: white;
+}
+
+.shortcut-modal-body {
+  padding: 20px 24px;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+.input-group label {
+  display: block;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  text-align: left;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #34C759;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.error-message {
+  color: #FF453A;
+  font-size: 12px;
+  margin-top: 4px;
+  min-height: 14px;
+  text-align: left;
+}
+
+.shortcut-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shortcut-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.shortcut-btn.primary {
+  background: #34C759;
+  color: white;
+}
+
+.shortcut-btn.primary:hover {
+  background: #2FB653;
+}
+
+.shortcut-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shortcut-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* CSS Custom Properties for Settings Modal */
