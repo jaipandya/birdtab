@@ -1,0 +1,438 @@
+{
+  "extensionName": {
+    "message": "BirdTab - اكتشف صور وأصوات الطيور في علامات التبويب الجديدة",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "حسّن تبويب جديد في Chrome بصور الطيور الجميلة والأصوات المهدئة. استمتع بخلفية منعشة للطيور في كل مرة.",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "معلومات الطائر",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "معلومات",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "كاميرا",
+    "description": "Alt text for camera icon"
+  },
+  "photographer": {
+    "message": "المصور",
+    "description": "Label for photographer credit"
+  },
+  "audioAlt": {
+    "message": "صوت",
+    "description": "Alt text for audio waveform icon"
+  },
+  "recordist": {
+    "message": "المسجل",
+    "description": "Label for audio recordist credit"
+  },
+  "viaText": {
+    "message": "عبر",
+    "description": "Text before Macaulay Library link"
+  },
+  "macaulayLibrary": {
+    "message": "مكتبة ماكولاي",
+    "description": "Name of Macaulay Library"
+  },
+  "openSettings": {
+    "message": "فتح الإعدادات",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "الإعدادات",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "تحديث",
+    "description": "Alt text for refresh icon"
+  },
+  "muteAlt": {
+    "message": "كتم الصوت",
+    "description": "Alt text for mute icon"
+  },
+  "errorAlt": {
+    "message": "خطأ",
+    "description": "Alt text for error icon"
+  },
+  "errorTitle": {
+    "message": "همم، يبدو أن الطيور خجولة اليوم",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "نواجه بعض المتاعب في العثور على أصدقائنا المريشين. لا تقلق، عادة ما يكون هذا مجرد رفرفة لحظية!",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "حاول مرة أخرى",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "تفاصيل الخطأ",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "البحث في الويب...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "بحث",
+    "description": "Alt text for search icon"
+  },
+  "settingsTitle": {
+    "message": "إعدادات BirdTab",
+    "description": "Title for settings page"
+  },
+  "birdingRegion": {
+    "message": "منطقة مراقبة الطيور",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "اختر المنطقة التي تريد رؤية الطيور منها. ستظل ترى طيوراً من جميع أنحاء العالم!",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "يساعدنا هذا في إظهار الطيور التي قد تشاهدها في منطقتك.",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "تشغيل أصوات الطيور تلقائياً",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "تشغيل أصوات الطيور تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "تمكين التشغيل التلقائي لأصوات الطيور عند فتح علامة تبويب جديدة",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "الساعات الهادئة",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "كتم أصوات الطيور خلال الساعات الهادئة المحددة.",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "تمكين إيقاف التشغيل التلقائي تلقائياً خلال الساعات الهادئة",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "الساعات الهادئة نشطة",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "الساعات الهادئة",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quickAccessFeatures": {
+    "message": "ميزات الوصول السريع",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "تمكين مربع البحث والمواقع الأكثر زيارة والاختصارات المخصصة لزيادة الإنتاجية.",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "إظهار مربع البحث والمواقع الأكثر زيارة والسماح بالاختصارات المخصصة",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "تم حفظ الإعدادات",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "خيارات التصحيح",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "حذف التخزين المؤقت",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "إعادة تعيين الإرشاد",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "مرحباً بك في BirdTab!",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "عرض توضيحي لـ BirdTab",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "استعد لجرعة يومية من عجائب الطيور! كل علامة تبويب جديدة تجلب لك وجهاً لوجه مع صور مذهلة للطيور وحقائق رائعة.",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "إنه مثل وجود نافذة على عالم الطيور مباشرة في متصفحك!",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "التالي",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "اختر منطقة مراقبة الطيور الخاصة بك",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "حدد منطقتك المفضلة لرؤية الطيور الموجودة عادة في منطقتك. لا تقلق، ستظل قادراً على استكشاف الطيور من جميع أنحاء العالم!",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "الولايات المتحدة",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "كندا",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "المملكة المتحدة",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "الهند",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "يساعدنا هذا في إظهار الطيور التي قد تشاهدها في منطقتك المحلية. يمكنك تغيير هذا في أي وقت في الإعدادات.",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "أصوات الطيور: موسيقى لأذنيك؟",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "تريد سماع الزقزقة والتغريد؟ فعّل التشغيل التلقائي لتجربة مراقبة طيور غامرة!",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "لا تقلق، يمكنك دائماً تشغيل أو إيقاف الأصوات لكل طائر. هذا الإعداد يحدد فقط السلوك الافتراضي، ويمكنك تغييره لاحقاً إذا رغبت.",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "ابدأ مراقبة الطيور!",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "تشغيل",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "إيقاف مؤقت",
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "تستمتع بـ BirdTab؟",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "مراجعتك ستعني لنا العالم وتساعد محبي الطيور الآخرين في اكتشاف إضافتنا!",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "اترك مراجعة",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "ربما لاحقاً",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "لا، شكراً",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "سيؤدي هذا إلى إعادة تعيين جميع الإعدادات إلى الافتراضية وإظهار الإرشاد مرة أخرى. المتابعة؟",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ خطأ في إعادة تعيين الإعدادات. يرجى المحاولة مرة أخرى.",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ إعادة تعيين الإعدادات مكتملة!\n\nتم استعادة جميع إعدادات BirdTab إلى قيمها الافتراضية.\n\nافتح علامة تبويب جديدة لرؤية معالج الإعداد مرة أخرى.",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ خطأ في مسح التخزين المؤقت. يرجى المحاولة مرة أخرى.",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 تم مسح التخزين المؤقت!\n\nتم حذف جميع صور الطيور المخزنة مؤقتاً والاختصارات المخصصة والبيانات المؤقتة.\n\nيجب أن يساعد هذا إذا كنت تواجه مشاكل في التحميل.",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 الإذن مطلوب\n\nلاستخدام ميزات الإنتاجية (مربع البحث والمواقع الأكثر زيارة والاختصارات المخصصة)، يحتاج BirdTab للوصول إلى المواقع الأولى في متصفحك.\n\nيمكنك تمكين هذا في أي وقت بتبديل الإعداد مرة أخرى.",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ حدث خطأ ما\n\nلم نتمكن من تحديث إعدادات الإنتاجية الخاصة بك. قد تكون هذه مشكلة مؤقتة.\n\nيرجى المحاولة مرة أخرى بعد قليل. إذا استمرت المشكلة، حاول إعادة تشغيل متصفحك.",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "تنظيف الريش...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "ضبط أصوات الطيور...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "فحص السماء...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "النظر في الأعشاش...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "ملء مغذيات الطيور...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "تلميع المناظير...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "تهذيب ريش الذيل...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "إحماء التغريدات...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "ضبط امتداد الأجنحة...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "تنظيف حمامات الطيور...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "تحضير طرق الهجرة...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "ترتيب البذور والتوت...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "ممارسة أنماط الطيران...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "تنظيف أدلة الحقل...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "تركيب بيوت الطيور...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "شحذ المناقير...",
+    "description": "Loading message 16"
+  },
+  "closeSettings": {
+    "message": "إغلاق الإعدادات",
+    "description": "Aria label for close settings button"
+  },
+  "currentLocale": {
+    "message": "Current locale: @@ui_locale",
+    "description": "Shows current UI locale using predefined message"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "المواقع الأكثر زيارة والاختصارات المخصصة",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "زيارة",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "موقع ويب",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "إزالة الاختصار",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "إضافة اختصار مخصص جديد",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "إضافة اختصار",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "تحرير الاختصار",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "إزالة",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "إضافة اختصار",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "تحرير الاختصار",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "الاسم:",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "أدخل اسم الاختصار",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "رابط الويب:",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "أدخل رابط الويب (مثال: google.com)",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "إلغاء",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "موافق",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "الاسم مطلوب",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "رابط الويب مطلوب",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "يرجى إدخال رابط ويب صحيح",
+    "description": "Error message when shortcut URL is invalid"
+  }
+}

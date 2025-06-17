@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>BirdTab</title>
+  <title data-i18n="pageTitle">BirdTab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -48,47 +48,47 @@
       <div class="info-panel-header">
         <h1 id="bird-name"></h1>
         <span id="scientific-name"></span>
-        <span class="info-icon" title="">
-          <img src="images/svg/info.svg" alt="Info" width="16" height="16">
+        <span class="info-icon" data-i18n-title="infoTooltip" title="Bird information">
+          <img src="images/svg/info.svg" data-i18n-alt="infoAlt" alt="Info" width="16" height="16">
         </span>
       </div>
       <p id="description"></p>
       <p id="conservation-status"></p>
       <p class="credits">
         <span class="credit-item">
-          <img src="images/svg/camera.svg" alt="Camera" width="16" height="16">
-          <a id="photographer" href="#" target="_blank">Photographer</a>
+          <img src="images/svg/camera.svg" data-i18n-alt="cameraAlt" alt="Camera" width="16" height="16">
+          <a id="photographer" href="#" target="_blank" data-i18n="photographer">Photographer</a>
         </span>
         <span class="credit-item">
-          <img src="images/svg/waveform.svg" alt="Audio" width="16" height="16">
-          <a id="recordist" href="#" target="_blank">Recordist</a>
+          <img src="images/svg/waveform.svg" data-i18n-alt="audioAlt" alt="Audio" width="16" height="16">
+          <a id="recordist" href="#" target="_blank" data-i18n="recordist">Recordist</a>
         </span>
         <span class="credit-item">
-          via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+          <span data-i18n="viaText">via</span> <a href="https://www.macaulaylibrary.org/" target="_blank" data-i18n="macaulayLibrary">Macaulay Library</a>
         </span>
       </p>
     </div>
     <div class="control-buttons">
-      <button id="settings-button" class="icon-button" aria-label="Open settings">
-        <img src="images/svg/settings.svg" alt="Settings" width="24" height="24">
+      <button id="settings-button" class="icon-button" data-i18n-aria-label="openSettings" aria-label="Open settings">
+        <img src="images/svg/settings.svg" data-i18n-alt="settingsAlt" alt="Settings" width="24" height="24">
       </button>
       <button id="refresh-button" class="icon-button">
-        <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
+        <img src="images/svg/refresh.svg" data-i18n-alt="refreshAlt" alt="Refresh" width="24" height="24">
       </button>
       <button id="mute-button" class="icon-button">
-        <img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">
+        <img src="images/svg/sound-off.svg" data-i18n-alt="muteAlt" alt="Mute" width="24" height="24">
       </button>
     </div>
   </div>
   
   <div id="error-modal" class="error-modal hidden">
     <div class="error-content">
-      <img src="images/svg/error-icon.svg" alt="Error" class="error-icon">
-      <h2>Hmm, the birds seem shy today</h2>
-      <p>We're having a bit of trouble spotting our feathered friends. Don't worry, it's usually just a momentary flutter!</p>
+      <img src="images/svg/error-icon.svg" data-i18n-alt="errorAlt" alt="Error" class="error-icon">
+      <h2 data-i18n="errorTitle">Hmm, the birds seem shy today</h2>
+      <p data-i18n="errorMessage">We're having a bit of trouble spotting our feathered friends. Don't worry, it's usually just a momentary flutter!</p>
       <button id="retry-button" class="retry-button">
-        <img src="images/svg/refresh.svg" alt="Refresh" class="refresh-icon">
-        Try Again
+        <img src="images/svg/refresh.svg" data-i18n-alt="refreshAlt" alt="Refresh" class="refresh-icon">
+        <span data-i18n="tryAgain">Try Again</span>
       </button>
       <p class="error-details"></p>
     </div>
@@ -99,12 +99,13 @@
       <input 
         type="text" 
         id="search-input" 
+        data-i18n-placeholder="searchPlaceholder"
         placeholder="Search the web..."
         autocomplete="off"
         autofocus
       >
       <button type="submit" class="search-button">
-        <img src="images/svg/search.svg" alt="Search" width="20" height="20">
+        <img src="images/svg/search.svg" data-i18n-alt="searchAlt" alt="Search" width="20" height="20">
       </button>
     </form>
   </div>

@@ -3,43 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to BirdTab</title>
+    <title data-i18n="welcomeTitle">Welcome to BirdTab!</title>
 </head>
 <body>
     <div class="onboarding-container">
         <div id="step1" class="step active">
-            <h1>Welcome to BirdTab!</h1>
-            <img src="images/birdtab-demo.jpg" alt="BirdTab demo" class="demo-image">
-            <p>Get ready for a daily dose of avian wonder! Every new tab brings you face-to-face with a stunning bird photograph and fascinating facts.</p>
-            <p><strong>It's like having a window to the bird world right in your browser!</strong></p>
-            <button class="next-btn">Next</button>
+            <h1 data-i18n="welcomeTitle">Welcome to BirdTab!</h1>
+            <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image">
+            <p data-i18n="welcomeDescription1">Get ready for a daily dose of avian wonder! Every new tab brings you face-to-face with a stunning bird photograph and fascinating facts.</p>
+            <p><strong data-i18n="welcomeDescription2">It's like having a window to the bird world right in your browser!</strong></p>
+            <button class="next-btn" data-i18n="nextButton">Next</button>
         </div>
         
         <div id="step2" class="step">
-            <h2>Choose Your Birding Region</h2>
-            <p>Select your preferred region to see birds commonly found in your area. Don't worry, you'll still get to explore birds from around the world!</p>
+            <h2 data-i18n="chooseBirdingRegion">Choose Your Birding Region</h2>
+            <p data-i18n="regionSelectionDescription">Select your preferred region to see birds commonly found in your area. Don't worry, you'll still get to explore birds from around the world!</p>
             <select id="region-select">
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="GB">United Kingdom</option>
-                <option value="IN">India</option>
+                <option value="US" data-i18n="unitedStates">United States</option>
+                <option value="CA" data-i18n="canada">Canada</option>
+                <option value="GB" data-i18n="unitedKingdom">United Kingdom</option>
+                <option value="IN" data-i18n="india">India</option>
             </select>
-            <p class="help-text">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
-            <button class="next-btn">Next</button>
+            <p class="help-text" data-i18n="regionSelectionHelpText">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
+            <button class="next-btn" data-i18n="nextButton">Next</button>
         </div>
         
         <div id="step3" class="step">
-            <h2>Bird Calls: Music to Your Ears?</h2>
-            <p>Want to hear the chirps and tweets? Enable auto-play for an immersive birding experience!</p>
+            <h2 data-i18n="birdCallsTitle">Bird Calls: Music to Your Ears?</h2>
+            <p data-i18n="birdCallsDescription">Want to hear the chirps and tweets? Enable auto-play for an immersive birding experience!</p>
             <div class="toggle-container">
-                <span>Auto-play bird calls</span>
+                <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
                 <label class="switch">
                     <input type="checkbox" id="autoplay-toggle">
                     <span class="slider round"></span>
                 </label>
             </div>
-            <p class="help-text">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior, and you can change it later if you wish.</p>
-            <button id="finish-btn">Start Birding!</button>
+            <p class="help-text" data-i18n="autoPlayNote">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior, and you can change it later if you wish.</p>
+            <button id="finish-btn" data-i18n="startBirding">Start Birding!</button>
         </div>
     </div>
     <div class="progress-dots">

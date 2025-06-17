@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BirdTab Settings</title>
+    <title data-i18n="settingsTitle">BirdTab Settings</title>
 </head>
 <body>
-    <h1>BirdTab Settings</h1>
+    <h1 data-i18n="settingsTitle">BirdTab Settings</h1>
     
     <div class="setting">
-        <label for="region">Birding Region</label>
-        <select id="region" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
+        <label for="region" data-i18n="birdingRegion">Birding Region</label>
+        <select id="region" data-i18n-title="regionTooltip">
             <!-- Options will be populated by JavaScript -->
         </select>
-        <p class="help-text">This helps us show birds you might spot in your area.</p>
+        <p class="help-text" data-i18n="regionHelpText">This helps us show birds you might spot in your area.</p>
     </div>
     
     <div class="setting">
         <div class="toggle-container">
             <div class="toggle-text">
-                <span>Auto-play bird calls</span>
-                <p class="help-text">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
+                <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                <p class="help-text" data-i18n="autoPlayHelpText">Play bird songs automatically with each new tab.</p>
             </div>
-            <label class="switch" title="Enable to automatically play bird calls when you open a new tab">
+            <label class="switch" data-i18n-title="autoPlayTooltip">
                 <input type="checkbox" id="auto-play">
                 <span class="slider round"></span>
             </label>
@@ -32,10 +32,10 @@
     <div class="setting">
         <div class="toggle-container">
             <div class="toggle-text">
-                <span>Quiet Hours <span id="quiet-hours-text"></span></span>
-                <p class="help-text">Mute bird songs during specified quiet hours.</p>
+                <span data-i18n="quietHours">Quiet Hours</span> <span id="quiet-hours-text"></span>
+                <p class="help-text" data-i18n="quietHoursHelpText">Mute bird songs during specified quiet hours.</p>
             </div>
-            <label class="switch" title="Enable to automatically turn off auto-play during quiet hours">
+            <label class="switch" data-i18n-title="quietHoursTooltip">
                 <input type="checkbox" id="quiet-hours">
                 <span class="slider round"></span>
             </label>
@@ -44,22 +44,22 @@
     <div class="setting">
         <div class="toggle-container">
             <div class="toggle-text">
-                <span>Quick Access Features</span>
-                <p class="help-text" id="productivity-help">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
+                <span data-i18n="quickAccessFeatures">Quick Access Features</span>
+                <p class="help-text" id="productivity-help" data-i18n="productivityHelpText">Enable search box, top sites, and custom shortcuts.</p>
             </div>
-            <label class="switch" title="Show search box, most visited sites, and allow custom shortcuts">
+            <label class="switch" data-i18n-title="productivityTooltip">
                 <input type="checkbox" id="enable-productivity" aria-describedby="productivity-help">
                 <span class="slider round"></span>
             </label>
         </div>
     </div>
     
-    <div id="save-notification" class="save-notification">Settings saved</div>
+    <div id="save-notification" class="save-notification" data-i18n="settingsSaved">Settings saved</div>
 
     <div id="debug-section" style="display: none;">
-        <h2>Debug Options</h2>
-        <button id="delete-cache" class="debug-button">Delete Cache</button>
-        <button id="reset-onboarding" class="debug-button">Reset Onboarding</button>
+        <h2 data-i18n="debugOptions">Debug Options</h2>
+        <button id="delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
+        <button id="reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
     </div>
 </body>
 </html>

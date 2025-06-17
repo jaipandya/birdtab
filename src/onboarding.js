@@ -1,8 +1,10 @@
 import './onboarding.css';
-
 import { populateRegionSelect } from './shared.js';
+import { localizeHtml } from './i18n.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Localize the onboarding immediately
+  localizeHtml();
   let currentStep = 1;
   const totalSteps = 3;
   const nextButtons = document.querySelectorAll('.next-btn');

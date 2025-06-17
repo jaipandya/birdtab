@@ -1,0 +1,438 @@
+{
+  "extensionName": {
+    "message": "BirdTab - 新しいタブで鳥の写真と鳴き声を楽しもう",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "美しい鳥の写真と心地よい音でChromeの新しいタブを強化しましょう。毎回新鮮な鳥の背景をお楽しみください。",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "鳥の情報",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "情報",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "カメラ",
+    "description": "Alt text for camera icon"
+  },
+  "photographer": {
+    "message": "写真家",
+    "description": "Label for photographer credit"
+  },
+  "audioAlt": {
+    "message": "音声",
+    "description": "Alt text for audio waveform icon"
+  },
+  "recordist": {
+    "message": "録音者",
+    "description": "Label for audio recordist credit"
+  },
+  "viaText": {
+    "message": "経由",
+    "description": "Text before Macaulay Library link"
+  },
+  "macaulayLibrary": {
+    "message": "マコーレー図書館",
+    "description": "Name of Macaulay Library"
+  },
+  "openSettings": {
+    "message": "設定を開く",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "設定",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "更新",
+    "description": "Alt text for refresh icon"
+  },
+  "muteAlt": {
+    "message": "消音",
+    "description": "Alt text for mute icon"
+  },
+  "errorAlt": {
+    "message": "エラー",
+    "description": "Alt text for error icon"
+  },
+  "errorTitle": {
+    "message": "うーん、今日は鳥たちが恥ずかしがっているようです",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "羽毛の友達を見つけるのに少し困っています。心配しないでください、通常は一瞬の羽ばたきです！",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "もう一度試す",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "エラーの詳細",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "ウェブを検索...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "検索",
+    "description": "Alt text for search icon"
+  },
+  "settingsTitle": {
+    "message": "BirdTab 設定",
+    "description": "Title for settings page"
+  },
+  "birdingRegion": {
+    "message": "バードウォッチング地域",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "鳥を見たい地域を選択してください。世界中の鳥を見ることができます！",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "これは、あなたの地域で見つけることができる鳥を表示するのに役立ちます。",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "鳥の鳴き声を自動再生",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "新しいタブを開くたびに鳥の鳴き声を自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "新しいタブを開いたときに鳥の鳴き声を自動再生するよう有効にする",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "静寂時間",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "指定された静寂時間中に鳥の鳴き声をミュートします。",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "静寂時間中に自動再生を自動的にオフにするよう有効にする",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "静寂時間が有効",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "静寂時間",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quickAccessFeatures": {
+    "message": "クイックアクセス機能",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "生産性向上のため、検索ボックス、トップサイト、カスタムショートカットを有効にします。",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "検索ボックス、最も訪問されたサイトを表示し、カスタムショートカットを許可する",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "設定が保存されました",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "デバッグオプション",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "キャッシュを削除",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "オンボーディングをリセット",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "BirdTabへようこそ！",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "BirdTabデモ",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "毎日の鳥の驚異の準備をしましょう！新しいタブを開くたびに、美しい鳥の写真と魅力的な事実と向き合うことができます。",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "まるでブラウザの中に鳥の世界への窓があるようです！",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "次へ",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "バードウォッチング地域を選択",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "あなたの地域でよく見られる鳥を見るために、お好みの地域を選択してください。心配しないでください、世界中の鳥を探索することもできます！",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "アメリカ合衆国",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "カナダ",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "イギリス",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "インド",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "これは、あなたの地域で見つけることができる鳥を表示するのに役立ちます。設定でいつでも変更できます。",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "鳥の鳴き声：あなたの耳に音楽を？",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "さえずりやツイートを聞きたいですか？没入感のあるバードウォッチング体験のために自動再生を有効にしましょう！",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "心配しないでください、各鳥の音をいつでもオンまたはオフに切り替えることができます。この設定はデフォルトの動作を決定するだけで、後で変更することもできます。",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "バードウォッチングを開始！",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "再生",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "一時停止", 
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "BirdTabを楽しんでいますか？",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "あなたのレビューは私たちにとって大きな意味があり、他の鳥愛好家が私たちの拡張機能を発見するのに役立ちます！",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "レビューを書く",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "後で",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "いいえ、結構です",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "これにより、すべての設定がデフォルトにリセットされ、オンボーディングが再度表示されます。続行しますか？",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ 設定のリセット中にエラーが発生しました。もう一度お試しください。",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ 設定リセット完了！\n\nすべてのBirdTab設定がデフォルトに復元されました。\n\n新しいタブを開いて、セットアップウィザードを再度表示してください。",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ キャッシュのクリア中にエラーが発生しました。もう一度お試しください。",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 キャッシュがクリアされました！\n\nキャッシュされた鳥の画像、カスタムショートカット、一時データがすべて削除されました。\n\n読み込みの問題が発生していた場合、これが役立つはずです。",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 権限が必要です\n\n生産性機能（検索ボックス、最も訪問されたサイト、カスタムショートカット）を使用するには、BirdTabがブラウザのトップサイトにアクセスする必要があります。\n\n設定を再度切り替えることで、いつでもこれを有効にできます。",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ 何かが間違っています\n\n生産性設定を更新できませんでした。これは一時的な問題かもしれません。\n\nしばらくしてからもう一度お試しください。問題が続く場合は、ブラウザを再起動してみてください。",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "羽毛をふくらませています...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "鳥の鳴き声を調整しています...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "空をスキャンしています...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "巣を覗いています...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "鳥のえさ台を満たしています...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "双眼鏡を磨いています...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "尾羽を手入れしています...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "さえずりをウォームアップしています...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "翼の幅を調整しています...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "水浴び場を掃除しています...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "渡りルートを準備しています...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "種子や果実を仕分けしています...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "飛行パターンを練習しています...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "フィールドガイドのほこりを払っています...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "巣箱を設置しています...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "くちばしを研いでいます...",
+    "description": "Loading message 16"
+  },
+  "closeSettings": {
+    "message": "設定を閉じる",
+    "description": "Aria label for close settings button"
+  },
+  "currentLocale": {
+    "message": "現在のロケール：@@ui_locale",
+    "description": "Shows current UI locale using predefined message"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "最も訪問したサイトとカスタムショートカット",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "訪問",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "ウェブサイト",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "ショートカットを削除",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "新しいカスタムショートカットを追加",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "ショートカットを追加",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "ショートカットを編集",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "削除",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "ショートカットを追加",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "ショートカットを編集",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "名前：",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "ショートカット名を入力",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "URL：",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "URLを入力（例：google.com）",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "キャンセル",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "OK",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "名前は必須です",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "URLは必須です",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "有効なURLを入力してください",
+    "description": "Error message when shortcut URL is invalid"
+  }
+}

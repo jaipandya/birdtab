@@ -1,0 +1,438 @@
+{
+  "extensionName": {
+    "message": "BirdTab - 在新标签页中发现鸟类图片和鸟鸣",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "用美丽的鸟类照片和舒缓的声音增强您的Chrome新标签页。每次都享受清新的鸟类背景。",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "鸟类信息",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "信息",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "相机",
+    "description": "Alt text for camera icon"
+  },
+  "photographer": {
+    "message": "摄影师",
+    "description": "Label for photographer credit"
+  },
+  "audioAlt": {
+    "message": "音频",
+    "description": "Alt text for audio waveform icon"
+  },
+  "recordist": {
+    "message": "录音师",
+    "description": "Label for audio recordist credit"
+  },
+  "viaText": {
+    "message": "通过",
+    "description": "Text before Macaulay Library link"
+  },
+  "macaulayLibrary": {
+    "message": "麦考利图书馆",
+    "description": "Name of Macaulay Library"
+  },
+  "openSettings": {
+    "message": "打开设置",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "设置",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "刷新",
+    "description": "Alt text for refresh icon"
+  },
+  "muteAlt": {
+    "message": "静音",
+    "description": "Alt text for mute icon"
+  },
+  "errorAlt": {
+    "message": "错误",
+    "description": "Alt text for error icon"
+  },
+  "errorTitle": {
+    "message": "嗯，鸟儿们今天似乎很害羞",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "我们在寻找我们的羽毛朋友时遇到了一些困难。别担心，这通常只是暂时的扑翼！",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "再试一次",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "错误详情",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "搜索网络...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "搜索",
+    "description": "Alt text for search icon"
+  },
+  "settingsTitle": {
+    "message": "BirdTab 设置",
+    "description": "Title for settings page"
+  },
+  "birdingRegion": {
+    "message": "观鸟地区",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "选择您想要观看鸟类的地区。您仍然可以看到来自世界各地的鸟类！",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "这有助于我们展示您在当地可能发现的鸟类。",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "自动播放鸟鸣",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "每次打开新标签页时自动播放鸟鸣。安静时间激活时将覆盖此设置。",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "启用后在打开新标签页时自动播放鸟鸣",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "安静时间",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "在指定的安静时间内将鸟鸣静音。",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "启用后在安静时间自动关闭自动播放",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "安静时间已激活",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "安静时间",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quickAccessFeatures": {
+    "message": "快速访问功能",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "启用搜索框、热门网站和自定义快捷方式以提高工作效率。",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "显示搜索框、最常访问的网站并允许自定义快捷方式",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "设置已保存",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "调试选项",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "删除缓存",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "重置引导",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "欢迎使用 BirdTab！",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "BirdTab 演示",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "准备好每日的鸟类奇观吧！每个新标签页都会为您带来令人惊叹的鸟类摄影和迷人的事实。",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "就像在您的浏览器中拥有一扇通往鸟类世界的窗户！",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "下一步",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "选择您的观鸟地区",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "选择您偏好的地区以查看在您所在地区常见的鸟类。别担心，您仍然可以探索来自世界各地的鸟类！",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "美国",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "加拿大",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "英国",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "印度",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "这有助于我们向您展示您在当地可能发现的鸟类。您可以随时在设置中更改此选项。",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "鸟鸣：您耳朵的音乐？",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "想听到啾啾声和鸣叫声吗？启用自动播放来获得沉浸式的观鸟体验！",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "别担心，您总是可以为每只鸟类开启或关闭声音。此设置只是确定默认行为，如果您愿意，可以稍后更改。",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "开始观鸟！",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "播放",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "暂停",
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "喜欢 BirdTab 吗？",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "您的评价对我们意义重大，将帮助其他鸟类爱好者发现我们的扩展！",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "留下评价",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "稍后再说",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "不用了，谢谢",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "这将重置所有设置为默认值并再次显示引导。继续？",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ 重置设置时出错。请重试。",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ 设置重置完成！\n\n您的所有 BirdTab 设置已恢复为默认值。\n\n打开新标签页以再次查看设置向导。",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ 清除缓存时出错。请重试。",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 缓存已清除！\n\n所有缓存的鸟类图像、自定义快捷方式和临时数据已被删除。\n\n如果您遇到加载问题，这应该会有所帮助。",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 需要权限\n\n要使用生产力功能（搜索框、最常访问的网站和自定义快捷方式），BirdTab 需要访问您浏览器的热门网站。\n\n您可以随时通过再次切换设置来启用此功能。",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ 出了点问题\n\n我们无法更新您的生产力设置。这可能是临时问题。\n\n请稍后重试。如果问题持续存在，请尝试重新启动浏览器。",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "整理羽毛中...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "调试鸟鸣中...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "扫描天空中...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "偷看鸟巢中...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "填充鸟食器中...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "擦拭望远镜中...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "整理尾羽中...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "热身鸣叫中...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "调整翼展中...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "清洁鸟浴中...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "准备迁徙路线中...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "分类种子和浆果中...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "练习飞行模式中...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "整理野外指南中...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "搭建鸟屋中...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "磨尖鸟喙中...",
+    "description": "Loading message 16"
+  },
+  "closeSettings": {
+    "message": "关闭设置",
+    "description": "Aria label for close settings button"
+  },
+  "currentLocale": {
+    "message": "Current locale: @@ui_locale",
+    "description": "Shows current UI locale using predefined message"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "最常访问的网站和自定义快捷方式",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "访问",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "网站",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "删除快捷方式",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "添加新的自定义快捷方式",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "添加快捷方式",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "编辑快捷方式",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "删除",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "添加快捷方式",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "编辑快捷方式",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "名称：",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "输入快捷方式名称",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "网址：",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "输入网址（例：google.com）",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "取消",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "确定",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "名称是必需的",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "网址是必需的",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "请输入有效的网址",
+    "description": "Error message when shortcut URL is invalid"
+  }
+}

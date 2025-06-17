@@ -1,0 +1,438 @@
+{
+  "extensionName": {
+    "message": "BirdTab - Откройте для себя фотографии и голоса птиц в новых вкладках",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Улучшите свою новую вкладку Chrome красивыми фотографиями птиц и успокаивающими звуками. Наслаждайтесь освежающим птичьим фоном каждый раз.",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "Информация о птице",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "Информация",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "Камера",
+    "description": "Alt text for camera icon"
+  },
+  "photographer": {
+    "message": "Фотограф",
+    "description": "Label for photographer credit"
+  },
+  "audioAlt": {
+    "message": "Аудио",
+    "description": "Alt text for audio waveform icon"
+  },
+  "recordist": {
+    "message": "Звукооператор",
+    "description": "Label for audio recordist credit"
+  },
+  "viaText": {
+    "message": "через",
+    "description": "Text before Macaulay Library link"
+  },
+  "macaulayLibrary": {
+    "message": "Библиотека Маколея",
+    "description": "Name of Macaulay Library"
+  },
+  "openSettings": {
+    "message": "Открыть настройки",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "Настройки",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "Обновить",
+    "description": "Alt text for refresh icon"
+  },
+  "muteAlt": {
+    "message": "Отключить звук",
+    "description": "Alt text for mute icon"
+  },
+  "errorAlt": {
+    "message": "Ошибка",
+    "description": "Alt text for error icon"
+  },
+  "errorTitle": {
+    "message": "Хм, птицы сегодня кажутся застенчивыми",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "У нас возникли небольшие проблемы с поиском наших пернатых друзей. Не волнуйтесь, обычно это просто мгновенное взмахивание крыльев!",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "Попробовать ещё раз",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "Детали ошибки",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "Поиск в интернете...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "Поиск",
+    "description": "Alt text for search icon"
+  },
+  "settingsTitle": {
+    "message": "Настройки BirdTab",
+    "description": "Title for settings page"
+  },
+  "birdingRegion": {
+    "message": "Регион наблюдения за птицами",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "Выберите регион, из которого вы хотите видеть птиц. Вы все равно будете видеть птиц со всего мира!",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "Это помогает нам показывать птиц, которых вы можете встретить в вашем районе.",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "Автовоспроизведение птичьих голосов",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "Автоматически воспроизводить песни птиц с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "Включить автоматическое воспроизведение птичьих голосов при открытии новой вкладки",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "Тихие часы",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "Отключить песни птиц в течение указанных тихих часов.",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "Включить автоматическое отключение автовоспроизведения в тихие часы",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "Тихие часы активны",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "Тихие часы",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quickAccessFeatures": {
+    "message": "Функции быстрого доступа",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "Включить поисковую строку, топ-сайты и пользовательские ярлыки для повышения продуктивности.",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "Показать поисковую строку, наиболее посещаемые сайты и разрешить пользовательские ярлыки",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "Настройки сохранены",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "Параметры отладки",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "Очистить кэш",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "Сбросить ознакомление",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "Добро пожаловать в BirdTab!",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "Демо BirdTab",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "Приготовьтесь к ежедневной дозе птичьих чудес! Каждая новая вкладка знакомит вас с потрясающими птичьими фотографиями и увлекательными фактами.",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "Это как иметь окно в мир птиц прямо в вашем браузере!",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "Далее",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "Выберите ваш регион наблюдения за птицами",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "Выберите предпочитаемый регион, чтобы видеть птиц, обычно встречающихся в вашем районе. Не волнуйтесь, вы все равно сможете исследовать птиц со всего мира!",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "Соединенные Штаты",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "Канада",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "Великобритания",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "Индия",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "Это помогает нам показывать вам птиц, которых вы можете встретить в вашем местном районе. Вы можете изменить это в любое время в настройках.",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "Птичьи голоса: музыка для ваших ушей?",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "Хотите услышать чириканье и щебетание? Включите автовоспроизведение для погружающего опыта наблюдения за птицами!",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "Не волнуйтесь, вы всегда можете включить или выключить звуки для каждой птицы. Эта настройка просто определяет поведение по умолчанию, и вы можете изменить ее позже, если захотите.",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "Начать наблюдение за птицами!",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "Воспроизвести",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "Пауза", 
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "Нравится BirdTab?",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "Ваш отзыв будет значить для нас целый мир и поможет другим любителям птиц открыть наше расширение!",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "Оставить отзыв",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "Может быть позже",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "Нет, спасибо",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "Это сбросит все настройки к значениям по умолчанию и снова покажет ознакомление. Продолжить?",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ Ошибка сброса настроек. Пожалуйста, попробуйте снова.",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ Сброс настроек завершен!\n\nВсе ваши настройки BirdTab были восстановлены к значениям по умолчанию.\n\nОткройте новую вкладку, чтобы снова увидеть мастер настройки.",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ Ошибка очистки кэша. Пожалуйста, попробуйте снова.",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 Кэш очищен!\n\nВсе кэшированные изображения птиц, пользовательские ярлыки и временные данные были удалены.\n\nЭто должно помочь, если у вас были проблемы с загрузкой.",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 Требуется разрешение\n\nДля использования функций продуктивности (поисковая строка, наиболее посещаемые сайты и пользовательские ярлыки) BirdTab нужен доступ к топ-сайтам вашего браузера.\n\nВы можете включить это в любое время, переключив настройку снова.",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ Что-то пошло не так\n\nМы не смогли обновить ваши настройки продуктивности. Это может быть временная проблема.\n\nПожалуйста, попробуйте снова через некоторое время. Если проблема продолжается, попробуйте перезапустить браузер.",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "Взъерошиваем перья...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "Настраиваем птичьи голоса...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "Сканируем небеса...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "Заглядываем в гнезда...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "Наполняем кормушки...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "Полируем бинокли...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "Приглаживаем хвостовые перья...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "Разогреваем чириканье...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "Регулируем размах крыльев...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "Чистим птичьи ванны...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "Готовим миграционные маршруты...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "Сортируем семена и ягоды...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "Тренируем схемы полета...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "Вытираем пыль с полевых справочников...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "Устанавливаем скворечники...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "Точим клювы...",
+    "description": "Loading message 16"
+  },
+  "closeSettings": {
+    "message": "Закрыть настройки",
+    "description": "Aria label for close settings button"
+  },
+  "currentLocale": {
+    "message": "Текущая локаль: @@ui_locale",
+    "description": "Shows current UI locale using predefined message"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "Наиболее посещаемые сайты и пользовательские ярлыки",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "Посетить",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "Веб-сайт",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "Удалить ярлык",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "Добавить новый пользовательский ярлык",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "Добавить ярлык",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "Редактировать ярлык",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "Удалить",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "Добавить ярлык",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "Редактировать ярлык",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "Название:",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "Введите название ярлыка",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "URL:",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "Введите URL (например: google.com)",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "Отмена",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "OK",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "Название обязательно",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "URL обязателен",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "Пожалуйста, введите действительный URL",
+    "description": "Error message when shortcut URL is invalid"
+  }
+}

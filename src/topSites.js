@@ -52,7 +52,7 @@ class TopSites {
     this.container.id = 'top-sites-container';
     this.container.className = 'top-sites-container hidden';
     this.container.innerHTML = `
-      <div class="top-sites-grid" role="grid" aria-label="Most visited sites and custom shortcuts">
+      <div class="top-sites-grid" role="grid" aria-label="${chrome.i18n.getMessage('mostVisitedSitesAriaLabel')}">
         <!-- Top sites will be populated here -->
       </div>
     `;
@@ -230,7 +230,7 @@ class TopSites {
     const link = document.createElement('a');
     link.href = site.url;
     link.className = 'top-site-link';
-    link.setAttribute('aria-label', `Visit ${site.title || this.getDomainFromUrl(site.url)}`);
+    link.setAttribute('aria-label', `${chrome.i18n.getMessage('visitSiteAriaLabel')} ${site.title || this.getDomainFromUrl(site.url)}`);
 
     // Add right-click context menu for custom shortcuts
     if (site.isCustom) {
@@ -272,7 +272,7 @@ class TopSites {
       const removeButton = document.createElement('div');
       removeButton.className = 'remove-shortcut';
       removeButton.innerHTML = '×';
-      removeButton.title = 'Remove shortcut';
+      removeButton.title = chrome.i18n.getMessage('removeShortcutTooltip');
       
       removeButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -337,7 +337,7 @@ class TopSites {
     try {
       return new URL(url).hostname.replace('www.', '');
     } catch (error) {
-      return 'Website';
+      return chrome.i18n.getMessage('websiteFallback');
     }
   }
 
@@ -499,10 +499,10 @@ class TopSites {
     
     const buttonElement = document.createElement('button');
     buttonElement.className = 'add-shortcut-btn';
-    buttonElement.setAttribute('aria-label', 'Add new custom shortcut');
+    buttonElement.setAttribute('aria-label', chrome.i18n.getMessage('addNewShortcutAriaLabel'));
     buttonElement.innerHTML = `
       <div class="plus-icon">+</div>
-      <div class="add-text">Add shortcut</div>
+      <div class="add-text">${chrome.i18n.getMessage('addShortcutButtonText')}</div>
     `;
     
     buttonElement.addEventListener('click', () => {
@@ -526,8 +526,8 @@ class TopSites {
     const contextMenu = document.createElement('div');
     contextMenu.className = 'top-site-context-menu';
     contextMenu.innerHTML = `
-      <div class="context-menu-item" data-action="edit">Edit shortcut</div>
-      <div class="context-menu-item" data-action="remove">Remove</div>
+      <div class="context-menu-item" data-action="edit">${chrome.i18n.getMessage('editShortcutContextMenu')}</div>
+      <div class="context-menu-item" data-action="remove">${chrome.i18n.getMessage('removeShortcutContextMenu')}</div>
     `;
 
     // Position the menu
@@ -561,7 +561,7 @@ class TopSites {
    * Show add shortcut dialog
    */
   showAddShortcutDialog() {
-    this.createShortcutModal('Add Shortcut', '', '', (name, url) => {
+    this.createShortcutModal(chrome.i18n.getMessage('addShortcutModalTitle'), '', '', (name, url) => {
       // Ensure URL has protocol
       const finalUrl = url.startsWith('http') ? url : `https://${url}`;
       this.addCustomShortcut(name, finalUrl);
@@ -572,7 +572,7 @@ class TopSites {
    * Edit a custom shortcut
    */
   editShortcut(site) {
-    this.createShortcutModal('Edit Shortcut', site.title, site.url, (name, url) => {
+    this.createShortcutModal(chrome.i18n.getMessage('editShortcutModalTitle'), site.title, site.url, (name, url) => {
       // Remove old shortcut and add new one
       this.removeCustomShortcut(site.url).then(() => {
         const finalUrl = url.startsWith('http') ? url : `https://${url}`;
@@ -601,19 +601,19 @@ class TopSites {
         </div>
         <div class="shortcut-modal-body">
           <div class="input-group">
-            <label for="shortcut-name">Name:</label>
-            <input type="text" id="shortcut-name" value="${initialName}" placeholder="Enter shortcut name" maxlength="20">
+            <label for="shortcut-name">${chrome.i18n.getMessage('shortcutNameLabel')}</label>
+            <input type="text" id="shortcut-name" value="${initialName}" placeholder="${chrome.i18n.getMessage('shortcutNamePlaceholder')}" maxlength="20">
             <div class="error-message" id="name-error"></div>
           </div>
           <div class="input-group">
-            <label for="shortcut-url">URL:</label>
-            <input type="text" id="shortcut-url" value="${initialUrl}" placeholder="Enter URL (e.g., google.com)">
+            <label for="shortcut-url">${chrome.i18n.getMessage('shortcutUrlLabel')}</label>
+            <input type="text" id="shortcut-url" value="${initialUrl}" placeholder="${chrome.i18n.getMessage('shortcutUrlPlaceholder')}">
             <div class="error-message" id="url-error"></div>
           </div>
         </div>
         <div class="shortcut-modal-footer">
-          <button class="shortcut-btn secondary" id="shortcut-cancel">Cancel</button>
-          <button class="shortcut-btn primary" id="shortcut-ok">OK</button>
+          <button class="shortcut-btn secondary" id="shortcut-cancel">${chrome.i18n.getMessage('shortcutCancelButton')}</button>
+          <button class="shortcut-btn primary" id="shortcut-ok">${chrome.i18n.getMessage('shortcutOkButton')}</button>
         </div>
       </div>
     `;
@@ -636,15 +636,15 @@ class TopSites {
       modal.querySelector('#url-error').textContent = '';
 
       if (!name) {
-        modal.querySelector('#name-error').textContent = 'Name is required';
+        modal.querySelector('#name-error').textContent = chrome.i18n.getMessage('shortcutNameRequired');
         isValid = false;
       }
 
       if (!url) {
-        modal.querySelector('#url-error').textContent = 'URL is required';
+        modal.querySelector('#url-error').textContent = chrome.i18n.getMessage('shortcutUrlRequired');
         isValid = false;
       } else if (!this.isValidUrl(url)) {
-        modal.querySelector('#url-error').textContent = 'Please enter a valid URL';
+        modal.querySelector('#url-error').textContent = chrome.i18n.getMessage('shortcutUrlInvalid');
         isValid = false;
       }
 

@@ -1,5 +1,6 @@
 import { populateRegionSelect } from './shared.js';
 import { getQuietHoursText } from './quietHours.js';
+import { localizeHtml, getMessage } from './i18n.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -67,7 +68,7 @@ class SettingsModal {
       existingModal.remove();
     }
     
-    // Create modal HTML dynamically
+    // Create modal HTML dynamically with i18n data attributes
     const modalHTML = `
       <div 
         id="settings-modal" 
@@ -78,27 +79,27 @@ class SettingsModal {
       >
         <div class="settings-content">
           <div class="settings-header">
-            <h2 id="settings-modal-title">Settings</h2>
-            <button id="close-settings" class="close-button" aria-label="Close settings">
+            <h2 id="settings-modal-title" data-i18n="settingsTitle">BirdTab Settings</h2>
+            <button id="close-settings" class="close-button" data-i18n-aria-label="closeSettings" aria-label="Close settings">
               <img src="images/svg/close.svg" alt="Close" width="20" height="20">
             </button>
           </div>
           <div class="settings-body">
             <div class="setting">
-              <label for="modal-region">Birding Region</label>
-              <select id="modal-region" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
+              <label for="modal-region" data-i18n="birdingRegion">Birding Region</label>
+              <select id="modal-region" data-i18n-title="regionTooltip" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
                 <!-- Options will be populated by JavaScript -->
               </select>
-              <p class="help-text">This helps us show birds you might spot in your area.</p>
+              <p class="help-text" data-i18n="regionHelpText">This helps us show birds you might spot in your area.</p>
             </div>
             
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span>Auto-play bird calls</span>
-                  <p class="help-text">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
+                  <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                  <p class="help-text" data-i18n="autoPlayHelpText">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
                 </div>
-                <label class="switch" title="Enable to automatically play bird calls when you open a new tab">
+                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
                   <input type="checkbox" id="modal-auto-play">
                   <span class="slider round"></span>
                 </label>
@@ -108,10 +109,10 @@ class SettingsModal {
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span>Quiet Hours <span id="modal-quiet-hours-text"></span></span>
-                  <p class="help-text">Mute bird songs during specified quiet hours.</p>
+                  <span><span data-i18n="quietHours">Quiet Hours</span> <span id="modal-quiet-hours-text"></span></span>
+                  <p class="help-text" data-i18n="quietHoursHelpText">Mute bird songs during specified quiet hours.</p>
                 </div>
-                <label class="switch" title="Enable to automatically turn off auto-play during quiet hours">
+                <label class="switch" data-i18n-title="quietHoursTooltip" title="Enable to automatically turn off auto-play during quiet hours">
                   <input type="checkbox" id="modal-quiet-hours">
                   <span class="slider round"></span>
                 </label>
@@ -121,10 +122,10 @@ class SettingsModal {
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span>Quick Access Features</span>
-                  <p class="help-text" id="modal-productivity-help">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
+                  <span data-i18n="quickAccessFeatures">Quick Access Features</span>
+                  <p class="help-text" id="modal-productivity-help" data-i18n="productivityHelpText">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
                 </div>
-                <label class="switch" title="Show search box, most visited sites, and allow custom shortcuts">
+                <label class="switch" data-i18n-title="productivityTooltip" title="Show search box, most visited sites, and allow custom shortcuts">
                   <input type="checkbox" id="modal-enable-productivity" aria-describedby="modal-productivity-help">
                   <span class="slider round"></span>
                 </label>
@@ -141,6 +142,9 @@ class SettingsModal {
     // Get references to the created elements
     this.modal = document.getElementById('settings-modal');
     this.closeButton = document.getElementById('close-settings');
+    
+    // Localize the newly created modal
+    localizeHtml();
   }
 
   initializeElements() {
@@ -341,7 +345,7 @@ class SettingsModal {
         } else {
           // Permission denied, revert the toggle
           this.enableProductivityCheckbox.checked = false;
-          alert('🔒 Permission Required\n\nTo use productivity features (search box, most visited sites, and custom shortcuts), BirdTab needs access to your browser\'s top sites.\n\nYou can enable this anytime by toggling the setting again.');
+          alert(getMessage('permissionRequired'));
         }
       } else {
         // Save settings first, then try to remove permissions
@@ -359,7 +363,7 @@ class SettingsModal {
     } catch (error) {
       log('Error with productivity toggle: ' + error.message);
       this.enableProductivityCheckbox.checked = !isEnabled; // Revert on error
-      alert('⚠️ Something went wrong\n\nWe couldn\'t update your productivity settings. This might be a temporary issue.\n\nPlease try again in a moment. If the problem continues, try restarting your browser.');
+      alert(getMessage('somethingWentWrong'));
     }
   }
 
@@ -373,7 +377,7 @@ class SettingsModal {
     // Create new notification
     const notification = document.createElement('div');
     notification.className = 'settings-save-notification';
-    notification.textContent = 'Settings saved';
+    notification.textContent = getMessage('settingsSaved');
     
     // Add to document
     document.body.appendChild(notification);

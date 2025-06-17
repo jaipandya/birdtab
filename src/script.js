@@ -4,6 +4,7 @@ import { getAutoPlayState } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
 import SettingsModal from './settingsModal.js';
 import TopSites from './topSites.js';
+import { localizeHtml } from './i18n.js';
 
 let isMuted = false;
 let audio;
@@ -18,28 +19,31 @@ function log(message) {
   }
 }
 
-// Array of loading messages for a more engaging user experience
-const loadingMessages = [
-  "Fluffing feathers...",
-  "Tuning bird calls...",
-  "Scanning the skies...",
-  "Peeking into nests...",
-  "Filling bird feeders...",
-  "Polishing binoculars...",
-  "Preening tail feathers...",
-  "Warming up chirps...",
-  "Adjusting wing spans...",
-  "Cleaning bird baths...",
-  "Preparing migration routes...",
-  "Sorting seeds and berries...",
-  "Practicing flight patterns...",
-  "Dusting off field guides...",
-  "Setting up bird houses...",
-  "Sharpening beaks...",
+// Array of loading message keys for i18n
+const loadingMessageKeys = [
+  'loadingMessage1',
+  'loadingMessage2',
+  'loadingMessage3',
+  'loadingMessage4',
+  'loadingMessage5',
+  'loadingMessage6',
+  'loadingMessage7',
+  'loadingMessage8',
+  'loadingMessage9',
+  'loadingMessage10',
+  'loadingMessage11',
+  'loadingMessage12',
+  'loadingMessage13',
+  'loadingMessage14',
+  'loadingMessage15',
+  'loadingMessage16'
 ];
 
 // Get a random loading message
-const getRandomLoadingMessage = () => loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+const getRandomLoadingMessage = () => {
+  const randomKey = loadingMessageKeys[Math.floor(Math.random() * loadingMessageKeys.length)];
+  return chrome.i18n.getMessage(randomKey);
+};
 
 // Show loading indicator with a random message
 function showLoadingIndicator() {
@@ -90,8 +94,8 @@ const updatePlayPauseButton = () => {
   const playButton = document.getElementById('play-button');
   if (playButton) {
     playButton.innerHTML = isPlaying ?
-      '<img src="images/svg/pause.svg" alt="Pause" width="24" height="24">' :
-      '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
+      `<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
+      `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
   }
 };
 
@@ -133,8 +137,8 @@ function showQuietHoursIcon() {
   const button = document.createElement('button');
   button.id = 'quiet-hours-button';
   button.className = 'icon-button';
-  button.innerHTML = '<img src="images/svg/moon.svg" class="invert" alt="Quiet Hours" width="24" height="24">';
-  button.title = 'Quiet Hours Active';
+  button.innerHTML = `<img src="images/svg/moon.svg" class="invert" alt="${chrome.i18n.getMessage('quietHoursAlt')}" width="24" height="24">`;
+  button.title = chrome.i18n.getMessage('quietHoursActive');
 
   document.querySelector('.control-buttons').appendChild(button);
 }
@@ -167,7 +171,7 @@ function createAudioPlayer(mediaUrl) {
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
   playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = '<img src="images/svg/play.svg" alt="Play" width="16" height="16">';
+  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
   playButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -276,12 +280,12 @@ function getReviewPromptHTML() {
   return `
     <div id="review-prompt" class="review-prompt">
       <div class="review-content">
-        <h2>Enjoying BirdTab?</h2>
-        <p>Your review would mean the world to us and help other bird enthusiasts discover our extension!</p>
+        <h2>${chrome.i18n.getMessage('reviewPromptTitle')}</h2>
+        <p>${chrome.i18n.getMessage('reviewPromptMessage')}</p>
         <div class="review-buttons">
-          <button id="leave-review" class="review-btn primary">Leave a Review</button>
-          <button id="maybe-later" class="review-btn secondary">Maybe Later</button>
-          <button id="no-thanks" class="review-btn tertiary">No, Thanks</button>
+          <button id="leave-review" class="review-btn primary">${chrome.i18n.getMessage('leaveReview')}</button>
+          <button id="maybe-later" class="review-btn secondary">${chrome.i18n.getMessage('maybeLater')}</button>
+          <button id="no-thanks" class="review-btn tertiary">${chrome.i18n.getMessage('noThanks')}</button>
         </div>
       </div>
     </div>
@@ -445,7 +449,7 @@ async function initializePage() {
 function showErrorModal(errorMessage) {
   const errorModal = document.getElementById('error-modal');
   const errorDetails = errorModal.querySelector('.error-details');
-  errorDetails.textContent = `Error details: ${errorMessage}`;
+  errorDetails.textContent = `${chrome.i18n.getMessage('errorDetails')}: ${errorMessage}`;
   errorModal.classList.remove('hidden');
   
   const retryButton = document.getElementById('retry-button');
@@ -616,6 +620,9 @@ function checkOnboardingStatus() {
 
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  // Localize the page immediately
+  localizeHtml();
+  
   log('DOM content loaded, checking onboarding status');
   
   // Check if onboarding is complete first

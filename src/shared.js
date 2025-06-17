@@ -2,10 +2,30 @@ const REGIONS = [{ "code": "AF", "name": "Afghanistan" }, { "code": "AL", "name"
 
 // Helper function to populate a select element with regions
 export function populateRegionSelect(selectElement) {
+  // Get the current UI language from Chrome extension
+  const locale = chrome.i18n.getUILanguage();
+  
+  // Create Intl.DisplayNames for country names in the user's language
+  let displayNames;
+  try {
+    displayNames = new Intl.DisplayNames([locale], { type: 'region' });
+  } catch (error) {
+    // Fallback to English if the locale is not supported
+    displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+  }
+  
   REGIONS.forEach(region => {
     const option = document.createElement('option');
     option.value = region.code;
-    option.textContent = region.name;
+    
+    // Get localized country name, fallback to original name if not available
+    try {
+      option.textContent = displayNames.of(region.code) || region.name;
+    } catch (error) {
+      // If the country code is not recognized, use the original name
+      option.textContent = region.name;
+    }
+    
     selectElement.appendChild(option);
   });
 }

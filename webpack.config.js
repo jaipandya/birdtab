@@ -59,6 +59,7 @@ module.exports = (env, argv) => {
           },
           { from: 'src/images', to: 'images' },
           { from: 'src/icons', to: 'icons' },
+          { from: 'src/_locales', to: '_locales' },
         ],
       }),
       new DefinePlugin({

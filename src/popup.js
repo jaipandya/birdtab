@@ -1,6 +1,7 @@
 import { populateRegionSelect } from './shared.js';
 import './popup.css';
 import { getQuietHoursText } from './quietHours.js';
+import { localizeHtml, getMessage } from './i18n.js';
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -10,6 +11,14 @@ function log(message) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Localize the popup immediately
+  localizeHtml();
+  
+  // Debug i18n
+  console.log('UI Locale:', chrome.i18n.getUILanguage());
+  console.log('Accept Languages:', chrome.i18n.getAcceptLanguages(langs => console.log('Accept Languages:', langs)));
+  console.log('Test message (settingsTitle):', getMessage('settingsTitle'));
+
   const regionSelect = document.getElementById('region');
   const autoPlayCheckbox = document.getElementById('auto-play');
   const quietHoursCheckbox = document.getElementById('quiet-hours');
@@ -63,12 +72,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Reset onboarding
   resetOnboardingButton.addEventListener('click', function () {
-    if (confirm('This will reset all settings to defaults and show the onboarding again. Continue?')) {
+    if (confirm(getMessage('confirmResetSettings'))) {
       // Reset all settings to their default values
       chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError) {
           log('Error clearing sync storage: ' + chrome.runtime.lastError.message);
-          alert('⚠️ Error resetting settings. Please try again.');
+          alert(getMessage('errorResettingSettings'));
           return;
         }
         // Set default values including onboardingComplete: false
@@ -81,10 +90,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }, function () {
           if (chrome.runtime.lastError) {
             log('Error setting default values: ' + chrome.runtime.lastError.message);
-            alert('⚠️ Error resetting settings. Please try again.');
+            alert(getMessage('errorResettingSettings'));
             return;
           }
-          alert('✅ Settings Reset Complete!\n\nAll your BirdTab settings have been restored to their defaults.\n\nOpen a new tab to see the setup wizard again.');
+          alert(getMessage('settingsResetComplete'));
           window.close();
         });
       });
@@ -97,17 +106,17 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.local.clear(function () {
       if (chrome.runtime.lastError) {
         log('Error clearing local storage: ' + chrome.runtime.lastError.message);
-        alert('⚠️ Error clearing cache. Please try again.');
+        alert(getMessage('errorClearingCache'));
         return;
       }
       // Also clear some sync storage cached items if needed
       chrome.storage.sync.remove(['customShortcuts'], function () {
         if (chrome.runtime.lastError) {
           log('Error removing custom shortcuts: ' + chrome.runtime.lastError.message);
-          alert('⚠️ Error clearing cache. Please try again.');
+          alert(getMessage('errorClearingCache'));
           return;
         }
-        alert('🧹 Cache Cleared!\n\nAll cached bird images, custom shortcuts, and temporary data have been removed.\n\nThis should help if you were experiencing any loading issues.');
+        alert(getMessage('cacheCleared'));
       });
     });
   });
@@ -142,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           // Permission denied, revert the toggle
           this.checked = false;
-          alert('🔒 Permission Required\n\nTo use productivity features (search box, most visited sites, and custom shortcuts), BirdTab needs access to your browser\'s top sites.\n\nYou can enable this anytime by toggling the setting again.');
+          alert(getMessage('permissionRequired'));
         }
       } else {
         // Disable quick access features
@@ -168,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (error) {
       log('Error with productivity toggle: ' + error.message);
       this.checked = !isEnabled; // Revert on error
-      alert('⚠️ Something went wrong\n\nWe couldn\'t update your productivity settings. This might be a temporary issue.\n\nPlease try again in a moment. If the problem continues, try restarting your browser.');
+      alert(getMessage('somethingWentWrong'));
     }
   });
 

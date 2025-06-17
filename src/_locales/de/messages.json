@@ -1,0 +1,438 @@
+{
+  "extensionName": {
+    "message": "BirdTab - Entdecke Vogelbilder & Vogelgesänge in neuen Tabs",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Verbessere deinen neuen Tab in Chrome mit schönen Vogelfotos und beruhigenden Klängen. Genieße jedes Mal einen erfrischenden Vogelhintergrund.",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "Vogelinformationen",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "Info",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "Kamera",
+    "description": "Alt text for camera icon"
+  },
+  "photographer": {
+    "message": "Fotograf",
+    "description": "Label for photographer credit"
+  },
+  "audioAlt": {
+    "message": "Audio",
+    "description": "Alt text for audio waveform icon"
+  },
+  "recordist": {
+    "message": "Tontechniker",
+    "description": "Label for audio recordist credit"
+  },
+  "viaText": {
+    "message": "über",
+    "description": "Text before Macaulay Library link"
+  },
+  "macaulayLibrary": {
+    "message": "Macaulay Bibliothek",
+    "description": "Name of Macaulay Library"
+  },
+  "openSettings": {
+    "message": "Einstellungen öffnen",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "Einstellungen",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "Aktualisieren",
+    "description": "Alt text for refresh icon"
+  },
+  "muteAlt": {
+    "message": "Stumm",
+    "description": "Alt text for mute icon"
+  },
+  "errorAlt": {
+    "message": "Fehler",
+    "description": "Alt text for error icon"
+  },
+  "errorTitle": {
+    "message": "Hmm, die Vögel scheinen heute schüchtern zu sein",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "Wir haben etwas Schwierigkeiten, unsere gefiederten Freunde zu finden. Keine Sorge, das ist normalerweise nur ein vorübergehendes Flattern!",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "Erneut versuchen",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "Fehlerdetails",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "Im Web suchen...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "Suchen",
+    "description": "Alt text for search icon"
+  },
+  "settingsTitle": {
+    "message": "BirdTab Einstellungen",
+    "description": "Title for settings page"
+  },
+  "birdingRegion": {
+    "message": "Vogelbeobachtungsregion",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "Wähle die Region aus, aus der du Vögel sehen möchtest. Du wirst trotzdem Vögel aus der ganzen Welt sehen!",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "Dies hilft uns, Vögel anzuzeigen, die du in deiner Gegend entdecken könntest.",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "Vogelrufe automatisch abspielen",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "Vogelgesänge automatisch bei jedem neuen Tab abspielen. Ruhezeiten überschreiben dies wenn aktiv.",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "Aktivieren, um Vogelrufe automatisch beim Öffnen eines neuen Tabs abzuspielen",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "Ruhezeiten",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "Vogelgesänge während festgelegter Ruhezeiten stumm schalten.",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "Aktivieren, um automatische Wiedergabe während Ruhezeiten automatisch auszuschalten",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "Ruhezeiten Aktiv",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "Ruhezeiten",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quickAccessFeatures": {
+    "message": "Schnellzugriff-Funktionen",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "Suchfeld, Top-Seiten und benutzerdefinierte Verknüpfungen für verbesserte Produktivität aktivieren.",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "Suchfeld, meistbesuchte Seiten anzeigen und benutzerdefinierte Verknüpfungen erlauben",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "Einstellungen gespeichert",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "Debug-Optionen",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "Cache löschen",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "Einführung zurücksetzen",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "Willkommen bei BirdTab!",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "BirdTab Demo",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "Mach dich bereit für eine tägliche Dosis Vogelwunder! Jeder neue Tab bringt dich von Angesicht zu Angesicht mit atemberaubenden Vogelfotos und faszinierenden Fakten.",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "Es ist wie ein Fenster zur Vogelwelt direkt in deinem Browser!",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "Weiter",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "Wähle deine Vogelbeobachtungsregion",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "Wähle deine bevorzugte Region, um Vögel zu sehen, die häufig in deiner Gegend zu finden sind. Keine Sorge, du kannst trotzdem Vögel aus der ganzen Welt entdecken!",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "Vereinigte Staaten",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "Kanada",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "Vereinigtes Königreich",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "Indien",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "Dies hilft uns, dir Vögel zu zeigen, die du in deiner lokalen Umgebung entdecken könntest. Du kannst dies jederzeit in den Einstellungen ändern.",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "Vogelrufe: Musik für deine Ohren?",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "Möchtest du das Zwitschern und Piepen hören? Aktiviere die automatische Wiedergabe für ein immersives Vogelerlebnis!",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "Keine Sorge, du kannst die Töne für jeden Vogel immer ein- oder ausschalten. Diese Einstellung bestimmt nur das Standardverhalten, und du kannst es später ändern, wenn du möchtest.",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "Vogelbeobachtung starten!",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "Abspielen",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "Pausieren", 
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "BirdTab gefällt dir?",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "Deine Bewertung würde uns sehr viel bedeuten und anderen Vogelliebhabern helfen, unsere Erweiterung zu entdecken!",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "Bewertung schreiben",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "Vielleicht später",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "Nein, danke",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "Dies wird alle Einstellungen auf Standardwerte zurücksetzen und die Einführung erneut anzeigen. Fortfahren?",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ Fehler beim Zurücksetzen der Einstellungen. Bitte versuche es erneut.",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ Einstellungen zurückgesetzt!\n\nAlle deine BirdTab-Einstellungen wurden auf die Standardwerte zurückgesetzt.\n\nÖffne einen neuen Tab, um den Setup-Assistenten erneut zu sehen.",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ Fehler beim Löschen des Cache. Bitte versuche es erneut.",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 Cache geleert!\n\nAlle zwischengespeicherten Vogelbilder, benutzerdefinierten Verknüpfungen und temporären Daten wurden entfernt.\n\nDies sollte helfen, wenn du Ladeprobleme hattest.",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 Berechtigung erforderlich\n\nUm Produktivitätsfunktionen (Suchfeld, meistbesuchte Seiten und benutzerdefinierte Verknüpfungen) zu verwenden, benötigt BirdTab Zugriff auf die Top-Seiten deines Browsers.\n\nDu kannst dies jederzeit aktivieren, indem du die Einstellung erneut umschaltest.",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ Etwas ist schiefgelaufen\n\nWir konnten deine Produktivitätseinstellungen nicht aktualisieren. Dies könnte ein vorübergehendes Problem sein.\n\nBitte versuche es in einem Moment erneut. Wenn das Problem weiterhin besteht, versuche deinen Browser neu zu starten.",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "Federn aufplustern...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "Vogelrufe abstimmen...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "Den Himmel absuchen...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "In Nester hineinspähen...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "Vogelfutterstellen füllen...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "Ferngläser polieren...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "Schwanzfedern putzen...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "Gezwitscher aufwärmen...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "Flügelspannweiten anpassen...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "Vogelbäder reinigen...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "Flugrouten vorbereiten...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "Samen und Beeren sortieren...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "Flugmuster üben...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "Bestimmungsbücher abstauben...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "Vogelhäuser aufstellen...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "Schnäbel schärfen...",
+    "description": "Loading message 16"
+  },
+  "currentLocale": {
+    "message": "Aktuelle Sprache: @@ui_locale",
+    "description": "Shows current UI locale using predefined message"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "closeSettings": {
+    "message": "Einstellungen schließen",
+    "description": "Aria label for close settings button"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "Meistbesuchte Seiten und benutzerdefinierte Verknüpfungen",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "Besuchen",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "Webseite",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "Verknüpfung entfernen",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "Neue benutzerdefinierte Verknüpfung hinzufügen",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "Verknüpfung hinzufügen",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "Verknüpfung bearbeiten",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "Entfernen",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "Verknüpfung hinzufügen",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "Verknüpfung bearbeiten",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "Name:",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "Verknüpfungsname eingeben",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "URL:",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "URL eingeben (z.B. google.com)",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "Abbrechen",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "OK",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "Name ist erforderlich",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "URL ist erforderlich",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "Bitte geben Sie eine gültige URL ein",
+    "description": "Error message when shortcut URL is invalid"
+  }
+}
