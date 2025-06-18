@@ -87,6 +87,10 @@
     "message": "搜索",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "搜索网页",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "BirdTab 设置",
     "description": "Title for settings page"
@@ -458,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "请输入有效的网址",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "这是什么鸟？",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "第 {currentQuestion} 题，共 {totalQuestions} 题",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "得分：{score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "下一题",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "提交答案",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "查看结果",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "开始新测验",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "退出测验",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "退出测验？",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "您确定要退出测验吗？您的进度将会丢失。",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "退出测验",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "取消",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "优秀！您是真正的鸟类专家！",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "很棒！您对鸟类了解得很好！",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "不错！继续观鸟吧！",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "还不错！熟能生巧！",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "继续学习！每个鸟类专家都有起点！",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "该地区可用于测验的鸟类不足。请尝试其他地区。",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "无法开始测验。请重试。",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "测验错误",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "确定",
+    "description": "OK button for quiz error modal"
   }
 }

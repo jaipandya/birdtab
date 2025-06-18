@@ -87,6 +87,10 @@
     "message": "検索",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "ウェブを検索",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "BirdTab 設定",
     "description": "Title for settings page"
@@ -458,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "有効なURLを入力してください",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "この鳥は何ですか？",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "問題 {currentQuestion} / {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "スコア: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "次の問題",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "回答を送信",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "結果を表示",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "新しいクイズを開始",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "クイズを終了",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "クイズを終了しますか？",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "本当にクイズを終了しますか？進行状況が失われます。",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "クイズを終了",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "キャンセル",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "素晴らしい！あなたは真の鳥類専門家です！",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "すごいですね！鳥について良く知っています！",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "良い仕事です！バードウォッチングを続けてください！",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "悪くありません！練習すれば完璧になります！",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "学習を続けてください！すべての鳥類専門家がどこかからスタートしています！",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "この地域ではクイズ用の鳥が不足しています。別の地域をお試しください。",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "クイズを開始できません。もう一度お試しください。",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "クイズエラー",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
   }
 }

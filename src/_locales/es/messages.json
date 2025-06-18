@@ -462,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "Por favor ingresa una URL válida",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "¿Qué ave es esta?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Pregunta {currentQuestion} de {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "Puntuación: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Siguiente Pregunta",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "Enviar Respuesta",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "Ver Resultados",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Iniciar Nuevo Quiz",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Salir del Quiz",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "¿Salir del Quiz?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "¿Estás seguro de que quieres salir del quiz? Tu progreso se perderá.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "Salir del Quiz",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Cancelar",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "¡Excelente! ¡Eres un verdadero experto en aves!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "¡Muy bien! ¡Conoces muy bien las aves!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "¡Buen trabajo! ¡Sigue observando aves!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "¡Nada mal! ¡La práctica hace al maestro!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "¡Sigue aprendiendo! ¡Todo experto en aves empezó en algún lugar!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "No hay suficientes aves disponibles para el quiz en esta región. Por favor intenta con una región diferente.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "No se pudo iniciar el quiz. Por favor intenta de nuevo.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Error del Quiz",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
   }
 }

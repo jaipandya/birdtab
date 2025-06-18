@@ -87,6 +87,10 @@
     "message": "Поиск",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "Поиск в интернете",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "Настройки BirdTab",
     "description": "Title for settings page"
@@ -458,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "Пожалуйста, введите действительный URL",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "Что это за птица?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Вопрос {currentQuestion} из {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "Счет: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Следующий вопрос",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "Отправить ответ",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "Показать результаты",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Начать новую викторину",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Выйти из викторины",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "Выйти из викторины?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "Вы уверены, что хотите выйти из викторины? Ваш прогресс будет потерян.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "Выйти из викторины",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Отмена",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "Отлично! Вы настоящий эксперт по птицам!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "Отлично! Вы хорошо знаете птиц!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "Хорошая работа! Продолжайте наблюдать за птицами!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "Неплохо! Практика ведет к совершенству!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "Продолжайте изучать! Каждый эксперт по птицам с чего-то начинал!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "Недостаточно птиц для викторины в этом регионе. Попробуйте другой регион.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "Не удалось начать викторину. Пожалуйста, попробуйте снова.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Ошибка викторины",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "ОК",
+    "description": "OK button for quiz error modal"
   }
 }

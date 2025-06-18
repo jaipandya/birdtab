@@ -87,6 +87,10 @@
     "message": "بحث",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "البحث في الويب",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "إعدادات BirdTab",
     "description": "Title for settings page"
@@ -458,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "يرجى إدخال رابط ويب صحيح",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "ما هذا الطائر؟",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "السؤال {currentQuestion} من {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "النتيجة: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "السؤال التالي",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "إرسال الإجابة",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "عرض النتائج",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "بدء اختبار جديد",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "الخروج من الاختبار",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "الخروج من الاختبار؟",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "هل أنت متأكد من أنك تريد الخروج من الاختبار؟ سيتم فقدان تقدمك.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "الخروج من الاختبار",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "إلغاء",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "ممتاز! أنت خبير حقيقي في الطيور!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "عمل رائع! تعرف طيورك جيداً!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "عمل جيد! استمر في مراقبة الطيور!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "ليس سيئاً! الممارسة تصنع الإتقان!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "استمر في التعلم! كل خبير طيور بدأ من مكان ما!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "لا توجد طيور كافية متاحة للاختبار في هذه المنطقة. يرجى تجربة منطقة مختلفة.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "غير قادر على بدء الاختبار. يرجى المحاولة مرة أخرى.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "خطأ في الاختبار",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "موافق",
+    "description": "OK button for quiz error modal"
   }
 }

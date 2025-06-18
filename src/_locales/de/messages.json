@@ -462,5 +462,89 @@
   "shortcutUrlInvalid": {
     "message": "Bitte geben Sie eine gültige URL ein",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "Welcher Vogel ist das?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Frage {currentQuestion} von {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "Punktzahl: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Nächste Frage",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "Antwort abgeben",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "Ergebnisse anzeigen",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Neues Quiz starten",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Quiz verlassen",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "Quiz verlassen?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "Sind Sie sicher, dass Sie das Quiz verlassen möchten? Ihr Fortschritt geht verloren.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "Quiz verlassen",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Abbrechen",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "Ausgezeichnet! Sie sind ein wahrer Vogelexperte!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "Großartig! Sie kennen Ihre Vögel sehr gut!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "Gute Arbeit! Beobachten Sie weiter Vögel!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "Nicht schlecht! Übung macht den Meister!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "Lernen Sie weiter! Jeder Vogelexperte hat mal angefangen!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "Nicht genügend Vögel für das Quiz in dieser Region verfügbar. Bitte versuchen Sie eine andere Region.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "Quiz konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Quiz-Fehler",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
   }
 }
