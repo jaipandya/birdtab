@@ -434,5 +434,89 @@
   "shortcutUrlInvalid": {
     "message": "Please enter a valid URL",
     "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "Which bird is this?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Question {currentQuestion} of {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizScore": {
+    "message": "Score: {score}/{total}",
+    "description": "Score display in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Next Question",
+    "description": "Button text for next question"
+  },
+  "quizSubmitAnswer": {
+    "message": "Submit Answer",
+    "description": "Button text to submit answer"
+  },
+  "quizShowResults": {
+    "message": "Show Results",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Start New Quiz",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Exit Quiz",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizExitConfirmTitle": {
+    "message": "Exit Quiz?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "Are you sure you want to exit the quiz? Your progress will be lost.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "Exit Quiz",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Cancel",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "Excellent! You're a true bird expert!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "Great job! You know your birds well!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "Good work! Keep bird watching!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "Not bad! Practice makes perfect!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "Keep learning! Every bird expert started somewhere!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "Not enough birds available for quiz in this region. Please try a different region.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "Unable to start quiz. Please try again.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Quiz Error",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
   }
 }

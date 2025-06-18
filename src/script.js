@@ -5,12 +5,14 @@ import { isQuietHoursActive } from './quietHours.js';
 import SettingsModal from './settingsModal.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
+import QuizMode from './quiz.js';
 
 let isMuted = false;
 let audio;
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
 let birdInfo;
+let quizMode;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -367,6 +369,9 @@ async function initializePage() {
         <button id="settings-button" class="icon-button" aria-label="Open settings">
           <img src="images/svg/settings.svg" alt="Settings" width="24" height="24">
         </button>
+        <button id="quiz-button" class="icon-button" aria-label="Start quiz">
+          <img src="images/svg/quiz.svg" alt="Quiz" width="24" height="24">
+        </button>
         <button id="refresh-button" class="icon-button">
           <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
         </button>
@@ -416,6 +421,14 @@ async function initializePage() {
       e.preventDefault();
       e.stopPropagation();
       window.location.reload();
+    });
+
+    document.getElementById('quiz-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (quizMode && !quizMode.isActive) {
+        quizMode.startQuiz();
+      }
     });
 
     // After updating the page content, add the review prompt if needed
@@ -643,6 +656,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     await window.topSitesInstance.initialize();
   } catch (error) {
     console.error('Failed to initialize top sites:', error);
+  }
+  
+  // Initialize quiz mode
+  try {
+    quizMode = new QuizMode();
+    log('Quiz mode initialized');
+  } catch (error) {
+    console.error('Failed to initialize quiz mode:', error);
   }
   
   // Start page update after UI elements are initialized

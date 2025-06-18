@@ -20,7 +20,8 @@ module.exports = (env, argv) => {
       script: './src/script.js',
       onboarding: './src/onboarding.js',
       config: './src/config.js',
-      shared: './src/shared.js'
+      shared: './src/shared.js',
+      quiz: './src/quiz.css'
     },
     output: {
       filename: '[name].js',
