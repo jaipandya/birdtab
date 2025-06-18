@@ -87,6 +87,10 @@
     "message": "Suchen",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "Im Web suchen",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "BirdTab Einstellungen",
     "description": "Title for settings page"
@@ -374,6 +378,30 @@
   "removeShortcutTooltip": {
     "message": "Verknüpfung entfernen",
     "description": "Tooltip for remove shortcut button"
+  },
+  "settingsTooltip": {
+    "message": "Einstellungen öffnen, um Ihre BirdTab-Erfahrung anzupassen",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "Ein Vogelbestimmungsquiz starten",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "Neues Vogelfoto und -informationen laden",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "Vogelgeräusche stumm schalten/aktivieren",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "Vogelgeräusch abspielen",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Vogelgeräusch pausieren",
+    "description": "Tooltip for pause button"
   },
   "addNewShortcutAriaLabel": {
     "message": "Neue benutzerdefinierte Verknüpfung hinzufügen",

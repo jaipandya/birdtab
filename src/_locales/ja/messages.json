@@ -375,6 +375,30 @@
     "message": "ショートカットを削除",
     "description": "Tooltip for remove shortcut button"
   },
+  "settingsTooltip": {
+    "message": "設定を開いてBirdTabエクスペリエンスをカスタマイズ",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "鳥類識別クイズを開始",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "新しい鳥の写真と情報を読み込み",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "鳥の音をミュート/ミュート解除",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "鳥の音を再生",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "鳥の音を一時停止",
+    "description": "Tooltip for pause button"
+  },
   "addNewShortcutAriaLabel": {
     "message": "新しいカスタムショートカットを追加",
     "description": "Aria label for add shortcut button"

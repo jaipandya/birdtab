@@ -375,6 +375,30 @@
     "message": "Remover atalho",
     "description": "Tooltip for remove shortcut button"
   },
+  "settingsTooltip": {
+    "message": "Abrir configurações para personalizar sua experiência BirdTab",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "Iniciar um quiz de identificação de aves",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "Carregar nova foto e informações de ave",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "Silenciar/ativar sons de aves",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "Reproduzir som de ave",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Pausar som de ave",
+    "description": "Tooltip for pause button"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Adicionar novo atalho personalizado",
     "description": "Aria label for add shortcut button"

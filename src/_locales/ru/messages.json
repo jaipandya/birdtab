@@ -375,6 +375,30 @@
     "message": "Удалить ярлык",
     "description": "Tooltip for remove shortcut button"
   },
+  "settingsTooltip": {
+    "message": "Открыть настройки для персонализации вашего опыта BirdTab",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "Начать викторину по идентификации птиц",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "Загрузить новое фото и информацию о птице",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "Отключить/включить звуки птиц",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "Воспроизвести звук птицы",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Приостановить звук птицы",
+    "description": "Tooltip for pause button"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Добавить новый пользовательский ярлык",
     "description": "Aria label for add shortcut button"

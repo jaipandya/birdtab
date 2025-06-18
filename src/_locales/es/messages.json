@@ -87,6 +87,10 @@
     "message": "Buscar",
     "description": "Alt text for search icon"
   },
+  "searchTooltip": {
+    "message": "Buscar en la web",
+    "description": "Tooltip for search button"
+  },
   "settingsTitle": {
     "message": "Configuración de BirdTab",
     "description": "Title for settings page"
@@ -374,6 +378,30 @@
   "removeShortcutTooltip": {
     "message": "Eliminar acceso directo",
     "description": "Tooltip for remove shortcut button"
+  },
+  "settingsTooltip": {
+    "message": "Abrir configuración para personalizar tu experiencia BirdTab",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "Iniciar un quiz de identificación de aves",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "Cargar una nueva foto e información de ave",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "Silenciar/activar sonidos de aves",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "Reproducir sonido de ave",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Pausar sonido de ave",
+    "description": "Tooltip for pause button"
   },
   "addNewShortcutAriaLabel": {
     "message": "Agregar nuevo acceso directo personalizado",

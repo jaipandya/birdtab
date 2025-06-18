@@ -375,6 +375,30 @@
     "message": "删除快捷方式",
     "description": "Tooltip for remove shortcut button"
   },
+  "settingsTooltip": {
+    "message": "打开设置以自定义您的 BirdTab 体验",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "开始鸟类识别测验",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "加载新的鸟类照片和信息",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "静音/取消静音鸟类声音",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "播放鸟类声音",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "暂停鸟类声音",
+    "description": "Tooltip for pause button"
+  },
   "addNewShortcutAriaLabel": {
     "message": "添加新的自定义快捷方式",
     "description": "Aria label for add shortcut button"

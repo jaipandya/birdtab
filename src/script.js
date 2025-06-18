@@ -98,6 +98,9 @@ const updatePlayPauseButton = () => {
     playButton.innerHTML = isPlaying ?
       `<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
       `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+    playButton.title = isPlaying ? 
+      chrome.i18n.getMessage('pauseTooltip') : 
+      chrome.i18n.getMessage('playTooltip');
   }
 };
 
@@ -174,6 +177,7 @@ function createAudioPlayer(mediaUrl) {
   playButton.id = 'play-button';
   playButton.classList.add('icon-button', 'play-button');
   playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+  playButton.title = chrome.i18n.getMessage('playTooltip');
   playButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -366,17 +370,17 @@ async function initializePage() {
         </p>
       </div>
       <div class="control-buttons">
-        <button id="settings-button" class="icon-button" aria-label="Open settings">
+        <button id="settings-button" class="icon-button" aria-label="Open settings" title="${chrome.i18n.getMessage('settingsTooltip')}">
           <img src="images/svg/settings.svg" alt="Settings" width="24" height="24">
         </button>
-        <button id="quiz-button" class="icon-button" aria-label="Start quiz">
+        <button id="quiz-button" class="icon-button" aria-label="Start quiz" title="${chrome.i18n.getMessage('quizTooltip')}">
           <img src="images/svg/quiz.svg" alt="Quiz" width="24" height="24">
         </button>
-        <button id="refresh-button" class="icon-button">
+        <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
           <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
         </button>
         ${birdInfo.mediaUrl ? `
-        <button id="mute-button" class="icon-button">
+        <button id="mute-button" class="icon-button" title="${chrome.i18n.getMessage('muteTooltip')}">
           <img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">
         </button>
         ` : ''}

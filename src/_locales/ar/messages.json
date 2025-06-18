@@ -375,6 +375,30 @@
     "message": "إزالة الاختصار",
     "description": "Tooltip for remove shortcut button"
   },
+  "settingsTooltip": {
+    "message": "فتح الإعدادات لتخصيص تجربة BirdTab الخاصة بك",
+    "description": "Tooltip for settings button"
+  },
+  "quizTooltip": {
+    "message": "بدء اختبار تحديد الطيور",
+    "description": "Tooltip for quiz button"
+  },
+  "refreshTooltip": {
+    "message": "تحميل صورة ومعلومات طائر جديدة",
+    "description": "Tooltip for refresh button"
+  },
+  "muteTooltip": {
+    "message": "كتم/إلغاء كتم أصوات الطيور",
+    "description": "Tooltip for mute button"
+  },
+  "playTooltip": {
+    "message": "تشغيل صوت الطائر",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "إيقاف صوت الطائر مؤقتاً",
+    "description": "Tooltip for pause button"
+  },
   "addNewShortcutAriaLabel": {
     "message": "إضافة اختصار مخصص جديد",
     "description": "Aria label for add shortcut button"
