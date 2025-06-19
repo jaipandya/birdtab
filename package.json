@@ -7,7 +7,9 @@
     "build:edge": "webpack --mode production --env BROWSER=edge",
     "dev:chrome": "webpack --mode development --watch --env BROWSER=chrome",
     "dev:edge": "webpack --mode development --watch --env BROWSER=edge",
-    "clean": "node -e \"require('rimraf').sync('dist-chrome'); require('rimraf').sync('dist-edge'); require('rimraf').sync('dev-chrome'); require('rimraf').sync('dev-edge');\""
+    "clean": "node -e \"require('rimraf').sync('dist-chrome'); require('rimraf').sync('dist-edge'); require('rimraf').sync('dev-chrome'); require('rimraf').sync('dev-edge');\"",
+    "check:i18n": "node scripts/check_i18n_completeness.js",
+    "check:unused": "node scripts/check_unused_strings.js"
   },
   "keywords": [],
   "author": "",

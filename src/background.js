@@ -271,6 +271,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     preloadedBirdInfo = null;
     sendResponse({ message: 'Cache deleted' });
     return true;
+  } else if (request.action === 'getBirdsByRegion') {
+    (async () => {
+      try {
+        const birds = await getBirdsByRegion(request.region);
+        sendResponse({ success: true, birds: birds });
+      } catch (error) {
+        console.error('Error fetching birds by region:', error);
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true; // Indicates that the response is asynchronous
   }
 });
 

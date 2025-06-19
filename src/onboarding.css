@@ -1,3 +1,16 @@
+/* RTL Support for onboarding */
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+html[dir="rtl"] .toggle-container {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .onboarding-container {
+  text-align: right;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;

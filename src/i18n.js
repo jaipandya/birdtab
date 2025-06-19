@@ -60,6 +60,30 @@ export function localizeHtml() {
       document.title = message;
     }
   }
+  
+  // Set HTML lang and dir attributes dynamically
+  const htmlElement = document.documentElement;
+  if (htmlElement) {
+    // Set lang attribute using Chrome's getUILanguage API (more reliable)
+    const currentLocale = chrome.i18n.getUILanguage();
+    if (currentLocale) {
+      htmlElement.lang = currentLocale;
+    }
+    
+    // Set dir attribute using textDirection translation key  
+    const textDirection = chrome.i18n.getMessage('textDirection');
+    if (textDirection && (textDirection === 'rtl' || textDirection === 'ltr')) {
+      htmlElement.dir = textDirection;
+      console.log('Set text direction to:', textDirection, 'for locale:', currentLocale);
+    } else {
+      // Fallback: detect RTL languages
+      const rtlLanguages = ['ar', 'he', 'fa', 'ur', 'yi'];
+      const langCode = currentLocale ? currentLocale.split('-')[0] : 'en';
+      const direction = rtlLanguages.includes(langCode) ? 'rtl' : 'ltr';
+      htmlElement.dir = direction;
+      console.log('Fallback: Set text direction to:', direction, 'for language:', langCode);
+    }
+  }
 }
 
 /**

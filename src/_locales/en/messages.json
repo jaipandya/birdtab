@@ -352,7 +352,7 @@
     "description": "Loading message 16"
   },
   "currentLocale": {
-    "message": "Current locale: @@ui_locale",
+    "message": "@@ui_locale",
     "description": "Shows current UI locale using predefined message"
   },
   "textDirection": {
@@ -546,5 +546,77 @@
   "quizErrorOk": {
     "message": "OK",
     "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "Preparing your quiz...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "quizLoadingAnswers": {
+    "message": "Loading quiz answers...",
+    "description": "Loading message when loading quiz answer options"
+  },
+  "quizLoadingImage": {
+    "message": "Loading bird image...",
+    "description": "Loading message when loading bird image"
+  },
+  "photoBy": {
+    "message": "Photo by",
+    "description": "Text before photographer credit"
+  },
+  "quizComplete": {
+    "message": "Quiz Complete!",
+    "description": "Title for quiz completion"
+  },
+  "quizResults": {
+    "message": "Quiz Results",
+    "description": "Title for quiz results section"
+  },
+  "finalScore": {
+    "message": "Final Score: {score}/10",
+    "description": "Final score display"
+  },
+  "questionReview": {
+    "message": "Question Review",
+    "description": "Title for question review section"
+  },
+  "correctAnswer": {
+    "message": "Correct answer: {answer}",
+    "description": "Shows the correct answer for a question"
+  },
+  "correct": {
+    "message": "Correct",
+    "description": "Indicates a correct answer"
+  },
+  "incorrect": {
+    "message": "Incorrect",
+    "description": "Indicates an incorrect answer"
+  },
+  "closeAlt": {
+    "message": "Close",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "Close quiz",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "Bing Search",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "eBird Page", 
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "Quiz",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "Start quiz",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "Loading...",
+    "description": "Loading text placeholder"
   }
 }

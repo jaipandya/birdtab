@@ -1,5 +1,27 @@
 /* Quiz Mode Styles - Clean & Minimal Design matching BirdTab aesthetic */
 
+/* RTL Support for quiz */
+html[dir="rtl"] .quiz-mode {
+  direction: rtl;
+}
+
+html[dir="rtl"] .quiz-header,
+html[dir="rtl"] .quiz-content,
+html[dir="rtl"] .quiz-question-title,
+html[dir="rtl"] .quiz-options-grid,
+html[dir="rtl"] .quiz-results-list {
+  text-align: right;
+}
+
+html[dir="rtl"] .quiz-actions {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .quiz-close-btn {
+  left: 20px;
+  right: auto;
+}
+
 /* Import better fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=SF+Pro+Display:wght@400;500;600;700&display=swap');
 
@@ -193,6 +215,7 @@
   font-size: 13px;
   color: #666;
   font-style: italic;
+  text-align: center;
 }
 
 .quiz-image-meta a {
@@ -581,3 +604,4 @@
 .quiz-btn:focus:not(:focus-visible) {
   outline: none;
 }
+

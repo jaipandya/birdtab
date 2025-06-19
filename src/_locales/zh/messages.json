@@ -356,7 +356,7 @@
     "description": "Aria label for close settings button"
   },
   "currentLocale": {
-    "message": "Current locale: @@ui_locale",
+    "message": "@@ui_locale",
     "description": "Shows current UI locale using predefined message"
   },
   "textDirection": {
@@ -546,5 +546,77 @@
   "quizErrorOk": {
     "message": "确定",
     "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "正在准备测验...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "quizLoadingAnswers": {
+    "message": "正在加载测验答案...",
+    "description": "Loading message when loading quiz answer options"
+  },
+  "quizLoadingImage": {
+    "message": "正在加载鸟类图片...",
+    "description": "Loading message when loading bird image"
+  },
+  "photoBy": {
+    "message": "照片拍摄者",
+    "description": "Text before photographer credit"
+  },
+  "quizComplete": {
+    "message": "测验完成！",
+    "description": "Quiz complete title"
+  },
+  "quizResults": {
+    "message": "测验结果",
+    "description": "Title for quiz results section"
+  },
+  "finalScore": {
+    "message": "最终得分：{score}/10",
+    "description": "Final score display"
+  },
+  "questionReview": {
+    "message": "题目回顾",
+    "description": "Question review section title"
+  },
+  "correctAnswer": {
+    "message": "正确答案：{answer}",
+    "description": "Correct answer display"
+  },
+  "correct": {
+    "message": "正确",
+    "description": "Correct answer indicator"
+  },
+  "incorrect": {
+    "message": "错误",
+    "description": "Incorrect answer indicator"
+  },
+  "closeAlt": {
+    "message": "关闭",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "关闭测验",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "必应搜索",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "eBird页面",
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "测验",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "开始测验",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "加载中...",
+    "description": "Loading text placeholder"
   }
 }

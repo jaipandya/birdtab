@@ -356,7 +356,7 @@
     "description": "Aria label for close settings button"
   },
   "currentLocale": {
-    "message": "Current locale: @@ui_locale",
+    "message": "@@ui_locale",
     "description": "Shows current UI locale using predefined message"
   },
   "textDirection": {
@@ -546,5 +546,77 @@
   "quizErrorOk": {
     "message": "موافق",
     "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "تحضير الاختبار...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "quizLoadingAnswers": {
+    "message": "تحميل إجابات الاختبار...",
+    "description": "Loading message when loading quiz answer options"
+  },
+  "quizLoadingImage": {
+    "message": "تحميل صورة الطائر...",
+    "description": "Loading message when loading bird image"
+  },
+  "photoBy": {
+    "message": "صورة بواسطة",
+    "description": "Text before photographer credit"
+  },
+  "quizComplete": {
+    "message": "اكتمل الاختبار!",
+    "description": "Title for quiz completion"
+  },
+  "quizResults": {
+    "message": "نتائج الاختبار",
+    "description": "Title for quiz results section"
+  },
+  "finalScore": {
+    "message": "النتيجة النهائية: {score}/10",
+    "description": "Final score display"
+  },
+  "questionReview": {
+    "message": "مراجعة الأسئلة",
+    "description": "Title for question review section"
+  },
+  "correctAnswer": {
+    "message": "الإجابة الصحيحة: {answer}",
+    "description": "Shows the correct answer for a question"
+  },
+  "correct": {
+    "message": "صحيح",
+    "description": "Indicates a correct answer"
+  },
+  "incorrect": {
+    "message": "خطأ",
+    "description": "Indicates an incorrect answer"
+  },
+  "closeAlt": {
+    "message": "إغلاق",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "إغلاق الاختبار",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "بحث بينغ",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "صفحة eBird",
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "اختبار",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "بدء الاختبار",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "جاري التحميل...",
+    "description": "Loading text placeholder"
   }
 }

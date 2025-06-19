@@ -1,5 +1,24 @@
 #!/usr/bin/env node
 
+/**
+ * Script to check for hardcoded English strings that should be internationalized
+ * 
+ * This script scans JavaScript, HTML, and CSS files for hardcoded English text
+ * that should be replaced with internationalization functions like chrome.i18n.getMessage()
+ * 
+ * Features:
+ * - Detects hardcoded strings in regular assignments and innerHTML
+ * - Skips log functions and console messages (developer-only)
+ * - Supports special skip flags to ignore specific code sections
+ * - Provides categorized output with helpful suggestions
+ * 
+ * Skip Flags:
+ * Use // @skip-hardcoded-check to start skipping a section
+ * Use // @end-skip-hardcoded-check to end skipping a section
+ * 
+ * Usage: node check_hardcoded_strings.js [file_or_directory]
+ */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -16,10 +35,17 @@ const patterns = [
   /'[A-Z][a-zA-Z\s,.'!?-]{10,}'/g,
   // Template literals with English text
   /`[A-Z][a-zA-Z\s,.'!?-]{10,}`/g,
-  // innerHTML with English text
+  // innerHTML with English text (comprehensive patterns)
   /innerHTML\s*=\s*["'`][^"'`]*[A-Z][a-zA-Z\s,.'!?-]{10,}[^"'`]*["'`]/g,
+  /innerHTML\s*=\s*["'`][^"'`]*<[^>]*>[A-Z][a-zA-Z\s,.'!?-]{5,}<\/[^>]*>[^"'`]*["'`]/g,
+  /innerHTML\s*\+=\s*["'`][^"'`]*[A-Z][a-zA-Z\s,.'!?-]{5,}[^"'`]*["'`]/g,
+  // innerHTML with template literals containing hardcoded text
+  /innerHTML\s*=\s*`[^`]*[A-Z][a-zA-Z\s,.'!?-]{5,}[^`]*`/g,
+  /innerHTML\s*\+=\s*`[^`]*[A-Z][a-zA-Z\s,.'!?-]{5,}[^`]*`/g,
   // textContent with English text
   /textContent\s*=\s*["'`][A-Z][a-zA-Z\s,.'!?-]{10,}["'`]/g,
+  // innerText with English text
+  /innerText\s*=\s*["'`][A-Z][a-zA-Z\s,.'!?-]{10,}["'`]/g,
   // Common UI text patterns
   /["'`](Add|Edit|Delete|Remove|Save|Cancel|OK|Close|Settings|Error|Warning|Success)[^"'`]*["'`]/g,
 ];
@@ -41,10 +67,17 @@ const whitelist = [
   /\.(js|css|html|json|png|jpg|svg)/,
   // Console/debug messages (developers only)
   /console\.(log|error|warn)/,
+  // Log function calls (developers only)
+  /log\s*\(/,
   // Library names
   /Macaulay Library|Chrome|BirdTab/,
   // CSS classes and IDs
   /class\s*=|id\s*=/,
+  // innerHTML that already uses i18n functions
+  /innerHTML.*chrome\.i18n\.getMessage/,
+  /innerHTML.*\$\{chrome\.i18n\.getMessage/,
+  // Template literals that use i18n
+  /`.*\$\{chrome\.i18n\.getMessage.*`/,
 ];
 
 function shouldIgnoreLine(line) {
@@ -106,9 +139,25 @@ function scanFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split('\n');
   const issues = [];
+  let skipHardcodedCheck = false;
 
   lines.forEach((line, index) => {
     const trimmedLine = line.trim();
+    
+    // Check for special skip flags
+    if (trimmedLine.includes('// @skip-hardcoded-check')) {
+      skipHardcodedCheck = true;
+      return;
+    }
+    if (trimmedLine.includes('// @end-skip-hardcoded-check')) {
+      skipHardcodedCheck = false;
+      return;
+    }
+    
+    // If we're in a skip section, don't check this line
+    if (skipHardcodedCheck) {
+      return;
+    }
     
     // Skip comments and empty lines
     if (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*') || 
@@ -148,9 +197,42 @@ function scanFile(filePath) {
         });
       }
     });
+
+    // Special check for innerHTML assignments with hardcoded text
+    if (isInnerHTMLWithHardcodedText(line)) {
+      // Extract the innerHTML assignment part
+      const innerHTMLMatch = line.match(/(\.?innerHTML\s*[+]?=\s*["'`][^"'`]*["'`]|\.?innerHTML\s*=\s*`[^`]*`)/);
+      if (innerHTMLMatch && !hasI18nAttribute(line)) {
+        issues.push({
+          line: index + 1,
+          text: innerHTMLMatch[0].trim(),
+          context: trimmedLine,
+          type: 'innerHTML_hardcoded'
+        });
+      }
+    }
   });
 
   return issues;
+}
+
+function isInnerHTMLWithHardcodedText(line) {
+  // More sophisticated innerHTML detection
+  const innerHTMLPatterns = [
+    // Basic innerHTML assignments with hardcoded text
+    /\.innerHTML\s*=\s*["'`][^"'`]*[A-Z][a-zA-Z\s,.'!?()-]{4,}[^"'`]*["'`]/,
+    // innerHTML with HTML tags containing text
+    /\.innerHTML\s*=\s*["'`][^"'`]*<[^>]*>[A-Z][a-zA-Z\s,.'!?()-]{3,}<\/[^>]*>[^"'`]*["'`]/,
+    // innerHTML concatenation
+    /\.innerHTML\s*\+=\s*["'`][^"'`]*[A-Z][a-zA-Z\s,.'!?()-]{4,}[^"'`]*["'`]/,
+    // Template literal innerHTML
+    /\.innerHTML\s*=\s*`[^`]*[A-Z][a-zA-Z\s,.'!?()-]{4,}[^`]*`/,
+    // Element.innerHTML without the dot (direct assignment)
+    /innerHTML\s*=\s*["'`][^"'`]*[A-Z][a-zA-Z\s,.'!?()-]{4,}[^"'`]*["'`]/,
+    /innerHTML\s*=\s*`[^`]*[A-Z][a-zA-Z\s,.'!?()-]{4,}[^`]*`/,
+  ];
+  
+  return innerHTMLPatterns.some(pattern => pattern.test(line));
 }
 
 function shouldIgnoreMatch(match) {
@@ -163,6 +245,10 @@ function shouldIgnoreMatch(match) {
     /^\d+(\.\d+)?(px|em|rem|%)?$/,
     // Color codes
     /#[0-9a-fA-F]{3,6}/,
+    // HTML attributes and tags (technical)
+    /^["'`](class|id|href|src|alt|title|data-\w+)["'`]$/,
+    // Common HTML tag names
+    /^["'`](div|span|p|h1|h2|h3|button|input|img)["'`]$/,
   ];
 
   // Single words that might be technical
@@ -227,8 +313,12 @@ function checkHardcodedStrings() {
   Object.entries(allResults).forEach(([filePath, issues]) => {
     console.log(`⚠️  ${filePath}:`);
     issues.forEach(issue => {
-      console.log(`   Line ${issue.line}: ${issue.text}`);
+      const typeIndicator = issue.type === 'innerHTML_hardcoded' ? '🏷️  innerHTML' : '📝 String';
+      console.log(`   ${typeIndicator} - Line ${issue.line}: ${issue.text}`);
       console.log(`   Context: ${issue.context}`);
+      if (issue.type === 'innerHTML_hardcoded') {
+        console.log(`   💡 Suggestion: Use chrome.i18n.getMessage() inside the innerHTML assignment`);
+      }
       console.log('');
       totalIssues++;
     });

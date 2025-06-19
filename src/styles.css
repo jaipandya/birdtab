@@ -4,6 +4,88 @@
   box-sizing: border-box;
 }
 
+/* RTL Support */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+/* RTL overrides for specific elements */
+html[dir="rtl"] .external-links {
+  flex-direction: row;
+}
+
+html[dir="rtl"] .control-buttons {
+  flex-direction: row-reverse;
+  right: auto;
+  left: 48px;
+}
+
+html[dir="rtl"] .credit-item {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .toggle-container {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .quiz-options-grid {
+  text-align: right;
+}
+
+html[dir="rtl"] .info-panel-header {
+  text-align: right;
+}
+
+html[dir="rtl"] .credits {
+  text-align: right;
+}
+
+/* RTL search support */
+html[dir="rtl"] #search-input {
+  padding: 16px 20px 16px 48px;
+}
+
+html[dir="rtl"] .search-button {
+  right: auto;
+  left: 12px;
+}
+
+/* RTL shortcut modal support */
+html[dir="rtl"] .shortcut-modal-content {
+  direction: rtl;
+}
+
+html[dir="rtl"] .shortcut-modal-header {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .shortcut-modal-header h3 {
+  text-align: right;
+}
+
+html[dir="rtl"] .shortcut-modal-footer {
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .input-group label {
+  text-align: right;
+}
+
+html[dir="rtl"] .input-group input[type="text"],
+html[dir="rtl"] .input-group input[type="url"],
+html[dir="rtl"] .input-group input {
+  text-align: right;
+}
+
+html[dir="rtl"] .error-message {
+  text-align: right;
+}
+
 html, body {
   height: 100%;
   width: 100%;

@@ -356,7 +356,7 @@
     "description": "Aria label for close settings button"
   },
   "currentLocale": {
-    "message": "Current locale: @@ui_locale",
+    "message": "@@ui_locale",
     "description": "Shows current UI locale using predefined message"
   },
   "textDirection": {
@@ -546,5 +546,77 @@
   "quizErrorOk": {
     "message": "OK",
     "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "Preparando tu quiz...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "quizLoadingAnswers": {
+    "message": "Cargando respuestas del quiz...",
+    "description": "Loading message when loading quiz answer options"
+  },
+  "quizLoadingImage": {
+    "message": "Cargando imagen del ave...",
+    "description": "Loading message when loading bird image"
+  },
+  "photoBy": {
+    "message": "Foto por",
+    "description": "Text before photographer credit"
+  },
+  "quizComplete": {
+    "message": "¡Quiz Completado!",
+    "description": "Title for quiz completion"
+  },
+  "quizResults": {
+    "message": "Resultados del Quiz",
+    "description": "Title for quiz results section"
+  },
+  "finalScore": {
+    "message": "Puntuación Final: {score}/10",
+    "description": "Final score display"
+  },
+  "questionReview": {
+    "message": "Revisión de Preguntas",
+    "description": "Title for question review section"
+  },
+  "correctAnswer": {
+    "message": "Respuesta correcta: {answer}",
+    "description": "Shows the correct answer for a question"
+  },
+  "correct": {
+    "message": "Correcto",
+    "description": "Indicates a correct answer"
+  },
+  "incorrect": {
+    "message": "Incorrecto",
+    "description": "Indicates an incorrect answer"
+  },
+  "closeAlt": {
+    "message": "Cerrar",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "Cerrar quiz",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "Búsqueda Bing",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "Página eBird",
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "Quiz",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "Iniciar quiz",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "Cargando...",
+    "description": "Loading text placeholder"
   }
 }

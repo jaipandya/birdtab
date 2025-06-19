@@ -356,7 +356,7 @@
     "description": "Aria label for close settings button"
   },
   "currentLocale": {
-    "message": "現在のロケール：@@ui_locale",
+    "message": "@@ui_locale",
     "description": "Shows current UI locale using predefined message"
   },
   "textDirection": {
@@ -546,5 +546,77 @@
   "quizErrorOk": {
     "message": "OK",
     "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "クイズを準備中...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "quizLoadingAnswers": {
+    "message": "クイズの選択肢を読み込み中...",
+    "description": "Loading message when loading quiz answer options"
+  },
+  "quizLoadingImage": {
+    "message": "鳥の画像を読み込み中...",
+    "description": "Loading message when loading bird image"
+  },
+  "photoBy": {
+    "message": "撮影者",
+    "description": "Text before photographer credit"
+  },
+  "quizComplete": {
+    "message": "クイズ完了！",
+    "description": "Quiz complete title"
+  },
+  "quizResults": {
+    "message": "クイズ結果",
+    "description": "Title for quiz results section"
+  },
+  "finalScore": {
+    "message": "最終スコア：{score}/10",
+    "description": "Final score display"
+  },
+  "questionReview": {
+    "message": "問題の振り返り",
+    "description": "Question review section title"
+  },
+  "correctAnswer": {
+    "message": "正解：{answer}",
+    "description": "Correct answer display"
+  },
+  "correct": {
+    "message": "正解",
+    "description": "Correct answer indicator"
+  },
+  "incorrect": {
+    "message": "不正解",
+    "description": "Incorrect answer indicator"
+  },
+  "closeAlt": {
+    "message": "閉じる",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "クイズを閉じる",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "Bing検索",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "eBirdページ",
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "クイズ",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "クイズを開始",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "読み込み中...",
+    "description": "Loading text placeholder"
   }
 }

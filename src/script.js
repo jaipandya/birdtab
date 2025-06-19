@@ -340,27 +340,27 @@ async function initializePage() {
       <div class="info-panel">
         <div class="external-links">
           <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
-            <img src="images/svg/bing-default.svg" alt="Bing Search" width="24" height="24">
+            <img src="images/svg/bing-default.svg" alt="${chrome.i18n.getMessage('bingSearchAlt')}" width="24" height="24">
           </a>
           <a href="${birdInfo.ebirdUrl}" target="_blank" class="external-link ebird-link">
-            <img src="images/svg/ebird-default.svg" alt="eBird Page" width="24" height="24">
+            <img src="images/svg/ebird-default.svg" alt="${chrome.i18n.getMessage('eBirdPageAlt')}" width="24" height="24">
           </a>
         </div>
         <div class="info-panel-header">
           <h1 id="bird-name"></h1>
           <span id="scientific-name"></span>
           <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
-            <img src="images/svg/info.svg" alt="Info" width="16" height="16">
+            <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
           </span>
         </div>
         <p class="credits">
           <span class="credit-item">
-            <img src="images/svg/camera.svg" alt="Camera" width="16" height="16">
+            <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
             <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
           </span>
           ${birdInfo.mediaUrl ? `
           <span class="credit-item">
-            <img src="images/svg/waveform.svg" alt="Audio" width="16" height="16">
+            <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
             <a id="recordist" href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
           </span>
           ` : ''}
@@ -370,18 +370,18 @@ async function initializePage() {
         </p>
       </div>
       <div class="control-buttons">
-        <button id="settings-button" class="icon-button" aria-label="Open settings" title="${chrome.i18n.getMessage('settingsTooltip')}">
-          <img src="images/svg/settings.svg" alt="Settings" width="24" height="24">
+        <button id="settings-button" class="icon-button" aria-label="${chrome.i18n.getMessage('openSettings')}" title="${chrome.i18n.getMessage('settingsTooltip')}">
+          <img src="images/svg/settings.svg" alt="${chrome.i18n.getMessage('settingsAlt')}" width="24" height="24">
         </button>
-        <button id="quiz-button" class="icon-button" aria-label="Start quiz" title="${chrome.i18n.getMessage('quizTooltip')}">
-          <img src="images/svg/quiz.svg" alt="Quiz" width="24" height="24">
+        <button id="quiz-button" class="icon-button" aria-label="${chrome.i18n.getMessage('startQuiz')}" title="${chrome.i18n.getMessage('quizTooltip')}">
+          <img src="images/svg/quiz.svg" alt="${chrome.i18n.getMessage('quizAlt')}" width="24" height="24">
         </button>
         <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
-          <img src="images/svg/refresh.svg" alt="Refresh" width="24" height="24">
+          <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
         ${birdInfo.mediaUrl ? `
         <button id="mute-button" class="icon-button" title="${chrome.i18n.getMessage('muteTooltip')}">
-          <img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">
+          <img src="images/svg/sound-off.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">
         </button>
         ` : ''}
       </div>
@@ -516,8 +516,8 @@ function updateMuteButton() {
   const muteButton = document.getElementById('mute-button');
   if (muteButton) {
     muteButton.innerHTML = isMuted ?
-      `<img src="images/svg/sound-off.svg" alt="Mute" width="24" height="24">` :
-      `<img src="images/svg/sound-on.svg" alt="Mute" width="24" height="24">`;
+      `<img src="images/svg/sound-off.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">` :
+      `<img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">`;
   }
 }
 
@@ -702,3 +702,33 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
   }
 });
+
+// Centralized function to restore main UI elements after quiz exit
+function restoreMainUIElements() {
+  // Show core UI elements and clear inline styles set by quiz
+  const elementsToShow = [
+    '.info-panel',
+    '.control-buttons',
+    '.external-links',
+    '.top-sites-container',
+    '.search-container'
+  ];
+  
+  elementsToShow.forEach(selector => {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.style.display = '';
+    }
+  });
+  
+  // Re-initialize search with proper permission/settings checks
+  initializeSearch();
+  
+  // Re-initialize top sites visibility
+  if (window.topSitesInstance) {
+    window.topSitesInstance.updateVisibility();
+  }
+}
+
+// Export for use by quiz mode
+window.restoreMainUIElements = restoreMainUIElements;
