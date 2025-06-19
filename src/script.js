@@ -8,11 +8,14 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 
 let isMuted = false;
+let volumeLevel = 0.8;
+let lastVolumeLevel = 0.8;
 let audio;
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
 let birdInfo;
 let quizMode;
+let saveVolumeTimeout = null;
 
 // Helper function for logging messages (only in development)
 function log(message) {
@@ -126,16 +129,16 @@ async function initializeAudio() {
 
 function hideAudioControls() {
   const playButton = document.getElementById('play-button');
-  const muteButton = document.getElementById('mute-button');
+  const volumeControl = document.getElementById('volume-control');
   if (playButton) playButton.style.display = 'none';
-  if (muteButton) muteButton.style.display = 'none';
+  if (volumeControl) volumeControl.style.display = 'none';
 }
 
 function showAudioControls() {
   const playButton = document.getElementById('play-button');
-  const muteButton = document.getElementById('mute-button');
+  const volumeControl = document.getElementById('volume-control');
   if (playButton) playButton.style.display = 'inline-flex';
-  if (muteButton) muteButton.style.display = 'inline-flex';
+  if (volumeControl) volumeControl.style.display = 'inline-flex';
 }
 
 function showQuietHoursIcon() {
@@ -172,6 +175,7 @@ function createAudioPlayer(mediaUrl) {
   // because it's usually recordist commentary
   audio.currentTime = 4;
   audio.muted = isMuted;
+  audio.volume = volumeLevel;
 
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
@@ -210,16 +214,22 @@ async function playAudio() {
 
   if (!audio) {
     audio = new Audio(birdInfo.mediaUrl);
+    audio.volume = volumeLevel;
+    audio.muted = isMuted;
   }
   try {
     await audio.play();
     isPlaying = true;
     updatePlayPauseButton();
+    
+    // Fade in the audio gradually to the current volume level
+    const targetVolume = isMuted ? 0 : volumeLevel;
     audio.volume = 0;
     let fadeAudioIn = setInterval(function () {
-      if (audio.volume < 0.9) {
+      if (audio.volume < targetVolume - 0.1) {
         audio.volume += 0.1;
       } else {
+        audio.volume = targetVolume;
         clearInterval(fadeAudioIn);
       }
     }, 200);
@@ -380,9 +390,14 @@ async function initializePage() {
           <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
         ${birdInfo.mediaUrl ? `
-        <button id="mute-button" class="icon-button" title="${chrome.i18n.getMessage('muteTooltip')}">
-          <img src="images/svg/sound-off.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">
-        </button>
+        <div id="volume-control" class="volume-control">
+          <button id="volume-button" class="icon-button" title="${chrome.i18n.getMessage('volumeTooltip')}">
+            <img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">
+          </button>
+          <div id="volume-slider-container" class="volume-slider-container">
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="80" orient="vertical">
+          </div>
+        </div>
         ` : ''}
       </div>
     `;
@@ -396,22 +411,20 @@ async function initializePage() {
         document.querySelector('.control-buttons').appendChild(audioPlayer);
       }
 
-      chrome.storage.sync.get(['isMuted'], (result) => {
+      chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
         isMuted = result.isMuted || false;
-        updateMuteButton();
-        if (audio) audio.muted = isMuted;
+        volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
+        lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+        updateVolumeControl();
+        if (audio) {
+          audio.muted = isMuted;
+          audio.volume = isMuted ? 0 : volumeLevel;
+        }
       });
 
-      document.getElementById('mute-button').addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        isMuted = !isMuted;
-        updateMuteButton();
-        if (audio) audio.muted = isMuted;
-        saveMuteState();
-      });
+      setupVolumeControl();
 
-      updateMuteButton();
+      updateVolumeControl();
     } else {
       log('No audio URL found in bird info');
       hideAudioControls();
@@ -511,21 +524,130 @@ function dismissPrompt() {
   }
 }
 
-// Update mute button UI
-function updateMuteButton() {
-  const muteButton = document.getElementById('mute-button');
-  if (muteButton) {
-    muteButton.innerHTML = isMuted ?
-      `<img src="images/svg/sound-off.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">` :
-      `<img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('muteAlt')}" width="24" height="24">`;
+// Update volume control UI
+function updateVolumeControl() {
+  const volumeButton = document.getElementById('volume-button');
+  const volumeSlider = document.getElementById('volume-slider');
+  
+  if (volumeButton) {
+    const iconSrc = (isMuted || volumeLevel === 0) ? 'sound-off.svg' : 'sound-on.svg';
+    volumeButton.innerHTML = `<img src="images/svg/${iconSrc}" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">`;
+    volumeButton.title = chrome.i18n.getMessage('volumeTooltip');
+  }
+  
+  if (volumeSlider) {
+    volumeSlider.value = Math.round(volumeLevel * 100);
+    // Update CSS custom property for visual feedback
+    volumeSlider.style.setProperty('--volume-percentage', `${volumeLevel * 100}%`);
   }
 }
 
-// Save mute state to chrome storage
-function saveMuteState() {
-  chrome.storage.sync.set({ isMuted }, () => {
-    log(`Mute state saved: ${isMuted}`);
+// Setup volume control event handlers
+function setupVolumeControl() {
+  const volumeButton = document.getElementById('volume-button');
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumeControl = document.getElementById('volume-control');
+  const sliderContainer = document.getElementById('volume-slider-container');
+  
+  if (!volumeButton || !volumeSlider || !volumeControl || !sliderContainer) return;
+  
+  let hoverTimer;
+  
+  // Volume button click handler
+  volumeButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMute();
   });
+  
+  // Volume slider change handler
+  volumeSlider.addEventListener('input', (e) => {
+    const newVolume = parseFloat(e.target.value) / 100;
+    setVolume(newVolume);
+  });
+  
+  // Hover behavior for showing slider
+  volumeControl.addEventListener('mouseenter', () => {
+    clearTimeout(hoverTimer);
+    sliderContainer.classList.add('visible');
+  });
+  
+  volumeControl.addEventListener('mouseleave', () => {
+    hoverTimer = setTimeout(() => {
+      sliderContainer.classList.remove('visible');
+    }, 300);
+  });
+  
+  // Keep slider visible when hovering over it
+  sliderContainer.addEventListener('mouseenter', () => {
+    clearTimeout(hoverTimer);
+  });
+}
+
+// Toggle mute state
+function toggleMute() {
+  if (isMuted) {
+    // Unmute: restore last volume level
+    isMuted = false;
+    if (lastVolumeLevel === 0) lastVolumeLevel = 0.8;
+    setVolume(lastVolumeLevel, true); // immediate save for mute/unmute
+  } else {
+    // Mute: save current volume and set to 0
+    if (volumeLevel > 0) lastVolumeLevel = volumeLevel;
+    isMuted = true;
+    setVolume(0, true); // immediate save for mute/unmute
+  }
+}
+
+// Set volume level
+function setVolume(newLevel, immediate = false) {
+  volumeLevel = Math.max(0, Math.min(1, newLevel));
+  
+  // Auto-mute/unmute based on volume level
+  if (volumeLevel === 0 && !isMuted) {
+    isMuted = true;
+  } else if (volumeLevel > 0 && isMuted) {
+    isMuted = false;
+  }
+  
+  // Update audio volume
+  if (audio) {
+    audio.volume = volumeLevel;
+    audio.muted = isMuted;
+  }
+  
+  updateVolumeControl();
+  saveVolumeState(immediate);
+}
+
+// Save volume state to chrome storage with debouncing
+function saveVolumeState(immediate = false) {
+  // Clear existing timeout
+  if (saveVolumeTimeout) {
+    clearTimeout(saveVolumeTimeout);
+  }
+  
+  if (immediate) {
+    // Save immediately (for mute/unmute actions)
+    chrome.storage.sync.set({ isMuted, volumeLevel }, () => {
+      if (chrome.runtime.lastError) {
+        console.warn('Failed to save volume state:', chrome.runtime.lastError);
+      } else {
+        log(`Volume state saved - muted: ${isMuted}, level: ${volumeLevel}`);
+      }
+    });
+  } else {
+    // Debounce for volume slider movements
+    saveVolumeTimeout = setTimeout(() => {
+      chrome.storage.sync.set({ isMuted, volumeLevel }, () => {
+        if (chrome.runtime.lastError) {
+          console.warn('Failed to save volume state:', chrome.runtime.lastError);
+        } else {
+          log(`Volume state saved - muted: ${isMuted}, level: ${volumeLevel}`);
+        }
+      });
+    }, 500); // Wait 500ms after last volume change
+  }
 }
 
 // Combined message listener to handle all background messages
@@ -533,10 +655,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
     location.reload();
   } else if (request.action === "toggleMute") {
-    isMuted = !isMuted;
-    updateMuteButton();
-    if (audio) audio.muted = isMuted;
-    saveMuteState();
+    toggleMute();
   } else if (request.action === "quietHoursChanged") {
     if (request.quietHoursEnabled) {
       const isQuietHour = await isQuietHoursActive();
@@ -651,6 +770,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   log('Onboarding complete, initializing UI components first');
   
+  // Load volume settings initially
+  chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
+    isMuted = result.isMuted || false;
+    volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
+    lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+    updateVolumeControl();
+  });
+  
   // Initialize search box and top sites immediately for better UX
   initializeSearch();
   
@@ -666,6 +793,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     quizMode = new QuizMode();
     log('Quiz mode initialized');
+    
+    // Add quiz button event listener for static HTML
+    const quizButton = document.getElementById('quiz-button');
+    if (quizButton) {
+      quizButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (quizMode && !quizMode.isActive) {
+          quizMode.startQuiz();
+        }
+      });
+    }
   } catch (error) {
     console.error('Failed to initialize quiz mode:', error);
   }
@@ -728,6 +867,10 @@ function restoreMainUIElements() {
   if (window.topSitesInstance) {
     window.topSitesInstance.updateVisibility();
   }
+  
+  // Re-setup volume control after quiz exit
+  setupVolumeControl();
+  updateVolumeControl();
 }
 
 // Export for use by quiz mode

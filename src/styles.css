@@ -86,6 +86,22 @@ html[dir="rtl"] .error-message {
   text-align: right;
 }
 
+/* RTL volume control support - ensure vertical slider behavior is consistent */
+html[dir="rtl"] .volume-control {
+  /* Volume control should behave the same in RTL - vertical slider up/down behavior */
+  direction: ltr;
+}
+
+html[dir="rtl"] .volume-slider-container {
+  /* Keep slider container positioning consistent */
+  direction: ltr;
+}
+
+html[dir="rtl"] .volume-slider {
+  /* Ensure vertical slider maintains up=increase, down=decrease behavior */
+  direction: ltr;
+}
+
 html, body {
   height: 100%;
   width: 100%;
@@ -176,9 +192,115 @@ body.loaded {
   left: 20px;
 }
 
-#mute-button {
-  top: 20px;
-  right: 20px;
+/* Volume Control Styles */
+.volume-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+#volume-button {
+  transition: all 0.3s ease;
+}
+
+#volume-button:hover {
+  transform: scale(1.05);
+}
+
+.volume-slider-container {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 15px 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 1001;
+}
+
+.volume-slider-container.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  cursor: pointer;
+  margin: 40px 0;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.volume-slider::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  border: none;
+}
+
+.volume-slider::-webkit-slider-track {
+  background: linear-gradient(to right, 
+    #ffffff 0%, 
+    #ffffff var(--volume-percentage, 80%), 
+    rgba(255, 255, 255, 0.3) var(--volume-percentage, 80%), 
+    rgba(255, 255, 255, 0.3) 100%);
+  border-radius: 2px;
+}
+
+/* Volume button icon animation */
+#volume-button img {
+  transition: all 0.2s ease;
+}
+
+#volume-button:hover img {
+  filter: brightness(1.2);
 }
 
 /* don't animate the background image */
