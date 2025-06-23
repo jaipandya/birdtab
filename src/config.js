@@ -9,6 +9,8 @@ export const CONFIG = {
   DEV_TIME_DELAY: 1 * 60 * 1000,  // 1 minute in milliseconds
   PROD_TIME_DELAY: 4 * 24 * 60 * 60 * 1000,  // 4 days in milliseconds
   API_SERVER_URL: 'https://api.birdtab.app/api',
+  DEFAULT_VOLUME: 0.3, // Default volume level (0.0 to 1.0)
+  VOLUME_STEP: 0.1 // Volume change step for keyboard shortcuts
 };
 
 export default CONFIG;

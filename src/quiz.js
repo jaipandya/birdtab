@@ -118,10 +118,10 @@ class QuizMode {
         this.showQuizUI();
         this.isActive = true;
         this.hideMainUI();
+        
+        // Show loading indicator while preparing first image
+        this.showQuizLoading();
       }
-      
-      // Show loading indicator while preparing first image
-      this.showQuizLoading();
       
       // Wait for first image to load before displaying question
       await this.ensureFirstImageLoaded();

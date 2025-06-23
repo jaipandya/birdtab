@@ -8,8 +8,8 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 
 let isMuted = false;
-let volumeLevel = 0.8;
-let lastVolumeLevel = 0.8;
+let volumeLevel = CONFIG.DEFAULT_VOLUME;
+let lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
 let audio;
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
@@ -589,7 +589,7 @@ function toggleMute() {
   if (isMuted) {
     // Unmute: restore last volume level
     isMuted = false;
-    if (lastVolumeLevel === 0) lastVolumeLevel = 0.8;
+    if (lastVolumeLevel === 0) lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
     setVolume(lastVolumeLevel, true); // immediate save for mute/unmute
   } else {
     // Mute: save current volume and set to 0
@@ -722,11 +722,26 @@ function setupSearchListeners() {
       });
     }
   });
-  // Add keyboard shortcut to focus search (Ctrl/Cmd + K)
+  // Add keyboard shortcuts
   document.addEventListener('keydown', (e) => {
+    // Focus search (Ctrl/Cmd + K)
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
       e.preventDefault();
       searchInput.focus();
+      return;
+    }
+    
+    // Volume controls (Up/Down arrows) - only when not in an input field
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const newVolume = Math.min(1, Math.round((volumeLevel + CONFIG.VOLUME_STEP) * 10) / 10);
+        setVolume(newVolume);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const newVolume = Math.max(0, Math.round((volumeLevel - CONFIG.VOLUME_STEP) * 10) / 10);
+        setVolume(newVolume);
+      }
     }
   });
 
@@ -773,10 +788,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load volume settings initially
   chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
     isMuted = result.isMuted || false;
-    volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
-    lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+    volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.DEFAULT_VOLUME;
+    lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.DEFAULT_VOLUME;
     updateVolumeControl();
   });
+  
+  // Setup volume control event listeners
+  setupVolumeControl();
   
   // Initialize search box and top sites immediately for better UX
   initializeSearch();
