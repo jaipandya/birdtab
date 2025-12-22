@@ -9,7 +9,8 @@
     "dev:edge": "webpack --mode development --watch --env BROWSER=edge",
     "clean": "node -e \"require('rimraf').sync('dist-chrome'); require('rimraf').sync('dist-edge'); require('rimraf').sync('dev-chrome'); require('rimraf').sync('dev-edge');\"",
     "check:i18n": "node scripts/check_i18n_completeness.js",
-    "check:unused": "node scripts/check_unused_strings.js"
+    "check:unused": "node scripts/check_unused_strings.js",
+    "test:sentry": "node scripts/test-sentry.js"
   },
   "keywords": [],
   "author": "",
@@ -30,5 +31,9 @@
     "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@sentry/browser": "^9.35.0",
+    "@sentry/tracing": "^7.120.3"
   }
 }

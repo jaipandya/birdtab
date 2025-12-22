@@ -52,7 +52,7 @@ async function getMacaulayImage(speciesCode) {
 
 // Fetch audio information from Macaulay Library
 async function getMacaulayAudio(speciesCode) {
-  
+
   // simulate a slow loading experience
   // await delay(4000);
 
@@ -179,7 +179,9 @@ async function fetchBirdInfo(region) {
       recordist: audioInfo?.recordist,
       recordistUrl: audioInfo?.recordistUrl,
       description: bird.description,
-      conservationStatus: bird.conservationStatus
+      conservationStatus: bird.conservationStatus,
+      primaryComName_fr: bird.primaryComName_fr,
+      primaryComName_cn: bird.primaryComName_cn
     };
 
     log(`Bird info compiled: ${JSON.stringify(birdInfo)}`);
@@ -292,7 +294,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     clearCache();
     preloadedBirdInfo = null;
   } else if (namespace === 'sync' && changes.quietHours) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {
         action: "quietHoursChanged",
         quietHoursEnabled: changes.quietHours.newValue
@@ -321,7 +323,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason === 'install' || details.reason === 'update') {
     checkOnboarding();
   }
-  
+
   // This helps in tracking the number of new tabs opened by the user
   // which is used in the review prompt
   if (details.reason === "install") {

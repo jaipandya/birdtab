@@ -13,7 +13,7 @@ Checks if all language files have complete translations compared to the English 
 ```bash
 node scripts/check_i18n_completeness.js
 # or
-npm run check:i18n
+pnpm run check:i18n
 ```
 
 **What it does:**
@@ -29,7 +29,7 @@ Identifies translation strings that might not be used in the codebase.
 ```bash
 node scripts/check_unused_strings.js
 # or
-npm run check:unused
+pnpm run check:unused
 ```
 
 **What it does:**
@@ -51,19 +51,19 @@ npm run check:unused
 
 1. **After adding new features:**
    ```bash
-   npm run check:i18n
+   pnpm run check:i18n
    ```
    Ensure all new strings are translated in all languages.
 
 2. **During code cleanup:**
    ```bash
-   npm run check:unused
+   pnpm run check:unused
    ```
    Find and remove obsolete translation strings.
 
 3. **Before releases:**
    ```bash
-   npm run check:i18n && npm run check:unused
+   pnpm run check:i18n && pnpm run check:unused
    ```
    Ensure complete translations and clean up unused strings.
 

@@ -101,8 +101,8 @@ const updatePlayPauseButton = () => {
     playButton.innerHTML = isPlaying ?
       `<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
       `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-    playButton.title = isPlaying ? 
-      chrome.i18n.getMessage('pauseTooltip') : 
+    playButton.title = isPlaying ?
+      chrome.i18n.getMessage('pauseTooltip') :
       chrome.i18n.getMessage('playTooltip');
   }
 };
@@ -221,7 +221,7 @@ async function playAudio() {
     await audio.play();
     isPlaying = true;
     updatePlayPauseButton();
-    
+
     // Fade in the audio gradually to the current volume level
     const targetVolume = isMuted ? 0 : volumeLevel;
     audio.volume = 0;
@@ -330,7 +330,7 @@ async function initializePage() {
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
-    
+
     // force an error to test error handling
     // throw new Error('Simulated error');
 
@@ -430,7 +430,16 @@ async function initializePage() {
       hideAudioControls();
     }
 
-    document.getElementById('bird-name').textContent = birdInfo.name;
+    const lang = chrome.i18n.getUILanguage();
+    let nameToDisplay = birdInfo.name;
+
+    if (lang && birdInfo.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
+      nameToDisplay = birdInfo.primaryComName_fr;
+    } else if (lang && birdInfo.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
+      nameToDisplay = birdInfo.primaryComName_cn;
+    }
+
+    document.getElementById('bird-name').textContent = nameToDisplay;
     document.getElementById('scientific-name').textContent = "(" + birdInfo.scientificName + ")";
     document.getElementById('photographer').textContent = birdInfo.photographer;
 
@@ -456,7 +465,7 @@ async function initializePage() {
 
     setupExternalLinks();
     await initializeAudio();
-    
+
     // Initialize settings modal after DOM elements are available
     requestAnimationFrame(() => {
       try {
@@ -481,7 +490,7 @@ function showErrorModal(errorMessage) {
   const errorDetails = errorModal.querySelector('.error-details');
   errorDetails.textContent = `${chrome.i18n.getMessage('errorDetails')}: ${errorMessage}`;
   errorModal.classList.remove('hidden');
-  
+
   const retryButton = document.getElementById('retry-button');
   // Remove existing event listeners to prevent multiple bindings
   retryButton.removeEventListener('click', retryHandler);
@@ -528,13 +537,13 @@ function dismissPrompt() {
 function updateVolumeControl() {
   const volumeButton = document.getElementById('volume-button');
   const volumeSlider = document.getElementById('volume-slider');
-  
+
   if (volumeButton) {
     const iconSrc = (isMuted || volumeLevel === 0) ? 'sound-off.svg' : 'sound-on.svg';
     volumeButton.innerHTML = `<img src="images/svg/${iconSrc}" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">`;
     volumeButton.title = chrome.i18n.getMessage('volumeTooltip');
   }
-  
+
   if (volumeSlider) {
     volumeSlider.value = Math.round(volumeLevel * 100);
     // Update CSS custom property for visual feedback
@@ -548,36 +557,36 @@ function setupVolumeControl() {
   const volumeSlider = document.getElementById('volume-slider');
   const volumeControl = document.getElementById('volume-control');
   const sliderContainer = document.getElementById('volume-slider-container');
-  
+
   if (!volumeButton || !volumeSlider || !volumeControl || !sliderContainer) return;
-  
+
   let hoverTimer;
-  
+
   // Volume button click handler
   volumeButton.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     toggleMute();
   });
-  
+
   // Volume slider change handler
   volumeSlider.addEventListener('input', (e) => {
     const newVolume = parseFloat(e.target.value) / 100;
     setVolume(newVolume);
   });
-  
+
   // Hover behavior for showing slider
   volumeControl.addEventListener('mouseenter', () => {
     clearTimeout(hoverTimer);
     sliderContainer.classList.add('visible');
   });
-  
+
   volumeControl.addEventListener('mouseleave', () => {
     hoverTimer = setTimeout(() => {
       sliderContainer.classList.remove('visible');
     }, 300);
   });
-  
+
   // Keep slider visible when hovering over it
   sliderContainer.addEventListener('mouseenter', () => {
     clearTimeout(hoverTimer);
@@ -602,20 +611,20 @@ function toggleMute() {
 // Set volume level
 function setVolume(newLevel, immediate = false) {
   volumeLevel = Math.max(0, Math.min(1, newLevel));
-  
+
   // Auto-mute/unmute based on volume level
   if (volumeLevel === 0 && !isMuted) {
     isMuted = true;
   } else if (volumeLevel > 0 && isMuted) {
     isMuted = false;
   }
-  
+
   // Update audio volume
   if (audio) {
     audio.volume = volumeLevel;
     audio.muted = isMuted;
   }
-  
+
   updateVolumeControl();
   saveVolumeState(immediate);
 }
@@ -626,7 +635,7 @@ function saveVolumeState(immediate = false) {
   if (saveVolumeTimeout) {
     clearTimeout(saveVolumeTimeout);
   }
-  
+
   if (immediate) {
     // Save immediately (for mute/unmute actions)
     chrome.storage.sync.set({ isMuted, volumeLevel }, () => {
@@ -691,7 +700,7 @@ function setupExternalLinks() {
 
 function initializeSearch() {
   const searchContainer = document.getElementById('search-container');
-  
+
   // Check settings synchronously first to show/hide immediately
   chrome.storage.sync.get(['quickAccessEnabled'], (result) => {
     chrome.permissions.contains({
@@ -730,7 +739,7 @@ function setupSearchListeners() {
       searchInput.focus();
       return;
     }
-    
+
     // Volume controls (Up/Down arrows) - only when not in an input field
     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
       if (e.key === 'ArrowUp') {
@@ -773,18 +782,18 @@ function checkOnboardingStatus() {
 document.addEventListener('DOMContentLoaded', async () => {
   // Localize the page immediately
   localizeHtml();
-  
+
   log('DOM content loaded, checking onboarding status');
-  
+
   // Check if onboarding is complete first
   const shouldContinue = await checkOnboardingStatus();
   if (!shouldContinue) {
     log('Redirecting to onboarding');
     return;
   }
-  
+
   log('Onboarding complete, initializing UI components first');
-  
+
   // Load volume settings initially
   chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
     isMuted = result.isMuted || false;
@@ -792,13 +801,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.DEFAULT_VOLUME;
     updateVolumeControl();
   });
-  
+
   // Setup volume control event listeners
   setupVolumeControl();
-  
+
   // Initialize search box and top sites immediately for better UX
   initializeSearch();
-  
+
   // Initialize top sites
   try {
     window.topSitesInstance = new TopSites();
@@ -806,12 +815,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Failed to initialize top sites:', error);
   }
-  
+
   // Initialize quiz mode
   try {
     quizMode = new QuizMode();
     log('Quiz mode initialized');
-    
+
     // Add quiz button event listener for static HTML
     const quizButton = document.getElementById('quiz-button');
     if (quizButton) {
@@ -826,7 +835,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Failed to initialize quiz mode:', error);
   }
-  
+
   // Start page update after UI elements are initialized
   log('Starting page update');
   await initializePage();
@@ -841,12 +850,12 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.quickAccessEnabled) {
       const searchContainer = document.getElementById('search-container');
       searchContainer.style.display = changes.quickAccessEnabled.newValue ? 'block' : 'none';
-      
+
       if (changes.quickAccessEnabled.newValue) {
         setupSearchListeners();
       }
     }
-    
+
     // Handle top sites and shortcuts toggle - update existing TopSites instance
     if (changes.quickAccessEnabled || changes.customShortcuts) {
       if (window.topSitesInstance) {
@@ -870,22 +879,22 @@ function restoreMainUIElements() {
     '.top-sites-container',
     '.search-container'
   ];
-  
+
   elementsToShow.forEach(selector => {
     const element = document.querySelector(selector);
     if (element) {
       element.style.display = '';
     }
   });
-  
+
   // Re-initialize search with proper permission/settings checks
   initializeSearch();
-  
+
   // Re-initialize top sites visibility
   if (window.topSitesInstance) {
     window.topSitesInstance.updateVisibility();
   }
-  
+
   // Re-setup volume control after quiz exit
   setupVolumeControl();
   updateVolumeControl();
