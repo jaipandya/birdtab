@@ -5,12 +5,44 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin } = require('webpack');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+const { rimraf } = require('rimraf');
+const fs = require('fs');
+const Dotenv = require('dotenv-webpack');
+
+// Load .env file for webpack config (dotenv-webpack only injects into bundled code)
+require('dotenv').config();
 
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   const isEdge = env.BROWSER === 'edge';
   const outputDir = isProduction ? (isEdge ? 'dist-edge' : 'dist-chrome') : (isEdge ? 'dev-edge' : 'dev-chrome');
+
+  // Custom plugin to delete source maps after they've been used
+  const DeleteSourceMapsPlugin = {
+    apply: (compiler) => {
+      compiler.hooks.done.tap('DeleteSourceMapsPlugin', () => {
+        if (isProduction) {
+          console.log('Cleaning up source maps...');
+          const outputPath = path.resolve(__dirname, outputDir);
+          // Find and delete all .map files
+          try {
+            const files = fs.readdirSync(outputPath);
+            const mapFiles = files.filter(file => file.endsWith('.map'));
+            mapFiles.forEach(file => {
+              const filePath = path.join(outputPath, file);
+              fs.unlinkSync(filePath);
+              console.log(`  Deleted: ${file}`);
+            });
+            console.log(`Source maps deleted successfully (${mapFiles.length} files).`);
+          } catch (err) {
+            console.error('Failed to delete source maps:', err);
+          }
+        }
+      });
+    },
+  };
 
   return {
     mode: isProduction ? 'production' : 'development',
@@ -21,6 +53,7 @@ module.exports = (env, argv) => {
       onboarding: './src/onboarding.js',
       config: './src/config.js',
       shared: './src/shared.js',
+      sentry: './src/sentry.js',
       quiz: './src/quiz.css'
     },
     output: {
@@ -28,7 +61,8 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, outputDir),
       clean: true,
     },
-    devtool: isProduction ? false : 'inline-source-map',
+    // Use source-map in production for Sentry, but we'll delete them after
+    devtool: isProduction ? 'source-map' : 'inline-source-map',
     optimization: {
       minimize: isProduction,
       minimizer: [
@@ -50,8 +84,8 @@ module.exports = (env, argv) => {
     plugins: [
       new CopyPlugin({
         patterns: [
-          { 
-            from: 'src/manifest.json', 
+          {
+            from: 'src/manifest.json',
             to: 'manifest.json',
             transform(content, path) {
               const isEdge = outputDir.includes('edge');
@@ -65,9 +99,15 @@ module.exports = (env, argv) => {
       }),
       new DefinePlugin({
         'process.env.BROWSER': JSON.stringify(isEdge ? 'edge' : 'chrome'),
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+        'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
       }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
+      }),
+      new Dotenv({
+        systemvars: true, // Load system environment variables as well
+        silent: true, // Hide errors if .env is missing (e.g. in CI)
       }),
       new HtmlWebpackPlugin({
         template: './src/popup.html',
@@ -84,6 +124,30 @@ module.exports = (env, argv) => {
         filename: 'onboarding.html',
         chunks: ['onboarding', 'shared'],
       }),
+      // Sentry plugin - only in production and if token is present
+      ...(isProduction && process.env.SENTRY_AUTH_TOKEN ? (() => {
+        console.log('\n📤 Sentry source map upload enabled (SENTRY_AUTH_TOKEN found)');
+        console.log(`   Organization: ${process.env.SENTRY_ORG || "birdtab"}`);
+        console.log(`   Project: ${process.env.SENTRY_PROJECT || "birdtab-extension"}\n`);
+        return [
+          sentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: process.env.SENTRY_ORG || "birdtab",
+            project: process.env.SENTRY_PROJECT || "birdtab-extension",
+            telemetry: false,
+            sourcemaps: {
+              assets: outputDir + "/**",
+            },
+            // Silent mode off so we can see upload output
+            silent: false,
+          }),
+        ];
+      })() : (isProduction ? (() => {
+        console.log('\n⚠️  SENTRY_AUTH_TOKEN not found - source maps will NOT be uploaded to Sentry.');
+        console.log('   To enable source map uploads, set SENTRY_AUTH_TOKEN in your .env file.\n');
+        return [];
+      })() : [])),
+      DeleteSourceMapsPlugin // Add our custom plugin to delete maps
     ],
     module: {
       rules: [

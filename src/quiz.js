@@ -1,4 +1,6 @@
+import { captureException } from './sentry.js';
 import './quiz.css';
+import { log } from './logger.js';
 
 /*
  * IMAGE PRELOADING OPTIMIZATION STRATEGY
@@ -23,13 +25,6 @@ import './quiz.css';
  * The key insight: Preload AFTER answering, not AFTER clicking next.
  */
 
-// Helper function for logging messages (only in development)
-function log(message) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[BirdTab]: ${message}`);
-  }
-}
-
 class QuizMode {
   constructor() {
     this.isActive = false;
@@ -45,7 +40,7 @@ class QuizMode {
     this.preloadedImages = new Map(); // Track preloaded images for cleanup
     this.abortController = null; // For cancelling pending requests
     this.eventListeners = []; // Track event listeners for cleanup
-    
+
     this.setupKeyboardListener();
   }
 
@@ -59,7 +54,7 @@ class QuizMode {
           this.showExitConfirmation();
         }
       }
-      
+
       // Handle keyboard navigation in quiz
       if (this.isActive && !this.hasAnswered) {
         if (e.key >= '1' && e.key <= '4') {
@@ -69,7 +64,7 @@ class QuizMode {
           }
         }
       }
-      
+
       // Handle next question with Enter
       if (this.isActive && this.hasAnswered && e.key === 'Enter') {
         this.nextQuestion();
@@ -84,27 +79,28 @@ class QuizMode {
     try {
       // Get current region setting
       const region = await this.getCurrentRegion();
-      
+
       // Get cached birds for the region, fetch if not available
       let birds = await this.getCachedBirds(region);
       let needsDataFetch = !birds;
-      
+
       if (needsDataFetch) {
         // Show loading UI only when data needs to be fetched
         this.showQuizUI();
         this.isActive = true;
         this.hideMainUI();
         this.showQuizLoading();
-        
+
         try {
           // Fetch birds from background script if not in cache
           birds = await this.fetchBirdsForRegion(region);
         } catch (error) {
+          captureException(error, { tags: { operation: 'fetchBirdsForRegion', component: 'QuizMode' }, extra: { region } });
           this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
           return;
         }
       }
-      
+
       if (!birds || birds.length < 10) {
         this.showError(chrome.i18n.getMessage('quizErrorNotEnoughBirds'));
         return;
@@ -112,24 +108,24 @@ class QuizMode {
 
       // Prepare quiz questions with enriched bird data
       await this.prepareQuestions(birds);
-      
+
       // Show quiz UI only if not already shown during data fetch
       if (!needsDataFetch) {
         this.showQuizUI();
         this.isActive = true;
         this.hideMainUI();
-        
+
         // Show loading indicator while preparing first image
         this.showQuizLoading();
       }
-      
+
       // Wait for first image to load before displaying question
       await this.ensureFirstImageLoaded();
-      
+
       // Display first question
       await this.displayQuestion();
     } catch (error) {
-      log(`Error starting quiz: ${error.message}`);
+      captureException(error, { tags: { operation: 'startQuiz', component: 'QuizMode' } });
       this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
     }
   }
@@ -177,7 +173,7 @@ class QuizMode {
     // Select 10 unique birds for questions
     const shuffledBirds = [...birds].sort(() => 0.5 - Math.random());
     const selectedBirds = shuffledBirds.slice(0, 10);
-    
+
     // Prepare questions without loading images first
     this.questions = selectedBirds.map(bird => {
       // Get 3 other birds as distractors (same region, different species)
@@ -185,16 +181,16 @@ class QuizMode {
         .filter(b => b.speciesCode !== bird.speciesCode)
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
-      
+
       // Create options array with correct answer and distractors
       const options = [
         { name: bird.primaryComName, isCorrect: true },
         ...distractors.map(d => ({ name: d.primaryComName, isCorrect: false }))
       ];
-      
+
       // Shuffle options
       options.sort(() => 0.5 - Math.random());
-      
+
       return {
         bird: {
           ...bird,
@@ -206,11 +202,11 @@ class QuizMode {
         correctAnswer: bird.primaryComName
       };
     });
-    
+
     this.currentQuestion = 0;
     this.score = 0;
     this.answers = [];
-    
+
     // Start loading images - first question with priority, others in background
     this.startImagePreloading();
   }
@@ -219,13 +215,13 @@ class QuizMode {
     // Load first question's image with priority
     if (this.questions.length > 0 && this.questions[0] && this.questions[0].bird) {
       const firstBird = this.questions[0].bird;
-      
+
       // Check cache first
       let imageInfo = await this.getBirdImage(firstBird.speciesCode);
       if (!imageInfo) {
         imageInfo = await this.loadBirdImageFromCDN(firstBird.speciesCode, true); // Priority = true
       }
-      
+
       // Update first question with image info
       if (this.questions && this.questions[0] && this.questions[0].bird) {
         this.questions[0].bird = {
@@ -235,13 +231,13 @@ class QuizMode {
           photographerUrl: imageInfo?.photographerUrl
         };
       }
-      
+
       // Preload first image in browser cache
       if (imageInfo?.imageUrl) {
         this.preloadImageInBrowser(imageInfo.imageUrl);
       }
     }
-    
+
     // Start preloading remaining images in background (non-priority)
     this.preloadRemainingImages();
   }
@@ -250,7 +246,7 @@ class QuizMode {
     // Make sure first question has a proper image loaded
     if (this.questions.length > 0 && this.questions[0] && this.questions[0].bird) {
       const firstBird = this.questions[0].bird;
-      
+
       // If image is still null or default, try to load it
       if (!firstBird.imageUrl || firstBird.imageUrl.includes('default-bird.jpg')) {
         // Check cache first
@@ -258,7 +254,7 @@ class QuizMode {
         if (!imageInfo) {
           imageInfo = await this.loadBirdImageFromCDN(firstBird.speciesCode, true);
         }
-        
+
         // Update first question with image info
         if (this.questions && this.questions[0] && this.questions[0].bird) {
           this.questions[0].bird = {
@@ -277,7 +273,7 @@ class QuizMode {
     for (let i = 1; i < this.questions.length; i++) {
       if (!this.questions[i] || !this.questions[i].bird) continue;
       const bird = this.questions[i].bird;
-      
+
       // Check cache first
       let imageInfo = await this.getBirdImage(bird.speciesCode);
       if (!imageInfo) {
@@ -341,7 +337,7 @@ class QuizMode {
 
     while (this.imageLoadingQueue.length > 0) {
       const { speciesCode, resolve } = this.imageLoadingQueue.shift();
-      
+
       try {
         const imageInfo = await this.fetchImageFromAPI(speciesCode);
         resolve(imageInfo);
@@ -368,20 +364,20 @@ class QuizMode {
       if (!this.abortController) {
         this.abortController = new AbortController();
       }
-      
+
       // Use the same logic as in background.js to fetch from Macaulay Library
       const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=photo`;
-      const response = await fetch(url, { 
+      const response = await fetch(url, {
         signal: this.abortController.signal,
         cache: 'default' // Use browser cache when available
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.results?.content?.[0]) {
         const image = data.results.content[0];
         if (image.mediaUrl) {
@@ -390,24 +386,24 @@ class QuizMode {
             photographer: image.userDisplayName,
             photographerUrl: `https://macaulaylibrary.org/asset/${image.assetId}`
           };
-          
+
           // Cache the image data
           const cacheKey = `image_${speciesCode}`;
           chrome.storage.local.set({
-            [cacheKey]: { 
-              value: imageInfo, 
-              timestamp: Date.now(), 
+            [cacheKey]: {
+              value: imageInfo,
+              timestamp: Date.now(),
               duration: 24 * 60 * 60 * 1000 // 24 hours
             }
           });
-          
+
           // Preload image in browser cache for faster display
           this.preloadImageInBrowser(imageInfo.imageUrl);
-          
+
           return imageInfo;
         }
       }
-      
+
       throw new Error('No image found in Macaulay Library');
     } catch (error) {
       log(`Error loading image for ${speciesCode}: ${error.message}`);
@@ -425,7 +421,7 @@ class QuizMode {
     if (!imageUrl || this.preloadedImages.has(imageUrl)) {
       return;
     }
-    
+
     const img = new Image();
     img.onload = () => {
       // Image successfully preloaded in browser cache
@@ -435,7 +431,7 @@ class QuizMode {
       this.preloadedImages.delete(imageUrl);
     };
     img.src = imageUrl;
-    
+
     // Track for cleanup
     this.preloadedImages.set(imageUrl, img);
   }
@@ -451,13 +447,13 @@ class QuizMode {
         </div>
       `;
     }
-    
+
     // Update question text to show loading
     const questionText = document.getElementById('quiz-question-text');
     if (questionText) {
       questionText.textContent = chrome.i18n.getMessage('quizLoadingQuestions');
     }
-    
+
     // Disable options while loading
     const optionsContainer = document.getElementById('quiz-options');
     if (optionsContainer) {
@@ -518,9 +514,9 @@ class QuizMode {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(this.quizContainer);
-    
+
     // Setup event listeners
     this.setupQuizEventListeners();
   }
@@ -534,7 +530,7 @@ class QuizMode {
       '.top-sites-container',
       '.external-links'
     ];
-    
+
     elementsToHide.forEach(selector => {
       const element = document.querySelector(selector);
       if (element) {
@@ -554,7 +550,7 @@ class QuizMode {
         '.control-buttons',
         '.external-links'
       ];
-      
+
       elementsToShow.forEach(selector => {
         const element = document.querySelector(selector);
         if (element) {
@@ -568,19 +564,19 @@ class QuizMode {
     const question = this.questions[this.currentQuestion];
     this.selectedAnswer = null;
     this.hasAnswered = false;
-    
+
     // Update progress
     const progressPercent = ((this.currentQuestion + 1) / 10) * 100;
     document.getElementById('quiz-progress-fill').style.width = `${progressPercent}%`;
     document.getElementById('quiz-current').textContent = this.currentQuestion + 1;
     document.getElementById('quiz-score').textContent = this.score;
-    
+
     // Update question text (clear any loading state)
     const questionText = document.getElementById('quiz-question-text');
     if (questionText) {
       questionText.textContent = chrome.i18n.getMessage('quizModeQuestion');
     }
-    
+
     // Update next button text
     const nextBtn = document.getElementById('quiz-next');
     if (this.currentQuestion === 9) {
@@ -589,11 +585,11 @@ class QuizMode {
       nextBtn.textContent = chrome.i18n.getMessage('quizNextQuestion');
     }
     nextBtn.disabled = true;
-    
+
     // OPTIMAL TIMING: Preload next question's image immediately when displaying current question
     // This gives maximum time for the next image to load while user reads and answers
     this.preloadNextQuestionImage();
-    
+
     // Update photographer info immediately if available
     if (question.bird.photographer) {
       this.updateImageMeta(question.bird);
@@ -604,11 +600,11 @@ class QuizMode {
         imageMeta.innerHTML = `${chrome.i18n.getMessage('photoBy')} <a href="#" id="quiz-photographer" target="_blank">${chrome.i18n.getMessage('loading')}</a>`;
       }
     }
-    
+
     // Show loading indicator for image
     const imageContainer = document.getElementById('quiz-image-container');
     imageContainer.innerHTML = '';
-    
+
     const loader = document.createElement('div');
     loader.className = 'image-loader';
     loader.innerHTML = `
@@ -616,11 +612,11 @@ class QuizMode {
       <p>${chrome.i18n.getMessage('quizLoadingImage')}</p>
     `;
     imageContainer.appendChild(loader);
-    
+
     // Load image with fallback
     const imageUrl = question.bird.imageUrl || chrome.runtime.getURL('images/default-bird.jpg');
     const img = new Image();
-    
+
     img.onload = () => {
       imageContainer.innerHTML = '';
       const imageElement = document.createElement('img');
@@ -629,12 +625,12 @@ class QuizMode {
       imageElement.alt = `${question.bird.primaryComName} - Bird quiz image`;
       imageContainer.appendChild(imageElement);
     };
-    
+
     img.onerror = async () => {
       // If image fails to load, try to fetch a new one
       const imageInfo = await this.loadBirdImageFromCDN(question.bird.speciesCode);
       const newImageUrl = imageInfo.imageUrl;
-      
+
       const retryImg = new Image();
       retryImg.onload = () => {
         imageContainer.innerHTML = '';
@@ -643,10 +639,10 @@ class QuizMode {
         imageElement.src = newImageUrl;
         imageElement.alt = `${question.bird.primaryComName} - Bird quiz image`;
         imageContainer.appendChild(imageElement);
-        
+
         // Update the question data with new image
         question.bird.imageUrl = newImageUrl;
-        
+
         // Update photographer info if we got new info
         if (imageInfo.photographer) {
           question.bird.photographer = imageInfo.photographer;
@@ -654,7 +650,7 @@ class QuizMode {
           this.updateImageMeta(question.bird);
         }
       };
-      
+
       retryImg.onerror = () => {
         // Fallback to default image
         imageContainer.innerHTML = '';
@@ -663,28 +659,28 @@ class QuizMode {
         imageElement.src = chrome.runtime.getURL('images/default-bird.jpg');
         imageElement.alt = 'Default bird image';
         imageContainer.appendChild(imageElement);
-        
+
         this.updateImageMeta({ photographer: 'Unknown', photographerUrl: '#' });
       };
-      
+
       retryImg.src = newImageUrl;
     };
-    
+
     img.src = imageUrl;
-    
+
     // Display options
     const optionsContainer = document.getElementById('quiz-options');
     optionsContainer.innerHTML = '';
-    
+
     question.options.forEach((option, index) => {
       const optionElement = document.createElement('div');
       optionElement.className = 'quiz-option';
       optionElement.textContent = option.name;
-      
+
       const optionHandler = () => this.selectOption(index);
       optionElement.addEventListener('click', optionHandler);
       this.eventListeners.push({ element: optionElement, event: 'click', handler: optionHandler });
-      
+
       optionsContainer.appendChild(optionElement);
     });
   }
@@ -699,29 +695,29 @@ class QuizMode {
 
   selectOption(index) {
     if (this.hasAnswered) return;
-    
+
     const options = document.querySelectorAll('.quiz-option');
-    
+
     // Add selection to clicked option
     options[index].classList.add('selected');
     this.selectedAnswer = index;
-    
+
     // Automatically submit the answer
     this.submitAnswer();
   }
 
   submitAnswer() {
     if (this.selectedAnswer === null || this.hasAnswered) return;
-    
+
     const question = this.questions[this.currentQuestion];
     const selectedOption = question.options[this.selectedAnswer];
     const isCorrect = selectedOption.isCorrect;
-    
+
     // Update score
     if (isCorrect) {
       this.score++;
     }
-    
+
     // Record answer
     this.answers.push({
       question: question,
@@ -729,11 +725,11 @@ class QuizMode {
       correctAnswer: question.correctAnswer,
       isCorrect: isCorrect
     });
-    
+
     // Show feedback
     this.showAnswerFeedback();
     this.hasAnswered = true;
-    
+
     // Update next button
     const nextBtn = document.getElementById('quiz-next');
     if (this.currentQuestion === 9) {
@@ -747,18 +743,18 @@ class QuizMode {
   showAnswerFeedback() {
     const options = document.querySelectorAll('.quiz-option');
     const question = this.questions[this.currentQuestion];
-    
+
     options.forEach((option, index) => {
       const optionData = question.options[index];
       option.classList.add('disabled');
-      
+
       if (optionData.isCorrect) {
         option.classList.add('correct');
       } else if (index === this.selectedAnswer) {
         option.classList.add('incorrect');
       }
     });
-    
+
     // Update score display
     document.getElementById('quiz-score').textContent = this.score;
   }
@@ -772,7 +768,7 @@ class QuizMode {
     const nextQuestionIndex = this.currentQuestion + 1;
     if (nextQuestionIndex < this.questions.length && this.questions[nextQuestionIndex] && this.questions[nextQuestionIndex].bird) {
       const nextBird = this.questions[nextQuestionIndex].bird;
-      
+
       // Only preload if image not already loaded
       if (!nextBird.imageUrl || nextBird.imageUrl.includes('default-bird.jpg')) {
         // Check cache first
@@ -787,7 +783,7 @@ class QuizMode {
               photographerUrl: imageInfo?.photographerUrl
             };
           }
-          
+
           // Preload in browser cache for instant display
           this.preloadImageInBrowser(imageInfo.imageUrl);
         } else {
@@ -825,7 +821,7 @@ class QuizMode {
           </div>
           <div class="quiz-meta">
             <span>${chrome.i18n.getMessage('quizComplete')}</span>
-            <span>${chrome.i18n.getMessage('finalScore', {score: this.score})}</span>
+            <span>${chrome.i18n.getMessage('finalScore', { score: this.score })}</span>
           </div>
           <h1 class="quiz-question-title">${chrome.i18n.getMessage('quizResults')}</h1>
         </div>
@@ -842,7 +838,7 @@ class QuizMode {
                 <div class="quiz-result-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
                   <div class="quiz-result-bird">
                     ${index + 1}. ${answer.question.bird.primaryComName}
-                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', {answer: answer.correctAnswer})}</div>` : ''}
+                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', { answer: answer.correctAnswer })}</div>` : ''}
                   </div>
                   <div class="quiz-result-status ${answer.isCorrect ? 'correct' : 'incorrect'}">
                     ${answer.isCorrect ? chrome.i18n.getMessage('correct') : chrome.i18n.getMessage('incorrect')}
@@ -858,11 +854,11 @@ class QuizMode {
         </div>
       </div>
     `;
-    
+
     // Add event listeners and track them for cleanup
     const restartButton = document.getElementById('quiz-restart');
     const exitButton = document.getElementById('quiz-exit');
-    
+
     const restartHandler = async () => {
       // Reset quiz state without exiting the modal
       this.currentQuestion = 0;
@@ -871,18 +867,18 @@ class QuizMode {
       this.answers = [];
       this.selectedAnswer = null;
       this.hasAnswered = false;
-      
+
       // Clear preloaded images and reset loading state
       this.imageLoadingQueue = [];
       this.isLoadingImages = false;
-      
+
       try {
         // Get current region setting
         const region = await this.getCurrentRegion();
-        
+
         // Get cached birds for the region
         const birds = await this.getCachedBirds(region);
-        
+
         if (!birds || birds.length < 10) {
           this.showError(chrome.i18n.getMessage('quizErrorNotEnoughBirds'));
           return;
@@ -890,28 +886,29 @@ class QuizMode {
 
         // Prepare new quiz questions
         await this.prepareQuestions(birds);
-        
+
         // Update the modal content to show quiz UI instead of results
         this.updateQuizUIForNewQuiz();
-        
+
         // Show loading indicator while preparing first image
         this.showQuizLoading();
-        
+
         // Wait for first image to load before displaying question
         await this.ensureFirstImageLoaded();
-        
+
         // Display first question
         await this.displayQuestion();
       } catch (error) {
         log(`Error restarting quiz: ${error.message}`);
+        captureException(error, { tags: { operation: 'restartQuiz', component: 'QuizMode' } });
         this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
       }
     };
     const exitHandler = () => this.exitQuiz();
-    
+
     restartButton.addEventListener('click', restartHandler);
     exitButton.addEventListener('click', exitHandler);
-    
+
     this.eventListeners.push({ element: restartButton, event: 'click', handler: restartHandler });
     this.eventListeners.push({ element: exitButton, event: 'click', handler: exitHandler });
 
@@ -938,7 +935,7 @@ class QuizMode {
       this.exitQuiz();
       return;
     }
-    
+
     const exitModal = document.createElement('div');
     exitModal.className = 'quiz-exit-modal';
     exitModal.innerHTML = `
@@ -951,17 +948,17 @@ class QuizMode {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(exitModal);
-    
+
     const confirmButton = document.getElementById('quiz-confirm-exit');
     const cancelButton = document.getElementById('quiz-cancel-exit');
-    
+
     if (!confirmButton || !cancelButton) {
-      console.error('Exit confirmation buttons not found');
+      captureException(new Error('Exit confirmation buttons not found'), { tags: { component: 'QuizMode' } });
       return;
     }
-    
+
     const confirmHandler = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -977,17 +974,17 @@ class QuizMode {
         document.body.removeChild(exitModal);
       }
     };
-    
+
     confirmButton.addEventListener('click', confirmHandler);
     cancelButton.addEventListener('click', cancelHandler);
-    
+
     // Note: These don't need to be tracked in this.eventListeners since the modal will be removed
   }
 
   exitQuiz() {
     // Clean up resources before exiting
     this.cleanup();
-    
+
     this.isActive = false;
     this.currentQuestion = 0;
     this.score = 0;
@@ -995,35 +992,35 @@ class QuizMode {
     this.answers = [];
     this.selectedAnswer = null;
     this.hasAnswered = false;
-    
+
     if (this.quizContainer) {
       document.body.removeChild(this.quizContainer);
       this.quizContainer = null;
     }
-    
+
     // Remove any exit modals
     const exitModal = document.querySelector('.quiz-exit-modal');
     if (exitModal) {
       document.body.removeChild(exitModal);
     }
-    
+
     this.showMainUI();
   }
 
   // Comprehensive cleanup method to prevent memory leaks
   cleanup() {
     log('Cleaning up quiz resources...');
-    
+
     // Cancel any pending image loading requests
     if (this.abortController) {
       this.abortController.abort();
       this.abortController = null;
     }
-    
+
     // Clear image loading queue
     this.imageLoadingQueue = [];
     this.isLoadingImages = false;
-    
+
     // Clean up preloaded images
     this.preloadedImages.forEach((img, url) => {
       // Set src to empty to potentially free memory
@@ -1032,7 +1029,7 @@ class QuizMode {
       img.onerror = null;
     });
     this.preloadedImages.clear();
-    
+
     // Remove tracked event listeners (except main keyboard listener)
     this.eventListeners.forEach(({ element, event, handler, persist }) => {
       if (!persist) { // Only remove non-persistent listeners
@@ -1045,7 +1042,7 @@ class QuizMode {
     });
     // Keep only persistent listeners (like main keyboard listener)
     this.eventListeners = this.eventListeners.filter(listener => listener.persist);
-    
+
     // Clear large data structures
     if (this.questions.length > 0) {
       this.questions.forEach(question => {
@@ -1058,7 +1055,7 @@ class QuizMode {
       });
       this.questions = [];
     }
-    
+
     if (this.answers.length > 0) {
       this.answers.forEach(answer => {
         // Clear references
@@ -1066,19 +1063,19 @@ class QuizMode {
       });
       this.answers = [];
     }
-    
+
     // Force garbage collection hint (not guaranteed but helpful)
     if (window.gc && typeof window.gc === 'function') {
       window.gc();
     }
-    
+
     log('Quiz cleanup completed');
   }
 
   // Destructor method - call this when QuizMode instance is no longer needed
   destroy() {
     log('Destroying QuizMode instance...');
-    
+
     // Exit quiz if active
     if (this.isActive) {
       this.exitQuiz();
@@ -1086,14 +1083,14 @@ class QuizMode {
       // Just cleanup if not active
       this.cleanup();
     }
-    
+
     // Remove global keyboard listener if it exists
     this.eventListeners.forEach(({ element, event, handler }) => {
       if (element === document && event === 'keydown') {
         document.removeEventListener(event, handler);
       }
     });
-    
+
     // Clear all references
     this.quizContainer = null;
     this.questions = null;
@@ -1102,7 +1099,7 @@ class QuizMode {
     this.preloadedImages = null;
     this.eventListeners = null;
     this.abortController = null;
-    
+
     log('QuizMode instance destroyed');
   }
 
@@ -1119,7 +1116,7 @@ class QuizMode {
     });
     // Remove non-persistent listeners from the array
     this.eventListeners = this.eventListeners.filter(listener => listener.persist);
-    
+
     // Replace results content with fresh quiz UI
     this.quizContainer.innerHTML = `
       <button class="quiz-close-btn" id="quiz-close" aria-label="${chrome.i18n.getMessage('closeQuiz')}">
@@ -1168,11 +1165,11 @@ class QuizMode {
         </div>
       </div>
     `;
-    
+
     // Re-add event listeners for the new UI
     this.setupQuizEventListeners();
   }
-  
+
   setupQuizEventListeners() {
     // Add event listeners and track them for cleanup
     const nextButton = document.getElementById('quiz-next');
@@ -1234,24 +1231,24 @@ class QuizMode {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(errorModal);
-    
+
     const errorOkButton = document.getElementById('quiz-error-ok');
     const errorHandler = () => {
       document.body.removeChild(errorModal);
     };
-    
+
     errorOkButton.addEventListener('click', errorHandler);
     // Note: Error modal listeners don't need tracking since modal will be removed
-    
+
     // Auto-remove after 5 seconds
     const timeoutId = setTimeout(() => {
       if (document.body.contains(errorModal)) {
         document.body.removeChild(errorModal);
       }
     }, 5000);
-    
+
     // Clear timeout if modal is manually closed
     errorOkButton.addEventListener('click', () => {
       clearTimeout(timeoutId);

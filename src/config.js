@@ -10,7 +10,26 @@ export const CONFIG = {
   PROD_TIME_DELAY: 4 * 24 * 60 * 60 * 1000,  // 4 days in milliseconds
   API_SERVER_URL: 'https://api.birdtab.app/api',
   DEFAULT_VOLUME: 0.3, // Default volume level (0.0 to 1.0)
-  VOLUME_STEP: 0.1 // Volume change step for keyboard shortcuts
+  VOLUME_STEP: 0.1, // Volume change step for keyboard shortcuts
+
+  // Sentry Configuration - follows same pattern as other config
+  SENTRY: {
+    // DSN - Safe to include in production builds (Sentry DSN is designed to be public)
+    // Replace with your actual Sentry DSN from your project settings
+    DSN: 'https://98781d8af4acd4e491de6bb3ae00bd39@o4509638513393664.ingest.us.sentry.io/4509638520012800',
+
+    // Environment detection - set by webpack based on build mode
+    ENVIRONMENT: process.env.SENTRY_ENVIRONMENT || 'production',
+
+    // Performance monitoring sample rate (5% for free tier optimization)
+    // With 1000+ daily users and new tab loads, 5% keeps us well within:
+    // - 5 million spans/month limit
+    // - Estimated: 1000 users × 30 days × 5 tabs/day × 5% = ~7,500 spans/month
+    TRACES_SAMPLE_RATE: 0.05,
+
+    // Enable debug mode (set to true only when debugging Sentry issues)
+    DEBUG: false
+  }
 };
 
 export default CONFIG;

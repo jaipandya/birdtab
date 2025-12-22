@@ -1,10 +1,20 @@
 import './onboarding.css';
 import { populateRegionSelect } from './shared.js';
 import { localizeHtml } from './i18n.js';
+import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Sentry for onboarding
+  initSentry('onboarding');
+  
+  // Start onboarding flow transaction
+  const transaction = startTransaction('onboarding-flow', 'navigation');
+  
   // Localize the onboarding immediately
   localizeHtml();
+  
+  addBreadcrumb('Onboarding started', 'navigation', 'info');
+  
   let currentStep = 1;
   const totalSteps = 3;
   const nextButtons = document.querySelectorAll('.next-btn');
@@ -21,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === step - 1);
     });
+    
+    addBreadcrumb(`Onboarding step ${step}`, 'navigation', 'info', { step, totalSteps });
   }
 
   nextButtons.forEach(button => {
@@ -36,11 +48,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedRegion = document.getElementById('region-select').value;
     const autoPlayEnabled = document.getElementById('autoplay-toggle').checked;
 
+    addBreadcrumb('Onboarding completed', 'user', 'info', { 
+      region: selectedRegion, 
+      autoPlay: autoPlayEnabled 
+    });
+
     chrome.storage.sync.set({
       region: selectedRegion,
       autoPlay: autoPlayEnabled,
       onboardingComplete: true
     }, function () {
+      if (chrome.runtime.lastError) {
+        captureException(new Error('Failed to save onboarding settings'), {
+          tags: { operation: 'saveOnboardingSettings' },
+          extra: { error: chrome.runtime.lastError.message, selectedRegion, autoPlayEnabled }
+        });
+        return;
+      }
+      
+      // Finish the onboarding transaction
+      if (transaction) {
+        transaction.setStatus('ok');
+        transaction.finish();
+      }
+      
       chrome.tabs.create({ url: 'index.html' });
       window.close();
     });

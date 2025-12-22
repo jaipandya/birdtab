@@ -1,16 +1,15 @@
 import { CONFIG } from './config.js';
+import { initSentry, captureException, addBreadcrumb } from './sentry.js';
+import { log } from './logger.js';
+
+// Initialize Sentry for background script
+initSentry('background');
 
 log('Background script starting...');
+addBreadcrumb('Background script started', 'lifecycle', 'info');
 
 let preloadedBirdInfo = null;
 let lastNewTabId = null;
-
-// Helper function for logging messages (only in development)
-function log(message) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[BirdTab]: ${message}`);
-  }
-}
 
 // new async delay function to simulate a slow loading experience
 async function delay(ms) {
@@ -135,9 +134,15 @@ async function getBirdsByRegion(region) {
     throw new Error('No birds found in the response');
   } catch (error) {
     log(`Error fetching birds: ${error.message}`);
+    captureException(error, {
+      tags: { operation: 'getBirdsByRegion' },
+      extra: { region } // Removed URL to avoid exposing API endpoints
+    });
+
     const cachedData = await getCachedData(cacheKey);
     if (cachedData) {
       log(`Using cached birds due to error: ${error.message}`);
+      addBreadcrumb(`Using cached birds for region ${region}`, 'fallback', 'warning');
       return cachedData;
     }
     throw error;
@@ -145,8 +150,12 @@ async function getBirdsByRegion(region) {
 }
 
 // Update fetchBirdInfo function
+// Note: Uses breadcrumbs instead of transactions to reduce Sentry span usage
+// (1000+ daily users × new tabs = lots of potential spans)
 async function fetchBirdInfo(region) {
   log(`Fetching bird info for region: ${region}`);
+  const startTime = Date.now();
+  addBreadcrumb(`Fetching bird info for region: ${region}`, 'http', 'info');
 
   try {
     const birds = await getBirdsByRegion(region);
@@ -155,6 +164,10 @@ async function fetchBirdInfo(region) {
 
     let imageInfo = await getMacaulayImage(bird.speciesCode).catch(error => {
       log(`Error fetching image: ${error.message}`);
+      captureException(error, {
+        tags: { operation: 'getMacaulayImage', component: 'background' },
+        extra: { speciesCode: bird.speciesCode }
+      });
       return {
         imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
         photographer: 'Unknown',
@@ -164,6 +177,10 @@ async function fetchBirdInfo(region) {
 
     let audioInfo = await getMacaulayAudio(bird.speciesCode).catch(error => {
       log(`Error fetching audio: ${error.message}`);
+      captureException(error, {
+        tags: { operation: 'getMacaulayAudio', component: 'background' },
+        extra: { speciesCode: bird.speciesCode }
+      });
       return null;
     });
 
@@ -185,9 +202,25 @@ async function fetchBirdInfo(region) {
     };
 
     log(`Bird info compiled: ${JSON.stringify(birdInfo)}`);
+
+    // Track successful fetch via breadcrumb (lightweight, no span cost)
+    const duration = Date.now() - startTime;
+    addBreadcrumb('Bird info fetched successfully', 'http', 'info', { 
+      duration, 
+      region, 
+      birdName: birdInfo.name 
+    });
+
     return birdInfo;
   } catch (error) {
     log(`Error in fetchBirdInfo: ${error.message}`);
+    const duration = Date.now() - startTime;
+    
+    addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
+    captureException(error, {
+      tags: { operation: 'fetchBirdInfo' },
+      extra: { region, duration }
+    });
     throw error;
   }
 }
@@ -211,6 +244,10 @@ async function preloadNextBird(region) {
     log('Next bird preloaded');
   } catch (error) {
     log(`Error preloading next bird: ${error.message}`);
+    captureException(error, {
+      tags: { operation: 'preloadNextBird' },
+      extra: { region }
+    });
   }
 }
 
@@ -262,8 +299,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse(birdInfo);
         preloadNextBird(region);
       } catch (error) {
-        console.error('Error fetching bird info:', error);
         log(`Error: ${error.message}`);
+        captureException(error, {
+          tags: { operation: 'getBirdInfo', source: 'messageListener' },
+          extra: { region, autoPlay }
+        });
         sendResponse({ error: error.message });
       }
     });
@@ -279,7 +319,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const birds = await getBirdsByRegion(request.region);
         sendResponse({ success: true, birds: birds });
       } catch (error) {
-        console.error('Error fetching birds by region:', error);
+        captureException(error, {
+          tags: { operation: 'getBirdsByRegion', source: 'messageListener' },
+          extra: { region: request.region }
+        });
         sendResponse({ success: false, error: error.message });
       }
     })();

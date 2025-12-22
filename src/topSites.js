@@ -1,3 +1,6 @@
+import { captureException } from './sentry.js';
+import { warn } from './logger.js';
+
 /**
  * Top Sites module for displaying most visited websites
  * Only works when user has granted topSites permission
@@ -15,10 +18,10 @@ class TopSites {
    */
   async initialize() {
     if (this.isInitialized) return;
-    
+
     // Create the container element
     this.createContainer();
-    
+
     // Check settings immediately to show container if enabled
     const settings = await this.getSettings();
     if (settings.quickAccessEnabled) {
@@ -30,10 +33,10 @@ class TopSites {
       // Hide if disabled
       this.hide();
     }
-    
+
     // Listen for storage changes
     this.setupStorageListener();
-    
+
     this.isInitialized = true;
   }
 
@@ -82,7 +85,7 @@ class TopSites {
     if (this.updateTimeout) {
       clearTimeout(this.updateTimeout);
     }
-    
+
     // Debounce the update to prevent rapid consecutive calls
     this.updateTimeout = setTimeout(async () => {
       try {
@@ -102,7 +105,7 @@ class TopSites {
             permissions: ['topSites']
           });
         } catch (error) {
-          console.warn('Error checking topSites permission:', error);
+          warn('Error checking topSites permission:', error);
           hasPermission = false;
         }
 
@@ -114,9 +117,11 @@ class TopSites {
 
         // All good - show top sites
         await this.loadAndDisplay();
-        
+
       } catch (error) {
-        console.error('Error updating top sites visibility:', error);
+        captureException(error, {
+          tags: { operation: 'updateVisibility', component: 'TopSites' }
+        });
         this.hide();
       }
     }, 100); // 100ms debounce
@@ -129,29 +134,29 @@ class TopSites {
     try {
       const settings = await this.getSettings();
       const sites = [];
-      
+
       // Get custom shortcuts if quick access is enabled
       if (settings.quickAccessEnabled) {
         const customShortcuts = await this.getCustomShortcuts();
         sites.push(...customShortcuts);
       }
-      
+
       // Get top sites from Chrome API with error handling
       let topSites = [];
       try {
         topSites = await chrome.topSites.get();
       } catch (error) {
-        console.warn('Could not get top sites from Chrome API:', error);
+        warn('Could not get top sites from Chrome API:', error);
         // Continue with just custom shortcuts if available
       }
-      
+
       if (topSites && topSites.length > 0) {
         // Add top sites, avoiding duplicates
         const existingUrls = new Set(sites.map(site => site.url));
         const uniqueTopSites = topSites.filter(site => !existingUrls.has(site.url));
         sites.push(...uniqueTopSites);
       }
-      
+
       if (sites.length > 0) {
         await this.renderTopSites(sites); // Pass all sites, renderTopSites will handle the limit
         this.show();
@@ -159,7 +164,9 @@ class TopSites {
         this.hide();
       }
     } catch (error) {
-      console.error('Error loading top sites:', error);
+      captureException(error, {
+        tags: { operation: 'loadAndDisplay', component: 'TopSites' }
+      });
       this.hide();
     }
   }
@@ -194,7 +201,7 @@ class TopSites {
     // Mobile will adapt with responsive CSS to show fewer items per row
     const maxTotalItems = 10;
     let maxSites;
-    
+
     if (quickAccessEnabled) {
       // Reserve 1 slot for the add button: 9 sites + 1 add button = 10 total
       maxSites = maxTotalItems - 1;
@@ -202,7 +209,7 @@ class TopSites {
       // No add button needed: 10 sites total
       maxSites = maxTotalItems;
     }
-    
+
     const displaySites = sites.slice(0, maxSites);
 
     // Create site elements
@@ -243,7 +250,7 @@ class TopSites {
     // Create favicon element
     const favicon = document.createElement('div');
     favicon.className = 'top-site-favicon';
-    
+
     // Try to get favicon using Chrome's official favicon API (if permission granted) or fallback
     const faviconUrl = await this.getFaviconUrl(site.url);
     if (faviconUrl) {
@@ -267,19 +274,19 @@ class TopSites {
     // Add custom shortcut indicator
     if (site.isCustom) {
       siteDiv.classList.add('custom-shortcut');
-      
+
       // Add remove button (Chrome-style)
       const removeButton = document.createElement('div');
       removeButton.className = 'remove-shortcut';
       removeButton.innerHTML = '×';
       removeButton.title = chrome.i18n.getMessage('removeShortcutTooltip');
-      
+
       removeButton.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.removeCustomShortcut(site.url);
       });
-      
+
       siteDiv.appendChild(removeButton);
     }
 
@@ -312,7 +319,10 @@ class TopSites {
         return `${domain}/favicon.ico`;
       }
     } catch (error) {
-      console.error('Error creating favicon URL:', error);
+      captureException(error, {
+        tags: { operation: 'getFaviconUrl', component: 'TopSites' },
+        extra: { url }
+      });
       return null;
     }
   }
@@ -377,14 +387,18 @@ class TopSites {
           'quickAccessEnabled'
         ], (result) => {
           if (chrome.runtime.lastError) {
-            console.error('Error getting settings:', chrome.runtime.lastError);
+            captureException(new Error(chrome.runtime.lastError.message), {
+              tags: { operation: 'getSettings', component: 'TopSites' }
+            });
             resolve({}); // Return empty object on error
           } else {
             resolve(result);
           }
         });
       } catch (error) {
-        console.error('Error accessing storage:', error);
+        captureException(error, {
+          tags: { operation: 'getSettings', component: 'TopSites' }
+        });
         resolve({}); // Return empty object on error
       }
     });
@@ -398,7 +412,9 @@ class TopSites {
       try {
         chrome.storage.sync.get(['customShortcuts'], (result) => {
           if (chrome.runtime.lastError) {
-            console.error('Error getting custom shortcuts:', chrome.runtime.lastError);
+            captureException(new Error(chrome.runtime.lastError.message), {
+              tags: { operation: 'getCustomShortcuts', component: 'TopSites' }
+            });
             resolve([]);
           } else {
             const shortcuts = result.customShortcuts || [];
@@ -411,7 +427,9 @@ class TopSites {
           }
         });
       } catch (error) {
-        console.error('Error accessing custom shortcuts:', error);
+        captureException(error, {
+          tags: { operation: 'getCustomShortcuts', component: 'TopSites' }
+        });
         resolve([]);
       }
     });
@@ -428,7 +446,7 @@ class TopSites {
           name: shortcut.title || shortcut.name,
           url: shortcut.url
         }));
-        
+
         chrome.storage.sync.set({ customShortcuts: storageFormat }, () => {
           if (chrome.runtime.lastError) {
             reject(new Error(chrome.runtime.lastError.message));
@@ -468,23 +486,23 @@ class TopSites {
   setupStorageListener() {
     // Listen for storage changes and update accordingly
     const handleStorageChange = (changes, namespace) => {
-             if (namespace === 'sync') {
-         const relevantChanges = [
-           'quickAccessEnabled', 
-           'customShortcuts'
-         ];
-         
-         const hasRelevantChanges = relevantChanges.some(key => changes.hasOwnProperty(key));
-         
-         if (hasRelevantChanges) {
-           // Debounce multiple rapid changes
-           this.updateVisibility();
-         }
-       }
+      if (namespace === 'sync') {
+        const relevantChanges = [
+          'quickAccessEnabled',
+          'customShortcuts'
+        ];
+
+        const hasRelevantChanges = relevantChanges.some(key => changes.hasOwnProperty(key));
+
+        if (hasRelevantChanges) {
+          // Debounce multiple rapid changes
+          this.updateVisibility();
+        }
+      }
     };
 
     chrome.storage.onChanged.addListener(handleStorageChange);
-    
+
     // Store reference for cleanup
     this.storageChangeListener = handleStorageChange;
   }
@@ -496,7 +514,7 @@ class TopSites {
     const addButton = document.createElement('div');
     addButton.className = 'top-site';
     addButton.setAttribute('role', 'gridcell');
-    
+
     const buttonElement = document.createElement('button');
     buttonElement.className = 'add-shortcut-btn';
     buttonElement.setAttribute('aria-label', chrome.i18n.getMessage('addNewShortcutAriaLabel'));
@@ -504,11 +522,11 @@ class TopSites {
       <div class="plus-icon">+</div>
       <div class="add-text">${chrome.i18n.getMessage('addShortcutButtonText')}</div>
     `;
-    
+
     buttonElement.addEventListener('click', () => {
       this.showAddShortcutDialog();
     });
-    
+
     addButton.appendChild(buttonElement);
     return addButton;
   }
@@ -721,18 +739,18 @@ class TopSites {
       clearTimeout(this.updateTimeout);
       this.updateTimeout = null;
     }
-    
+
     // Remove storage listener
     if (this.storageChangeListener) {
       chrome.storage.onChanged.removeListener(this.storageChangeListener);
       this.storageChangeListener = null;
     }
-    
+
     // Remove container from DOM
     if (this.container && this.container.parentNode) {
       this.container.remove();
     }
-    
+
     // Clear state
     this.container = null;
     this.isInitialized = false;

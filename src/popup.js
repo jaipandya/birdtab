@@ -2,22 +2,23 @@ import { populateRegionSelect } from './shared.js';
 import './popup.css';
 import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
+import { initSentry, captureException, addBreadcrumb, updateUserContext } from './sentry.js';
 
-// Helper function for logging messages (only in development)
-function log(message) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[BirdTab Popup]: ${message}`);
-  }
-}
+import { log } from './logger.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Sentry for popup
+  initSentry('popup');
+  
   // Localize the popup immediately
   localizeHtml();
   
+  addBreadcrumb('Popup opened', 'navigation', 'info');
+  
   // Debug i18n
-  console.log('UI Locale:', chrome.i18n.getUILanguage());
-  console.log('Accept Languages:', chrome.i18n.getAcceptLanguages(langs => console.log('Accept Languages:', langs)));
-  console.log('Test message (settingsTitle):', getMessage('settingsTitle'));
+  log('UI Locale: ' + chrome.i18n.getUILanguage());
+  chrome.i18n.getAcceptLanguages(langs => log('Accept Languages: ' + langs.join(', ')));
+  log('Test message (settingsTitle): ' + getMessage('settingsTitle'));
 
   const regionSelect = document.getElementById('region');
   const autoPlayCheckbox = document.getElementById('auto-play');
@@ -50,6 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     
     chrome.storage.sync.set(settings, function () {
+      if (chrome.runtime.lastError) {
+        captureException(new Error('Failed to save settings'), {
+          tags: { operation: 'saveSettings' },
+          extra: { error: chrome.runtime.lastError.message, settings }
+        });
+        return;
+      }
+      
+      // Update Sentry user context with new settings
+      updateUserContext(settings);
+      
       showSaveNotification();
     });
   }
@@ -172,10 +184,16 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         } catch (error) {
           log('Could not remove permissions (this is usually harmless): ' + error.message);
+          // Don't capture this as an error since it's expected to sometimes fail
+          addBreadcrumb('Permission removal failed (harmless)', 'info', 'info', { error: error.message });
         }
       }
     } catch (error) {
       log('Error with productivity toggle: ' + error.message);
+      captureException(error, {
+        tags: { operation: 'productivityToggle' },
+        extra: { isEnabled, permissions: ['topSites', 'favicon'] }
+      });
       this.checked = !isEnabled; // Revert on error
       alert(getMessage('somethingWentWrong'));
     }

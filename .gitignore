@@ -20,3 +20,8 @@ dev
 dev/*
 prod
 prod/*
+.env
+
+# Documentation (internal, not tracked in git)
+doc/
+doc/*

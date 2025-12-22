@@ -6,6 +6,11 @@ import SettingsModal from './settingsModal.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
+import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
+import { log } from './logger.js';
+
+// Initialize Sentry for content script
+initSentry('content-script');
 
 let isMuted = false;
 let volumeLevel = CONFIG.DEFAULT_VOLUME;
@@ -17,12 +22,7 @@ let birdInfo;
 let quizMode;
 let saveVolumeTimeout = null;
 
-// Helper function for logging messages (only in development)
-function log(message) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[BirdTab]: ${message}`);
-  }
-}
+
 
 // Array of loading message keys for i18n
 const loadingMessageKeys = [
@@ -77,17 +77,32 @@ function updateLoadingMessage() {
 }
 
 // Fetch bird information from background script
+// Note: No separate transaction here - this is captured as part of the page-load transaction
+// to reduce Sentry span usage (1000+ daily users × new tabs)
 async function getBirdInfo() {
   log(`Requesting bird info`);
+  const startTime = Date.now();
+
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Request timed out')), 30000);
+    const timeout = setTimeout(() => {
+      addBreadcrumb('Bird info request timed out', 'http', 'error');
+      reject(new Error('Request timed out'));
+    }, 30000);
 
     chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
       clearTimeout(timeout);
+      const duration = Date.now() - startTime;
+
       if (response.error) {
         log(`Error getting bird info: ${response.error}`);
+        addBreadcrumb(`Bird info error: ${response.error}`, 'http', 'error', { duration });
         reject(new Error(response.error));
       } else {
+        addBreadcrumb('Bird info received', 'http', 'info', { 
+          duration, 
+          birdName: response.name,
+          region: response.location 
+        });
         resolve(response);
       }
     });
@@ -235,6 +250,15 @@ async function playAudio() {
     }, 200);
   } catch (error) {
     console.error('Error playing audio:', error);
+    captureException(error, {
+      tags: { operation: 'playAudio' },
+      extra: {
+        mediaUrl: birdInfo?.mediaUrl,
+        currentTime: audio?.currentTime,
+        volume: audio?.volume,
+        muted: audio?.muted
+      }
+    });
   }
 }
 
@@ -331,8 +355,6 @@ async function initializePage() {
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
 
-    // force an error to test error handling
-    // throw new Error('Simulated error');
 
     clearInterval(loadingInterval);
     hideLoadingIndicator();
@@ -430,6 +452,7 @@ async function initializePage() {
       hideAudioControls();
     }
 
+
     const lang = chrome.i18n.getUILanguage();
     let nameToDisplay = birdInfo.name;
 
@@ -472,6 +495,9 @@ async function initializePage() {
         new SettingsModal();
       } catch (error) {
         console.error('Failed to initialize settings modal:', error);
+        captureException(error, {
+          tags: { operation: 'initializeSettingsModal' }
+        });
       }
     });
 
@@ -481,6 +507,9 @@ async function initializePage() {
     hideLoadingIndicator();
     console.error('Error updating page:', error);
     log(`Error updating page: ${error.message}`);
+    captureException(error, {
+      tags: { operation: 'initializePage' }
+    });
     showErrorModal(error.message);
   }
 }
@@ -780,10 +809,14 @@ function checkOnboardingStatus() {
 
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  // Start performance monitoring transaction
+  const transaction = startTransaction('page-load', 'navigation');
+
   // Localize the page immediately
   localizeHtml();
 
   log('DOM content loaded, checking onboarding status');
+  addBreadcrumb('DOM content loaded', 'navigation', 'info');
 
   // Check if onboarding is complete first
   const shouldContinue = await checkOnboardingStatus();
@@ -813,7 +846,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.topSitesInstance = new TopSites();
     await window.topSitesInstance.initialize();
   } catch (error) {
-    console.error('Failed to initialize top sites:', error);
+    captureException(error, {
+      tags: { operation: 'initializeTopSites' }
+    });
   }
 
   // Initialize quiz mode
@@ -833,12 +868,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
   } catch (error) {
-    console.error('Failed to initialize quiz mode:', error);
+    captureException(error, {
+      tags: { operation: 'initializeQuizMode' }
+    });
   }
 
   // Start page update after UI elements are initialized
   log('Starting page update');
   await initializePage();
+
+  // Finish performance monitoring transaction
+  if (transaction) {
+    transaction.setStatus('ok');
+    transaction.finish();
+  }
 });
 
 log('Main script loaded');
@@ -863,6 +906,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
           window.topSitesInstance.updateVisibility();
         } catch (error) {
           console.error('Failed to update top sites:', error);
+          captureException(error, {
+            tags: { operation: 'updateTopSites' }
+          });
         }
       }
     }

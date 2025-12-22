@@ -1,16 +1,11 @@
 import { populateRegionSelect } from './shared.js';
 import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
+import { log } from './logger.js';
+import { captureException } from './sentry.js';
 
 // Module-level singleton instance
 let instance = null;
-
-// Helper function for logging messages (only in development)
-function log(message) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[BirdTab Settings]: ${message}`);
-  }
-}
 
 
 
@@ -362,6 +357,10 @@ class SettingsModal {
       }
     } catch (error) {
       log('Error with productivity toggle: ' + error.message);
+      captureException(error, {
+        tags: { operation: 'productivityToggle', component: 'settingsModal' },
+        extra: { isEnabled }
+      });
       this.enableProductivityCheckbox.checked = !isEnabled; // Revert on error
       alert(getMessage('somethingWentWrong'));
     }
