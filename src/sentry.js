@@ -51,36 +51,62 @@ const SENTRY_CONFIG = {
 
   // Integrations
   integrations: (defaultIntegrations) => {
-    // Filter out integrations that contain CDN references (Chrome Web Store rejection)
-    const filteredIntegrations = defaultIntegrations.filter(integration => {
-      const name = integration.name;
-      const constructor = integration.constructor && integration.constructor.name;
+    try {
+      // Detect if we're in a service worker context (no window object)
+      const isServiceWorker = typeof window === 'undefined' && typeof self !== 'undefined';
 
-      return !name.includes('Feedback') &&
-        !name.includes('feedback') &&
-        (!constructor || !constructor.includes('Feedback')) &&
-        name !== 'FeedbackIntegration';
-    });
+      // Filter out integrations that contain CDN references (Chrome Web Store rejection)
+      // Also filter out browser-specific integrations when in service worker
+      const filteredIntegrations = defaultIntegrations.filter(integration => {
+        try {
+          const name = integration.name || '';
+          const constructor = integration.constructor && integration.constructor.name;
 
-    // Add browser tracing integration only in production (reduces console noise in dev)
-    if (CONFIG.SENTRY.ENVIRONMENT === 'production' && typeof Sentry.browserTracingIntegration === 'function') {
-      filteredIntegrations.push(Sentry.browserTracingIntegration({
-        // Disable automatic page load spans for extension (not relevant)
-        enableLongTask: false,
-        // Enable Web Vitals capture
-        enableInp: true,
-      }));
+          // Remove feedback integrations
+          if (name.includes('Feedback') || name.includes('feedback') ||
+              (constructor && constructor.includes('Feedback')) ||
+              name === 'FeedbackIntegration') {
+            return false;
+          }
+
+          // In service workers, filter out browser-specific integrations that require DOM/window
+          if (isServiceWorker) {
+            const browserOnlyIntegrations = ['BrowserTracing', 'TryCatch', 'Breadcrumbs', 'LinkedErrors', 'HttpContext', 'GlobalHandlers'];
+            if (browserOnlyIntegrations.some(browserInt => name.includes(browserInt))) {
+              return false;
+            }
+          }
+
+          return true;
+        } catch (e) {
+          return false; // Skip any integration that causes an error
+        }
+      });
+
+      // Add browser tracing integration only in production AND only in browser context (not service worker)
+      if (!isServiceWorker && CONFIG.SENTRY.ENVIRONMENT === 'production' && typeof Sentry.browserTracingIntegration === 'function') {
+        filteredIntegrations.push(Sentry.browserTracingIntegration({
+          // Disable automatic page load spans for extension (not relevant)
+          enableLongTask: false,
+          // Enable Web Vitals capture
+          enableInp: true,
+        }));
+      }
+
+      // Add console capture integration to capture console.error as breadcrumbs
+      // Only in browser context, not service worker
+      if (!isServiceWorker && typeof Sentry.captureConsoleIntegration === 'function') {
+        filteredIntegrations.push(Sentry.captureConsoleIntegration({
+          levels: ['error', 'warn'], // Only capture errors and warnings, not info/log
+        }));
+      }
+
+      return filteredIntegrations;
+    } catch (e) {
+      // If anything fails, return default integrations without modifications
+      console.error('[Sentry] Error configuring integrations:', e);
+      return defaultIntegrations;
     }
-    
-    // Add console capture integration to capture console.error as breadcrumbs
-    // Only captures errors, not info/log to avoid noise
-    if (typeof Sentry.captureConsoleIntegration === 'function') {
-      filteredIntegrations.push(Sentry.captureConsoleIntegration({
-        levels: ['error', 'warn'], // Only capture errors and warnings, not info/log
-      }));
-    }
-
-    return filteredIntegrations;
   },
 
   // Client-side rate limiting and error filtering

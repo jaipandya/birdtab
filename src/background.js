@@ -338,10 +338,17 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     preloadedBirdInfo = null;
   } else if (namespace === 'sync' && changes.quietHours) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: "quietHoursChanged",
-        quietHoursEnabled: changes.quietHours.newValue
-      });
+      if (tabs && tabs[0]) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          action: "quietHoursChanged",
+          quietHoursEnabled: changes.quietHours.newValue
+        }, () => {
+          // Consume the response to prevent "message port closed" error
+          if (chrome.runtime.lastError) {
+            log(`Error sending quietHoursChanged: ${chrome.runtime.lastError.message}`);
+          }
+        });
+      }
     });
   }
 });

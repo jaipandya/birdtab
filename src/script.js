@@ -93,15 +93,32 @@ async function getBirdInfo() {
       clearTimeout(timeout);
       const duration = Date.now() - startTime;
 
+      // Check for message delivery failure
+      if (chrome.runtime.lastError) {
+        const errorMsg = chrome.runtime.lastError.message || 'Message delivery failed';
+        log(`Error sending message: ${errorMsg}`);
+        addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration });
+        reject(new Error(errorMsg));
+        return;
+      }
+
+      // Check if response is undefined (background script unavailable)
+      if (!response) {
+        log('No response from background script');
+        addBreadcrumb('No response from background script', 'http', 'error', { duration });
+        reject(new Error('No response from background script'));
+        return;
+      }
+
       if (response.error) {
         log(`Error getting bird info: ${response.error}`);
         addBreadcrumb(`Bird info error: ${response.error}`, 'http', 'error', { duration });
         reject(new Error(response.error));
       } else {
-        addBreadcrumb('Bird info received', 'http', 'info', { 
-          duration, 
+        addBreadcrumb('Bird info received', 'http', 'info', {
+          duration,
           birdName: response.name,
-          region: response.location 
+          region: response.location
         });
         resolve(response);
       }

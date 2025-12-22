@@ -51,9 +51,6 @@ module.exports = (env, argv) => {
       popup: './src/popup.js',
       script: './src/script.js',
       onboarding: './src/onboarding.js',
-      config: './src/config.js',
-      shared: './src/shared.js',
-      sentry: './src/sentry.js',
       quiz: './src/quiz.css'
     },
     output: {
@@ -68,6 +65,15 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
+            compress: {
+              drop_debugger: true,
+              // Remove only debug logs, keep console.error and console.warn for error tracking
+              pure_funcs: isProduction ? ['console.log', 'console.info', 'console.debug'] : [],
+              passes: 2, // Multiple compression passes for better results
+            },
+            mangle: {
+              safari10: true, // Work around Safari 10 bugs
+            },
             format: {
               comments: false,
             },
@@ -76,8 +82,13 @@ module.exports = (env, argv) => {
         }),
         new CssMinimizerPlugin(),
       ],
+      // Tree shaking - remove unused exports
+      usedExports: true,
       splitChunks: isProduction ? {
-        chunks: 'all',
+        chunks: (chunk) => {
+          // Don't split the background script - service workers can't import chunks
+          return chunk.name !== 'background';
+        },
         name: 'vendor',
       } : false,
     },
@@ -112,17 +123,17 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: './src/popup.html',
         filename: 'popup.html',
-        chunks: ['popup', 'shared'],
+        chunks: ['vendor', 'popup'],
       }),
       new HtmlWebpackPlugin({
         template: './src/index.html',
         filename: 'index.html',
-        chunks: ['script', 'shared'],
+        chunks: ['vendor', 'script'],
       }),
       new HtmlWebpackPlugin({
         template: './src/onboarding.html',
         filename: 'onboarding.html',
-        chunks: ['onboarding', 'shared'],
+        chunks: ['vendor', 'onboarding'],
       }),
       // Sentry plugin - only in production and if token is present
       ...(isProduction && process.env.SENTRY_AUTH_TOKEN ? (() => {
@@ -157,7 +168,16 @@ module.exports = (env, argv) => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
+              presets: [
+                ['@babel/preset-env', {
+                  // Chrome 88+ required for MV3, target modern browsers only
+                  targets: { chrome: '88' },
+                  // Only include polyfills that are actually used
+                  useBuiltIns: false,
+                  // Use modern module syntax
+                  modules: false,
+                }]
+              ],
             },
           },
         },
