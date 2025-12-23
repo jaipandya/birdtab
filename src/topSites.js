@@ -212,11 +212,11 @@ class TopSites {
 
     const displaySites = sites.slice(0, maxSites);
 
-    // Create site elements
-    for (const site of displaySites) {
-      const siteElement = await this.createSiteElement(site);
-      grid.appendChild(siteElement);
-    }
+    // Create site elements concurrently
+    const siteElements = await Promise.all(displaySites.map(site => this.createSiteElement(site)));
+
+    // Append all elements
+    siteElements.forEach(element => grid.appendChild(element));
 
     // Add "Add Shortcut" button if quick access is enabled
     if (quickAccessEnabled) {

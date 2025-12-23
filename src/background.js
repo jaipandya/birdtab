@@ -162,27 +162,28 @@ async function fetchBirdInfo(region) {
     const bird = birds[Math.floor(Math.random() * birds.length)];
     log(`Bird found: ${bird.primaryComName}`);
 
-    let imageInfo = await getMacaulayImage(bird.speciesCode).catch(error => {
-      log(`Error fetching image: ${error.message}`);
-      captureException(error, {
-        tags: { operation: 'getMacaulayImage', component: 'background' },
-        extra: { speciesCode: bird.speciesCode }
-      });
-      return {
-        imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
-        photographer: 'Unknown',
-        photographerUrl: '#'
-      };
-    });
-
-    let audioInfo = await getMacaulayAudio(bird.speciesCode).catch(error => {
-      log(`Error fetching audio: ${error.message}`);
-      captureException(error, {
-        tags: { operation: 'getMacaulayAudio', component: 'background' },
-        extra: { speciesCode: bird.speciesCode }
-      });
-      return null;
-    });
+    const [imageInfo, audioInfo] = await Promise.all([
+      getMacaulayImage(bird.speciesCode).catch(error => {
+        log(`Error fetching image: ${error.message}`);
+        captureException(error, {
+          tags: { operation: 'getMacaulayImage', component: 'background' },
+          extra: { speciesCode: bird.speciesCode }
+        });
+        return {
+          imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
+          photographer: 'Unknown',
+          photographerUrl: '#'
+        };
+      }),
+      getMacaulayAudio(bird.speciesCode).catch(error => {
+        log(`Error fetching audio: ${error.message}`);
+        captureException(error, {
+          tags: { operation: 'getMacaulayAudio', component: 'background' },
+          extra: { speciesCode: bird.speciesCode }
+        });
+        return null;
+      })
+    ]);
 
     const birdInfo = {
       name: bird.primaryComName,
@@ -205,17 +206,17 @@ async function fetchBirdInfo(region) {
 
     // Track successful fetch via breadcrumb (lightweight, no span cost)
     const duration = Date.now() - startTime;
-    addBreadcrumb('Bird info fetched successfully', 'http', 'info', { 
-      duration, 
-      region, 
-      birdName: birdInfo.name 
+    addBreadcrumb('Bird info fetched successfully', 'http', 'info', {
+      duration,
+      region,
+      birdName: birdInfo.name
     });
 
     return birdInfo;
   } catch (error) {
     log(`Error in fetchBirdInfo: ${error.message}`);
     const duration = Date.now() - startTime;
-    
+
     addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
     captureException(error, {
       tags: { operation: 'fetchBirdInfo' },

@@ -1517,3 +1517,25 @@ p {
   align-items: center;
   justify-content: center;
 }
+
+@media (prefers-reduced-transparency: reduce) {
+  .info-panel,
+  .volume-slider-container,
+  .error-modal,
+  .review-prompt,
+  .search-input,
+  #search-input,
+  .info-icon::before {
+    backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.9) !important; /* Fallback opaque background */
+  }
+
+  .review-prompt {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  #conservation-status {
+    backdrop-filter: none;
+    background-color: rgb(124, 107, 89);
+  }
+}

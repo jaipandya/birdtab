@@ -190,7 +190,7 @@ function loadAudioWithoutPlaying() {
     audio = null;
   }
   audio = new Audio(birdInfo.mediaUrl);
-  audio.load();
+  audio.preload = 'metadata'; // Only load metadata to save bandwidth
   updatePlayPauseButton();
 }
 
@@ -384,7 +384,7 @@ async function initializePage() {
     const contentContainer = document.getElementById('content-container');
     contentContainer.innerHTML = `
       <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-link">
-        <img src="" alt="${birdInfo.name}" class="background-image">
+        <img src="" alt="${birdInfo.name}" class="background-image" decoding="async">
       </a>
       <div class="info-panel">
         <div class="external-links">
