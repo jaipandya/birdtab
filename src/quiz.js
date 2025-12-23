@@ -126,7 +126,12 @@ class QuizMode {
       await this.displayQuestion();
     } catch (error) {
       captureException(error, { tags: { operation: 'startQuiz', component: 'QuizMode' } });
-      this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
+      
+      if (error.message === 'NOT_ENOUGH_IMAGES') {
+        this.showError(chrome.i18n.getMessage('quizErrorNotEnoughImages') || 'Not enough bird images available. Please check your internet connection and try again.');
+      } else {
+        this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
+      }
     }
   }
 
@@ -222,13 +227,13 @@ class QuizMode {
         imageInfo = await this.loadBirdImageFromCDN(firstBird.speciesCode, true); // Priority = true
       }
 
-      // Update first question with image info
-      if (this.questions && this.questions[0] && this.questions[0].bird) {
+      // Update first question with image info (only if we got a valid image)
+      if (this.questions && this.questions[0] && this.questions[0].bird && imageInfo?.imageUrl) {
         this.questions[0].bird = {
           ...firstBird,
-          imageUrl: imageInfo?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-          photographer: imageInfo?.photographer,
-          photographerUrl: imageInfo?.photographerUrl
+          imageUrl: imageInfo.imageUrl,
+          photographer: imageInfo.photographer,
+          photographerUrl: imageInfo.photographerUrl
         };
       }
 
@@ -247,32 +252,79 @@ class QuizMode {
     if (this.questions.length > 0 && this.questions[0] && this.questions[0].bird) {
       const firstBird = this.questions[0].bird;
 
-      // If image is still null or default, try to load it
-      if (!firstBird.imageUrl || firstBird.imageUrl.includes('default-bird.jpg')) {
+      // If image is still null, try to load it
+      if (!firstBird.imageUrl) {
         // Check cache first
         let imageInfo = await this.getBirdImage(firstBird.speciesCode);
         if (!imageInfo) {
           imageInfo = await this.loadBirdImageFromCDN(firstBird.speciesCode, true);
         }
 
-        // Update first question with image info
-        if (this.questions && this.questions[0] && this.questions[0].bird) {
+        // Update first question with image info (only if we got a valid image)
+        if (this.questions && this.questions[0] && this.questions[0].bird && imageInfo?.imageUrl) {
           this.questions[0].bird = {
             ...firstBird,
-            imageUrl: imageInfo?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-            photographer: imageInfo?.photographer,
-            photographerUrl: imageInfo?.photographerUrl
+            imageUrl: imageInfo.imageUrl,
+            photographer: imageInfo.photographer,
+            photographerUrl: imageInfo.photographerUrl
           };
         }
       }
     }
+    
+    // If first question still has no image, try to find another question with an image
+    // or skip to a question that has one
+    await this.ensureValidQuestionImages();
+  }
+  
+  async ensureValidQuestionImages() {
+    // Filter out questions without valid images and ensure we have enough
+    const validQuestions = [];
+    
+    for (const question of this.questions) {
+      if (question.bird.imageUrl) {
+        validQuestions.push(question);
+      } else {
+        // Try one more time to load the image
+        let imageInfo = await this.getBirdImage(question.bird.speciesCode);
+        if (!imageInfo) {
+          try {
+            imageInfo = await this.loadBirdImageFromCDN(question.bird.speciesCode, true);
+          } catch (error) {
+            // Skip this question if image fails to load
+            log(`Skipping question for ${question.bird.primaryComName} - no image available`);
+            continue;
+          }
+        }
+        
+        if (imageInfo?.imageUrl) {
+          question.bird.imageUrl = imageInfo.imageUrl;
+          question.bird.photographer = imageInfo.photographer;
+          question.bird.photographerUrl = imageInfo.photographerUrl;
+          validQuestions.push(question);
+        } else {
+          log(`Skipping question for ${question.bird.primaryComName} - no image available`);
+        }
+      }
+    }
+    
+    // Update questions array with only valid ones
+    this.questions = validQuestions;
+    
+    // Check if we still have enough questions (minimum 5 for a meaningful quiz)
+    if (this.questions.length < 5) {
+      throw new Error('NOT_ENOUGH_IMAGES');
+    }
   }
 
   async preloadRemainingImages() {
-    // Load images for questions 2-10 in background
+    // Load images for remaining questions in background
     for (let i = 1; i < this.questions.length; i++) {
       if (!this.questions[i] || !this.questions[i].bird) continue;
       const bird = this.questions[i].bird;
+
+      // Skip if already has an image
+      if (bird.imageUrl) continue;
 
       // Check cache first
       let imageInfo = await this.getBirdImage(bird.speciesCode);
@@ -280,23 +332,27 @@ class QuizMode {
         // Add to queue without priority
         this.loadBirdImageFromCDN(bird.speciesCode, false).then(info => {
           // Safety check: ensure questions array and question still exist
-          if (this.questions && this.questions[i] && this.questions[i].bird) {
+          // Only update if we got a valid image
+          if (this.questions && this.questions[i] && this.questions[i].bird && info?.imageUrl) {
             this.questions[i].bird = {
               ...bird,
-              imageUrl: info?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-              photographer: info?.photographer,
-              photographerUrl: info?.photographerUrl
+              imageUrl: info.imageUrl,
+              photographer: info.photographer,
+              photographerUrl: info.photographerUrl
             };
           }
+        }).catch(error => {
+          // Log error but don't update with default image
+          log(`Failed to preload image for ${bird.primaryComName}: ${error.message}`);
         });
-      } else {
-        // Update immediately if cached
+      } else if (imageInfo?.imageUrl) {
+        // Update immediately if cached and has valid URL
         if (this.questions && this.questions[i] && this.questions[i].bird) {
           this.questions[i].bird = {
             ...bird,
-            imageUrl: imageInfo?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-            photographer: imageInfo?.photographer,
-            photographerUrl: imageInfo?.photographerUrl
+            imageUrl: imageInfo.imageUrl,
+            photographer: imageInfo.photographer,
+            photographerUrl: imageInfo.photographerUrl
           };
         }
       }
@@ -342,11 +398,8 @@ class QuizMode {
         const imageInfo = await this.fetchImageFromAPI(speciesCode);
         resolve(imageInfo);
       } catch (error) {
-        resolve({
-          imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
-          photographer: 'Unknown',
-          photographerUrl: '#'
-        });
+        // Return null instead of default image - let caller handle the failure
+        resolve(null);
       }
 
       // Add delay between requests to be respectful to Macaulay Library
@@ -613,8 +666,16 @@ class QuizMode {
     `;
     imageContainer.appendChild(loader);
 
-    // Load image with fallback
-    const imageUrl = question.bird.imageUrl || chrome.runtime.getURL('images/default-bird.jpg');
+    // Load image - question should already have a valid imageUrl from ensureValidQuestionImages
+    const imageUrl = question.bird.imageUrl;
+    
+    if (!imageUrl) {
+      // This shouldn't happen as we filter out questions without images, but handle it gracefully
+      log(`Warning: Question for ${question.bird.primaryComName} has no image URL`);
+      this.showImageLoadError(imageContainer, question.bird.primaryComName);
+      return;
+    }
+    
     const img = new Image();
 
     img.onload = () => {
@@ -629,6 +690,13 @@ class QuizMode {
     img.onerror = async () => {
       // If image fails to load, try to fetch a new one
       const imageInfo = await this.loadBirdImageFromCDN(question.bird.speciesCode);
+      
+      if (!imageInfo?.imageUrl) {
+        // Show a friendly error message instead of default image
+        this.showImageLoadError(imageContainer, question.bird.primaryComName);
+        return;
+      }
+      
       const newImageUrl = imageInfo.imageUrl;
 
       const retryImg = new Image();
@@ -652,15 +720,8 @@ class QuizMode {
       };
 
       retryImg.onerror = () => {
-        // Fallback to default image
-        imageContainer.innerHTML = '';
-        const imageElement = document.createElement('img');
-        imageElement.className = 'quiz-image';
-        imageElement.src = chrome.runtime.getURL('images/default-bird.jpg');
-        imageElement.alt = 'Default bird image';
-        imageContainer.appendChild(imageElement);
-
-        this.updateImageMeta({ photographer: 'Unknown', photographerUrl: '#' });
+        // Show a friendly error message instead of default image
+        this.showImageLoadError(imageContainer, question.bird.primaryComName);
       };
 
       retryImg.src = newImageUrl;
@@ -690,6 +751,28 @@ class QuizMode {
     if (photographerLink && bird.photographer) {
       photographerLink.textContent = bird.photographer;
       photographerLink.href = bird.photographerUrl || '#';
+    }
+  }
+  
+  showImageLoadError(container, birdName) {
+    container.innerHTML = `
+      <div class="quiz-image-error">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" opacity="0.3"/>
+          <path d="M32 18C32 18 22 24 22 32C22 40 32 46 32 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          <path d="M32 18C32 18 42 24 42 32C42 40 32 46 32 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          <circle cx="32" cy="28" r="3" fill="currentColor" opacity="0.8"/>
+          <path d="M26 38C26 38 28 42 32 42C36 42 38 38 38 38" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+        <p class="quiz-image-error-text">Image unavailable</p>
+        <p class="quiz-image-error-hint">Can you identify this bird?</p>
+      </div>
+    `;
+    
+    // Hide photographer info when there's no image
+    const imageMeta = document.getElementById('quiz-image-meta');
+    if (imageMeta) {
+      imageMeta.style.display = 'none';
     }
   }
 
@@ -770,17 +853,17 @@ class QuizMode {
       const nextBird = this.questions[nextQuestionIndex].bird;
 
       // Only preload if image not already loaded
-      if (!nextBird.imageUrl || nextBird.imageUrl.includes('default-bird.jpg')) {
+      if (!nextBird.imageUrl) {
         // Check cache first
         let imageInfo = await this.getBirdImage(nextBird.speciesCode);
-        if (imageInfo) {
+        if (imageInfo?.imageUrl) {
           // Update immediately if cached
           if (this.questions && this.questions[nextQuestionIndex] && this.questions[nextQuestionIndex].bird) {
             this.questions[nextQuestionIndex].bird = {
               ...nextBird,
-              imageUrl: imageInfo?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-              photographer: imageInfo?.photographer,
-              photographerUrl: imageInfo?.photographerUrl
+              imageUrl: imageInfo.imageUrl,
+              photographer: imageInfo.photographer,
+              photographerUrl: imageInfo.photographerUrl
             };
           }
 
@@ -790,16 +873,17 @@ class QuizMode {
           // Add to priority queue for next question
           try {
             const info = await this.loadBirdImageFromCDN(nextBird.speciesCode, true);
-            if (this.questions && this.questions[nextQuestionIndex] && this.questions[nextQuestionIndex].bird) {
+            if (info?.imageUrl && this.questions && this.questions[nextQuestionIndex] && this.questions[nextQuestionIndex].bird) {
               this.questions[nextQuestionIndex].bird = {
                 ...nextBird,
-                imageUrl: info?.imageUrl || chrome.runtime.getURL('images/default-bird.jpg'),
-                photographer: info?.photographer,
-                photographerUrl: info?.photographerUrl
+                imageUrl: info.imageUrl,
+                photographer: info.photographer,
+                photographerUrl: info.photographerUrl
               };
             }
           } catch (error) {
-            // Silently handle errors, will fallback to default image
+            // Log error - question will show error state if image truly unavailable
+            log(`Failed to preload next question image: ${error.message}`);
           }
         }
       } else {

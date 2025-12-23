@@ -618,5 +618,29 @@
   "loading": {
     "message": "加载中...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "无法连接到鸟类数据库",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "我们在连接鸟类数据库时遇到问题。这可能是由于您或我们这边的网络问题造成的。",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "请检查您的网络连接并重试。如果问题持续存在，我们很乐意听取您的反馈！",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "联系支持",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "调节音量",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "音量",
+    "description": "Alt text for volume icon"
   }
 }

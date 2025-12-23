@@ -535,6 +535,10 @@
     "message": "Not enough birds available for quiz in this region. Please try a different region.",
     "description": "Error message when not enough birds for quiz"
   },
+  "quizErrorNotEnoughImages": {
+    "message": "Not enough bird images available. Please check your internet connection and try again.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
   "quizErrorGeneral": {
     "message": "Unable to start quiz. Please try again.",
     "description": "General error message for quiz"
@@ -618,5 +622,29 @@
   "loading": {
     "message": "Loading...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Couldn't reach the birds",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "We're having trouble connecting to our bird database. This might be due to network issues on your end or ours.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Check your internet connection and try again. If this keeps happening, we'd love to hear from you!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Contact Support",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Adjust volume",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volume",
+    "description": "Alt text for volume icon"
   }
 }

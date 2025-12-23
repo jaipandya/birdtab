@@ -532,6 +532,12 @@ async function initializePage() {
 }
 
 function showErrorModal(errorMessage) {
+  // Check if this is a network error with no cached birds
+  if (errorMessage === 'NETWORK_ERROR_NO_CACHE') {
+    showNetworkErrorState();
+    return;
+  }
+  
   const errorModal = document.getElementById('error-modal');
   const errorDetails = errorModal.querySelector('.error-details');
   errorDetails.textContent = `${chrome.i18n.getMessage('errorDetails')}: ${errorMessage}`;
@@ -541,6 +547,45 @@ function showErrorModal(errorMessage) {
   // Remove existing event listeners to prevent multiple bindings
   retryButton.removeEventListener('click', retryHandler);
   retryButton.addEventListener('click', retryHandler);
+}
+
+// Show beautiful network error state when no cached birds are available
+function showNetworkErrorState() {
+  document.body.classList.add('loaded');
+  
+  const contentContainer = document.getElementById('content-container');
+  contentContainer.innerHTML = `
+    <div class="network-error-container">
+      <div class="network-error-content">
+        <div class="network-error-icon">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" opacity="0.3"/>
+            <path d="M40 20C40 20 25 28 25 40C25 52 40 60 40 60" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <path d="M40 20C40 20 55 28 55 40C55 52 40 60 40 60" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <circle cx="40" cy="35" r="4" fill="currentColor" opacity="0.8"/>
+            <path d="M32 45C32 45 35 50 40 50C45 50 48 45 48 45" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          </svg>
+        </div>
+        <h1 class="network-error-title">${chrome.i18n.getMessage('networkErrorTitle')}</h1>
+        <p class="network-error-message">${chrome.i18n.getMessage('networkErrorMessage')}</p>
+        <p class="network-error-suggestion">${chrome.i18n.getMessage('networkErrorSuggestion')}</p>
+        <div class="network-error-actions">
+          <button id="network-retry-button" class="network-error-btn primary">
+            <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="18" height="18">
+            <span>${chrome.i18n.getMessage('tryAgain')}</span>
+          </button>
+          <a href="mailto:support@birdtab.app?subject=BirdTab%20Network%20Issue" class="network-error-btn secondary">
+            <span>${chrome.i18n.getMessage('contactSupport')}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add event listener for retry button
+  document.getElementById('network-retry-button').addEventListener('click', () => {
+    window.location.reload();
+  });
 }
 
 function retryHandler() {

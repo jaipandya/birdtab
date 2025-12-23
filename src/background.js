@@ -105,6 +105,75 @@ async function cacheData(key, value, duration) {
   });
 }
 
+// Get a random cached complete bird info as fallback when network fails
+// Uses existing cache keys (image_*, audio_*, birds_*) for backward compatibility
+async function getRandomCachedBirdInfo() {
+  return new Promise(resolve => {
+    chrome.storage.local.get(null, async items => {
+      // Find all cached images
+      const imageKeys = Object.keys(items).filter(key => key.startsWith('image_'));
+      if (imageKeys.length === 0) {
+        resolve(null);
+        return;
+      }
+
+      // Pick a random cached image
+      const randomImageKey = imageKeys[Math.floor(Math.random() * imageKeys.length)];
+      const imageData = items[randomImageKey];
+      if (!imageData?.value) {
+        resolve(null);
+        return;
+      }
+
+      // Extract speciesCode from key (image_SPECIESCODE)
+      const speciesCode = randomImageKey.replace('image_', '');
+      log(`Found cached image for species: ${speciesCode}`);
+
+      // Find the bird data from any cached region
+      const birdsKeys = Object.keys(items).filter(key => key.startsWith('birds_'));
+      let bird = null;
+      for (const birdsKey of birdsKeys) {
+        const birdsData = items[birdsKey];
+        if (birdsData?.value) {
+          bird = birdsData.value.find(b => b.speciesCode === speciesCode);
+          if (bird) break;
+        }
+      }
+
+      if (!bird) {
+        log(`No bird data found for species: ${speciesCode}`);
+        resolve(null);
+        return;
+      }
+
+      // Get cached audio if available
+      const audioData = items[`audio_${speciesCode}`];
+      const audioInfo = audioData?.value || null;
+
+      // Reconstruct complete bird info from cached data
+      const birdInfo = {
+        name: bird.primaryComName,
+        scientificName: bird.scientificName,
+        location: 'Cached', // We don't know the original region
+        ebirdUrl: `https://ebird.org/species/${bird.speciesCode}`,
+        imageUrl: imageData.value.imageUrl,
+        photographer: imageData.value.photographer,
+        photographerUrl: imageData.value.photographerUrl,
+        mediaUrl: audioInfo?.mediaUrl,
+        recordist: audioInfo?.recordist,
+        recordistUrl: audioInfo?.recordistUrl,
+        description: bird.description,
+        conservationStatus: bird.conservationStatus,
+        primaryComName_fr: bird.primaryComName_fr,
+        primaryComName_cn: bird.primaryComName_cn
+      };
+
+      log(`Reconstructed cached bird info: ${birdInfo.name}`);
+      resolve(birdInfo);
+    });
+  });
+}
+
 // Format location string
 function formatLocation(locName, subnational1Name, countryName) {
   return [locName, subnational1Name, countryName].filter(Boolean).join(', ');
@@ -162,28 +231,35 @@ async function fetchBirdInfo(region) {
     const bird = birds[Math.floor(Math.random() * birds.length)];
     log(`Bird found: ${bird.primaryComName}`);
 
-    const [imageInfo, audioInfo] = await Promise.all([
-      getMacaulayImage(bird.speciesCode).catch(error => {
-        log(`Error fetching image: ${error.message}`);
-        captureException(error, {
-          tags: { operation: 'getMacaulayImage', component: 'background' },
-          extra: { speciesCode: bird.speciesCode }
-        });
-        return {
-          imageUrl: chrome.runtime.getURL('images/default-bird.jpg'),
-          photographer: 'Unknown',
-          photographerUrl: '#'
-        };
-      }),
-      getMacaulayAudio(bird.speciesCode).catch(error => {
-        log(`Error fetching audio: ${error.message}`);
-        captureException(error, {
-          tags: { operation: 'getMacaulayAudio', component: 'background' },
-          extra: { speciesCode: bird.speciesCode }
-        });
-        return null;
-      })
-    ]);
+    let imageInfo, audioInfo;
+    try {
+      [imageInfo, audioInfo] = await Promise.all([
+        getMacaulayImage(bird.speciesCode),
+        getMacaulayAudio(bird.speciesCode).catch(error => {
+          log(`Error fetching audio: ${error.message}`);
+          // Audio is optional, don't throw - just return null
+          return null;
+        })
+      ]);
+    } catch (error) {
+      // Image fetch failed - try to use a previously cached complete bird
+      log(`Error fetching image: ${error.message}`);
+      captureException(error, {
+        tags: { operation: 'getMacaulayImage', component: 'background' },
+        extra: { speciesCode: bird.speciesCode }
+      });
+      
+      const cachedBirdInfo = await getRandomCachedBirdInfo();
+      if (cachedBirdInfo) {
+        addBreadcrumb('Using cached bird info as fallback', 'fallback', 'warning');
+        log(`Falling back to cached bird: ${cachedBirdInfo.name}`);
+        return cachedBirdInfo;
+      }
+      
+      // No cached bird available - throw error to trigger network error UI
+      log('No cached bird available, throwing network error');
+      throw new Error('NETWORK_ERROR_NO_CACHE');
+    }
 
     const birdInfo = {
       name: bird.primaryComName,
@@ -218,11 +294,22 @@ async function fetchBirdInfo(region) {
     const duration = Date.now() - startTime;
 
     addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
+    
+    // Try to use a cached bird as fallback before giving up
+    const cachedBirdInfo = await getRandomCachedBirdInfo();
+    if (cachedBirdInfo) {
+      addBreadcrumb('Using cached bird info as fallback after fetch error', 'fallback', 'warning');
+      log(`Falling back to cached bird: ${cachedBirdInfo.name}`);
+      return cachedBirdInfo;
+    }
+    
     captureException(error, {
       tags: { operation: 'fetchBirdInfo' },
       extra: { region, duration }
     });
-    throw error;
+    
+    // No cached bird available - throw specific error
+    throw new Error('NETWORK_ERROR_NO_CACHE');
   }
 }
 

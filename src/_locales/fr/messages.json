@@ -618,5 +618,29 @@
   "loading": {
     "message": "Chargement...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Impossible d'atteindre les oiseaux",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "Nous avons du mal à nous connecter à notre base de données d'oiseaux. Cela peut être dû à des problèmes de réseau de votre côté ou du nôtre.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Vérifiez votre connexion internet et réessayez. Si cela continue, nous serions ravis d'avoir de vos nouvelles !",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Contacter le support",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Régler le volume",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volume",
+    "description": "Alt text for volume icon"
   }
 }

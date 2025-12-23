@@ -618,5 +618,29 @@
   "loading": {
     "message": "جاري التحميل...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "تعذر الوصول إلى الطيور",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "نواجه مشكلة في الاتصال بقاعدة بيانات الطيور. قد يكون هذا بسبب مشاكل في الشبكة من جانبك أو من جانبنا.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "تحقق من اتصالك بالإنترنت وحاول مرة أخرى. إذا استمرت المشكلة، نود أن نسمع منك!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "اتصل بالدعم",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "ضبط مستوى الصوت",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "مستوى الصوت",
+    "description": "Alt text for volume icon"
   }
 }

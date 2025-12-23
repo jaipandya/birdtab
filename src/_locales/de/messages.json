@@ -618,5 +618,29 @@
   "loading": {
     "message": "Laden...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Vögel nicht erreichbar",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "Wir haben Probleme, eine Verbindung zu unserer Vogeldatenbank herzustellen. Dies könnte an Netzwerkproblemen auf Ihrer oder unserer Seite liegen.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut. Wenn dies weiterhin passiert, würden wir gerne von Ihnen hören!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Support kontaktieren",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Lautstärke anpassen",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Lautstärke",
+    "description": "Alt text for volume icon"
   }
 }

@@ -618,5 +618,29 @@
   "loading": {
     "message": "Загрузка...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Не удалось связаться с птицами",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "У нас возникли проблемы с подключением к базе данных птиц. Это может быть связано с сетевыми проблемами с вашей или нашей стороны.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Проверьте подключение к интернету и попробуйте снова. Если это продолжает происходить, мы будем рады услышать от вас!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Связаться с поддержкой",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Настроить громкость",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Громкость",
+    "description": "Alt text for volume icon"
   }
 }

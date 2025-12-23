@@ -618,5 +618,29 @@
   "loading": {
     "message": "Cargando...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "No se pudo conectar con las aves",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "Estamos teniendo problemas para conectarnos a nuestra base de datos de aves. Esto podría deberse a problemas de red de tu lado o del nuestro.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Verifica tu conexión a internet e inténtalo de nuevo. Si esto sigue sucediendo, ¡nos encantaría saber de ti!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Contactar soporte",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Ajustar volumen",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volumen",
+    "description": "Alt text for volume icon"
   }
 }

@@ -128,7 +128,13 @@ document.addEventListener('DOMContentLoaded', function () {
           alert(getMessage('errorClearingCache'));
           return;
         }
-        alert(getMessage('cacheCleared'));
+        // Notify background script to clear preloaded bird info
+        chrome.runtime.sendMessage({ action: 'deleteCache' }, function () {
+          if (chrome.runtime.lastError) {
+            log('Error notifying background script: ' + chrome.runtime.lastError.message);
+          }
+          alert(getMessage('cacheCleared'));
+        });
       });
     });
   });

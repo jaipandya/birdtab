@@ -618,5 +618,29 @@
   "loading": {
     "message": "読み込み中...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "鳥に接続できませんでした",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "鳥のデータベースへの接続に問題が発生しています。これはお客様側またはサーバー側のネットワークの問題が原因かもしれません。",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "インターネット接続を確認して、もう一度お試しください。問題が続く場合は、ぜひご連絡ください！",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "サポートに連絡",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "音量を調整",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "音量",
+    "description": "Alt text for volume icon"
   }
 }

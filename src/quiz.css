@@ -605,3 +605,38 @@ html[dir="rtl"] .quiz-close-btn {
   outline: none;
 }
 
+/* Quiz Image Error State */
+.quiz-image-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  color: #666;
+  text-align: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.quiz-image-error svg {
+  color: #adb5bd;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.quiz-image-error-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #495057;
+  margin: 0 0 8px 0;
+}
+
+.quiz-image-error-hint {
+  font-size: 14px;
+  color: #868e96;
+  margin: 0;
+  font-style: italic;
+}
+

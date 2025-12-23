@@ -618,5 +618,29 @@
   "loading": {
     "message": "Carregando...",
     "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Não foi possível alcançar os pássaros",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "Estamos tendo problemas para conectar ao nosso banco de dados de pássaros. Isso pode ser devido a problemas de rede do seu lado ou do nosso.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Verifique sua conexão com a internet e tente novamente. Se isso continuar acontecendo, adoraríamos ouvir de você!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Contatar suporte",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Ajustar volume",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volume",
+    "description": "Alt text for volume icon"
   }
 }
