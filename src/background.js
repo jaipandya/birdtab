@@ -128,9 +128,15 @@ async function getMacaulayAudio(speciesCode) {
 }
 
 // Helper function to fetch and parse JSON from a URL
-async function fetchJson(url) {
+async function fetchJson(url, timeoutMs = 25000) {
+  // Use AbortController to implement timeout (25 seconds default)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
       const error = new Error(`HTTP error! status: ${response.status}`);
       error.isHttpError = true;
@@ -139,9 +145,19 @@ async function fetchJson(url) {
     }
     return response.json();
   } catch (error) {
+    clearTimeout(timeoutId);
+
     // Distinguish between network errors (Failed to fetch) and HTTP errors
     if (error.isHttpError) {
       throw error; // Re-throw HTTP errors as-is
+    }
+
+    // AbortError means fetch was cancelled due to timeout
+    if (error.name === 'AbortError') {
+      const timeoutError = new Error(`Request timed out after ${timeoutMs}ms`);
+      timeoutError.isNetworkError = true;
+      timeoutError.isTimeout = true;
+      throw timeoutError;
     }
 
     // Network error - add metadata for better tracking
