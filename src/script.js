@@ -79,50 +79,89 @@ function updateLoadingMessage() {
 // Fetch bird information from background script
 // Note: No separate transaction here - this is captured as part of the page-load transaction
 // to reduce Sentry span usage (1000+ daily users × new tabs)
-async function getBirdInfo() {
-  log(`Requesting bird info`);
+async function getBirdInfo(retryCount = 0) {
+  const maxRetries = 1; // Reduced to 1 retry to minimize API load
+  log(`Requesting bird info (attempt ${retryCount + 1}/${maxRetries + 1})`);
   const startTime = Date.now();
 
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      addBreadcrumb('Bird info request timed out', 'http', 'error');
+      const duration = Date.now() - startTime;
+      log(`Bird info request timed out after ${duration}ms`);
+      addBreadcrumb('Bird info request timed out', 'http', 'error', { duration, retryCount });
       reject(new Error('Request timed out'));
     }, 30000);
 
-    chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
+    try {
+      chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
+        clearTimeout(timeout);
+        const duration = Date.now() - startTime;
+
+        // Check for message delivery failure
+        if (chrome.runtime.lastError) {
+          const errorMsg = chrome.runtime.lastError.message || 'Message delivery failed';
+          log(`Error sending message: ${errorMsg} (duration: ${duration}ms)`);
+          addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration, retryCount });
+
+          // ONLY retry on "Receiving end does not exist" - this means service worker was terminated
+          // This is a transient MV3 issue that's worth retrying
+          if (errorMsg.includes('Receiving end does not exist') && retryCount < maxRetries) {
+            log(`Service worker terminated, retrying in 1 second...`);
+            setTimeout(async () => {
+              try {
+                const result = await getBirdInfo(retryCount + 1);
+                resolve(result);
+              } catch (retryError) {
+                reject(retryError);
+              }
+            }, 1000); // Wait 1 second before retry to give service worker time to restart
+            return;
+          }
+
+          reject(new Error(errorMsg));
+          return;
+        }
+
+        // Check if response is undefined (background script unavailable)
+        // DON'T retry here - this likely indicates a bug, not a transient issue
+        // Log to Sentry for investigation instead
+        if (!response) {
+          log(`No response from background script (duration: ${duration}ms)`);
+          addBreadcrumb('No response from background script', 'http', 'error', { duration, retryCount });
+          const error = new Error('No response from background script');
+          captureException(error, {
+            tags: { operation: 'getBirdInfo', errorType: 'undefined-response' },
+            extra: { duration, retryCount }
+          });
+          reject(error);
+          return;
+        }
+
+        // Data errors (image not found, API errors, etc.) - don't retry
+        if (response.error) {
+          log(`Error getting bird info: ${response.error} (duration: ${duration}ms)`);
+          addBreadcrumb(`Bird info error: ${response.error}`, 'http', 'error', { duration, retryCount });
+          reject(new Error(response.error));
+        } else {
+          log(`Bird info received successfully (duration: ${duration}ms)`);
+          addBreadcrumb('Bird info received', 'http', 'info', {
+            duration,
+            birdName: response.name,
+            region: response.location,
+            retryCount
+          });
+          resolve(response);
+        }
+      });
+    } catch (sendError) {
       clearTimeout(timeout);
-      const duration = Date.now() - startTime;
-
-      // Check for message delivery failure
-      if (chrome.runtime.lastError) {
-        const errorMsg = chrome.runtime.lastError.message || 'Message delivery failed';
-        log(`Error sending message: ${errorMsg}`);
-        addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration });
-        reject(new Error(errorMsg));
-        return;
-      }
-
-      // Check if response is undefined (background script unavailable)
-      if (!response) {
-        log('No response from background script');
-        addBreadcrumb('No response from background script', 'http', 'error', { duration });
-        reject(new Error('No response from background script'));
-        return;
-      }
-
-      if (response.error) {
-        log(`Error getting bird info: ${response.error}`);
-        addBreadcrumb(`Bird info error: ${response.error}`, 'http', 'error', { duration });
-        reject(new Error(response.error));
-      } else {
-        addBreadcrumb('Bird info received', 'http', 'info', {
-          duration,
-          birdName: response.name,
-          region: response.location
-        });
-        resolve(response);
-      }
-    });
+      log(`Exception while sending message: ${sendError.message}`);
+      captureException(sendError, {
+        tags: { operation: 'getBirdInfo', phase: 'sendMessage' },
+        extra: { retryCount }
+      });
+      reject(sendError);
+    }
   });
 }
 

@@ -10,6 +10,40 @@ addBreadcrumb('Background script started', 'lifecycle', 'info');
 
 let preloadedBirdInfo = null;
 let lastNewTabId = null;
+let serviceWorkerStartTime = Date.now();
+
+// Track service worker lifecycle for debugging
+log(`Service worker started at: ${new Date(serviceWorkerStartTime).toISOString()}`);
+
+// Add error handler for unhandled promise rejections
+self.addEventListener('unhandledrejection', (event) => {
+  log(`Unhandled promise rejection: ${event.reason}`);
+  captureException(event.reason, {
+    tags: { type: 'unhandledRejection' }
+  });
+});
+
+// Keepalive mechanism: Use chrome.alarms to prevent service worker from being terminated
+// This creates a minimal alarm that fires periodically to keep the worker alive during critical operations
+let keepAliveInterval = null;
+
+function startKeepAlive() {
+  if (!keepAliveInterval) {
+    // Ping every 20 seconds to keep service worker alive (Chrome terminates after ~30s of inactivity)
+    keepAliveInterval = setInterval(() => {
+      log('Keepalive ping');
+    }, 20000);
+    log('Keepalive started');
+  }
+}
+
+function stopKeepAlive() {
+  if (keepAliveInterval) {
+    clearInterval(keepAliveInterval);
+    keepAliveInterval = null;
+    log('Keepalive stopped');
+  }
+}
 
 // new async delay function to simulate a slow loading experience
 async function delay(ms) {
@@ -375,27 +409,62 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 // Message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getBirdInfo') {
-    log(`Received request for bird info`);
-    chrome.storage.sync.get(['region', 'autoPlay'], async result => {
-      const region = result.region || 'US';
-      const autoPlay = result.autoPlay || false;
-      log(`Using region: ${region}, auto-play: ${autoPlay}`);
+    log(`Received request for bird info from tab ${sender.tab?.id || 'unknown'}`);
+
+    // Start keepalive to prevent service worker termination during fetch
+    startKeepAlive();
+
+    // Use IIFE pattern to handle async operations properly
+    (async () => {
       try {
+        // Get settings from storage
+        const result = await chrome.storage.sync.get(['region', 'autoPlay']);
+        const region = result.region || 'US';
+        const autoPlay = result.autoPlay || false;
+        log(`Using region: ${region}, auto-play: ${autoPlay}`);
+
+        // Fetch or retrieve preloaded bird info
         let birdInfo = preloadedBirdInfo || await fetchBirdInfo(region);
         preloadedBirdInfo = null;
         birdInfo.autoPlay = autoPlay;
-        sendResponse(birdInfo);
+
+        log(`Sending bird info response: ${birdInfo.name}`);
+
+        // Check if the message port is still open before sending response
+        try {
+          sendResponse(birdInfo);
+        } catch (responseError) {
+          log(`Failed to send response: ${responseError.message}`);
+          captureException(responseError, {
+            tags: { operation: 'sendResponse', source: 'messageListener' },
+            extra: { birdName: birdInfo?.name }
+          });
+        }
+
+        // Preload next bird in background (don't await)
         preloadNextBird(region);
       } catch (error) {
-        log(`Error: ${error.message}`);
+        log(`Error in getBirdInfo handler: ${error.message}`);
         captureException(error, {
           tags: { operation: 'getBirdInfo', source: 'messageListener' },
-          extra: { region, autoPlay }
+          extra: {
+            tabId: sender.tab?.id,
+            url: sender.url
+          }
         });
-        sendResponse({ error: error.message });
+
+        try {
+          sendResponse({ error: error.message });
+        } catch (responseError) {
+          log(`Failed to send error response: ${responseError.message}`);
+        }
+      } finally {
+        // Stop keepalive after operation completes
+        stopKeepAlive();
       }
-    });
-    return true;  // Indicates that the response is asynchronous
+    })();
+
+    return true;  // Keep message channel open for async response
   } else if (request.action === 'deleteCache') {
     clearCache();
     preloadedBirdInfo = null;
