@@ -305,6 +305,14 @@ async function playAudio() {
       }
     }, 200);
   } catch (error) {
+    // AbortError is expected when user opens multiple tabs quickly (background sends pauseAudio)
+    // Don't log this as an error - it's normal behavior
+    if (error.name === 'AbortError') {
+      log('Audio playback interrupted (user opened another tab)');
+      return;
+    }
+
+    // Other errors are unexpected and should be reported
     console.error('Error playing audio:', error);
     captureException(error, {
       tags: { operation: 'playAudio' },
@@ -312,7 +320,8 @@ async function playAudio() {
         mediaUrl: birdInfo?.mediaUrl,
         currentTime: audio?.currentTime,
         volume: audio?.volume,
-        muted: audio?.muted
+        muted: audio?.muted,
+        errorName: error.name
       }
     });
   }
