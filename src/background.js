@@ -129,9 +129,27 @@ async function getMacaulayAudio(speciesCode) {
 
 // Helper function to fetch and parse JSON from a URL
 async function fetchJson(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-  return response.json();
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      const error = new Error(`HTTP error! status: ${response.status}`);
+      error.isHttpError = true;
+      error.statusCode = response.status;
+      throw error;
+    }
+    return response.json();
+  } catch (error) {
+    // Distinguish between network errors (Failed to fetch) and HTTP errors
+    if (error.isHttpError) {
+      throw error; // Re-throw HTTP errors as-is
+    }
+
+    // Network error - add metadata for better tracking
+    const networkError = new Error(error.message || 'Network request failed');
+    networkError.isNetworkError = true;
+    networkError.originalError = error.name;
+    throw networkError;
+  }
 }
 
 // Get cached data from chrome.storage.local
@@ -255,10 +273,30 @@ async function getBirdsByRegion(region) {
     throw new Error('No birds found in the response');
   } catch (error) {
     log(`Error fetching birds: ${error.message}`);
-    captureException(error, {
-      tags: { operation: 'getBirdsByRegion' },
-      extra: { region } // Removed URL to avoid exposing API endpoints
-    });
+
+    // Distinguish between network errors (user issue) and API errors (our issue)
+    if (error.isNetworkError) {
+      // Network connectivity issue - log as warning
+      captureMessage('Network error fetching birds from API', 'warning', {
+        tags: {
+          operation: 'getBirdsByRegion',
+          errorType: 'network'
+        },
+        extra: {
+          region,
+          errorMessage: error.message
+        }
+      });
+    } else {
+      // API errors, data errors, or other issues - log as error
+      captureException(error, {
+        tags: { operation: 'getBirdsByRegion' },
+        extra: {
+          region,
+          statusCode: error.statusCode // Include HTTP status if available
+        }
+      });
+    }
 
     const cachedData = await getCachedData(cacheKey);
     if (cachedData) {
@@ -312,14 +350,33 @@ async function fetchBirdInfo(region) {
     } catch (error) {
       // Image fetch failed - try to use a previously cached complete bird
       log(`Error fetching image: ${error.message}`);
-      captureException(error, {
-        tags: { operation: 'getMacaulayImage', component: 'background' },
-        extra: {
-          speciesCode: bird.speciesCode,
-          region,
-          responseData: error.responseData
-        }
-      });
+
+      // Report network errors as warnings (user's network issue, not our bug)
+      // Report data errors as errors (missing images we should fix)
+      if (error.isNetworkError || error.message?.includes('Failed to fetch')) {
+        captureMessage('Network error fetching bird image', 'warning', {
+          tags: {
+            operation: 'getMacaulayImage',
+            component: 'background',
+            errorType: 'network'
+          },
+          extra: {
+            speciesCode: bird.speciesCode,
+            region,
+            errorMessage: error.message
+          }
+        });
+      } else {
+        // Data errors (missing images, API issues) - report as errors
+        captureException(error, {
+          tags: { operation: 'getMacaulayImage', component: 'background' },
+          extra: {
+            speciesCode: bird.speciesCode,
+            region,
+            responseData: error.responseData
+          }
+        });
+      }
       
       const cachedBirdInfo = await getRandomCachedBirdInfo();
       if (cachedBirdInfo) {
@@ -404,10 +461,27 @@ async function preloadNextBird(region) {
     log('Next bird preloaded');
   } catch (error) {
     log(`Error preloading next bird: ${error.message}`);
-    captureException(error, {
-      tags: { operation: 'preloadNextBird' },
-      extra: { region }
-    });
+
+    // Network errors during preload are expected (user offline, etc.) - log as info
+    // Preload is an optimization, not critical functionality
+    if (error.isNetworkError || error.message?.includes('Failed to fetch')) {
+      captureMessage('Network error during bird preload', 'info', {
+        tags: {
+          operation: 'preloadNextBird',
+          errorType: 'network'
+        },
+        extra: {
+          region,
+          errorMessage: error.message
+        }
+      });
+    } else {
+      // Non-network errors (data issues, bugs) should still be reported as errors
+      captureException(error, {
+        tags: { operation: 'preloadNextBird' },
+        extra: { region }
+      });
+    }
   }
 }
 
