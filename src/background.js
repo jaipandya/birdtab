@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-import { initSentry, captureException, addBreadcrumb } from './sentry.js';
+import { initSentry, captureException, captureMessage, addBreadcrumb } from './sentry.js';
 import { log } from './logger.js';
 
 // Initialize Sentry for background script
@@ -70,7 +70,11 @@ async function getMacaulayImage(speciesCode) {
 
   if (data.results?.content?.[0]) {
     const image = data.results.content[0];
-    if (!image.mediaUrl) throw new Error('No image found in Macaulay Library');
+    if (!image.mediaUrl) {
+      const error = new Error('No image found in Macaulay Library');
+      error.responseData = { hasResults: true, hasMediaUrl: false };
+      throw error;
+    }
 
     const imageInfo = {
       imageUrl: image.mediaUrl,
@@ -80,7 +84,15 @@ async function getMacaulayImage(speciesCode) {
     await cacheData(cacheKey, imageInfo, CONFIG.CACHE_DURATION.BIRD_INFO);
     return imageInfo;
   }
-  throw new Error('No image found in Macaulay Library');
+
+  // No results found in API response
+  const error = new Error('No image found in Macaulay Library');
+  error.responseData = {
+    hasResults: false,
+    resultCount: data.results?.content?.length || 0,
+    totalResults: data.results?.total || 0
+  };
+  throw error;
 }
 
 // Fetch audio information from Macaulay Library
@@ -98,6 +110,10 @@ async function getMacaulayAudio(speciesCode) {
 
   if (data.results?.content?.[0]) {
     const audio = data.results.content[0];
+    if (!audio.mediaUrl) {
+      // Audio has results but no mediaUrl
+      return null;
+    }
     const audioInfo = {
       mediaUrl: audio.mediaUrl,
       recordist: audio.userDisplayName,
@@ -106,6 +122,8 @@ async function getMacaulayAudio(speciesCode) {
     await cacheData(cacheKey, audioInfo, CONFIG.CACHE_DURATION.BIRD_INFO);
     return audioInfo;
   }
+
+  // Audio not found - this is OK, audio is optional
   return null;
 }
 
@@ -270,17 +288,37 @@ async function fetchBirdInfo(region) {
       [imageInfo, audioInfo] = await Promise.all([
         getMacaulayImage(bird.speciesCode),
         getMacaulayAudio(bird.speciesCode).catch(error => {
-          log(`Error fetching audio: ${error.message}`);
+          log(`[AUDIO ERROR]: ${error.message} for species ${bird.speciesCode} in region ${region}`);
           // Audio is optional, don't throw - just return null
           return null;
         })
       ]);
+
+      // Track audio unavailability in Sentry for data quality analysis
+      if (!audioInfo) {
+        log(`[AUDIO UNAVAILABLE]: species ${bird.speciesCode} in region ${region}`);
+        captureMessage('Audio unavailable for bird species', 'info', {
+          tags: {
+            operation: 'getMacaulayAudio',
+            component: 'background',
+            mediaType: 'audio'
+          },
+          extra: {
+            speciesCode: bird.speciesCode,
+            region
+          }
+        });
+      }
     } catch (error) {
       // Image fetch failed - try to use a previously cached complete bird
       log(`Error fetching image: ${error.message}`);
       captureException(error, {
         tags: { operation: 'getMacaulayImage', component: 'background' },
-        extra: { speciesCode: bird.speciesCode }
+        extra: {
+          speciesCode: bird.speciesCode,
+          region,
+          responseData: error.responseData
+        }
       });
       
       const cachedBirdInfo = await getRandomCachedBirdInfo();
