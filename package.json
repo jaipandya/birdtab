@@ -11,7 +11,9 @@
     "check:i18n": "node scripts/check_i18n_completeness.js",
     "check:unused": "node scripts/check_unused_strings.js",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "deploy": "node scripts/deploy.js",
+    "tag-deployment": "node scripts/tag-deployment.js"
   },
   "keywords": [],
   "author": "",
