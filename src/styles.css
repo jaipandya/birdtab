@@ -129,15 +129,6 @@ body.loaded {
   opacity: 1;
 }
 
-.bird-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
 .image-container {
   position: relative;
   width: 100%;
@@ -521,6 +512,19 @@ body.loaded {
   margin-right: 0.5rem;
 }
 
+.bird-name-link {
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.bird-name-link:hover {
+  opacity: 1;
+}
+
 .info-panel h1 {
   display: inline;
   margin-right: 0.5rem;
@@ -649,14 +653,6 @@ p {
   display: inline-flex;
 }
 
-/* Ensure the play button doesn't interfere with the bird link */
-.bird-link {
-  pointer-events: none;
-}
-
-.bird-link img {
-  pointer-events: auto;
-}
 
 
 .hidden {

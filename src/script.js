@@ -455,9 +455,7 @@ async function initializePage() {
 
     const contentContainer = document.getElementById('content-container');
     contentContainer.innerHTML = `
-      <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-link">
-        <img src="" alt="${birdInfo.name}" class="background-image" decoding="async">
-      </a>
+      <img src="" alt="${birdInfo.name}" class="background-image" decoding="async">
       <div class="info-panel">
         <div class="external-links">
           <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
@@ -468,8 +466,10 @@ async function initializePage() {
           </a>
         </div>
         <div class="info-panel-header">
-          <h1 id="bird-name"></h1>
-          <span id="scientific-name"></span>
+          <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-name-link">
+            <h1 id="bird-name"></h1>
+            <span id="scientific-name"></span>
+          </a>
           <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
             <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
           </span>
