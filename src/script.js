@@ -79,9 +79,31 @@ function updateLoadingMessage() {
 // Fetch bird information from background script
 // Note: No separate transaction here - this is captured as part of the page-load transaction
 // to reduce Sentry span usage (1000+ daily users × new tabs)
+const MAX_RETRIES = 1; // Reduced to 1 retry to minimize API load
+
+/**
+ * Schedule a retry for getBirdInfo after a delay.
+ * Used for transient MV3 service worker issues.
+ * @returns {boolean} true if retry was scheduled, false if max retries exceeded
+ */
+function scheduleRetry(resolve, reject, retryCount, reason) {
+  if (retryCount < MAX_RETRIES) {
+    log(`${reason}, retrying in 1 second...`);
+    setTimeout(async () => {
+      try {
+        const result = await getBirdInfo(retryCount + 1);
+        resolve(result);
+      } catch (retryError) {
+        reject(retryError);
+      }
+    }, 1000);
+    return true;
+  }
+  return false;
+}
+
 async function getBirdInfo(retryCount = 0) {
-  const maxRetries = 1; // Reduced to 1 retry to minimize API load
-  log(`Requesting bird info (attempt ${retryCount + 1}/${maxRetries + 1})`);
+  log(`Requesting bird info (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`);
   const startTime = Date.now();
 
   return new Promise((resolve, reject) => {
@@ -103,22 +125,13 @@ async function getBirdInfo(retryCount = 0) {
           log(`Error sending message: ${errorMsg} (duration: ${duration}ms)`);
           addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration, retryCount });
 
-          // ONLY retry on service worker communication errors - these are transient MV3 issues
+          // Retry on service worker communication errors - these are transient MV3 issues
           // "Receiving end does not exist" = service worker was terminated
           // "message channel closed" = message port closed before response
           const isServiceWorkerError = errorMsg.includes('Receiving end does not exist') ||
                                        errorMsg.includes('message channel closed');
 
-          if (isServiceWorkerError && retryCount < maxRetries) {
-            log(`Service worker communication error, retrying in 1 second...`);
-            setTimeout(async () => {
-              try {
-                const result = await getBirdInfo(retryCount + 1);
-                resolve(result);
-              } catch (retryError) {
-                reject(retryError);
-              }
-            }, 1000); // Wait 1 second before retry to give service worker time to restart
+          if (isServiceWorkerError && scheduleRetry(resolve, reject, retryCount, 'Service worker communication error')) {
             return;
           }
 
@@ -126,12 +139,17 @@ async function getBirdInfo(retryCount = 0) {
           return;
         }
 
-        // Check if response is undefined (background script unavailable)
-        // DON'T retry here - this likely indicates a bug, not a transient issue
-        // Log to Sentry for investigation instead
+        // Check if response is undefined (background script unavailable or crashed)
+        // This can happen when service worker is cold-starting or terminated mid-execution
         if (!response) {
           log(`No response from background script (duration: ${duration}ms)`);
           addBreadcrumb('No response from background script', 'http', 'error', { duration, retryCount });
+
+          if (scheduleRetry(resolve, reject, retryCount, 'Service worker may have crashed')) {
+            return;
+          }
+
+          // Only report to Sentry if retry also failed
           const error = new Error('No response from background script');
           captureException(error, {
             tags: { operation: 'getBirdInfo', errorType: 'undefined-response' },
