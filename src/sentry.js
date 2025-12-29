@@ -20,6 +20,29 @@ const IGNORED_ERROR_PATTERNS = [
   'Receiving end does not exist',
 ];
 
+/**
+ * Get or create a unique visitor ID for anonymous user tracking.
+ * This ID persists per installation in chrome.storage.local.
+ * Unlike chrome.runtime.id (which is the same for all users),
+ * this gives each installation a unique identifier.
+ */
+async function getOrCreateVisitorId() {
+  try {
+    const result = await chrome.storage.local.get('visitorId');
+    if (result.visitorId) {
+      return result.visitorId;
+    }
+
+    const newId = crypto.randomUUID();
+    await chrome.storage.local.set({ visitorId: newId });
+    return newId;
+  } catch (error) {
+    logError('Failed to get/create visitor ID:', error);
+    // Fallback to a session-based ID if storage fails
+    return `session-${crypto.randomUUID()}`;
+  }
+}
+
 // Configuration object for Sentry
 const SENTRY_CONFIG = {
   // DSN from config
@@ -229,17 +252,26 @@ export function initSentry(component, additionalConfig = {}) {
 
     Sentry.setTag('component', component);
 
-    // Set user context (anonymous, using extension ID)
-    chrome.storage.sync.get(['region', 'onboardingComplete', 'autoPlay', 'quietHours', 'quickAccessEnabled'], (result) => {
-      Sentry.setUser({
-        id: chrome.runtime.id, // Anonymous identifier
-        region: result.region || 'US',
-        onboarded: result.onboardingComplete || false,
-        autoPlay: result.autoPlay || false,
-        quietHours: result.quietHours || false,
-        quickAccess: result.quickAccessEnabled || false,
-      });
-    });
+    // Set user context with unique anonymous visitor ID
+    // This runs async but doesn't block initialization
+    (async () => {
+      try {
+        const visitorId = await getOrCreateVisitorId();
+        const result = await chrome.storage.sync.get(['region', 'onboardingComplete', 'autoPlay', 'quietHours', 'quickAccessEnabled']);
+        Sentry.setUser({
+          id: visitorId,
+          data: {
+            region: result.region || 'US',
+            onboarded: result.onboardingComplete || false,
+            autoPlay: result.autoPlay || false,
+            quietHours: result.quietHours || false,
+            quickAccess: result.quickAccessEnabled || false,
+          }
+        });
+      } catch (error) {
+        logError('Failed to set user context:', error);
+      }
+    })();
 
     const manifest = chrome.runtime.getManifest();
     Sentry.setContext('extension', {
@@ -371,17 +403,19 @@ export function addBreadcrumb(message, category = 'default', level = 'info', dat
   }
 }
 
-export function updateUserContext(newSettings = {}) {
+export async function updateUserContext(newSettings = {}) {
   try {
-    chrome.storage.sync.get(['region', 'onboardingComplete', 'autoPlay', 'quietHours', 'quickAccessEnabled'], (result) => {
-      Sentry.setUser({
-        id: chrome.runtime.id,
+    const visitorId = await getOrCreateVisitorId();
+    const result = await chrome.storage.sync.get(['region', 'onboardingComplete', 'autoPlay', 'quietHours', 'quickAccessEnabled']);
+    Sentry.setUser({
+      id: visitorId,
+      data: {
         region: newSettings.region || result.region || 'US',
         onboarded: newSettings.onboardingComplete !== undefined ? newSettings.onboardingComplete : (result.onboardingComplete || false),
         autoPlay: newSettings.autoPlay !== undefined ? newSettings.autoPlay : (result.autoPlay || false),
         quietHours: newSettings.quietHours !== undefined ? newSettings.quietHours : (result.quietHours || false),
         quickAccess: newSettings.quickAccessEnabled !== undefined ? newSettings.quickAccessEnabled : (result.quickAccessEnabled || false),
-      });
+      }
     });
   } catch (error) {
     logError('Failed to update user context:', error);

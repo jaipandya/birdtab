@@ -366,20 +366,9 @@ async function fetchBirdInfo(region) {
         })
       ]);
 
-      // Track audio unavailability in Sentry for data quality analysis
+      // Log audio unavailability for local debugging only
       if (!audioInfo) {
         log(`[AUDIO UNAVAILABLE]: species ${bird.speciesCode} in region ${region}`);
-        captureMessage('Audio unavailable for bird species', 'info', {
-          tags: {
-            operation: 'getMacaulayAudio',
-            component: 'background',
-            mediaType: 'audio'
-          },
-          extra: {
-            speciesCode: bird.speciesCode,
-            region
-          }
-        });
       }
     } catch (error) {
       // Image fetch failed - try to use a previously cached complete bird
