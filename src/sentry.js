@@ -17,6 +17,7 @@ const IGNORED_ERROR_PATTERNS = [
   // Chrome extension specific
   'chrome.runtime.lastError',
   'The message port closed',
+  'message channel closed',
   'Receiving end does not exist',
 ];
 

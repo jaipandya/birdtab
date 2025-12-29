@@ -103,10 +103,14 @@ async function getBirdInfo(retryCount = 0) {
           log(`Error sending message: ${errorMsg} (duration: ${duration}ms)`);
           addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration, retryCount });
 
-          // ONLY retry on "Receiving end does not exist" - this means service worker was terminated
-          // This is a transient MV3 issue that's worth retrying
-          if (errorMsg.includes('Receiving end does not exist') && retryCount < maxRetries) {
-            log(`Service worker terminated, retrying in 1 second...`);
+          // ONLY retry on service worker communication errors - these are transient MV3 issues
+          // "Receiving end does not exist" = service worker was terminated
+          // "message channel closed" = message port closed before response
+          const isServiceWorkerError = errorMsg.includes('Receiving end does not exist') ||
+                                       errorMsg.includes('message channel closed');
+
+          if (isServiceWorkerError && retryCount < maxRetries) {
+            log(`Service worker communication error, retrying in 1 second...`);
             setTimeout(async () => {
               try {
                 const result = await getBirdInfo(retryCount + 1);
