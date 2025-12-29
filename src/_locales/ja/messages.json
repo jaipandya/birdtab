@@ -55,14 +55,6 @@
     "message": "更新",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "消音",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "エラー",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "うーん、今日は鳥たちが恥ずかしがっているようです",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "新しい鳥の写真と情報を読み込み",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "鳥の音をミュート/ミュート解除",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "鳥の音を再生",
     "description": "Tooltip for play button"
@@ -642,5 +630,49 @@
   "volumeAlt": {
     "message": "音量",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "この鳥を共有",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "共有",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "鳥の画像が十分にありません。インターネット接続を確認して、もう一度お試しください。",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "リンクを共有",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "コピー",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "コピーしました！",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "共有先",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "この美しい{birdName}を見てください！",
+    "description": "Default share text with bird name placeholder"
   }
 }

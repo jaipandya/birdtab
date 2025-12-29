@@ -55,14 +55,6 @@
     "message": "Atualizar",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "Silenciar",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "Erro",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "Hmm, os pássaros parecem tímidos hoje",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "Carregar nova foto e informações de ave",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "Silenciar/ativar sons de aves",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "Reproduzir som de ave",
     "description": "Tooltip for play button"
@@ -642,5 +630,49 @@
   "volumeAlt": {
     "message": "Volume",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "Compartilhar este pássaro",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "Compartilhar",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "Não há imagens de pássaros suficientes disponíveis. Por favor, verifique sua conexão com a internet e tente novamente.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "Compartilhar link",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "Copiar",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "Copiado!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "Compartilhar em",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "Veja este lindo {birdName}!",
+    "description": "Default share text with bird name placeholder"
   }
 }

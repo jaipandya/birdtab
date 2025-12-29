@@ -55,14 +55,6 @@
     "message": "Refresh",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "Mute",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "Error",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "Hmm, the birds seem shy today",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "Load a new bird photo and information",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "Mute/unmute bird sounds",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "Play bird sound",
     "description": "Tooltip for play button"
@@ -646,5 +634,45 @@
   "volumeAlt": {
     "message": "Volume",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "Share this bird",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "Share",
+    "description": "Alt text for share icon"
+  },
+  "shareLink": {
+    "message": "Share link",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "Copy",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "Copied!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "Share on",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "Check out this beautiful {birdName}!",
+    "description": "Default share text with bird name placeholder"
   }
 }

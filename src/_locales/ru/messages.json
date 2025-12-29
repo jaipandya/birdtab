@@ -55,14 +55,6 @@
     "message": "Обновить",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "Отключить звук",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "Ошибка",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "Хм, птицы сегодня кажутся застенчивыми",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "Загрузить новое фото и информацию о птице",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "Отключить/включить звуки птиц",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "Воспроизвести звук птицы",
     "description": "Tooltip for play button"
@@ -642,5 +630,49 @@
   "volumeAlt": {
     "message": "Громкость",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "Поделиться этой птицей",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "Поделиться",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "Недостаточно изображений птиц. Пожалуйста, проверьте подключение к интернету и попробуйте снова.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "Поделиться ссылкой",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "Копировать",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "Скопировано!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "Поделиться в",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "Посмотрите на эту прекрасную птицу {birdName}!",
+    "description": "Default share text with bird name placeholder"
   }
 }

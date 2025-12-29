@@ -55,14 +55,6 @@
     "message": "刷新",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "静音",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "错误",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "嗯，鸟儿们今天似乎很害羞",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "加载新的鸟类照片和信息",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "静音/取消静音鸟类声音",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "播放鸟类声音",
     "description": "Tooltip for play button"
@@ -642,5 +630,49 @@
   "volumeAlt": {
     "message": "音量",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "分享这只鸟",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "分享",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "没有足够的鸟类图片可用。请检查您的网络连接并重试。",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "分享链接",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "复制",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "已复制！",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "分享到",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "快来看这只美丽的{birdName}！",
+    "description": "Default share text with bird name placeholder"
   }
 }

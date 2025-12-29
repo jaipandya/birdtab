@@ -55,14 +55,6 @@
     "message": "تحديث",
     "description": "Alt text for refresh icon"
   },
-  "muteAlt": {
-    "message": "كتم الصوت",
-    "description": "Alt text for mute icon"
-  },
-  "errorAlt": {
-    "message": "خطأ",
-    "description": "Alt text for error icon"
-  },
   "errorTitle": {
     "message": "همم، يبدو أن الطيور خجولة اليوم",
     "description": "Title for error modal"
@@ -391,10 +383,6 @@
     "message": "تحميل صورة ومعلومات طائر جديدة",
     "description": "Tooltip for refresh button"
   },
-  "muteTooltip": {
-    "message": "كتم/إلغاء كتم أصوات الطيور",
-    "description": "Tooltip for mute button"
-  },
   "playTooltip": {
     "message": "تشغيل صوت الطائر",
     "description": "Tooltip for play button"
@@ -642,5 +630,49 @@
   "volumeAlt": {
     "message": "مستوى الصوت",
     "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "مشاركة هذا الطائر",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "مشاركة",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "لا تتوفر صور كافية للطيور. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "مشاركة الرابط",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "نسخ",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "تم النسخ!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "مشاركة على",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "فيسبوك",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "واتساب",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "شاهد هذا الطائر الجميل {birdName}!",
+    "description": "Default share text with bird name placeholder"
   }
 }
