@@ -146,7 +146,8 @@ async function getBirdInfo(retryCount = 0) {
           log(`Bird info received successfully (duration: ${duration}ms)`);
           addBreadcrumb('Bird info received', 'http', 'info', {
             duration,
-            birdName: response.name,
+            speciesCode: response.speciesCode,
+            ebirdUrl: response.ebirdUrl,
             region: response.location,
             retryCount
           });

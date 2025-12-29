@@ -421,6 +421,7 @@ async function fetchBirdInfo(region) {
     const birdInfo = {
       name: bird.primaryComName,
       scientificName: bird.scientificName,
+      speciesCode: bird.speciesCode,
       location: region, // We don't have specific location data anymore
       ebirdUrl: `https://ebird.org/species/${bird.speciesCode}`,
       imageUrl: imageInfo.imageUrl,
@@ -442,7 +443,8 @@ async function fetchBirdInfo(region) {
     addBreadcrumb('Bird info fetched successfully', 'http', 'info', {
       duration,
       region,
-      birdName: birdInfo.name
+      speciesCode: birdInfo.speciesCode,
+      ebirdUrl: birdInfo.ebirdUrl
     });
 
     return birdInfo;
