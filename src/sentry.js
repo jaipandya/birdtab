@@ -134,6 +134,11 @@ const SENTRY_CONFIG = {
 
   // Client-side rate limiting and error filtering
   beforeSend(event, hint) {
+    // Don't send events when offline - prevents console noise and failed requests
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return null;
+    }
+
     // Rate limiting: max 10 errors per session
     if (typeof window !== 'undefined' && window.sentryErrorCount >= 10) {
       return null;
