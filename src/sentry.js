@@ -171,6 +171,48 @@ function isServiceWorker() {
 }
 
 /**
+ * Parse user agent to extract OS and browser information
+ * Used in service worker context where HttpContext integration is not available
+ */
+function parseUserAgent() {
+  if (typeof navigator === 'undefined' || !navigator.userAgent) {
+    return { os: null, browser: null };
+  }
+
+  const ua = navigator.userAgent;
+  let os = null;
+  let browser = null;
+
+  // Parse OS
+  if (ua.includes('Windows NT 10')) {
+    os = { name: 'Windows', version: '10' };
+  } else if (ua.includes('Windows NT 11') || (ua.includes('Windows NT 10') && ua.includes('Win64'))) {
+    // Windows 11 reports as Windows NT 10 but we can't reliably detect it
+    os = { name: 'Windows', version: '10' };
+  } else if (ua.includes('Windows')) {
+    os = { name: 'Windows' };
+  } else if (ua.includes('Mac OS X')) {
+    const match = ua.match(/Mac OS X (\d+[._]\d+[._]?\d*)/);
+    os = { name: 'macOS', version: match ? match[1].replace(/_/g, '.') : undefined };
+  } else if (ua.includes('Linux')) {
+    os = { name: 'Linux' };
+  } else if (ua.includes('CrOS')) {
+    os = { name: 'Chrome OS' };
+  }
+
+  // Parse Browser (Chrome extension will always be Chrome-based)
+  const chromeMatch = ua.match(/Chrome\/(\d+(\.\d+)*)/);
+  if (chromeMatch) {
+    browser = { name: 'Chrome', version: chromeMatch[1] };
+  } else if (ua.includes('Edg/')) {
+    const edgeMatch = ua.match(/Edg\/(\d+(\.\d+)*)/);
+    browser = { name: 'Edge', version: edgeMatch ? edgeMatch[1] : undefined };
+  }
+
+  return { os, browser };
+}
+
+/**
  * Filter integrations based on context and requirements
  */
 function filterIntegrations(defaultIntegrations) {
@@ -267,8 +309,9 @@ const SENTRY_CONFIG = {
   },
 
   beforeSend(event, hint) {
-    // Don't send events when offline (browser context only)
-    if (typeof window !== 'undefined' && !navigator.onLine) {
+    // Don't send events when offline (works in both browser and service worker contexts)
+    // navigator.onLine is available in service workers via WorkerNavigator
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
       return null;
     }
 
@@ -382,6 +425,18 @@ export function initSentry(component, additionalConfig = {}) {
       component: component,
       manifestVersion: manifest.manifest_version,
     });
+
+    // In service worker context, HttpContext integration is not available
+    // so we manually set OS and browser context from user agent
+    if (isServiceWorker()) {
+      const { os, browser } = parseUserAgent();
+      if (os) {
+        Sentry.setContext('os', os);
+      }
+      if (browser) {
+        Sentry.setContext('browser', browser);
+      }
+    }
 
     log(`Sentry initialized for ${component}`);
 
