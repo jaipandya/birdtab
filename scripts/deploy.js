@@ -117,9 +117,11 @@ async function main() {
 
   log('\n🔨 Building production...\n', colors.blue);
 
-  // Build for Chrome using pnpm
+  // Build for Chrome using pnpm with UPLOAD_SOURCEMAPS enabled
   try {
-    exec('pnpm run build:chrome');
+    exec('pnpm run build:chrome', {
+      env: { ...process.env, UPLOAD_SOURCEMAPS: 'true' }
+    });
   } catch (error) {
     log('\n❌ Build failed!', colors.red);
     process.exit(1);

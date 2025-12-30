@@ -135,9 +135,9 @@ module.exports = (env, argv) => {
         filename: 'onboarding.html',
         chunks: ['vendor', 'onboarding'],
       }),
-      // Sentry plugin - only in production and if token is present
-      ...(isProduction && process.env.SENTRY_AUTH_TOKEN ? (() => {
-        console.log('\n📤 Sentry source map upload enabled (SENTRY_AUTH_TOKEN found)');
+      // Sentry plugin - only when UPLOAD_SOURCEMAPS is set (during deploy) and token is present
+      ...(isProduction && process.env.UPLOAD_SOURCEMAPS === 'true' && process.env.SENTRY_AUTH_TOKEN ? (() => {
+        console.log('\n📤 Sentry source map upload enabled (UPLOAD_SOURCEMAPS=true, SENTRY_AUTH_TOKEN found)');
         console.log(`   Organization: ${process.env.SENTRY_ORG || "birdtab"}`);
         console.log(`   Project: ${process.env.SENTRY_PROJECT || "birdtab-extension"}\n`);
         return [
@@ -153,7 +153,7 @@ module.exports = (env, argv) => {
             silent: false,
           }),
         ];
-      })() : (isProduction ? (() => {
+      })() : (isProduction && process.env.UPLOAD_SOURCEMAPS === 'true' && !process.env.SENTRY_AUTH_TOKEN ? (() => {
         console.log('\n⚠️  SENTRY_AUTH_TOKEN not found - source maps will NOT be uploaded to Sentry.');
         console.log('   To enable source map uploads, set SENTRY_AUTH_TOKEN in your .env file.\n');
         return [];
