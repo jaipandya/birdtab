@@ -194,18 +194,29 @@ async function fetchJson(url, timeoutMs = 25000, maxRetries = 1) {
         throw error; // Re-throw HTTP errors as-is
       }
 
-      // AbortError means fetch was cancelled due to timeout
+      // Handle network errors (Failed to fetch, timeouts, etc.)
+      let networkError;
       if (error.name === 'AbortError') {
-        const timeoutError = new Error(`Request timed out after ${timeoutMs}ms`);
-        timeoutError.isNetworkError = true;
-        timeoutError.isTimeout = true;
-        throw timeoutError;
+        // AbortError means fetch was cancelled due to timeout
+        networkError = new Error(`Request timed out after ${timeoutMs}ms`);
+        networkError.isNetworkError = true;
+        networkError.isTimeout = true;
+      } else {
+        // Other network errors (Failed to fetch, DNS failures, etc.)
+        networkError = new Error(error.message || 'Network request failed');
+        networkError.isNetworkError = true;
+        networkError.originalError = error.name;
       }
 
-      // Network error - add metadata for better tracking
-      const networkError = new Error(error.message || 'Network request failed');
-      networkError.isNetworkError = true;
-      networkError.originalError = error.name;
+      // Retry network errors if user is online (transient network glitches)
+      // Don't retry if offline - it's pointless and wastes resources
+      if (attempt < maxRetries && navigator.onLine) {
+        log(`Network error, retrying... (attempt ${attempt + 1}/${maxRetries})`);
+        // Longer delay for network errors (1.5s) to allow connectivity to recover
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        continue;
+      }
+
       throw networkError;
     }
   }
@@ -234,6 +245,21 @@ async function cacheData(key, value, duration) {
     chrome.storage.local.set({
       [key]: { value, timestamp: Date.now(), duration }
     }, resolve);
+  });
+}
+
+// Get count of cached birds across all regions (for Sentry impact assessment)
+async function getCachedBirdCount() {
+  return new Promise(resolve => {
+    chrome.storage.local.get(null, items => {
+      let totalBirds = 0;
+      Object.keys(items).forEach(key => {
+        if (key.startsWith('birds_') && items[key]?.value?.length) {
+          totalBirds += items[key].value.length;
+        }
+      });
+      resolve(totalBirds);
+    });
   });
 }
 
@@ -346,6 +372,8 @@ async function getBirdsByRegion(region) {
     // Distinguish between network errors (user issue) and API errors (our issue)
     if (error.isNetworkError) {
       // Network connectivity issue - log as warning
+      // Include cached bird count for impact assessment and online status for debugging
+      const cachedBirdCount = await getCachedBirdCount();
       captureMessage('Network error fetching birds from API', 'warning', {
         tags: {
           operation: 'getBirdsByRegion',
@@ -353,7 +381,8 @@ async function getBirdsByRegion(region) {
         },
         extra: {
           region,
-          errorMessage: error.message
+          errorMessage: error.message,
+          cachedBirdCount
         }
       });
     } else {
@@ -441,6 +470,7 @@ async function fetchBirdInfo(region, videoMode = false) {
       // Report data errors (4xx, missing images) as errors (issues we might fix)
       if (error.isNetworkError || error.message?.includes('Failed to fetch') || error.isServerError) {
         const errorType = error.isServerError ? 'serverError' : 'network';
+        const cachedBirdCount = await getCachedBirdCount();
         captureMessage(`${errorType === 'serverError' ? 'Server' : 'Network'} error fetching bird image`, 'warning', {
           tags: {
             operation: 'getMacaulayImage',
@@ -451,7 +481,8 @@ async function fetchBirdInfo(region, videoMode = false) {
           extra: {
             speciesCode: bird.speciesCode,
             region,
-            errorMessage: error.message
+            errorMessage: error.message,
+            cachedBirdCount
           }
         });
       } else {
@@ -576,6 +607,7 @@ async function preloadNextBird(region, videoMode = false) {
     // - 5xx errors: transient issues on Macaulay Library's servers
     if (error.isNetworkError || error.message?.includes('Failed to fetch') || error.isServerError) {
       const errorType = error.isServerError ? 'serverError' : 'network';
+      const cachedBirdCount = await getCachedBirdCount();
       captureMessage(`${errorType === 'serverError' ? 'Server' : 'Network'} error during bird preload`, 'info', {
         tags: {
           operation: 'preloadNextBird',
@@ -584,7 +616,8 @@ async function preloadNextBird(region, videoMode = false) {
         },
         extra: {
           region,
-          errorMessage: error.message
+          errorMessage: error.message,
+          cachedBirdCount
         }
       });
     } else {
