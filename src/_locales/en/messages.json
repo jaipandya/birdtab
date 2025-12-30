@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "Video unavailable: Your connection is slow (2G/3G) or data saver is enabled. Showing photo instead to save bandwidth.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "Viewing History",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "View your bird watching history",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "History",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "Open history",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "No viewing history yet. Start exploring birds!",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Clear History",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Are you sure you want to clear your viewing history?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "Just now",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "$1 minute ago",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "$1 minutes ago",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "$1 hour ago",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "$1 hours ago",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Yesterday",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "$1 days ago",
+    "description": "Relative time: multiple days ago"
   }
 }

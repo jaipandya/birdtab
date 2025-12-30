@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "Видео недоступно: Ваше соединение медленное (2G/3G) или включена экономия трафика. Показано фото для экономии данных.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "История просмотров",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "Посмотреть историю наблюдений за птицами",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "История",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "Открыть историю",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "История просмотров пока пуста. Начните исследовать птиц!",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Очистить историю",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Вы уверены, что хотите очистить историю просмотров?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "Только что",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "$1 минуту назад",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "$1 минут назад",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "$1 час назад",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "$1 часов назад",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Вчера",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "$1 дней назад",
+    "description": "Relative time: multiple days ago"
   }
 }

@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "视频不可用：您的网络连接较慢（2G/3G）或已启用省流量模式。为节省流量，正在显示照片。",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "查看历史",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "查看您的观鸟历史",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "历史",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "打开历史记录",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "还没有查看历史。开始探索鸟类吧！",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "清除历史",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "您确定要清除查看历史吗？",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "刚刚",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "$1分钟前",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "$1分钟前",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "$1小时前",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "$1小时前",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "昨天",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "$1天前",
+    "description": "Relative time: multiple days ago"
   }
 }

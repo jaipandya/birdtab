@@ -482,6 +482,277 @@ async function getBirdInfo(retryCount = 0) {
   });
 }
 
+// ===== History Management Functions =====
+
+// Add bird to viewing history
+async function addToHistory(birdInfo) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['viewHistory'], (result) => {
+      const history = result.viewHistory?.value || [];
+
+      const entry = {
+        speciesCode: birdInfo.speciesCode,
+        name: birdInfo.name,
+        scientificName: birdInfo.scientificName,
+        imageUrl: birdInfo.imageUrl,
+        timestamp: Date.now(),
+        ebirdUrl: birdInfo.ebirdUrl
+      };
+
+      history.push(entry); // Newest at end
+
+      // Enforce 200 item limit - remove oldest
+      if (history.length > 200) {
+        history.shift();
+      }
+
+      chrome.storage.local.set({
+        viewHistory: { value: history, timestamp: Date.now() }
+      }, () => {
+        if (chrome.runtime.lastError) {
+          log(`Error saving history: ${chrome.runtime.lastError.message}`);
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+// Get viewing history
+async function getHistory() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['viewHistory'], (result) => {
+      resolve(result.viewHistory?.value || []);
+    });
+  });
+}
+
+// Clear all viewing history
+async function clearHistory() {
+  return new Promise((resolve) => {
+    chrome.storage.local.remove(['viewHistory'], resolve);
+  });
+}
+
+// Get relative time string for timestamp display
+function getRelativeTimeString(timestamp) {
+  const now = Date.now();
+  const diff = now - timestamp;
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 60) {
+    return chrome.i18n.getMessage('justNow') || 'Just now';
+  } else if (minutes < 60) {
+    const key = minutes === 1 ? 'minuteAgo' : 'minutesAgo';
+    return chrome.i18n.getMessage(key, [minutes.toString()]) || `${minutes} min ago`;
+  } else if (hours < 24) {
+    const key = hours === 1 ? 'hourAgo' : 'hoursAgo';
+    return chrome.i18n.getMessage(key, [hours.toString()]) || `${hours}h ago`;
+  } else if (days === 1) {
+    return chrome.i18n.getMessage('yesterday') || 'Yesterday';
+  } else if (days < 7) {
+    return chrome.i18n.getMessage('daysAgo', [days.toString()]) || `${days} days ago`;
+  } else {
+    // Format as "Jan 15" or localized equivalent
+    const date = new Date(timestamp);
+    return new Intl.DateTimeFormat(chrome.i18n.getUILanguage(), {
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  }
+}
+
+// Load specific bird by species code from history
+async function loadBirdBySpeciesCode(speciesCode) {
+  log(`Loading bird by species code: ${speciesCode}`);
+
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: 'getBirdInfoBySpeciesCode', speciesCode },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (response.error) {
+          reject(new Error(response.error));
+          return;
+        }
+
+        // Store the loaded bird info and reload page
+        // This ensures all initialization logic runs correctly
+        chrome.storage.local.set({ pendingBirdInfo: response }, () => {
+          window.location.reload();
+          resolve(response);
+        });
+      }
+    );
+  });
+}
+
+// ===== End History Management Functions =====
+
+// ===== History Modal UI Functions =====
+
+let historyModal = null;
+
+// Escape HTML to prevent XSS
+function escapeHtml(unsafe) {
+  if (!unsafe) return '';
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Create history modal DOM element
+function createHistoryModal() {
+  const existingModal = document.getElementById('history-modal');
+  if (existingModal) existingModal.remove();
+
+  const modalHTML = `
+    <div id="history-modal" class="settings-modal hidden" role="dialog" aria-modal="true">
+      <div class="settings-content history-content">
+        <div class="settings-header">
+          <h2 id="history-modal-title" data-i18n="historyTitle">Viewing History</h2>
+          <button id="close-history" class="close-button" aria-label="Close history">
+            <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+          </button>
+        </div>
+        <div class="settings-body">
+          <div id="history-list" class="history-list"></div>
+          <div id="empty-history" class="empty-history hidden">
+            <img src="images/svg/info.svg" alt="" width="64" height="64">
+            <p data-i18n="emptyHistory">No viewing history yet. Start exploring birds!</p>
+          </div>
+        </div>
+        <div class="history-footer">
+          <button id="clear-history-btn" class="shortcut-btn secondary" data-i18n="clearHistory">
+            Clear History
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  localizeHtml();
+  return document.getElementById('history-modal');
+}
+
+// Populate history list with entries
+async function populateHistoryList() {
+  const history = await getHistory();
+  const historyList = document.getElementById('history-list');
+  const emptyState = document.getElementById('empty-history');
+
+  if (history.length === 0) {
+    historyList.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    return;
+  }
+
+  historyList.classList.remove('hidden');
+  emptyState.classList.add('hidden');
+
+  // Reverse to show newest first
+  const reversedHistory = [...history].reverse();
+
+  // Use escaped HTML to prevent XSS
+  historyList.innerHTML = reversedHistory.map(entry => `
+    <button class="history-item" data-species-code="${escapeHtml(entry.speciesCode)}">
+      <img src="${escapeHtml(entry.imageUrl)}" alt="${escapeHtml(entry.name)}" class="history-item-image" loading="lazy">
+      <div class="history-item-info">
+        <div class="history-item-name">${escapeHtml(entry.name)}</div>
+        <div class="history-item-scientific">${escapeHtml(entry.scientificName)}</div>
+        <div class="history-item-time">${escapeHtml(getRelativeTimeString(entry.timestamp))}</div>
+      </div>
+    </button>
+  `).join('');
+}
+
+// Handle clicking on a history item
+async function handleHistoryItemClick(item) {
+  const speciesCode = item.dataset.speciesCode;
+  closeHistoryModal();
+  showLoadingIndicator();
+
+  try {
+    await loadBirdBySpeciesCode(speciesCode);
+  } catch (error) {
+    hideLoadingIndicator();
+    log(`Error loading bird from history: ${error.message}`);
+    showErrorModal(error.message || 'Failed to load bird. Loading a random bird instead...');
+    setTimeout(() => window.location.reload(), 2000);
+  }
+}
+
+// Open history modal
+function openHistoryModal() {
+  if (!historyModal) {
+    historyModal = createHistoryModal();
+    bindHistoryModalEvents();
+  }
+  populateHistoryList();
+  historyModal.classList.remove('hidden');
+}
+
+// Close history modal
+function closeHistoryModal() {
+  if (historyModal) {
+    historyModal.classList.add('hidden');
+  }
+}
+
+// Bind event listeners to history modal
+function bindHistoryModalEvents() {
+  const closeBtn = document.getElementById('close-history');
+  const clearBtn = document.getElementById('clear-history-btn');
+  const historyList = document.getElementById('history-list');
+
+  // Close button
+  closeBtn.addEventListener('click', closeHistoryModal);
+
+  // Click outside to close
+  historyModal.addEventListener('click', (e) => {
+    if (e.target === historyModal) {
+      closeHistoryModal();
+    }
+  });
+
+  // ESC key to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !historyModal.classList.contains('hidden')) {
+      closeHistoryModal();
+    }
+  });
+
+  // Event delegation for history items
+  historyList.addEventListener('click', (e) => {
+    const historyItem = e.target.closest('.history-item');
+    if (historyItem) {
+      handleHistoryItemClick(historyItem);
+    }
+  });
+
+  // Clear history button
+  clearBtn.addEventListener('click', async () => {
+    const confirmed = confirm(chrome.i18n.getMessage('confirmClearHistory') ||
+      'Are you sure you want to clear your viewing history?');
+    if (confirmed) {
+      await clearHistory();
+      await populateHistoryList();
+    }
+  });
+}
+
+// ===== End History Modal UI Functions =====
+
 // Update play/pause button UI
 const updatePlayPauseButton = () => {
   const playButton = document.getElementById('play-button');
@@ -1238,7 +1509,27 @@ async function initializePage() {
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
-    birdInfo = await getBirdInfo();
+    // Check if there's a pending bird from history selection
+    const pendingBird = await new Promise((resolve) => {
+      chrome.storage.local.get(['pendingBirdInfo'], (result) => {
+        if (result.pendingBirdInfo) {
+          // Clear it immediately
+          chrome.storage.local.remove(['pendingBirdInfo']);
+          resolve(result.pendingBirdInfo);
+        } else {
+          resolve(null);
+        }
+      });
+    });
+
+    if (pendingBird) {
+      birdInfo = pendingBird;
+    } else {
+      birdInfo = await getBirdInfo();
+    }
+
+    // Add bird to viewing history
+    await addToHistory(birdInfo);
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
@@ -1332,6 +1623,9 @@ async function initializePage() {
       <div class="control-buttons">
         <button id="settings-button" class="icon-button" aria-label="${chrome.i18n.getMessage('openSettings')}" title="${chrome.i18n.getMessage('settingsTooltip')}">
           <img src="images/svg/settings.svg" alt="${chrome.i18n.getMessage('settingsAlt')}" width="24" height="24">
+        </button>
+        <button id="history-button" class="icon-button" aria-label="${chrome.i18n.getMessage('openHistory') || 'Open history'}" title="${chrome.i18n.getMessage('historyTooltip') || 'View your bird watching history'}">
+          <img src="images/svg/history.svg" alt="${chrome.i18n.getMessage('historyAlt') || 'History'}" width="24" height="24">
         </button>
         <button id="quiz-button" class="icon-button" aria-label="${chrome.i18n.getMessage('startQuiz')}" title="${chrome.i18n.getMessage('quizTooltip')}">
           <img src="images/svg/quiz.svg" alt="${chrome.i18n.getMessage('quizAlt')}" width="24" height="24">
@@ -1434,6 +1728,12 @@ async function initializePage() {
       e.preventDefault();
       e.stopPropagation();
       window.location.reload();
+    });
+
+    document.getElementById('history-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openHistoryModal();
     });
 
     document.getElementById('quiz-button').addEventListener('click', (e) => {

@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "الفيديو غير متاح: اتصالك بطيء (2G/3G) أو تم تفعيل موفر البيانات. يتم عرض الصورة لتوفير البيانات.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "سجل المشاهدة",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "عرض سجل مراقبة الطيور الخاص بك",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "السجل",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "فتح السجل",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "لا يوجد سجل مشاهدة حتى الآن. ابدأ في استكشاف الطيور!",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "مسح السجل",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "هل أنت متأكد من أنك تريد مسح سجل المشاهدة الخاص بك؟",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "الآن",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "منذ $1 دقيقة",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "منذ $1 دقيقة",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "منذ $1 ساعة",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "منذ $1 ساعة",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "أمس",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "منذ $1 يوم",
+    "description": "Relative time: multiple days ago"
   }
 }

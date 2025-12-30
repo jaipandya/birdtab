@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "Vídeo indisponível: Sua conexão está lenta (2G/3G) ou a economia de dados está ativada. Mostrando foto para economizar dados.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "Histórico de visualização",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "Ver seu histórico de observação de pássaros",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "Histórico",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "Abrir histórico",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "Nenhum histórico de visualização ainda. Comece a explorar pássaros!",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Limpar histórico",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Tem certeza de que deseja limpar seu histórico de visualização?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "Agora mesmo",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "Há $1 minuto",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "Há $1 minutos",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "Há $1 hora",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "Há $1 horas",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Ontem",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "Há $1 dias",
+    "description": "Relative time: multiple days ago"
   }
 }

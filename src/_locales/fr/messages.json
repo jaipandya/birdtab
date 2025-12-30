@@ -702,5 +702,61 @@
   "videoUnavailableTooltip": {
     "message": "Vidéo non disponible : Votre connexion est lente (2G/3G) ou l'économie de données est activée. Photo affichée pour économiser la bande passante.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "historyTitle": {
+    "message": "Historique de visualisation",
+    "description": "Title for history modal"
+  },
+  "historyTooltip": {
+    "message": "Voir votre historique d'observation des oiseaux",
+    "description": "Tooltip for history button"
+  },
+  "historyAlt": {
+    "message": "Historique",
+    "description": "Alt text for history icon"
+  },
+  "openHistory": {
+    "message": "Ouvrir l'historique",
+    "description": "Aria label for history button"
+  },
+  "emptyHistory": {
+    "message": "Aucun historique de visualisation pour le moment. Commencez à explorer les oiseaux !",
+    "description": "Message shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Effacer l'historique",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Êtes-vous sûr de vouloir effacer votre historique de visualisation ?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "À l'instant",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "Il y a $1 minute",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "Il y a $1 minutes",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "Il y a $1 heure",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "Il y a $1 heures",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Hier",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "Il y a $1 jours",
+    "description": "Relative time: multiple days ago"
   }
 }
