@@ -172,6 +172,7 @@ body.loaded {
   justify-content: center;
   background: transparent;
   z-index: 5;
+  pointer-events: none; /* Allow clicks through to elements beneath */
   cursor: pointer;
   animation: overlayFadeIn 0.3s ease;
 }
@@ -192,6 +193,7 @@ body.loaded {
   align-items: center;
   justify-content: center;
   transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+  pointer-events: auto; /* Re-enable pointer events for the button */
 }
 
 .video-play-btn:hover {

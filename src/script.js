@@ -206,15 +206,6 @@ class VideoVisibilityManager {
     this.video = videoEl;
     video = videoEl; // Update global reference
 
-    // Handle successful load
-    const handleCanPlay = () => {
-      hideVideoLoadingIndicator();
-      this.switchToVideoCredits();
-      // Re-setup video controls for the reloaded video
-      setupVideoControls();
-      // Video will be shown when play event fires
-    };
-
     // Handle errors during reload
     const handleReloadError = () => {
       log('Error reloading video, falling back to image mode');
@@ -223,6 +214,19 @@ class VideoVisibilityManager {
       this.switchToPhotoCredits();
       // Mark as unloaded so we don't try to play
       this.isUnloaded = true;
+    };
+
+    // Set up all event listeners for the reloaded video (play, pause, ended, buffering, etc.)
+    const markAsLoaded = setupVideoEventListeners(videoEl, handleReloadError);
+
+    // Handle successful load
+    const handleCanPlay = () => {
+      hideVideoLoadingIndicator();
+      markAsLoaded(); // Mark as successfully loaded
+      this.switchToVideoCredits();
+      // Re-setup video controls for the reloaded video
+      setupVideoControls();
+      // Video will be shown when play event fires
     };
 
     videoEl.addEventListener('canplay', handleCanPlay, { once: true });
@@ -780,55 +784,9 @@ function setImageSource(imageUrl) {
   img.src = imageUrl;
 }
 
-// Set up video to show when ready
-function setVideoSource() {
-  const videoEl = document.querySelector('.background-video');
-  if (!videoEl) return;
-
-  // Show loading indicator immediately
-  showVideoLoadingIndicator();
-
-  const fallbackToImage = () => {
-    log('Falling back to image mode (visual only)');
-    showPosterImage();
-
-    // Remove loading indicator
-    hideVideoLoadingIndicator();
-    cleanupVideoControls();
-
-    // Show play overlay so user can click to retry loading the video
-    if (videoVisibilityManager) {
-      videoVisibilityManager.isUnloaded = true; // Mark as needing reload
-      videoVisibilityManager.showPlayOverlay();
-      videoVisibilityManager.switchToPhotoCredits(); // Show photo credits while image is displayed
-    }
-
-    // Keep video reference for retry attempts - don't destroy the manager
-    // The play overlay click will trigger reloadAndPlay
-  };
-
-  // Show video when it can start playing
-  videoEl.addEventListener('canplay', function () {
-    log('Video ready to play');
-
-    // Mark as successfully loaded - future errors won't trigger fallback
-    hasLoadedSuccessfully = true;
-
-    // Hide loading indicator
-    hideVideoLoadingIndicator();
-
-    // Setup video controls (progress bar + duration)
-    setupVideoControls();
-
-    // Switch from photo credits to video credits
-    if (videoVisibilityManager) {
-      videoVisibilityManager.switchToVideoCredits();
-    }
-
-    // Note: We don't show video here - it will be shown when play event fires
-    // If autoplay is disabled, poster remains visible until user clicks play
-  }, { once: true });
-
+// Set up all video event listeners (play, pause, ended, buffering, errors, etc.)
+// This is extracted into a separate function so it can be reused when reloading video
+function setupVideoEventListeners(videoEl, fallbackToImage) {
   // Handle buffering - show loading indicator when video is waiting for data
   videoEl.addEventListener('waiting', function () {
     log('Video buffering...');
@@ -856,16 +814,16 @@ function setVideoSource() {
       log('Ignoring video error after intentional unload');
       return;
     }
-    
+
     // If video already loaded successfully before, don't fall back on transient errors
     // (network hiccups during playback shouldn't cause full fallback)
     if (hasLoadedSuccessfully) {
       log(`Video playback error (non-fatal): ${e.message || 'Unknown error'}`);
       return;
     }
-    
+
     log(`Video load error: ${e.message || 'Unknown error'}, falling back to image`);
-    fallbackToImage();
+    if (fallbackToImage) fallbackToImage();
   });
 
   // Handle source element errors (this is where most load failures occur)
@@ -877,15 +835,15 @@ function setVideoSource() {
         log('Ignoring source error after intentional unload');
         return;
       }
-      
+
       // If already loaded successfully, don't fall back
       if (hasLoadedSuccessfully) {
         log('Video source error (non-fatal during playback)');
         return;
       }
-      
+
       log('Video source failed to load, falling back to image');
-      fallbackToImage();
+      if (fallbackToImage) fallbackToImage();
     });
   }
 
@@ -898,9 +856,10 @@ function setVideoSource() {
     // Reset video to beginning for replay
     videoEl.currentTime = 0;
 
-    // Show play overlay for replay
+    // Show play overlay for replay and switch to photo credits (showing poster)
     if (videoVisibilityManager) {
       videoVisibilityManager.showPlayOverlay();
+      videoVisibilityManager.switchToPhotoCredits();
     }
   });
 
@@ -910,9 +869,10 @@ function setVideoSource() {
     updatePlayPauseButton();
     showVideoElement();
 
-    // Hide play overlay when video starts playing
+    // Hide play overlay when video starts playing and switch to video credits
     if (videoVisibilityManager) {
       videoVisibilityManager.hidePlayOverlay();
+      videoVisibilityManager.switchToVideoCredits();
     }
   });
 
@@ -921,9 +881,10 @@ function setVideoSource() {
     updatePlayPauseButton();
     showPosterImage();
 
-    // Show play overlay when paused
+    // Show play overlay when paused and switch to photo credits (showing poster)
     if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
       videoVisibilityManager.showPlayOverlay();
+      videoVisibilityManager.switchToPhotoCredits();
     }
   });
 
@@ -940,6 +901,64 @@ function setVideoSource() {
       pauseVideo();
     }
   });
+
+  // Return a function to mark the video as successfully loaded
+  return () => {
+    hasLoadedSuccessfully = true;
+  };
+}
+
+// Set up video to show when ready
+function setVideoSource() {
+  const videoEl = document.querySelector('.background-video');
+  if (!videoEl) return;
+
+  // Show loading indicator immediately
+  showVideoLoadingIndicator();
+
+  const fallbackToImage = () => {
+    log('Falling back to image mode (visual only)');
+    showPosterImage();
+
+    // Remove loading indicator
+    hideVideoLoadingIndicator();
+    cleanupVideoControls();
+
+    // Show play overlay so user can click to retry loading the video
+    if (videoVisibilityManager) {
+      videoVisibilityManager.isUnloaded = true; // Mark as needing reload
+      videoVisibilityManager.showPlayOverlay();
+      videoVisibilityManager.switchToPhotoCredits(); // Show photo credits while image is displayed
+    }
+
+    // Keep video reference for retry attempts - don't destroy the manager
+    // The play overlay click will trigger reloadAndPlay
+  };
+
+  // Set up all event listeners for video playback, buffering, errors, etc.
+  const markAsLoaded = setupVideoEventListeners(videoEl, fallbackToImage);
+
+  // Show video when it can start playing
+  videoEl.addEventListener('canplay', function () {
+    log('Video ready to play');
+
+    // Mark as successfully loaded - future errors won't trigger fallback
+    markAsLoaded();
+
+    // Hide loading indicator
+    hideVideoLoadingIndicator();
+
+    // Setup video controls (progress bar + duration)
+    setupVideoControls();
+
+    // Switch from photo credits to video credits
+    if (videoVisibilityManager) {
+      videoVisibilityManager.switchToVideoCredits();
+    }
+
+    // Note: We don't show video here - it will be shown when play event fires
+    // If autoplay is disabled, poster remains visible until user clicks play
+  }, { once: true });
 
   // Start loading the video
   videoEl.load();
