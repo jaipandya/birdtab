@@ -24,8 +24,6 @@ prod/*
 
 # Releases (deployment packages)
 releases/
-releases/*
-
-# Documentation (internal, not tracked in git)
+releases/*# Documentation (internal, not tracked in git)
 doc/
 doc/*

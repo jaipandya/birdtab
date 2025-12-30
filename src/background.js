@@ -12,6 +12,27 @@ let preloadedBirdInfo = null;
 let lastNewTabId = null;
 let serviceWorkerStartTime = Date.now();
 
+// Detect if user is on a slow connection
+function isSlowConnection() {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (!connection) {
+    // Connection API not available, assume good connection
+    return false;
+  }
+
+  // Check for slow connection types or data saver mode
+  const slowTypes = ['slow-2g', '2g'];
+  const isSlowType = slowTypes.includes(connection.effectiveType);
+  const isSaveData = connection.saveData === true;
+
+  if (isSlowType || isSaveData) {
+    log(`Slow connection detected: effectiveType=${connection.effectiveType}, saveData=${connection.saveData}`);
+    return true;
+  }
+
+  return false;
+}
+
 // Track service worker lifecycle for debugging
 log(`Service worker started at: ${new Date(serviceWorkerStartTime).toISOString()}`);
 
@@ -678,8 +699,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const result = await chrome.storage.sync.get(['region', 'autoPlay', 'videoMode']);
         const region = result.region || 'US';
         const autoPlay = result.autoPlay || false;
-        const videoMode = result.videoMode || false;
-        log(`Using region: ${region}, auto-play: ${autoPlay}, video-mode: ${videoMode}`);
+        let videoMode = result.videoMode || false;
+
+        // Silent fallback: skip video on slow connections
+        const slowConnection = isSlowConnection();
+        const videoDisabledDueToSlowConnection = videoMode && slowConnection;
+        if (videoDisabledDueToSlowConnection) {
+          log('Slow connection detected, silently falling back to image mode');
+          videoMode = false; // Don't change user's setting, just skip video for this request
+        }
+
+        log(`Using region: ${region}, auto-play: ${autoPlay}, video-mode: ${videoMode}, slow-connection: ${slowConnection}`);
 
         // Fetch or retrieve preloaded bird info
         // Note: preloaded bird info may have different videoMode, so we need to check
@@ -690,6 +720,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         preloadedBirdInfo = null;
         birdInfo.autoPlay = autoPlay;
+
+        // Add slow connection flag to response
+        if (videoDisabledDueToSlowConnection) {
+          birdInfo.videoDisabledDueToSlowConnection = true;
+        }
 
         log(`Sending bird info response: ${birdInfo.name}`);
 

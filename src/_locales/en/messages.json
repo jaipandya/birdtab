@@ -674,5 +674,33 @@
   "shareText": {
     "message": "Check out this beautiful {birdName}!",
     "description": "Default share text with bird name placeholder"
+  },
+  "videoLoading": {
+    "message": "Loading video...",
+    "description": "Tooltip text shown while video is loading"
+  },
+  "videoAlt": {
+    "message": "Video",
+    "description": "Alt text for video icon"
+  },
+  "videoMode": {
+    "message": "Video Mode",
+    "description": "Label for video mode setting"
+  },
+  "videoModeHelpText": {
+    "message": "Show bird videos instead of photos when available. Videos include their own audio from the recording.",
+    "description": "Help text for video mode setting"
+  },
+  "videoModeTooltip": {
+    "message": "Enable to show bird videos instead of photos when available",
+    "description": "Tooltip for video mode toggle"
+  },
+  "videoUnavailableAlt": {
+    "message": "Video unavailable (slow connection)",
+    "description": "Alt text for video unavailable icon when connection is slow"
+  },
+  "videoUnavailableTooltip": {
+    "message": "Video unavailable: Your connection is slow (2G/3G) or data saver is enabled. Showing photo instead to save bandwidth.",
+    "description": "Tooltip explaining why video is unavailable due to slow connection"
   }
 }

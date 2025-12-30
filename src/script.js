@@ -23,8 +23,296 @@ let birdInfo;
 let quizMode;
 let saveVolumeTimeout = null;
 let showShareMenu = false;
+let videoVisibilityManager = null; // Manages video visibility and memory
 
+// Video Visibility Manager - handles tab visibility, memory management, and state
+class VideoVisibilityManager {
+  constructor(videoElement, birdData) {
+    this.video = videoElement;
+    this.birdData = birdData; // Store bird info for credits switching
+    this.hiddenTimestamp = null;
+    this.wasPlaying = false;
+    this.lastPlaybackPosition = 0;
+    this.isUnloaded = false;
+    this.unloadTimeout = null;
+    this.UNLOAD_DELAY = 30000; // 30 seconds
 
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
+    log('VideoVisibilityManager initialized');
+  }
+
+  handleVisibilityChange() {
+    if (document.hidden) {
+      this.onTabHidden();
+    } else {
+      this.onTabVisible();
+    }
+  }
+
+  onTabHidden() {
+    this.hiddenTimestamp = Date.now();
+    this.wasPlaying = this.video && !this.video.paused;
+    this.lastPlaybackPosition = this.video ? this.video.currentTime : 0;
+
+    // Pause video immediately
+    if (this.video && !this.video.paused) {
+      this.video.pause();
+      log('Video paused on tab hide');
+    }
+
+    // Schedule unload after 30 seconds
+    this.unloadTimeout = setTimeout(() => {
+      this.unloadVideo();
+    }, this.UNLOAD_DELAY);
+
+    log(`Tab hidden, scheduled unload in ${this.UNLOAD_DELAY}ms`);
+  }
+
+  onTabVisible() {
+    // Clear unload timeout if returning before 30s
+    if (this.unloadTimeout) {
+      clearTimeout(this.unloadTimeout);
+      this.unloadTimeout = null;
+    }
+
+    if (this.isUnloaded) {
+      // Video was unloaded - show play overlay, let user click to reload
+      log('Tab visible after unload - showing play overlay');
+      this.showPlayOverlay();
+      this.switchToPhotoCredits();
+    } else if (this.wasPlaying && this.video) {
+      // Video still in memory - resume playback
+      log('Tab visible < 30s - resuming video');
+      this.video.play().catch(err => {
+        log(`Error resuming video: ${err.message}`);
+      });
+    }
+  }
+
+  unloadVideo() {
+    if (!this.video || this.isUnloaded) return;
+
+    log('Unloading video to release memory');
+    this.isUnloaded = true;
+
+    // Pause the video first
+    this.video.pause();
+
+    // Remove the video element entirely to release memory without triggering error events
+    // (Setting src='' and calling load() triggers an error event which we want to avoid)
+    if (this.video.parentNode) {
+      this.video.remove();
+    }
+
+    // Clear references
+    this.video = null;
+    video = null; // Clear global reference too
+
+    // Show the poster image
+    showPosterImage();
+
+    // Show play overlay
+    this.showPlayOverlay();
+
+    // Hide video controls (they don't make sense when video is unloaded)
+    cleanupVideoControls();
+
+    // Switch to photo credits (we're showing the poster now)
+    this.switchToPhotoCredits();
+  }
+
+  showPlayOverlay() {
+    // Remove existing overlay if present
+    const existing = document.querySelector('.video-play-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'video-play-overlay';
+    overlay.innerHTML = `
+      <button class="video-play-btn" aria-label="${chrome.i18n.getMessage('playTooltip') || 'Play video'}">
+        <img src="images/svg/play.svg" alt="Play" width="32" height="32">
+      </button>
+    `;
+
+    overlay.addEventListener('click', async () => {
+      if (this.isUnloaded) {
+        // Video was unloaded - need to reload
+        await this.reloadAndPlay();
+      } else {
+        // Video is just paused - play it
+        this.hidePlayOverlay();
+        if (this.video) {
+          await playVideo();
+        }
+      }
+    });
+
+    const contentContainer = document.getElementById('content-container');
+    if (contentContainer) {
+      contentContainer.appendChild(overlay);
+    }
+  }
+
+  hidePlayOverlay() {
+    const overlay = document.querySelector('.video-play-overlay');
+    if (overlay) overlay.remove();
+  }
+
+  async reloadAndPlay() {
+    if (!this.birdData || !this.birdData.videoUrl) {
+      log('Cannot reload - no video URL available');
+      return;
+    }
+
+    log('Reloading video after unload');
+
+    // Reset unloaded state BEFORE reloading to prevent error handler from ignoring real errors
+    this.isUnloaded = false;
+    this.wasPlaying = false;
+
+    // Show loading indicator
+    showVideoLoadingIndicator();
+
+    // Hide the play overlay immediately to show we're responding
+    this.hidePlayOverlay();
+
+    // Always create a fresh video element to avoid stale state issues
+    const existingVideo = document.querySelector('.background-video');
+    if (existingVideo) {
+      existingVideo.remove();
+    }
+
+    // Create new video element
+    const videoEl = document.createElement('video');
+    videoEl.className = 'background-video hidden';
+    videoEl.loop = true;
+    videoEl.playsInline = true;
+    videoEl.preload = 'auto'; // Use 'auto' for faster loading on reload
+    videoEl.poster = this.birdData.imageUrl;
+
+    const source = document.createElement('source');
+    source.src = this.birdData.videoUrl;
+    source.type = 'video/mp4';
+    videoEl.appendChild(source);
+
+    const contentContainer = document.getElementById('content-container');
+    if (contentContainer) {
+      contentContainer.insertBefore(videoEl, contentContainer.firstChild);
+    }
+
+    // Update references
+    this.video = videoEl;
+    video = videoEl; // Update global reference
+
+    // Handle successful load
+    const handleCanPlay = () => {
+      hideVideoLoadingIndicator();
+      this.switchToVideoCredits();
+      // Re-setup video controls for the reloaded video
+      setupVideoControls();
+      // Video will be shown when play event fires
+    };
+
+    // Handle errors during reload
+    const handleReloadError = () => {
+      log('Error reloading video, falling back to image mode');
+      hideVideoLoadingIndicator();
+      showPosterImage();
+      this.switchToPhotoCredits();
+      // Mark as unloaded so we don't try to play
+      this.isUnloaded = true;
+    };
+
+    videoEl.addEventListener('canplay', handleCanPlay, { once: true });
+    videoEl.addEventListener('error', handleReloadError, { once: true });
+    source.addEventListener('error', handleReloadError, { once: true });
+
+    // Apply volume settings
+    videoEl.volume = volumeLevel;
+    videoEl.muted = isMuted;
+
+    // Play video
+    try {
+      await videoEl.play();
+      isPlaying = true;
+      updatePlayPauseButton();
+    } catch (err) {
+      log(`Error playing video after reload: ${err.message}`);
+    }
+  }
+
+  switchToPhotoCredits() {
+    if (!this.birdData) return;
+
+    const creditsContainer = document.querySelector('.credits');
+    if (!creditsContainer) return;
+
+    // Build photo credits HTML
+    const photoCreditsHtml = `
+      <span class="credit-item">
+        <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
+        <a href="${this.birdData.photographerUrl}" target="_blank">${this.birdData.photographer}</a>
+      </span>
+      ${this.birdData.mediaUrl ? `
+      <span class="credit-item">
+        <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
+        <a href="${this.birdData.recordistUrl}" target="_blank">${this.birdData.recordist}</a>
+      </span>
+      ` : ''}
+      <span class="credit-item">
+        via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+      </span>
+      <span id="share-container" class="credit-item share-container">
+        <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
+          <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
+        </button>
+      </span>
+    `;
+
+    creditsContainer.innerHTML = photoCreditsHtml;
+    setupShareButton(); // Re-bind share button
+    log('Switched to photo credits');
+  }
+
+  switchToVideoCredits() {
+    if (!this.birdData) return;
+
+    const creditsContainer = document.querySelector('.credits');
+    if (!creditsContainer) return;
+
+    // Build video credits HTML
+    const videoCreditsHtml = `
+      <span class="credit-item">
+        <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
+        <a href="${this.birdData.videographerUrl}" target="_blank">${this.birdData.videographer}</a>
+      </span>
+      <span class="credit-item">
+        via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+      </span>
+      <span id="share-container" class="credit-item share-container">
+        <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
+          <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
+        </button>
+      </span>
+    `;
+
+    creditsContainer.innerHTML = videoCreditsHtml;
+    setupShareButton(); // Re-bind share button
+    log('Switched to video credits');
+  }
+
+  destroy() {
+    // Clean up
+    if (this.unloadTimeout) {
+      clearTimeout(this.unloadTimeout);
+    }
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    this.hidePlayOverlay();
+    log('VideoVisibilityManager destroyed');
+  }
+}
 
 // Array of loading message keys for i18n
 const loadingMessageKeys = [
@@ -217,6 +505,11 @@ async function initializeAudio() {
       showAudioControls();
       if (shouldAutoPlay) {
         await playVideo();
+      } else {
+        // Show play overlay if not auto-playing
+        if (videoVisibilityManager) {
+          videoVisibilityManager.showPlayOverlay();
+        }
       }
     }
     // Audio mode: auto-play audio if enabled
@@ -332,18 +625,9 @@ function createAudioPlayer(mediaUrl) {
 function createVideoPlayer() {
   log('Creating video player controls');
 
-  const playButton = document.createElement('button');
-  playButton.id = 'play-button';
-  playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-  playButton.title = chrome.i18n.getMessage('playTooltip');
-  playButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await toggleVideoPlay();
-  });
-
-  return playButton;
+  // In video mode, we don't show the bottom-right play/pause button
+  // Instead, we use the centered play overlay
+  return null;
 }
 
 // Toggle video play/pause
@@ -501,26 +785,86 @@ function setVideoSource() {
   const videoEl = document.querySelector('.background-video');
   if (!videoEl) return;
 
+  // Show loading indicator immediately
+  showVideoLoadingIndicator();
+
   const fallbackToImage = () => {
-    videoEl.classList.add('hidden');
-    const img = document.querySelector('.background-image');
-    if (img) {
-      img.classList.remove('hidden');
-      img.classList.remove('video-fallback');
+    log('Falling back to image mode (visual only)');
+    showPosterImage();
+
+    // Remove loading indicator
+    hideVideoLoadingIndicator();
+    cleanupVideoControls();
+
+    // Show play overlay so user can click to retry loading the video
+    if (videoVisibilityManager) {
+      videoVisibilityManager.isUnloaded = true; // Mark as needing reload
+      videoVisibilityManager.showPlayOverlay();
+      videoVisibilityManager.switchToPhotoCredits(); // Show photo credits while image is displayed
     }
-    // Clear video reference since we're falling back to image
-    video = null;
+
+    // Keep video reference for retry attempts - don't destroy the manager
+    // The play overlay click will trigger reloadAndPlay
   };
 
   // Show video when it can start playing
   videoEl.addEventListener('canplay', function () {
-    videoEl.classList.remove('hidden');
     log('Video ready to play');
+
+    // Mark as successfully loaded - future errors won't trigger fallback
+    hasLoadedSuccessfully = true;
+
+    // Hide loading indicator
+    hideVideoLoadingIndicator();
+
+    // Setup video controls (progress bar + duration)
+    setupVideoControls();
+
+    // Switch from photo credits to video credits
+    if (videoVisibilityManager) {
+      videoVisibilityManager.switchToVideoCredits();
+    }
+
+    // Note: We don't show video here - it will be shown when play event fires
+    // If autoplay is disabled, poster remains visible until user clicks play
+  }, { once: true });
+
+  // Handle buffering - show loading indicator when video is waiting for data
+  videoEl.addEventListener('waiting', function () {
+    log('Video buffering...');
+    showVideoLoadingIndicator();
   });
 
+  // Handle buffering resolved - hide loading indicator when video can play
+  videoEl.addEventListener('canplaythrough', function () {
+    hideVideoLoadingIndicator();
+  });
+
+  // Also hide loading indicator on playing event (in case canplaythrough doesn't fire)
+  videoEl.addEventListener('playing', function () {
+    hideVideoLoadingIndicator();
+  });
+
+  // Track if initial load has completed successfully
+  let hasLoadedSuccessfully = false;
+
   // Handle video element errors
+  // Note: We need to ignore errors that occur after intentional unload or during playback
   videoEl.addEventListener('error', function (e) {
-    log(`Video error: ${e.message || 'Unknown error'}, falling back to image`);
+    // If video was intentionally unloaded by VideoVisibilityManager, ignore errors
+    if (videoVisibilityManager && videoVisibilityManager.isUnloaded) {
+      log('Ignoring video error after intentional unload');
+      return;
+    }
+    
+    // If video already loaded successfully before, don't fall back on transient errors
+    // (network hiccups during playback shouldn't cause full fallback)
+    if (hasLoadedSuccessfully) {
+      log(`Video playback error (non-fatal): ${e.message || 'Unknown error'}`);
+      return;
+    }
+    
+    log(`Video load error: ${e.message || 'Unknown error'}, falling back to image`);
     fallbackToImage();
   });
 
@@ -528,30 +872,342 @@ function setVideoSource() {
   const source = videoEl.querySelector('source');
   if (source) {
     source.addEventListener('error', function (e) {
+      // If video was intentionally unloaded, ignore errors
+      if (videoVisibilityManager && videoVisibilityManager.isUnloaded) {
+        log('Ignoring source error after intentional unload');
+        return;
+      }
+      
+      // If already loaded successfully, don't fall back
+      if (hasLoadedSuccessfully) {
+        log('Video source error (non-fatal during playback)');
+        return;
+      }
+      
       log('Video source failed to load, falling back to image');
       fallbackToImage();
     });
   }
 
-  // Handle video ended - update play button
+  // Handle video ended - show poster and replay overlay
   videoEl.addEventListener('ended', function () {
     isPlaying = false;
     updatePlayPauseButton();
+    showPosterImage();
+
+    // Reset video to beginning for replay
+    videoEl.currentTime = 0;
+
+    // Show play overlay for replay
+    if (videoVisibilityManager) {
+      videoVisibilityManager.showPlayOverlay();
+    }
   });
 
   // Handle video play/pause state changes
   videoEl.addEventListener('play', function () {
     isPlaying = true;
     updatePlayPauseButton();
+    showVideoElement();
+
+    // Hide play overlay when video starts playing
+    if (videoVisibilityManager) {
+      videoVisibilityManager.hidePlayOverlay();
+    }
   });
 
   videoEl.addEventListener('pause', function () {
     isPlaying = false;
     updatePlayPauseButton();
+    showPosterImage();
+
+    // Show play overlay when paused
+    if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
+      videoVisibilityManager.showPlayOverlay();
+    }
+  });
+
+  // Add click handler on video to toggle play/pause
+  videoEl.addEventListener('click', async function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (videoEl.paused) {
+      // Video is paused - clicking overlay will play it
+      // The overlay click handler will handle this
+    } else {
+      // Video is playing - pause it and show overlay
+      pauseVideo();
+    }
   });
 
   // Start loading the video
   videoEl.load();
+}
+
+// Show video loading indicator in top-left corner
+function showVideoLoadingIndicator() {
+  // Don't show if already exists
+  if (document.querySelector('.video-loading-indicator')) return;
+
+  const indicator = document.createElement('div');
+  indicator.className = 'video-loading-indicator';
+  indicator.innerHTML = '<div class="loading-spinner"></div>';
+
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.appendChild(indicator);
+  }
+}
+
+// Hide video loading indicator
+function hideVideoLoadingIndicator() {
+  const indicator = document.querySelector('.video-loading-indicator');
+  if (indicator) {
+    indicator.remove();
+  }
+}
+
+// Video progress bar controller
+let progressHideTimeout = null;
+
+// Create video progress bar
+function createVideoProgressBar() {
+  // Don't create if already exists
+  if (document.querySelector('.video-progress')) return;
+
+  const progressBar = document.createElement('div');
+  progressBar.className = 'video-progress';
+  progressBar.innerHTML = `
+    <div class="video-progress-buffered"></div>
+    <div class="video-progress-played"></div>
+  `;
+
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.appendChild(progressBar);
+  }
+
+  // Click to seek
+  progressBar.addEventListener('click', handleProgressBarClick);
+
+  return progressBar;
+}
+
+// Handle click on progress bar to seek
+function handleProgressBarClick(e) {
+  if (!video || !video.duration) return;
+
+  const progressBar = e.currentTarget;
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const percentage = clickX / rect.width;
+  const newTime = percentage * video.duration;
+
+  video.currentTime = newTime;
+  updateProgressBar();
+}
+
+// Update progress bar visuals
+function updateProgressBar() {
+  if (!video) return;
+
+  const playedBar = document.querySelector('.video-progress-played');
+  const bufferedBar = document.querySelector('.video-progress-buffered');
+
+  if (playedBar && video.duration) {
+    const playedPercent = (video.currentTime / video.duration) * 100;
+    playedBar.style.width = `${playedPercent}%`;
+  }
+
+  if (bufferedBar && video.buffered.length > 0 && video.duration) {
+    // Get the buffered end time for the current position
+    let bufferedEnd = 0;
+    for (let i = 0; i < video.buffered.length; i++) {
+      if (video.buffered.start(i) <= video.currentTime && video.currentTime <= video.buffered.end(i)) {
+        bufferedEnd = video.buffered.end(i);
+        break;
+      }
+    }
+    const bufferedPercent = (bufferedEnd / video.duration) * 100;
+    bufferedBar.style.width = `${bufferedPercent}%`;
+  }
+}
+
+// Show progress bar
+function showProgressBar() {
+  const progressBar = document.querySelector('.video-progress');
+  if (progressBar) {
+    progressBar.classList.add('visible');
+  }
+
+  // Clear existing timeout
+  if (progressHideTimeout) {
+    clearTimeout(progressHideTimeout);
+  }
+
+  // Hide after 3 seconds (unless paused)
+  if (video && !video.paused) {
+    progressHideTimeout = setTimeout(() => {
+      hideProgressBar();
+    }, 3000);
+  }
+}
+
+// Hide progress bar
+function hideProgressBar() {
+  const progressBar = document.querySelector('.video-progress');
+  if (progressBar && video && !video.paused) {
+    progressBar.classList.remove('visible');
+  }
+}
+
+// Check if video has audio track
+function videoHasAudio(videoEl) {
+  // Check various browser-specific properties
+  if (typeof videoEl.webkitAudioDecodedByteCount !== 'undefined') {
+    // Chrome/Safari - check after some playback
+    return videoEl.webkitAudioDecodedByteCount > 0;
+  }
+  if (typeof videoEl.mozHasAudio !== 'undefined') {
+    // Firefox
+    return videoEl.mozHasAudio;
+  }
+  if (videoEl.audioTracks && videoEl.audioTracks.length > 0) {
+    // Standard API (limited support)
+    return true;
+  }
+  // Assume has audio if we can't detect
+  return true;
+}
+
+// Update volume control visibility based on whether video has audio
+function updateVolumeControlForVideo() {
+  if (!video) return;
+
+  const videoEl = video; // Capture reference
+
+  // We need to wait a bit for audio to be detected after video starts playing
+  const checkAudio = () => {
+    // Safety check - video might have been unloaded
+    if (!videoEl || !video) return;
+    
+    const hasAudio = videoHasAudio(videoEl);
+    
+    if (!hasAudio) {
+      // Use existing hideAudioControls pattern
+      hideAudioControls();
+      log('Video has no audio track - hiding volume control');
+    }
+  };
+
+  // Check after video has been playing for a short time
+  // (webkitAudioDecodedByteCount only updates after some decoding)
+  const checkOnce = function() {
+    // Safety check - video might have been unloaded
+    if (!videoEl || !video || videoEl !== video) {
+      videoEl.removeEventListener('timeupdate', checkOnce);
+      return;
+    }
+    if (videoEl.currentTime > 0.5) {
+      checkAudio();
+      videoEl.removeEventListener('timeupdate', checkOnce);
+    }
+  };
+
+  video.addEventListener('timeupdate', checkOnce);
+}
+
+// Setup video controls (progress bar)
+function setupVideoControls() {
+  if (!video) return;
+
+  // Create progress bar
+  createVideoProgressBar();
+
+  // Check if video has audio and update volume control accordingly
+  updateVolumeControlForVideo();
+
+  // Listen for timeupdate to update progress
+  video.addEventListener('timeupdate', () => {
+    updateProgressBar();
+  });
+
+  // Show progress bar on mouse move over video/content
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.addEventListener('mousemove', () => {
+      if (video) {
+        showProgressBar();
+      }
+    });
+
+    contentContainer.addEventListener('mouseleave', () => {
+      if (video && !video.paused) {
+        hideProgressBar();
+      }
+    });
+  }
+
+  // Always show progress bar when paused
+  video.addEventListener('pause', () => {
+    showProgressBar();
+    if (progressHideTimeout) {
+      clearTimeout(progressHideTimeout);
+    }
+  });
+
+  // Start hiding timer when playing
+  video.addEventListener('play', () => {
+    // Don't immediately hide, let the 3s timer handle it
+    showProgressBar();
+  });
+}
+
+// Cleanup video controls (when falling back to image mode or unloading)
+function cleanupVideoControls() {
+  // Remove progress bar
+  const progressBar = document.querySelector('.video-progress');
+  if (progressBar) {
+    progressBar.remove();
+  }
+
+  // Clear any pending hide timeout
+  if (progressHideTimeout) {
+    clearTimeout(progressHideTimeout);
+    progressHideTimeout = null;
+  }
+}
+
+// Switch to full image mode credits (photo + audio) on video fallback
+function switchToImageModeCredits() {
+  const creditsContainer = document.querySelector('.credits');
+  if (!creditsContainer || !birdInfo) return;
+
+  const imageCreditsHtml = `
+    <span class="credit-item">
+      <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
+      <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+    </span>
+    ${birdInfo.mediaUrl ? `
+    <span class="credit-item">
+      <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
+      <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+    </span>
+    ` : ''}
+    <span class="credit-item">
+      via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+    </span>
+    <span id="share-container" class="credit-item share-container">
+      <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
+        <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
+      </button>
+    </span>
+  `;
+
+  creditsContainer.innerHTML = imageCreditsHtml;
+  setupShareButton();
+  log('Switched to image mode credits');
 }
 
 // Main function to update the page with new bird information
@@ -583,13 +1239,17 @@ async function initializePage() {
     const isVideoMode = birdInfo.videoMode;
 
     // Build credits HTML based on mode
+    // In video mode, initially show photo credits (poster visible while video loads)
+    // Credits will switch to video credits when video is ready (canplay event)
     let creditsHtml;
     if (isVideoMode) {
-      // Video mode: only show videographer credit (video has its own audio)
+      // Video mode: initially show photo credits
+      // (we're showing the poster while video loads)
+      // Will switch to video credits on canplay event
       creditsHtml = `
         <span class="credit-item">
-          <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-          <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
+          <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
+          <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
         </span>
       `;
     } else {
@@ -605,12 +1265,17 @@ async function initializePage() {
           <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
         </span>
         ` : ''}
+        ${birdInfo.videoDisabledDueToSlowConnection ? `
+        <span class="credit-item info-icon" data-tooltip="${chrome.i18n.getMessage('videoUnavailableTooltip')}">
+          <img src="images/svg/video-off.svg" alt="${chrome.i18n.getMessage('videoUnavailableAlt')}" width="16" height="16">
+        </span>
+        ` : ''}
       `;
     }
 
     contentContainer.innerHTML = `
       ${isVideoMode ? `
-      <video class="background-video hidden" loop playsinline poster="${birdInfo.imageUrl}">
+      <video class="background-video hidden" loop playsinline preload="metadata" poster="${birdInfo.imageUrl}">
         <source src="${birdInfo.videoUrl}" type="video/mp4">
       </video>
       ` : ''}
@@ -676,6 +1341,12 @@ async function initializePage() {
 
       // Get reference to video element
       video = document.querySelector('.background-video');
+
+      // Initialize VideoVisibilityManager for tab visibility handling
+      if (videoVisibilityManager) {
+        videoVisibilityManager.destroy();
+      }
+      videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
 
       // Load volume settings for video
       chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
@@ -764,19 +1435,19 @@ async function initializePage() {
     }
 
     setupExternalLinks();
-    await initializeAudio();
 
-    // Initialize settings modal after DOM elements are available
-    requestAnimationFrame(() => {
-      try {
-        new SettingsModal();
-      } catch (error) {
-        console.error('Failed to initialize settings modal:', error);
-        captureException(error, {
-          tags: { operation: 'initializeSettingsModal' }
-        });
-      }
-    });
+    // Initialize settings modal immediately after DOM elements are created
+    // (before initializeAudio which may take time for video to load)
+    try {
+      new SettingsModal();
+    } catch (error) {
+      console.error('Failed to initialize settings modal:', error);
+      captureException(error, {
+        tags: { operation: 'initializeSettingsModal' }
+      });
+    }
+
+    await initializeAudio();
 
     log('Page updated successfully');
   } catch (error) {
@@ -1020,7 +1691,37 @@ function pauseVideo() {
     video.pause();
     isPlaying = false;
     updatePlayPauseButton();
+    showPosterImage();
   }
+}
+
+// Show poster image, hide video (for paused/ended/unloaded states)
+function showPosterImage() {
+  const videoEl = document.querySelector('.background-video');
+  const posterEl = document.querySelector('.background-image');
+
+  if (videoEl) {
+    videoEl.classList.add('hidden');
+  }
+  if (posterEl) {
+    posterEl.classList.remove('hidden');
+    posterEl.classList.remove('video-fallback');
+  }
+  log('Showing poster image');
+}
+
+// Show video, hide poster (for playing state)
+function showVideoElement() {
+  const videoEl = document.querySelector('.background-video');
+  const posterEl = document.querySelector('.background-image');
+
+  if (videoEl) {
+    videoEl.classList.remove('hidden');
+  }
+  if (posterEl) {
+    posterEl.classList.add('video-fallback'); // Keep it loaded but behind video
+  }
+  log('Showing video element');
 }
 
 // Combined message listener to handle all background messages
@@ -1403,6 +2104,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (transaction) {
     transaction.setStatus('ok');
     transaction.finish();
+  }
+});
+
+// Page unload cleanup - release video resources to prevent memory leaks
+window.addEventListener('beforeunload', () => {
+  log('Page unloading, cleaning up resources');
+
+  // Clean up VideoVisibilityManager
+  if (videoVisibilityManager) {
+    videoVisibilityManager.destroy();
+    videoVisibilityManager = null;
+  }
+
+  // Release video memory
+  if (video) {
+    video.pause();
+    video.src = '';
+    video.load();
+    video = null;
+  }
+
+  // Release audio memory
+  if (audio) {
+    audio.pause();
+    audio.src = '';
+    audio = null;
   }
 });
 

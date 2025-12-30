@@ -674,5 +674,33 @@
   "shareText": {
     "message": "شاهد هذا الطائر الجميل {birdName}!",
     "description": "Default share text with bird name placeholder"
+  },
+  "videoLoading": {
+    "message": "جاري تحميل الفيديو...",
+    "description": "Tooltip text shown while video is loading"
+  },
+  "videoAlt": {
+    "message": "فيديو",
+    "description": "Alt text for video icon"
+  },
+  "videoMode": {
+    "message": "وضع الفيديو",
+    "description": "Label for video mode setting"
+  },
+  "videoModeHelpText": {
+    "message": "عرض مقاطع فيديو الطيور بدلاً من الصور عند توفرها. تتضمن مقاطع الفيديو صوتها الخاص من التسجيل.",
+    "description": "Help text for video mode setting"
+  },
+  "videoModeTooltip": {
+    "message": "تفعيل لعرض مقاطع فيديو الطيور بدلاً من الصور عند توفرها",
+    "description": "Tooltip for video mode toggle"
+  },
+  "videoUnavailableAlt": {
+    "message": "الفيديو غير متاح (اتصال بطيء)",
+    "description": "Alt text for video unavailable icon when connection is slow"
+  },
+  "videoUnavailableTooltip": {
+    "message": "الفيديو غير متاح: اتصالك بطيء (2G/3G) أو تم تفعيل موفر البيانات. يتم عرض الصورة لتوفير البيانات.",
+    "description": "Tooltip explaining why video is unavailable due to slow connection"
   }
 }

@@ -160,6 +160,171 @@ body.loaded {
   z-index: 0;
 }
 
+/* Video play overlay - shown when returning to tab after unload */
+.video-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 5;
+  cursor: pointer;
+  animation: overlayFadeIn 0.3s ease;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.video-play-btn {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.video-play-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.video-play-btn:active {
+  transform: scale(0.98);
+}
+
+.video-play-btn img {
+  width: 56px;
+  height: 56px;
+  margin-left: 8px; /* Optical centering for play triangle */
+  filter: brightness(0) invert(1); /* Make SVG white */
+  opacity: 0.4;
+  transition: opacity 0.25s ease;
+}
+
+.video-play-btn:hover img {
+  opacity: 0.7;
+}
+
+/* Video loading indicator - positioned in top-left corner */
+/* Margins match the info-panel padding (3rem left, 2.5rem equivalent for top) */
+.video-loading-indicator {
+  position: absolute;
+  top: 2.5rem;
+  left: 3rem;
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+  animation: videoLoadingFadeIn 0.3s ease;
+}
+
+@keyframes videoLoadingFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.video-loading-indicator .loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: videoLoadingSpinnerSpin 0.9s linear infinite;
+}
+
+@keyframes videoLoadingSpinnerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Video buffering overlay - shown during mid-playback buffering */
+.video-buffering-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 4;
+  pointer-events: none;
+  animation: bufferingFadeIn 0.2s ease;
+}
+
+@keyframes bufferingFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.video-buffering-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: bufferingSpinnerSpin 0.9s linear infinite;
+}
+
+@keyframes bufferingSpinnerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Video progress bar - shown on hover */
+.video-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease, height 0.2s ease;
+  z-index: 10;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.video-progress.visible {
+  opacity: 1;
+}
+
+.video-progress:hover {
+  height: 8px;
+}
+
+.video-progress-buffered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transition: width 0.1s ease;
+}
+
+.video-progress-played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #ffffff;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
 .control-buttons {
   position: fixed;
   bottom: 40px;

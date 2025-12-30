@@ -674,5 +674,33 @@
   "shareText": {
     "message": "Посмотрите на эту прекрасную птицу {birdName}!",
     "description": "Default share text with bird name placeholder"
+  },
+  "videoLoading": {
+    "message": "Загрузка видео...",
+    "description": "Tooltip text shown while video is loading"
+  },
+  "videoAlt": {
+    "message": "Видео",
+    "description": "Alt text for video icon"
+  },
+  "videoMode": {
+    "message": "Режим видео",
+    "description": "Label for video mode setting"
+  },
+  "videoModeHelpText": {
+    "message": "Показывать видео птиц вместо фотографий, когда доступно. Видео включает собственный звук из записи.",
+    "description": "Help text for video mode setting"
+  },
+  "videoModeTooltip": {
+    "message": "Включить, чтобы показывать видео птиц вместо фотографий, когда доступно",
+    "description": "Tooltip for video mode toggle"
+  },
+  "videoUnavailableAlt": {
+    "message": "Видео недоступно (медленное соединение)",
+    "description": "Alt text for video unavailable icon when connection is slow"
+  },
+  "videoUnavailableTooltip": {
+    "message": "Видео недоступно: Ваше соединение медленное (2G/3G) или включена экономия трафика. Показано фото для экономии данных.",
+    "description": "Tooltip explaining why video is unavailable due to slow connection"
   }
 }

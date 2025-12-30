@@ -674,5 +674,33 @@
   "shareText": {
     "message": "この美しい{birdName}を見てください！",
     "description": "Default share text with bird name placeholder"
+  },
+  "videoLoading": {
+    "message": "動画を読み込み中...",
+    "description": "Tooltip text shown while video is loading"
+  },
+  "videoAlt": {
+    "message": "動画",
+    "description": "Alt text for video icon"
+  },
+  "videoMode": {
+    "message": "動画モード",
+    "description": "Label for video mode setting"
+  },
+  "videoModeHelpText": {
+    "message": "利用可能な場合、写真の代わりに鳥の動画を表示します。動画には録音された音声が含まれています。",
+    "description": "Help text for video mode setting"
+  },
+  "videoModeTooltip": {
+    "message": "利用可能な場合、写真の代わりに鳥の動画を表示するには有効にしてください",
+    "description": "Tooltip for video mode toggle"
+  },
+  "videoUnavailableAlt": {
+    "message": "動画が利用できません（接続が遅い）",
+    "description": "Alt text for video unavailable icon when connection is slow"
+  },
+  "videoUnavailableTooltip": {
+    "message": "動画が利用できません：接続が遅い（2G/3G）か、データセーバーが有効になっています。データを節約するため写真を表示しています。",
+    "description": "Tooltip explaining why video is unavailable due to slow connection"
   }
 }
