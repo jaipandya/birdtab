@@ -126,6 +126,19 @@ class SettingsModal {
                 </label>
               </div>
             </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span data-i18n="videoMode">Video Mode</span>
+                  <p class="help-text" id="modal-video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available. Videos include sound.</p>
+                </div>
+                <label class="switch" data-i18n-title="videoModeTooltip" title="Enable to show bird videos instead of photos">
+                  <input type="checkbox" id="modal-video-mode" aria-describedby="modal-video-mode-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -148,13 +161,14 @@ class SettingsModal {
     this.autoPlayCheckbox = document.getElementById('modal-auto-play');
     this.quietHoursCheckbox = document.getElementById('modal-quiet-hours');
     this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
+    this.videoModeCheckbox = document.getElementById('modal-video-mode');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
     // Populate the region select
     if (this.regionSelect) {
       populateRegionSelect(this.regionSelect);
     }
-    
+
     // Update quiet hours text
     if (this.quietHoursTextElement) {
       this.quietHoursTextElement.textContent = `(${getQuietHoursText()})`;
@@ -229,6 +243,9 @@ class SettingsModal {
         await this.handleProductivityToggle(e.target.checked);
       });
     }
+    if (this.videoModeCheckbox) {
+      this.videoModeCheckbox.addEventListener('change', () => this.saveSettings());
+    }
   }
 
   open() {
@@ -281,9 +298,9 @@ class SettingsModal {
       console.warn('Chrome storage API not available');
       return;
     }
-    
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled'], (result) => {
-      
+
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode'], (result) => {
+
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
       }
@@ -296,6 +313,9 @@ class SettingsModal {
       if (this.enableProductivityCheckbox) {
         this.enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
       }
+      if (this.videoModeCheckbox) {
+        this.videoModeCheckbox.checked = result.videoMode || false;
+      }
     });
   }
 
@@ -304,9 +324,9 @@ class SettingsModal {
       console.warn('Chrome storage API not available');
       return;
     }
-    
+
     const settings = {};
-    
+
     if (this.regionSelect) {
       settings.region = this.regionSelect.value;
     }
@@ -319,7 +339,10 @@ class SettingsModal {
     if (this.enableProductivityCheckbox) {
       settings.quickAccessEnabled = this.enableProductivityCheckbox.checked;
     }
-    
+    if (this.videoModeCheckbox) {
+      settings.videoMode = this.videoModeCheckbox.checked;
+    }
+
     chrome.storage.sync.set(settings, () => {
       // Settings saved successfully - show notification
       this.showSaveNotification();

@@ -145,6 +145,21 @@ body.loaded {
   /* transition: transform 0.3s ease; */
 }
 
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Image used as fallback when video fails to load */
+.background-image.video-fallback {
+  z-index: 0;
+}
+
 .control-buttons {
   position: fixed;
   bottom: 40px;

@@ -127,6 +127,34 @@ async function getMacaulayAudio(speciesCode) {
   return null;
 }
 
+// Fetch video information from Macaulay Library
+async function getMacaulayVideo(speciesCode) {
+  const cacheKey = `video_${speciesCode}`;
+  const cachedData = await getCachedData(cacheKey);
+  if (cachedData) return cachedData;
+
+  const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=video`;
+  const data = await fetchJson(url);
+
+  if (data.results?.content?.[0]) {
+    const video = data.results.content[0];
+    if (!video.mediaUrl) {
+      // Video has results but no mediaUrl
+      return null;
+    }
+    const videoInfo = {
+      videoUrl: video.mediaUrl,
+      videographer: video.userDisplayName,
+      videographerUrl: `https://macaulaylibrary.org/asset/${video.assetId}`
+    };
+    await cacheData(cacheKey, videoInfo, CONFIG.CACHE_DURATION.BIRD_INFO);
+    return videoInfo;
+  }
+
+  // Video not found - this is OK, video is optional
+  return null;
+}
+
 // Helper function to fetch and parse JSON from a URL
 // Includes retry logic for 5xx server errors (transient issues)
 async function fetchJson(url, timeoutMs = 25000, maxRetries = 1) {
@@ -254,6 +282,10 @@ async function getRandomCachedBirdInfo() {
       const audioData = items[`audio_${speciesCode}`];
       const audioInfo = audioData?.value || null;
 
+      // Get cached video if available
+      const videoData = items[`video_${speciesCode}`];
+      const videoInfo = videoData?.value || null;
+
       // Reconstruct complete bird info from cached data
       const birdInfo = {
         name: bird.primaryComName,
@@ -266,6 +298,9 @@ async function getRandomCachedBirdInfo() {
         mediaUrl: audioInfo?.mediaUrl,
         recordist: audioInfo?.recordist,
         recordistUrl: audioInfo?.recordistUrl,
+        videoUrl: videoInfo?.videoUrl,
+        videographer: videoInfo?.videographer,
+        videographerUrl: videoInfo?.videographerUrl,
         description: bird.description,
         conservationStatus: bird.conservationStatus,
         primaryComName_fr: bird.primaryComName_fr,
@@ -345,30 +380,56 @@ async function getBirdsByRegion(region) {
 // Update fetchBirdInfo function
 // Note: Uses breadcrumbs instead of transactions to reduce Sentry span usage
 // (1000+ daily users × new tabs = lots of potential spans)
-async function fetchBirdInfo(region) {
-  log(`Fetching bird info for region: ${region}`);
+async function fetchBirdInfo(region, videoMode = false) {
+  log(`Fetching bird info for region: ${region}, videoMode: ${videoMode}`);
   const startTime = Date.now();
-  addBreadcrumb(`Fetching bird info for region: ${region}`, 'http', 'info');
+  addBreadcrumb(`Fetching bird info for region: ${region}, videoMode: ${videoMode}`, 'http', 'info');
 
   try {
     const birds = await getBirdsByRegion(region);
     const bird = birds[Math.floor(Math.random() * birds.length)];
     log(`Bird found: ${bird.primaryComName}`);
 
-    let imageInfo, audioInfo;
+    let imageInfo, audioInfo, videoInfo;
     try {
-      [imageInfo, audioInfo] = await Promise.all([
-        getMacaulayImage(bird.speciesCode),
-        getMacaulayAudio(bird.speciesCode).catch(error => {
-          log(`[AUDIO ERROR]: ${error.message} for species ${bird.speciesCode} in region ${region}`);
-          // Audio is optional, don't throw - just return null
-          return null;
-        })
-      ]);
+      // Always fetch image
+      // Only fetch audio when NOT in video mode (video has its own audio)
+      // Only fetch video when in video mode (for performance)
+      const fetchPromises = [getMacaulayImage(bird.speciesCode)];
 
-      // Log audio unavailability for local debugging only
-      if (!audioInfo) {
-        log(`[AUDIO UNAVAILABLE]: species ${bird.speciesCode} in region ${region}`);
+      if (!videoMode) {
+        // In image mode: fetch audio
+        fetchPromises.push(
+          getMacaulayAudio(bird.speciesCode).catch(error => {
+            log(`[AUDIO ERROR]: ${error.message} for species ${bird.speciesCode} in region ${region}`);
+            return null;
+          })
+        );
+        fetchPromises.push(Promise.resolve(null)); // placeholder for video
+      } else {
+        // In video mode: fetch video, skip audio
+        fetchPromises.push(Promise.resolve(null)); // placeholder for audio
+        fetchPromises.push(
+          getMacaulayVideo(bird.speciesCode).catch(error => {
+            log(`[VIDEO ERROR]: ${error.message} for species ${bird.speciesCode} in region ${region}`);
+            return null;
+          })
+        );
+      }
+
+      [imageInfo, audioInfo, videoInfo] = await Promise.all(fetchPromises);
+
+      // Log media availability for debugging
+      if (videoMode) {
+        if (!videoInfo) {
+          log(`[VIDEO UNAVAILABLE]: species ${bird.speciesCode} in region ${region} - will fall back to image`);
+        } else {
+          log(`[VIDEO AVAILABLE]: species ${bird.speciesCode} in region ${region}`);
+        }
+      } else {
+        if (!audioInfo) {
+          log(`[AUDIO UNAVAILABLE]: species ${bird.speciesCode} in region ${region}`);
+        }
       }
     } catch (error) {
       // Image fetch failed - try to use a previously cached complete bird
@@ -430,6 +491,10 @@ async function fetchBirdInfo(region) {
       mediaUrl: audioInfo?.mediaUrl,
       recordist: audioInfo?.recordist,
       recordistUrl: audioInfo?.recordistUrl,
+      videoUrl: videoInfo?.videoUrl,
+      videographer: videoInfo?.videographer,
+      videographerUrl: videoInfo?.videographerUrl,
+      videoMode: videoMode && !!videoInfo, // Only true if video mode enabled AND video is available
       description: bird.description,
       conservationStatus: bird.conservationStatus,
       primaryComName_fr: bird.primaryComName_fr,
@@ -473,20 +538,33 @@ async function fetchBirdInfo(region) {
 }
 
 // Preload next bird information
-async function preloadNextBird(region) {
+async function preloadNextBird(region, videoMode = false) {
   try {
-    preloadedBirdInfo = await fetchBirdInfo(region);
+    preloadedBirdInfo = await fetchBirdInfo(region, videoMode);
     log('Bird info fetched successfully for preloading');
 
-    // Preload image and audio
-    await Promise.all([
+    // Preload image and audio/video based on mode
+    const preloadPromises = [
       fetch(preloadedBirdInfo.imageUrl, { mode: 'no-cors' })
         .then(() => log('Image preloaded successfully'))
-        .catch(error => log(`Error preloading image: ${error.message}`)),
-      preloadedBirdInfo.mediaUrl && fetch(preloadedBirdInfo.mediaUrl, { mode: 'no-cors' })
-        .then(() => log('Audio preloaded successfully'))
-        .catch(error => log(`Error preloading audio: ${error.message}`))
-    ]);
+        .catch(error => log(`Error preloading image: ${error.message}`))
+    ];
+
+    if (videoMode && preloadedBirdInfo.videoUrl) {
+      preloadPromises.push(
+        fetch(preloadedBirdInfo.videoUrl, { mode: 'no-cors' })
+          .then(() => log('Video preloaded successfully'))
+          .catch(error => log(`Error preloading video: ${error.message}`))
+      );
+    } else if (preloadedBirdInfo.mediaUrl) {
+      preloadPromises.push(
+        fetch(preloadedBirdInfo.mediaUrl, { mode: 'no-cors' })
+          .then(() => log('Audio preloaded successfully'))
+          .catch(error => log(`Error preloading audio: ${error.message}`))
+      );
+    }
+
+    await Promise.all(preloadPromises);
 
     log('Next bird preloaded');
   } catch (error) {
@@ -523,7 +601,7 @@ async function preloadNextBird(region) {
 function clearCache() {
   chrome.storage.local.get(null, items => {
     const keysToRemove = Object.keys(items).filter(key =>
-      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('birds_')
+      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('video_') || key.startsWith('birds_')
     );
     chrome.storage.local.remove(keysToRemove, () => log('Relevant cache keys cleared'));
   });
@@ -564,13 +642,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     (async () => {
       try {
         // Get settings from storage
-        const result = await chrome.storage.sync.get(['region', 'autoPlay']);
+        const result = await chrome.storage.sync.get(['region', 'autoPlay', 'videoMode']);
         const region = result.region || 'US';
         const autoPlay = result.autoPlay || false;
-        log(`Using region: ${region}, auto-play: ${autoPlay}`);
+        const videoMode = result.videoMode || false;
+        log(`Using region: ${region}, auto-play: ${autoPlay}, video-mode: ${videoMode}`);
 
         // Fetch or retrieve preloaded bird info
-        let birdInfo = preloadedBirdInfo || await fetchBirdInfo(region);
+        // Note: preloaded bird info may have different videoMode, so we need to check
+        let birdInfo = preloadedBirdInfo;
+        if (!birdInfo || (videoMode && !birdInfo.videoUrl) || (!videoMode && birdInfo.videoMode)) {
+          // Fetch fresh if no preload OR if video mode changed
+          birdInfo = await fetchBirdInfo(region, videoMode);
+        }
         preloadedBirdInfo = null;
         birdInfo.autoPlay = autoPlay;
 
@@ -588,7 +672,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         // Preload next bird in background (don't await)
-        preloadNextBird(region);
+        preloadNextBird(region, videoMode);
       } catch (error) {
         log(`Error in getBirdInfo handler: ${error.message}`);
         captureException(error, {
@@ -657,9 +741,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 // Initial preload
-chrome.storage.sync.get(['region'], result => {
+chrome.storage.sync.get(['region', 'videoMode'], result => {
   const region = result.region || 'US';
-  preloadNextBird(region);
+  const videoMode = result.videoMode || false;
+  preloadNextBird(region, videoMode);
 });
 
 // Add this function to check if onboarding is necessary

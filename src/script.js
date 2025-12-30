@@ -16,6 +16,7 @@ let isMuted = false;
 let volumeLevel = CONFIG.DEFAULT_VOLUME;
 let lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
 let audio;
+let video; // Video element for video mode
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
 let birdInfo;
@@ -202,7 +203,7 @@ const updatePlayPauseButton = () => {
   }
 };
 
-// Initialize audio based on auto-play settings
+// Initialize audio/video based on auto-play settings
 async function initializeAudio() {
   const isQuietHour = await isQuietHoursActive();
   const shouldAutoPlay = await getAutoPlayState();
@@ -211,7 +212,15 @@ async function initializeAudio() {
     hideAudioControls();
     showQuietHoursIcon();
   } else {
-    if (birdInfo && birdInfo.mediaUrl) {
+    // Video mode: auto-play video if enabled
+    if (birdInfo && birdInfo.videoMode && video) {
+      showAudioControls();
+      if (shouldAutoPlay) {
+        await playVideo();
+      }
+    }
+    // Audio mode: auto-play audio if enabled
+    else if (birdInfo && birdInfo.mediaUrl) {
       showAudioControls();
       if (shouldAutoPlay) {
         await playAudio();
@@ -219,6 +228,34 @@ async function initializeAudio() {
         loadAudioWithoutPlaying();
       }
     }
+  }
+}
+
+// Play video
+async function playVideo() {
+  if (!video) return;
+
+  try {
+    await video.play();
+    isPlaying = true;
+    updatePlayPauseButton();
+    log('Video playback started');
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      log('Video playback interrupted');
+      return;
+    }
+    console.error('Error playing video:', error);
+    captureException(error, {
+      tags: { operation: 'playVideo' },
+      extra: {
+        videoUrl: birdInfo?.videoUrl,
+        currentTime: video?.currentTime,
+        volume: video?.volume,
+        muted: video?.muted,
+        errorName: error.name
+      }
+    });
   }
 }
 
@@ -257,7 +294,7 @@ function loadAudioWithoutPlaying() {
   updatePlayPauseButton();
 }
 
-// Create audio player for bird calls
+// Create audio player for bird calls (image mode)
 function createAudioPlayer(mediaUrl) {
   if (!mediaUrl) {
     log('No media URL provided, skipping audio player creation');
@@ -289,6 +326,35 @@ function createAudioPlayer(mediaUrl) {
   };
 
   return playButton;
+}
+
+// Create video player controls (video mode)
+function createVideoPlayer() {
+  log('Creating video player controls');
+
+  const playButton = document.createElement('button');
+  playButton.id = 'play-button';
+  playButton.classList.add('icon-button', 'play-button');
+  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+  playButton.title = chrome.i18n.getMessage('playTooltip');
+  playButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleVideoPlay();
+  });
+
+  return playButton;
+}
+
+// Toggle video play/pause
+async function toggleVideoPlay() {
+  if (!video) return;
+
+  if (isPlaying) {
+    pauseVideo();
+  } else {
+    await playVideo();
+  }
 }
 
 // Toggle play/pause
@@ -430,6 +496,64 @@ function setImageSource(imageUrl) {
   img.src = imageUrl;
 }
 
+// Set up video to show when ready
+function setVideoSource() {
+  const videoEl = document.querySelector('.background-video');
+  if (!videoEl) return;
+
+  const fallbackToImage = () => {
+    videoEl.classList.add('hidden');
+    const img = document.querySelector('.background-image');
+    if (img) {
+      img.classList.remove('hidden');
+      img.classList.remove('video-fallback');
+    }
+    // Clear video reference since we're falling back to image
+    video = null;
+  };
+
+  // Show video when it can start playing
+  videoEl.addEventListener('canplay', function () {
+    videoEl.classList.remove('hidden');
+    log('Video ready to play');
+  });
+
+  // Handle video element errors
+  videoEl.addEventListener('error', function (e) {
+    log(`Video error: ${e.message || 'Unknown error'}, falling back to image`);
+    fallbackToImage();
+  });
+
+  // Handle source element errors (this is where most load failures occur)
+  const source = videoEl.querySelector('source');
+  if (source) {
+    source.addEventListener('error', function (e) {
+      log('Video source failed to load, falling back to image');
+      fallbackToImage();
+    });
+  }
+
+  // Handle video ended - update play button
+  videoEl.addEventListener('ended', function () {
+    isPlaying = false;
+    updatePlayPauseButton();
+  });
+
+  // Handle video play/pause state changes
+  videoEl.addEventListener('play', function () {
+    isPlaying = true;
+    updatePlayPauseButton();
+  });
+
+  videoEl.addEventListener('pause', function () {
+    isPlaying = false;
+    updatePlayPauseButton();
+  });
+
+  // Start loading the video
+  videoEl.load();
+}
+
 // Main function to update the page with new bird information
 async function initializePage() {
   incrementNewTabCount();
@@ -454,8 +578,43 @@ async function initializePage() {
     log('Bird info received, updating page content');
 
     const contentContainer = document.getElementById('content-container');
+
+    // Determine if we're in video mode (video mode enabled AND video available)
+    const isVideoMode = birdInfo.videoMode;
+
+    // Build credits HTML based on mode
+    let creditsHtml;
+    if (isVideoMode) {
+      // Video mode: only show videographer credit (video has its own audio)
+      creditsHtml = `
+        <span class="credit-item">
+          <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
+          <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
+        </span>
+      `;
+    } else {
+      // Image mode: show photographer and optionally recordist
+      creditsHtml = `
+        <span class="credit-item">
+          <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
+          <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+        </span>
+        ${birdInfo.mediaUrl ? `
+        <span class="credit-item">
+          <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
+          <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+        </span>
+        ` : ''}
+      `;
+    }
+
     contentContainer.innerHTML = `
-      <img src="" alt="${birdInfo.name}" class="background-image" decoding="async">
+      ${isVideoMode ? `
+      <video class="background-video hidden" loop playsinline poster="${birdInfo.imageUrl}">
+        <source src="${birdInfo.videoUrl}" type="video/mp4">
+      </video>
+      ` : ''}
+      <img src="" alt="${birdInfo.name}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
       <div class="info-panel">
         <div class="external-links">
           <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
@@ -475,16 +634,7 @@ async function initializePage() {
           </span>
         </div>
         <p class="credits">
-          <span class="credit-item">
-            <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
-            <a id="photographer" href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
-          </span>
-          ${birdInfo.mediaUrl ? `
-          <span class="credit-item">
-            <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
-            <a id="recordist" href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
-          </span>
-          ` : ''}
+          ${creditsHtml}
           <span class="credit-item">
             via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
           </span>
@@ -505,7 +655,7 @@ async function initializePage() {
         <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
           <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
-        ${birdInfo.mediaUrl ? `
+        ${(isVideoMode || birdInfo.mediaUrl) ? `
         <div id="volume-control" class="volume-control">
           <button id="volume-button" class="icon-button" title="${chrome.i18n.getMessage('volumeTooltip')}">
             <img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">
@@ -518,32 +668,63 @@ async function initializePage() {
       </div>
     `;
 
-    setImageSource(birdInfo.imageUrl);
+    // Set up video or image source
+    if (isVideoMode) {
+      // Video mode: set up video with sound, image as fallback
+      setVideoSource();
+      setImageSource(birdInfo.imageUrl);
 
-    if (birdInfo.mediaUrl) {
-      log(`Audio URL found: ${birdInfo.mediaUrl}`);
-      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
-      if (audioPlayer) {
-        document.querySelector('.control-buttons').appendChild(audioPlayer);
-      }
+      // Get reference to video element
+      video = document.querySelector('.background-video');
 
+      // Load volume settings for video
       chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
         isMuted = result.isMuted || false;
         volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
         lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
         updateVolumeControl();
-        if (audio) {
-          audio.muted = isMuted;
-          audio.volume = isMuted ? 0 : volumeLevel;
+        if (video) {
+          video.muted = isMuted;
+          video.volume = isMuted ? 0 : volumeLevel;
         }
       });
 
-      setupVolumeControl();
+      // Create play button for video
+      const playButton = createVideoPlayer();
+      if (playButton) {
+        document.querySelector('.control-buttons').appendChild(playButton);
+      }
 
+      setupVolumeControl();
       updateVolumeControl();
     } else {
-      log('No audio URL found in bird info');
-      hideAudioControls();
+      // Image mode: just load the image
+      setImageSource(birdInfo.imageUrl);
+
+      if (birdInfo.mediaUrl) {
+        log(`Audio URL found: ${birdInfo.mediaUrl}`);
+        const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
+        if (audioPlayer) {
+          document.querySelector('.control-buttons').appendChild(audioPlayer);
+        }
+
+        chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
+          isMuted = result.isMuted || false;
+          volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
+          lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+          updateVolumeControl();
+          if (audio) {
+            audio.muted = isMuted;
+            audio.volume = isMuted ? 0 : volumeLevel;
+          }
+        });
+
+        setupVolumeControl();
+        updateVolumeControl();
+      } else {
+        log('No audio URL found in bird info');
+        hideAudioControls();
+      }
     }
 
 
@@ -558,7 +739,6 @@ async function initializePage() {
 
     document.getElementById('bird-name').textContent = nameToDisplay;
     document.getElementById('scientific-name').textContent = "(" + birdInfo.scientificName + ")";
-    document.getElementById('photographer').textContent = birdInfo.photographer;
 
     document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();
@@ -790,10 +970,14 @@ function setVolume(newLevel, immediate = false) {
     isMuted = false;
   }
 
-  // Update audio volume
+  // Update audio or video volume
   if (audio) {
     audio.volume = volumeLevel;
     audio.muted = isMuted;
+  }
+  if (video) {
+    video.volume = volumeLevel;
+    video.muted = isMuted;
   }
 
   updateVolumeControl();
@@ -830,6 +1014,15 @@ function saveVolumeState(immediate = false) {
   }
 }
 
+// Pause video if playing
+function pauseVideo() {
+  if (video && !video.paused) {
+    video.pause();
+    isPlaying = false;
+    updatePlayPauseButton();
+  }
+}
+
 // Combined message listener to handle all background messages
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
@@ -841,10 +1034,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const isQuietHour = await isQuietHoursActive();
       if (isQuietHour && isPlaying) {
         pauseAudio();
+        pauseVideo();
       }
     }
-  } else if (request.action === "pauseAudio" && audio && !audio.paused) {
-    pauseAudio();
+  } else if (request.action === "pauseAudio") {
+    // Pause both audio and video when switching tabs
+    if (audio && !audio.paused) {
+      pauseAudio();
+    }
+    if (video && !video.paused) {
+      pauseVideo();
+    }
   }
 });
 
