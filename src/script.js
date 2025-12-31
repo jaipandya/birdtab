@@ -490,13 +490,10 @@ async function addToHistory(birdInfo) {
     chrome.storage.local.get(['viewHistory'], (result) => {
       const history = result.viewHistory?.value || [];
 
+      // Store complete birdInfo with timestamp to avoid API calls when loading from history
       const entry = {
-        speciesCode: birdInfo.speciesCode,
-        name: birdInfo.name,
-        scientificName: birdInfo.scientificName,
-        imageUrl: birdInfo.imageUrl,
-        timestamp: Date.now(),
-        ebirdUrl: birdInfo.ebirdUrl
+        ...birdInfo,
+        timestamp: Date.now()
       };
 
       history.push(entry); // Newest at end
@@ -563,34 +560,6 @@ function getRelativeTimeString(timestamp) {
       day: 'numeric'
     }).format(date);
   }
-}
-
-// Load specific bird by species code from history
-async function loadBirdBySpeciesCode(speciesCode) {
-  log(`Loading bird by species code: ${speciesCode}`);
-
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(
-      { action: 'getBirdInfoBySpeciesCode', speciesCode },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
-          return;
-        }
-        if (response.error) {
-          reject(new Error(response.error));
-          return;
-        }
-
-        // Store the loaded bird info and reload page
-        // This ensures all initialization logic runs correctly
-        chrome.storage.local.set({ pendingBirdInfo: response }, () => {
-          window.location.reload();
-          resolve(response);
-        });
-      }
-    );
-  });
 }
 
 // ===== End History Management Functions =====
@@ -664,8 +633,9 @@ async function populateHistoryList() {
   const reversedHistory = [...history].reverse();
 
   // Use escaped HTML to prevent XSS
-  historyList.innerHTML = reversedHistory.map(entry => `
-    <button class="history-item" data-species-code="${escapeHtml(entry.speciesCode)}">
+  // Store index to retrieve full birdInfo when clicked
+  historyList.innerHTML = reversedHistory.map((entry, index) => `
+    <button class="history-item" data-history-index="${index}">
       <img src="${escapeHtml(entry.imageUrl)}" alt="${escapeHtml(entry.name)}" class="history-item-image" loading="lazy">
       <div class="history-item-info">
         <div class="history-item-name">${escapeHtml(entry.name)}</div>
@@ -674,22 +644,30 @@ async function populateHistoryList() {
       </div>
     </button>
   `).join('');
+
+  // Store history reference for click handler
+  historyList.dataset.historyData = JSON.stringify(reversedHistory);
 }
 
 // Handle clicking on a history item
 async function handleHistoryItemClick(item) {
-  const speciesCode = item.dataset.speciesCode;
-  closeHistoryModal();
-  showLoadingIndicator();
+  const historyIndex = parseInt(item.dataset.historyIndex);
+  const historyList = document.getElementById('history-list');
+  const historyData = JSON.parse(historyList.dataset.historyData);
+  const birdInfo = historyData[historyIndex];
 
-  try {
-    await loadBirdBySpeciesCode(speciesCode);
-  } catch (error) {
-    hideLoadingIndicator();
-    log(`Error loading bird from history: ${error.message}`);
-    showErrorModal(error.message || 'Failed to load bird. Loading a random bird instead...');
-    setTimeout(() => window.location.reload(), 2000);
+  if (!birdInfo) {
+    log('Error: Could not find bird info in history');
+    return;
   }
+
+  closeHistoryModal();
+
+  // Store the cached bird info and reload page to display it
+  // This reuses all existing initialization logic without API calls
+  chrome.storage.local.set({ pendingBirdInfo: birdInfo }, () => {
+    window.location.reload();
+  });
 }
 
 // Open history modal
