@@ -1500,14 +1500,33 @@ async function initializePage() {
       });
     });
 
-    if (pendingBird) {
-      birdInfo = pendingBird;
-    } else {
-      birdInfo = await getBirdInfo();
+    // Try to get fresh bird info
+    let usedCachedFallback = false;
+    try {
+      if (pendingBird) {
+        birdInfo = pendingBird;
+      } else {
+        birdInfo = await getBirdInfo();
+      }
+    } catch (fetchError) {
+      log(`Failed to fetch bird: ${fetchError.message}`);
+
+      // Try to load from history as silent fallback (newest bird is at end of array)
+      const history = await getHistory();
+      if (history.length > 0) {
+        birdInfo = history[history.length - 1];
+        usedCachedFallback = true;
+        log(`Using cached bird from history: ${birdInfo.name}`);
+      } else {
+        // No cached birds available - re-throw to show error modal
+        throw fetchError;
+      }
     }
 
-    // Add bird to viewing history
-    await addToHistory(birdInfo);
+    // Add bird to viewing history (skip if we loaded from history)
+    if (!usedCachedFallback) {
+      await addToHistory(birdInfo);
+    }
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));

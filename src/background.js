@@ -9,6 +9,7 @@ log('Background script starting...');
 addBreadcrumb('Background script started', 'lifecycle', 'info');
 
 let preloadedBirdInfo = null;
+let preloadInProgress = false; // Prevents concurrent preload operations
 let lastNewTabId = null;
 let serviceWorkerStartTime = Date.now();
 
@@ -44,26 +45,25 @@ self.addEventListener('unhandledrejection', (event) => {
   });
 });
 
-// Keepalive mechanism: Use chrome.alarms to prevent service worker from being terminated
-// This creates a minimal alarm that fires periodically to keep the worker alive during critical operations
-let keepAliveInterval = null;
-
-function startKeepAlive() {
-  if (!keepAliveInterval) {
-    // Ping every 20 seconds to keep service worker alive (Chrome terminates after ~30s of inactivity)
-    keepAliveInterval = setInterval(() => {
-      log('Keepalive ping');
-    }, 20000);
-    log('Keepalive started');
+/**
+ * Check if the preloaded bird matches the requested mode and can be used
+ */
+function canUsePreloadedBird(preloadedBird, requestedVideoMode) {
+  if (!preloadedBird) {
+    return false;
   }
-}
 
-function stopKeepAlive() {
-  if (keepAliveInterval) {
-    clearInterval(keepAliveInterval);
-    keepAliveInterval = null;
-    log('Keepalive stopped');
+  // If video mode requested, preloaded bird must have video
+  if (requestedVideoMode && !preloadedBird.videoUrl) {
+    return false;
   }
+
+  // If image mode requested, preloaded bird must be image mode (not video)
+  if (!requestedVideoMode && preloadedBird.videoMode) {
+    return false;
+  }
+
+  return true;
 }
 
 // new async delay function to simulate a slow loading experience
@@ -689,9 +689,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getBirdInfo') {
     log(`Received request for bird info from tab ${sender.tab?.id || 'unknown'}`);
 
-    // Start keepalive to prevent service worker termination during fetch
-    startKeepAlive();
-
     // Use IIFE pattern to handle async operations properly
     (async () => {
       try {
@@ -712,13 +709,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         log(`Using region: ${region}, auto-play: ${autoPlay}, video-mode: ${videoMode}, slow-connection: ${slowConnection}`);
 
         // Fetch or retrieve preloaded bird info
-        // Note: preloaded bird info may have different videoMode, so we need to check
-        let birdInfo = preloadedBirdInfo;
-        if (!birdInfo || (videoMode && !birdInfo.videoUrl) || (!videoMode && birdInfo.videoMode)) {
-          // Fetch fresh if no preload OR if video mode changed
+        let birdInfo;
+
+        if (canUsePreloadedBird(preloadedBirdInfo, videoMode)) {
+          // Use preloaded bird and consume it atomically
+          birdInfo = preloadedBirdInfo;
+          preloadedBirdInfo = null;
+          log('Using preloaded bird info');
+        } else {
+          // Can't use preload - fetch fresh
+          if (preloadedBirdInfo) {
+            log('Preloaded bird mode mismatch, fetching fresh');
+            preloadedBirdInfo = null; // Free the unusable preload from memory
+          }
           birdInfo = await fetchBirdInfo(region, videoMode);
         }
-        preloadedBirdInfo = null;
+
         birdInfo.autoPlay = autoPlay;
 
         // Add slow connection flag to response
@@ -739,8 +745,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           });
         }
 
-        // Preload next bird in background (don't await)
-        preloadNextBird(region, videoMode);
+        // Preload next bird in background only if not already in progress
+        if (!preloadInProgress) {
+          preloadInProgress = true;
+          preloadNextBird(region, videoMode)
+            .catch(error => log(`Preload failed: ${error.message}`))
+            .finally(() => {
+              preloadInProgress = false;
+            });
+        }
       } catch (error) {
         log(`Error in getBirdInfo handler: ${error.message}`);
         captureException(error, {
@@ -756,9 +769,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } catch (responseError) {
           log(`Failed to send error response: ${responseError.message}`);
         }
-      } finally {
-        // Stop keepalive after operation completes
-        stopKeepAlive();
       }
     })();
 
@@ -791,7 +801,13 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     log(`Region changed, clearing cache`);
     clearCache();
     preloadedBirdInfo = null;
-  } else if (namespace === 'sync' && changes.quietHours) {
+  } else if (namespace === 'sync' && changes.videoMode) {
+    // Video mode changed - clear preload so next tab fetches with correct mode
+    log(`Video mode changed to ${changes.videoMode.newValue}, clearing preload`);
+    preloadedBirdInfo = null;
+  }
+
+  if (namespace === 'sync' && changes.quietHours) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs[0]) {
         chrome.tabs.sendMessage(tabs[0].id, {
