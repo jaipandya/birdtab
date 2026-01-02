@@ -18,13 +18,13 @@
         <div id="step2" class="step">
             <h2 data-i18n="chooseBirdingRegion">Choose Your Birding Region</h2>
             <p data-i18n="regionSelectionDescription">Select your preferred region to see birds commonly found in your area. Don't worry, you'll still get to explore birds from around the world!</p>
-            <select id="region-select">
+            <select id="region-select" aria-describedby="region-help">
                 <option value="US" data-i18n="unitedStates">United States</option>
                 <option value="CA" data-i18n="canada">Canada</option>
                 <option value="GB" data-i18n="unitedKingdom">United Kingdom</option>
                 <option value="IN" data-i18n="india">India</option>
             </select>
-            <p class="help-text" data-i18n="regionSelectionHelpText">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
+            <p id="region-help" class="help-text" data-i18n="regionSelectionHelpText">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
             <button class="next-btn" data-i18n="nextButton">Next</button>
         </div>
         
@@ -32,20 +32,22 @@
             <h2 data-i18n="birdCallsTitle">Bird Calls: Music to Your Ears?</h2>
             <p data-i18n="birdCallsDescription">Want to hear the chirps and tweets? Enable auto-play for an immersive birding experience!</p>
             <div class="toggle-container">
-                <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
-                <label class="switch">
-                    <input type="checkbox" id="autoplay-toggle">
+                <div class="toggle-text">
+                    <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                    <p class="help-text" data-i18n="autoPlayNote">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior, and you can change it later if you wish.</p>
+                </div>
+                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
+                    <input type="checkbox" id="autoplay-toggle" aria-describedby="autoplay-help">
                     <span class="slider round"></span>
                 </label>
             </div>
-            <p class="help-text" data-i18n="autoPlayNote">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior, and you can change it later if you wish.</p>
             <button id="finish-btn" data-i18n="startBirding">Start Birding!</button>
         </div>
     </div>
-    <div class="progress-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
+    <div class="progress-dots" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3">
+        <span class="dot active" aria-label="Step 1"></span>
+        <span class="dot" aria-label="Step 2"></span>
+        <span class="dot" aria-label="Step 3"></span>
     </div>
     <script src="onboarding.js" type="module"></script>
 </body>
