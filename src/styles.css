@@ -21,7 +21,7 @@ html[dir="rtl"] .external-links {
 html[dir="rtl"] .control-buttons {
   flex-direction: row-reverse;
   right: auto;
-  left: 48px;
+  left: 2rem;
 }
 
 html[dir="rtl"] .credit-item {
@@ -102,10 +102,13 @@ html[dir="rtl"] .volume-slider {
   direction: ltr;
 }
 
+/* Inter font for modern typography matching BirdTab website */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 html, body {
   height: 100%;
   width: 100%;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #979797;
 }
 
@@ -330,7 +333,7 @@ body.loaded {
 .control-buttons {
   position: fixed;
   bottom: 40px;
-  right: 48px;
+  right: 2rem;
   display: flex;
   gap: 10px;
   z-index: 1000;
@@ -677,15 +680,38 @@ body.loaded {
   left: 0;
   width: 100%;
   background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
-  padding: 2.5rem 3rem;
+  padding: 1rem 2rem 2rem;
   text-align: left;
   z-index: 2;
 }
 
+@media (min-width: 768px) {
+  .info-panel {
+    padding: 2.5rem 2rem 2rem;
+  }
+}
+
 .info-panel-header {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.scientific-name-row {
+  display: flex;
   align-items: baseline;
-  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.scientific-name-row .info-icon {
+  margin-left: 0;
+  position: relative;
+  top: -2px;
+}
+
+.scientific-name-row .info-icon img {
+  opacity: 0.6;
 }
 
 .info-panel .info-panel-header span {
@@ -697,40 +723,62 @@ body.loaded {
 .bird-name-link {
   text-decoration: none;
   color: inherit;
-  opacity: 0.9;
-  transition: opacity 0.2s ease;
-  display: inline-flex;
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.bird-name-link:hover {
-  opacity: 1;
+.bird-name-link h1 {
+  transition: text-shadow 0.25s ease;
+}
+
+.bird-name-link:hover h1 {
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
 }
 
 .info-panel h1 {
-  display: inline;
-  margin-right: 0.5rem;
+  display: block;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.1;
 }
 
-.info-panel span {
-  margin-left: 0.5rem;
-  font-size: 1.2rem;
-  color: rgb(255 255 255 / 81%);
+#scientific-name {
+  font-style: italic;
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  margin: 0.25rem 0 0 0;
+  line-height: 1.4;
 }
 
 .info-panel * {
-  text-shadow: 0 4px 2px rgba(0, 0, 0, 0.10)
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.credits span{
-  font-size: 1rem;
+/* Remove text shadow from bird name, scientific name, and credits */
+.info-panel h1,
+.info-panel #scientific-name,
+.info-panel .credits,
+.info-panel .credits * {
+  text-shadow: none;
+}
+
+.credits span {
+  font-size: 0.875rem;
   margin-left: 0;
   margin-right: 0.05rem;
 }
 
 h1 {
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 4rem;
+  }
 }
 
 .location-info {
@@ -762,41 +810,47 @@ p {
 }
 
 .credits {
-  font-size: 0.9rem;
-  margin-top: 1rem;
-  opacity: 0.8;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Add slightly more gap before share icon */
+.credits .share-container {
+  margin-left: 0.5rem;
 }
 
 .credits a {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  position: relative;
-}
-
-.credits a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  border-bottom: 1px dotted #ffffff;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.credits a:hover::after {
-  opacity: 1;
+  transition: color 0.2s ease;
 }
 
 .credit-item {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.375rem;
+  transition: opacity 0.2s ease;
+}
+
+.credit-item img,
+.credit-item svg {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  color: white;
+}
+
+.credit-item:hover a {
+  color: rgba(255, 255, 255, 1);
+}
+
+.credit-item:hover img,
+.credit-item:hover svg {
+  opacity: 1;
 }
 
 .icon {

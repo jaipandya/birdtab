@@ -262,7 +262,7 @@ class VideoVisibilityManager {
       </span>
       ${this.birdData.mediaUrl ? `
       <span class="credit-item">
-        <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
+        <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
         <a href="${this.birdData.recordistUrl}" target="_blank">${this.birdData.recordist}</a>
       </span>
       ` : ''}
@@ -287,8 +287,12 @@ class VideoVisibilityManager {
     const creditsContainer = document.querySelector('.credits');
     if (!creditsContainer) return;
 
-    // Build video credits HTML
+    // Build video credits HTML - keep photo credits alongside video credits
     const videoCreditsHtml = `
+      <span class="credit-item">
+        <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
+        <a href="${this.birdData.photographerUrl}" target="_blank">${this.birdData.photographer}</a>
+      </span>
       <span class="credit-item">
         <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
         <a href="${this.birdData.videographerUrl}" target="_blank">${this.birdData.videographer}</a>
@@ -1480,7 +1484,7 @@ function switchToImageModeCredits() {
     </span>
     ${birdInfo.mediaUrl ? `
     <span class="credit-item">
-      <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
+      <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
       <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
     </span>
     ` : ''}
@@ -1572,13 +1576,16 @@ async function initializePage() {
     // Credits will switch to video credits when video is ready (canplay event)
     let creditsHtml;
     if (isVideoMode) {
-      // Video mode: initially show photo credits
-      // (we're showing the poster while video loads)
-      // Will switch to video credits on canplay event
+      // Video mode: show both photo and video credits
+      // Photo credits for the poster/fallback image, video credits for the video
       creditsHtml = `
         <span class="credit-item">
           <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
           <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+        </span>
+        <span class="credit-item">
+          <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
+          <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
         </span>
       `;
     } else {
@@ -1590,7 +1597,7 @@ async function initializePage() {
         </span>
         ${birdInfo.mediaUrl ? `
         <span class="credit-item">
-          <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
+          <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
           <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
         </span>
         ` : ''}
@@ -1621,11 +1628,13 @@ async function initializePage() {
         <div class="info-panel-header">
           <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-name-link">
             <h1 id="bird-name"></h1>
-            <span id="scientific-name"></span>
           </a>
-          <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
-            <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
-          </span>
+          <div class="scientific-name-row">
+            <p id="scientific-name"></p>
+            <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
+              <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
+            </span>
+          </div>
         </div>
         <p class="credits">
           ${creditsHtml}
@@ -1741,7 +1750,7 @@ async function initializePage() {
     }
 
     document.getElementById('bird-name').textContent = nameToDisplay;
-    document.getElementById('scientific-name').textContent = "(" + birdInfo.scientificName + ")";
+    document.getElementById('scientific-name').textContent = birdInfo.scientificName;
 
     document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();

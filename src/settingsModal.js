@@ -95,7 +95,7 @@ class SettingsModal {
               <div class="toggle-container">
                 <div class="toggle-text">
                   <span class="setting-label-with-icon">
-                    <img src="images/svg/waveform.svg" alt="" width="18" height="18" class="setting-icon">
+                    <img src="images/svg/microphone.svg" alt="" width="18" height="18" class="setting-icon">
                     <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
                   </span>
                   <p class="help-text" data-i18n="autoPlayHelpText">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>

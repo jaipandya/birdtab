@@ -489,11 +489,11 @@ describe('Video Mode - Edge Cases', () => {
       // Error fallback: photo + audio credits
       creditsContainer.innerHTML = `
         <span class="credit-item"><img src="images/svg/camera.svg"></span>
-        <span class="credit-item"><img src="images/svg/waveform.svg"></span>
+        <span class="credit-item"><img src="images/svg/microphone.svg"></span>
       `;
 
       const cameraIcon = creditsContainer.querySelector('img[src*="camera.svg"]');
-      const audioIcon = creditsContainer.querySelector('img[src*="waveform.svg"]');
+      const audioIcon = creditsContainer.querySelector('img[src*="microphone.svg"]');
 
       expect(cameraIcon).toBeTruthy();
       expect(audioIcon).toBeTruthy();
