@@ -719,9 +719,13 @@
     "message": "Открыть историю",
     "description": "Aria label for history button"
   },
-  "emptyHistory": {
-    "message": "История просмотров пока пуста. Начните исследовать птиц!",
-    "description": "Message shown when history is empty"
+  "emptyHistoryTitle": {
+    "message": "Ваше путешествие в мир птиц начинается здесь!",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "Открывайте новых птиц, и они появятся в вашей истории.",
+    "description": "Subtitle shown when history is empty"
   },
   "clearHistory": {
     "message": "Очистить историю",
@@ -758,5 +762,109 @@
   "daysAgo": {
     "message": "$1 дней назад",
     "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "Добро пожаловать в BirdTab!",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "Позвольте показать вам всё! Этот тур поможет открыть все возможности.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "Всё готово!",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "Наслаждайтесь открытием прекрасных птиц со всего мира. Удачного наблюдения!",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "Поехали!",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "Начать исследование!",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "Понял!",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "Новинка!",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "Назад",
+    "description": "Feature tour: back button text"
+  },
+  "tourHistoryTitle": {
+    "message": "История Просмотров",
+    "description": "Feature tour: history button title"
+  },
+  "tourHistoryDescription": {
+    "message": "Посмотрите всех обнаруженных птиц! Нажмите здесь, чтобы вернуться к избранным.",
+    "description": "Feature tour: history button description"
+  },
+  "tourSettingsTitle": {
+    "message": "Настройки",
+    "description": "Feature tour: settings button title"
+  },
+  "tourSettingsDescription": {
+    "message": "Настройте свой опыт BirdTab. Выберите регион, включите автовоспроизведение и многое другое.",
+    "description": "Feature tour: settings button description"
+  },
+  "tourAudioTitle": {
+    "message": "Пение Птиц",
+    "description": "Feature tour: audio controls title"
+  },
+  "tourAudioDescription": {
+    "message": "Слушайте красивое пение птиц! Нажмите для воспроизведения или паузы и погрузитесь в звуки природы.",
+    "description": "Feature tour: audio controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "Открыть Новых Птиц",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "Готовы к новому пернатому другу? Нажмите здесь, чтобы загрузить новое фото птицы.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourQuizTitle": {
+    "message": "Викторина о Птицах",
+    "description": "Feature tour: quiz button title"
+  },
+  "tourQuizDescription": {
+    "message": "Проверьте свои навыки определения птиц! Пройдите весёлую викторину.",
+    "description": "Feature tour: quiz button description"
+  },
+  "tourNextButton": {
+    "message": "Далее",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "Пропустить тур",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "Понял!",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "tourStepIndicator": {
+    "message": "Шаг {current} из {total}",
+    "description": "Feature tour: step indicator text"
+  },
+  "resetTour": {
+    "message": "Сбросить тур по функциям",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "tourReset": {
+    "message": "Тур по функциям сброшен. Он появится снова при следующей загрузке страницы.",
+    "description": "Success message after resetting the feature tour"
+  },
+  "errorResettingTour": {
+    "message": "Ошибка сброса тура по функциям",
+    "description": "Error message when tour reset fails"
   }
 }

@@ -46,6 +46,12 @@ body {
   position: relative;
 }
 
+/* Override inline critical CSS to show content once full CSS loads */
+.onboarding-container,
+.progress-dots {
+  opacity: 1 !important;
+}
+
 /* Decorative background overlay */
 body::before {
   content: '';
@@ -345,13 +351,7 @@ input:focus + .slider {
   box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.3);
 }
 
-.slider.round {
-  border-radius: 31px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
+/* .slider.round class kept for compatibility - base .slider already has round styles */
 
 /* Progress dots */
 .progress-dots {

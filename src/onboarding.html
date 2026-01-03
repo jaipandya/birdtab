@@ -4,12 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="welcomeTitle">Welcome to BirdTab!</title>
+    <style>
+        /* Critical CSS to prevent layout shift */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .onboarding-container {
+            opacity: 0;
+        }
+        .progress-dots {
+            opacity: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="onboarding-container">
         <div id="step1" class="step active">
             <h1 data-i18n="welcomeTitle">Welcome to BirdTab!</h1>
-            <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image">
+            <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image" width="400" height="225">
             <p data-i18n="welcomeDescription1">Get ready for a daily dose of avian wonder! Every new tab brings you face-to-face with a stunning bird photograph and fascinating facts.</p>
             <p><strong data-i18n="welcomeDescription2">It's like having a window to the bird world right in your browser!</strong></p>
             <button class="next-btn" data-i18n="nextButton">Next</button>
@@ -49,6 +70,5 @@
         <span class="dot" aria-label="Step 2"></span>
         <span class="dot" aria-label="Step 3"></span>
     </div>
-    <script src="onboarding.js" type="module"></script>
 </body>
 </html>

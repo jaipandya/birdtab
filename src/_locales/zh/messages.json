@@ -719,9 +719,13 @@
     "message": "打开历史记录",
     "description": "Aria label for history button"
   },
-  "emptyHistory": {
-    "message": "还没有查看历史。开始探索鸟类吧！",
-    "description": "Message shown when history is empty"
+  "emptyHistoryTitle": {
+    "message": "您的观鸟之旅从这里开始！",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "发现新的鸟类，它们将出现在您的浏览历史中。",
+    "description": "Subtitle shown when history is empty"
   },
   "clearHistory": {
     "message": "清除历史",
@@ -758,5 +762,109 @@
   "daysAgo": {
     "message": "$1天前",
     "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "欢迎使用 BirdTab！",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "让我们带您了解！这个快速导览将帮助您发现所有功能。",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "一切就绪！",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "尽情发现来自世界各地的美丽鸟类。祝您观鸟愉快！",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "开始吧！",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "开始探索！",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "明白了！",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "新功能！",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "返回",
+    "description": "Feature tour: back button text"
+  },
+  "tourHistoryTitle": {
+    "message": "浏览历史",
+    "description": "Feature tour: history button title"
+  },
+  "tourHistoryDescription": {
+    "message": "查看您发现的所有鸟类！点击这里重温您的收藏。",
+    "description": "Feature tour: history button description"
+  },
+  "tourSettingsTitle": {
+    "message": "设置",
+    "description": "Feature tour: settings button title"
+  },
+  "tourSettingsDescription": {
+    "message": "自定义您的BirdTab体验。选择您的地区、启用自动播放等。",
+    "description": "Feature tour: settings button description"
+  },
+  "tourAudioTitle": {
+    "message": "鸟鸣声",
+    "description": "Feature tour: audio controls title"
+  },
+  "tourAudioDescription": {
+    "message": "聆听美妙的鸟鸣！点击播放或暂停，沉浸在大自然的声音中。",
+    "description": "Feature tour: audio controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "发现新鸟类",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "准备好认识新的羽毛朋友了吗？点击这里加载新的鸟类照片。",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourQuizTitle": {
+    "message": "鸟类问答",
+    "description": "Feature tour: quiz button title"
+  },
+  "tourQuizDescription": {
+    "message": "测试您的鸟类识别技能！来一个有趣的问答。",
+    "description": "Feature tour: quiz button description"
+  },
+  "tourNextButton": {
+    "message": "下一步",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "跳过导览",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "明白了！",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "tourStepIndicator": {
+    "message": "第 {current} 步，共 {total} 步",
+    "description": "Feature tour: step indicator text"
+  },
+  "resetTour": {
+    "message": "重置功能导览",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "tourReset": {
+    "message": "功能导览已重置。下次加载页面时将再次显示。",
+    "description": "Success message after resetting the feature tour"
+  },
+  "errorResettingTour": {
+    "message": "重置功能导览时出错",
+    "description": "Error message when tour reset fails"
   }
 }

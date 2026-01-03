@@ -82,62 +82,106 @@ document.addEventListener('DOMContentLoaded', function () {
   autoPlayCheckbox.addEventListener('change', saveSettings);
   quietHoursCheckbox.addEventListener('change', saveSettings);
 
-  // Reset onboarding
-  resetOnboardingButton.addEventListener('click', function () {
-    if (confirm(getMessage('confirmResetSettings'))) {
-      // Reset all settings to their default values
-      chrome.storage.sync.clear(function() {
-        if (chrome.runtime.lastError) {
-          log('Error clearing sync storage: ' + chrome.runtime.lastError.message);
-          alert(getMessage('errorResettingSettings'));
-          return;
-        }
-        // Set default values including onboardingComplete: false
-        chrome.storage.sync.set({
-          region: 'US',
-          autoPlay: false,
-          quietHours: false,
-          quickAccessEnabled: false,
-          onboardingComplete: false
-        }, function () {
-          if (chrome.runtime.lastError) {
-            log('Error setting default values: ' + chrome.runtime.lastError.message);
-            alert(getMessage('errorResettingSettings'));
-            return;
-          }
-          alert(getMessage('settingsResetComplete'));
-          window.close();
-        });
-      });
-    }
-  });
-
-  // Delete cache
-  deleteCacheButton.addEventListener('click', function () {
-    // Clear all cached data including bird info, custom shortcuts, and other cached items
-    chrome.storage.local.clear(function () {
-      if (chrome.runtime.lastError) {
-        log('Error clearing local storage: ' + chrome.runtime.lastError.message);
-        alert(getMessage('errorClearingCache'));
+  // Debug buttons - only exist in development builds
+  // Safe null checks prevent errors in production where debug section is removed
+  if (resetOnboardingButton) {
+    resetOnboardingButton.addEventListener('click', async function () {
+      if (!confirm(getMessage('confirmResetSettings'))) {
         return;
       }
-      // Also clear some sync storage cached items if needed
-      chrome.storage.sync.remove(['customShortcuts'], function () {
+      
+      try {
+        // Reset all settings to their default values
+        await new Promise((resolve, reject) => {
+          chrome.storage.sync.clear(function() {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve();
+            }
+          });
+        });
+        
+        // Set default values including onboardingComplete: false
+        await new Promise((resolve, reject) => {
+          chrome.storage.sync.set({
+            region: 'US',
+            autoPlay: false,
+            quietHours: false,
+            quickAccessEnabled: false,
+            onboardingComplete: false,
+            featureTourVersion: 0
+          }, function () {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve();
+            }
+          });
+        });
+        
+        // Show single success message
+        alert(getMessage('settingsResetComplete'));
+        window.close();
+      } catch (error) {
+        log('Error resetting settings: ' + error.message);
+        alert(getMessage('errorResettingSettings'));
+      }
+    });
+  }
+
+  if (deleteCacheButton) {
+    deleteCacheButton.addEventListener('click', async function () {
+      try {
+        // Clear all cached data including bird info, custom shortcuts, and other cached items
+        await new Promise((resolve, reject) => {
+          chrome.storage.local.clear(function () {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve();
+            }
+          });
+        });
+        
+        // Also clear some sync storage cached items if needed
+        await new Promise((resolve, reject) => {
+          chrome.storage.sync.remove(['customShortcuts'], function () {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve();
+            }
+          });
+        });
+        
+        // Notify background script to clear preloaded bird info (don't wait for response)
+        chrome.runtime.sendMessage({ action: 'deleteCache' });
+        
+        // Show single success message
+        alert(getMessage('cacheCleared'));
+      } catch (error) {
+        log('Error clearing cache: ' + error.message);
+        alert(getMessage('errorClearingCache'));
+      }
+    });
+  }
+
+  const resetTourButton = document.getElementById('reset-tour');
+  if (resetTourButton) {
+    resetTourButton.addEventListener('click', function () {
+      chrome.storage.sync.set({ featureTourVersion: 0 }, function () {
         if (chrome.runtime.lastError) {
-          log('Error removing custom shortcuts: ' + chrome.runtime.lastError.message);
-          alert(getMessage('errorClearingCache'));
+          log('Error resetting tour: ' + chrome.runtime.lastError.message);
+          const errorMsg = chrome.i18n.getMessage('errorResettingTour') || 'Error resetting the feature tour';
+          alert(errorMsg);
           return;
         }
-        // Notify background script to clear preloaded bird info
-        chrome.runtime.sendMessage({ action: 'deleteCache' }, function () {
-          if (chrome.runtime.lastError) {
-            log('Error notifying background script: ' + chrome.runtime.lastError.message);
-          }
-          alert(getMessage('cacheCleared'));
-        });
+        const successMsg = chrome.i18n.getMessage('tourReset') || 'Feature tour has been reset. It will show again on the next page load.';
+        alert(successMsg);
       });
     });
-  });
+  }
 
   // Check quick access features enabled state
   chrome.storage.sync.get(['quickAccessEnabled'], (result) => {

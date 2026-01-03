@@ -719,9 +719,13 @@
     "message": "Ouvrir l'historique",
     "description": "Aria label for history button"
   },
-  "emptyHistory": {
-    "message": "Aucun historique de visualisation pour le moment. Commencez à explorer les oiseaux !",
-    "description": "Message shown when history is empty"
+  "emptyHistoryTitle": {
+    "message": "Votre aventure ornithologique commence ici !",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "Découvrez de nouveaux oiseaux et ils apparaîtront dans votre historique.",
+    "description": "Subtitle shown when history is empty"
   },
   "clearHistory": {
     "message": "Effacer l'historique",
@@ -758,5 +762,109 @@
   "daysAgo": {
     "message": "Il y a $1 jours",
     "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "Bienvenue sur BirdTab !",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "Laissez-nous vous faire visiter ! Cette visite rapide vous aidera à découvrir toutes les fonctionnalités.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "Vous êtes prêt !",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "Profitez de la découverte de magnifiques oiseaux du monde entier. Bonne observation !",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "C'est parti !",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "Commencer l'exploration !",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "Compris !",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "Nouveau !",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "Retour",
+    "description": "Feature tour: back button text"
+  },
+  "tourHistoryTitle": {
+    "message": "Historique de Visualisation",
+    "description": "Feature tour: history button title"
+  },
+  "tourHistoryDescription": {
+    "message": "Voyez tous les oiseaux que vous avez découverts ! Cliquez ici pour revisiter vos favoris.",
+    "description": "Feature tour: history button description"
+  },
+  "tourSettingsTitle": {
+    "message": "Paramètres",
+    "description": "Feature tour: settings button title"
+  },
+  "tourSettingsDescription": {
+    "message": "Personnalisez votre expérience BirdTab. Choisissez votre région, activez la lecture automatique et plus.",
+    "description": "Feature tour: settings button description"
+  },
+  "tourAudioTitle": {
+    "message": "Chants d'Oiseaux",
+    "description": "Feature tour: audio controls title"
+  },
+  "tourAudioDescription": {
+    "message": "Écoutez de magnifiques chants d'oiseaux ! Appuyez pour lire ou mettre en pause et plongez dans les sons de la nature.",
+    "description": "Feature tour: audio controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "Découvrir de Nouveaux Oiseaux",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "Prêt pour un nouvel ami à plumes ? Cliquez ici pour charger une nouvelle photo d'oiseau.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourQuizTitle": {
+    "message": "Quiz Oiseaux",
+    "description": "Feature tour: quiz button title"
+  },
+  "tourQuizDescription": {
+    "message": "Testez vos compétences d'identification d'oiseaux ! Faites un quiz amusant.",
+    "description": "Feature tour: quiz button description"
+  },
+  "tourNextButton": {
+    "message": "Suivant",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "Passer le tour",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "Compris !",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "tourStepIndicator": {
+    "message": "Étape {current} sur {total}",
+    "description": "Feature tour: step indicator text"
+  },
+  "resetTour": {
+    "message": "Réinitialiser la visite guidée",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "tourReset": {
+    "message": "La visite guidée a été réinitialisée. Elle s'affichera à nouveau au prochain chargement de la page.",
+    "description": "Success message after resetting the feature tour"
+  },
+  "errorResettingTour": {
+    "message": "Erreur lors de la réinitialisation de la visite guidée",
+    "description": "Error message when tour reset fails"
   }
 }

@@ -719,9 +719,13 @@
     "message": "فتح السجل",
     "description": "Aria label for history button"
   },
-  "emptyHistory": {
-    "message": "لا يوجد سجل مشاهدة حتى الآن. ابدأ في استكشاف الطيور!",
-    "description": "Message shown when history is empty"
+  "emptyHistoryTitle": {
+    "message": "رحلتك في عالم الطيور تبدأ هنا!",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "اكتشف طيورًا جديدة وستظهر في سجل المشاهدة.",
+    "description": "Subtitle shown when history is empty"
   },
   "clearHistory": {
     "message": "مسح السجل",
@@ -758,5 +762,109 @@
   "daysAgo": {
     "message": "منذ $1 يوم",
     "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "مرحباً بك في BirdTab!",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "دعنا نريك كل شيء! ستساعدك هذه الجولة السريعة على اكتشاف جميع الميزات.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "أنت جاهز!",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "استمتع باكتشاف الطيور الجميلة من جميع أنحاء العالم. مراقبة سعيدة!",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "هيا بنا!",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "ابدأ الاستكشاف!",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "فهمت!",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "جديد!",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "رجوع",
+    "description": "Feature tour: back button text"
+  },
+  "tourHistoryTitle": {
+    "message": "سجل المشاهدة",
+    "description": "Feature tour: history button title"
+  },
+  "tourHistoryDescription": {
+    "message": "شاهد جميع الطيور التي اكتشفتها! انقر هنا لإعادة زيارة المفضلة لديك.",
+    "description": "Feature tour: history button description"
+  },
+  "tourSettingsTitle": {
+    "message": "الإعدادات",
+    "description": "Feature tour: settings button title"
+  },
+  "tourSettingsDescription": {
+    "message": "خصص تجربة BirdTab الخاصة بك. اختر منطقتك، فعّل التشغيل التلقائي والمزيد.",
+    "description": "Feature tour: settings button description"
+  },
+  "tourAudioTitle": {
+    "message": "أصوات الطيور",
+    "description": "Feature tour: audio controls title"
+  },
+  "tourAudioDescription": {
+    "message": "استمع إلى أصوات الطيور الجميلة! انقر للتشغيل أو الإيقاف واستمتع بأصوات الطبيعة.",
+    "description": "Feature tour: audio controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "اكتشف طيور جديدة",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "هل أنت مستعد لصديق ريشي جديد؟ انقر هنا لتحميل صورة طائر جديدة.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourQuizTitle": {
+    "message": "اختبار الطيور",
+    "description": "Feature tour: quiz button title"
+  },
+  "tourQuizDescription": {
+    "message": "اختبر مهاراتك في التعرف على الطيور! خذ اختبارًا ممتعًا.",
+    "description": "Feature tour: quiz button description"
+  },
+  "tourNextButton": {
+    "message": "التالي",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "تخطي الجولة",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "فهمت!",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "tourStepIndicator": {
+    "message": "الخطوة {current} من {total}",
+    "description": "Feature tour: step indicator text"
+  },
+  "resetTour": {
+    "message": "إعادة تعيين جولة الميزات",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "tourReset": {
+    "message": "تمت إعادة تعيين جولة الميزات. ستظهر مرة أخرى في تحميل الصفحة التالي.",
+    "description": "Success message after resetting the feature tour"
+  },
+  "errorResettingTour": {
+    "message": "خطأ في إعادة تعيين جولة الميزات",
+    "description": "Error message when tour reset fails"
   }
 }

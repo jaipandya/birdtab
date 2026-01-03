@@ -246,6 +246,39 @@ class SettingsModal {
     if (this.videoModeCheckbox) {
       this.videoModeCheckbox.addEventListener('change', () => this.saveSettings());
     }
+    
+    // Make entire toggle container rows clickable
+    this.bindToggleContainerClicks();
+  }
+
+  /**
+   * Make toggle container rows clickable to toggle the checkbox
+   */
+  bindToggleContainerClicks() {
+    const toggleContainers = this.modal.querySelectorAll('.toggle-container');
+    
+    toggleContainers.forEach(container => {
+      container.style.cursor = 'pointer';
+      
+      container.addEventListener('click', async (e) => {
+        // Don't toggle if clicking directly on the switch or checkbox
+        if (e.target.closest('.switch') || e.target.tagName === 'INPUT') {
+          return;
+        }
+        
+        const checkbox = container.querySelector('input[type="checkbox"]');
+        if (!checkbox) return;
+        
+        // Special handling for productivity toggle (requires permission)
+        if (checkbox.id === 'modal-enable-productivity') {
+          checkbox.checked = !checkbox.checked;
+          await this.handleProductivityToggle(checkbox.checked);
+        } else {
+          checkbox.checked = !checkbox.checked;
+          this.saveSettings();
+        }
+      });
+    });
   }
 
   open() {

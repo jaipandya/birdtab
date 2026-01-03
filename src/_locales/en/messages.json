@@ -719,9 +719,13 @@
     "message": "Open history",
     "description": "Aria label for history button"
   },
-  "emptyHistory": {
-    "message": "No viewing history yet. Start exploring birds!",
-    "description": "Message shown when history is empty"
+  "emptyHistoryTitle": {
+    "message": "Your birding journey begins here!",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "Discover new birds and they'll appear in your viewing history.",
+    "description": "Subtitle shown when history is empty"
   },
   "clearHistory": {
     "message": "Clear History",
@@ -758,5 +762,109 @@
   "daysAgo": {
     "message": "$1 days ago",
     "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "Welcome to BirdTab!",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "Let us show you around! This quick tour will help you discover all the features that make your birding experience special.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "You're All Set!",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "Enjoy discovering beautiful birds from around the world. Happy birding!",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "Let's Go!",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "Start Exploring!",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "Got it!",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "New!",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "Back",
+    "description": "Feature tour: back button text"
+  },
+  "tourHistoryTitle": {
+    "message": "Viewing History",
+    "description": "Feature tour: history button title"
+  },
+  "tourHistoryDescription": {
+    "message": "See all the birds you've discovered! Click here to revisit your favorites and explore your birding journey.",
+    "description": "Feature tour: history button description"
+  },
+  "tourSettingsTitle": {
+    "message": "Settings",
+    "description": "Feature tour: settings button title"
+  },
+  "tourSettingsDescription": {
+    "message": "Customize your BirdTab experience. Choose your region, enable auto-play for bird calls, and more.",
+    "description": "Feature tour: settings button description"
+  },
+  "tourAudioTitle": {
+    "message": "Bird Calls",
+    "description": "Feature tour: audio controls title"
+  },
+  "tourAudioDescription": {
+    "message": "Listen to beautiful bird songs! Tap to play or pause the bird's call and immerse yourself in the sounds of nature.",
+    "description": "Feature tour: audio controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "Discover New Birds",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "Ready for a new feathered friend? Click here anytime to load a fresh bird photo and learn something new.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourQuizTitle": {
+    "message": "Bird Quiz",
+    "description": "Feature tour: quiz button title"
+  },
+  "tourQuizDescription": {
+    "message": "Test your bird identification skills! Take a fun quiz to see how well you know your feathered friends.",
+    "description": "Feature tour: quiz button description"
+  },
+  "tourNextButton": {
+    "message": "Next",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "Skip tour",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "Got it!",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "tourStepIndicator": {
+    "message": "Step {current} of {total}",
+    "description": "Feature tour: step indicator text"
+  },
+  "resetTour": {
+    "message": "Reset Feature Tour",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "tourReset": {
+    "message": "Feature tour has been reset. It will show again on the next page load.",
+    "description": "Success message after resetting the feature tour"
+  },
+  "errorResettingTour": {
+    "message": "Error resetting the feature tour",
+    "description": "Error message when tour reset fails"
   }
 }

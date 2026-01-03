@@ -8,6 +8,7 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
+import { startTour, isTourCompleted } from './featureTour.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -596,12 +597,17 @@ function createHistoryModal() {
         <div class="settings-body">
           <div id="history-list" class="history-list"></div>
           <div id="empty-history" class="empty-history hidden">
-            <img src="images/svg/info.svg" alt="" width="64" height="64">
-            <p data-i18n="emptyHistory">No viewing history yet. Start exploring birds!</p>
+            <img src="icons/icon128.png" alt="BirdTab" class="empty-history-icon" width="64" height="64">
+            <p class="empty-history-title" data-i18n="emptyHistoryTitle">Your birding journey begins here!</p>
+            <p class="empty-history-subtitle" data-i18n="emptyHistorySubtitle">Discover new birds and they'll appear in your viewing history.</p>
           </div>
         </div>
         <div class="history-footer">
           <button id="clear-history-btn" class="shortcut-btn secondary" data-i18n="clearHistory">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: -2px;">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"></path>
+            </svg>
             Clear History
           </button>
         </div>
@@ -619,15 +625,24 @@ async function populateHistoryList() {
   const history = await getHistory();
   const historyList = document.getElementById('history-list');
   const emptyState = document.getElementById('empty-history');
+  const clearBtn = document.getElementById('clear-history-btn');
 
   if (history.length === 0) {
     historyList.classList.add('hidden');
     emptyState.classList.remove('hidden');
+    if (clearBtn) {
+      clearBtn.disabled = true;
+      clearBtn.setAttribute('aria-disabled', 'true');
+    }
     return;
   }
 
   historyList.classList.remove('hidden');
   emptyState.classList.add('hidden');
+  if (clearBtn) {
+    clearBtn.disabled = false;
+    clearBtn.setAttribute('aria-disabled', 'false');
+  }
 
   // Reverse to show newest first
   const reversedHistory = [...history].reverse();
@@ -663,11 +678,17 @@ async function handleHistoryItemClick(item) {
 
   closeHistoryModal();
 
+  // Smooth fade-out transition before reload
+  document.body.style.transition = 'opacity 0.2s ease';
+  document.body.style.opacity = '0';
+
   // Store the cached bird info and reload page to display it
   // This reuses all existing initialization logic without API calls
-  chrome.storage.local.set({ pendingBirdInfo: birdInfo }, () => {
-    window.location.reload();
-  });
+  setTimeout(() => {
+    chrome.storage.local.set({ pendingBirdInfo: birdInfo }, () => {
+      window.location.reload();
+    });
+  }, 200);
 }
 
 // Open history modal
@@ -1505,6 +1526,7 @@ async function initializePage() {
     try {
       if (pendingBird) {
         birdInfo = pendingBird;
+        usedCachedFallback = true; // Don't re-add to history when loading from history
       } else {
         birdInfo = await getBirdInfo();
       }
@@ -2415,6 +2437,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Start page update after UI elements are initialized
   log('Starting page update');
   await initializePage();
+
+  // Check if feature tour should be shown (for new users after onboarding)
+  try {
+    const tourCompleted = await isTourCompleted();
+    if (!tourCompleted) {
+      // Delay tour start to let UI fully render and user orient themselves
+      log('Feature tour not completed, scheduling tour start');
+      setTimeout(() => {
+        startTour();
+      }, 1500);
+    }
+  } catch (error) {
+    log('Error checking feature tour status: ' + error.message);
+    captureException(error, {
+      tags: { operation: 'checkFeatureTour' }
+    });
+  }
 
   // Finish performance monitoring transaction
   if (transaction) {

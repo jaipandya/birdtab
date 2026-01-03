@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const { rimraf } = require('rimraf');
@@ -125,6 +126,18 @@ module.exports = (env, argv) => {
         filename: 'popup.html',
         chunks: ['vendor', 'popup'],
       }),
+      // Remove debug section from production popup.html
+      ...(isProduction ? [
+        new ReplaceInFileWebpackPlugin([{
+          dir: outputDir,
+          files: ['popup.html'],
+          rules: [{
+            // Remove the entire debug section div
+            search: /<div id="debug-section"[^>]*>[\s\S]*?<\/div>/g,
+            replace: '<!-- Debug section removed in production -->'
+          }]
+        }])
+      ] : []),
       new HtmlWebpackPlugin({
         template: './src/index.html',
         filename: 'index.html',
