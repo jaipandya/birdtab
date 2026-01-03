@@ -939,6 +939,12 @@ function pauseAudio() {
   }
 }
 
+// Pause all media (audio and video) - used when starting quiz
+function pauseAllMedia() {
+  pauseAudio();
+  pauseVideo();
+}
+
 // Review section
 
 function incrementNewTabCount() {
@@ -2313,7 +2319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize quiz mode
   try {
-    quizMode = new QuizMode();
+    quizMode = new QuizMode({ onQuizStart: pauseAllMedia });
     log('Quiz mode initialized');
 
     // Add quiz button event listener for static HTML

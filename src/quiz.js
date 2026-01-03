@@ -26,7 +26,7 @@ import { log } from './logger.js';
  */
 
 class QuizMode {
-  constructor() {
+  constructor(options = {}) {
     this.isActive = false;
     this.currentQuestion = 0;
     this.score = 0;
@@ -40,6 +40,7 @@ class QuizMode {
     this.preloadedImages = new Map(); // Track preloaded images for cleanup
     this.abortController = null; // For cancelling pending requests
     this.eventListeners = []; // Track event listeners for cleanup
+    this.onQuizStart = options.onQuizStart || null; // Callback when quiz starts
 
     this.setupKeyboardListener();
   }
@@ -82,6 +83,11 @@ class QuizMode {
 
   async startQuiz() {
     try {
+      // Call onQuizStart callback (e.g., to pause background media)
+      if (this.onQuizStart) {
+        this.onQuizStart();
+      }
+
       // Get current region setting
       const region = await this.getCurrentRegion();
 
