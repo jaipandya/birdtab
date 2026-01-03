@@ -17,6 +17,7 @@ let isMuted = false;
 let volumeLevel = CONFIG.DEFAULT_VOLUME;
 let lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
 let audio;
+let fadeAudioInterval = null; // Interval for fading audio in/out
 let video; // Video element for video mode
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
@@ -791,6 +792,10 @@ function showQuietHoursIcon() {
 
 // Load audio without playing it
 function loadAudioWithoutPlaying() {
+  if (fadeAudioInterval) {
+    clearInterval(fadeAudioInterval);
+    fadeAudioInterval = null;
+  }
   if (audio) {
     audio.pause();
     audio = null;
@@ -883,12 +888,23 @@ async function playAudio() {
     // Fade in the audio gradually to the current volume level
     const targetVolume = isMuted ? 0 : volumeLevel;
     audio.volume = 0;
-    let fadeAudioIn = setInterval(function () {
+    // Clear any existing fade interval before starting a new one
+    if (fadeAudioInterval) {
+      clearInterval(fadeAudioInterval);
+    }
+    fadeAudioInterval = setInterval(function () {
+      // Guard against audio being nullified during fade
+      if (!audio) {
+        clearInterval(fadeAudioInterval);
+        fadeAudioInterval = null;
+        return;
+      }
       if (audio.volume < targetVolume - 0.1) {
         audio.volume += 0.1;
       } else {
         audio.volume = targetVolume;
-        clearInterval(fadeAudioIn);
+        clearInterval(fadeAudioInterval);
+        fadeAudioInterval = null;
       }
     }, 200);
   } catch (error) {
@@ -2364,6 +2380,10 @@ window.addEventListener('beforeunload', () => {
   }
 
   // Release audio memory
+  if (fadeAudioInterval) {
+    clearInterval(fadeAudioInterval);
+    fadeAudioInterval = null;
+  }
   if (audio) {
     audio.pause();
     audio.src = '';
