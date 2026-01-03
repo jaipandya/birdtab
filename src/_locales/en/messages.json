@@ -96,7 +96,7 @@
     "description": "Tooltip for region selection"
   },
   "regionHelpText": {
-    "message": "This helps us show birds you might spot in your area.",
+    "message": "Choose your preferred region for bird discoveries.",
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {

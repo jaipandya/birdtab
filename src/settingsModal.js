@@ -88,7 +88,7 @@ class SettingsModal {
               <select id="modal-region" data-i18n-title="regionTooltip" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
                 <!-- Options will be populated by JavaScript -->
               </select>
-              <p class="help-text" data-i18n="regionHelpText">This helps us show birds you might spot in your area.</p>
+              <p class="help-text" data-i18n="regionHelpText">Choose your preferred region for bird discoveries.</p>
             </div>
 
             <div class="setting">
