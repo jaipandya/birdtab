@@ -823,6 +823,14 @@
     "message": "Слушайте красивое пение птиц! Нажмите для воспроизведения или паузы и погрузитесь в звуки природы.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "Регулировка Громкости",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Настройте громкость по своему предпочтению. Управляйте звуком птичьих песен и видео для создания идеального опыта наблюдения за птицами.",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "Открыть Новых Птиц",
     "description": "Feature tour: refresh button title"

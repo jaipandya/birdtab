@@ -823,6 +823,14 @@
     "message": "聆听美妙的鸟鸣！点击播放或暂停，沉浸在大自然的声音中。",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "音量控制",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "根据您的喜好调节音量。控制鸟鸣和视频的声音，打造完美的观鸟体验。",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "发现新鸟类",
     "description": "Feature tour: refresh button title"

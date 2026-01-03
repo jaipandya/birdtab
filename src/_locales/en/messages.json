@@ -825,11 +825,11 @@
   },
   "tourVolumeTitle": {
     "message": "Volume Control",
-    "description": "Feature tour: volume controls title (video mode)"
+    "description": "Feature tour: volume controls title"
   },
   "tourVolumeDescription": {
-    "message": "Adjust the volume to your preference. Videos include both visuals and sound for a complete birding experience.",
-    "description": "Feature tour: volume controls description (video mode)"
+    "message": "Adjust the volume to your preference. Control the sound of bird calls and videos to create your perfect birding experience.",
+    "description": "Feature tour: volume controls description"
   },
   "tourRefreshTitle": {
     "message": "Discover New Birds",

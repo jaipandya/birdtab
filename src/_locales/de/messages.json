@@ -823,6 +823,14 @@
     "message": "Hören Sie wunderschöne Vogelgesänge! Tippen Sie zum Abspielen oder Pausieren und tauchen Sie in die Klänge der Natur ein.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "Lautstärkeregelung",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Passen Sie die Lautstärke nach Ihren Wünschen an. Steuern Sie den Klang von Vogelrufen und Videos für Ihr perfektes Vogelerlebnis.",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "Neue Vögel Entdecken",
     "description": "Feature tour: refresh button title"

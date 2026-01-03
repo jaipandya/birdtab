@@ -823,6 +823,14 @@
     "message": "استمع إلى أصوات الطيور الجميلة! انقر للتشغيل أو الإيقاف واستمتع بأصوات الطبيعة.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "التحكم في مستوى الصوت",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "اضبط مستوى الصوت حسب تفضيلك. تحكم في صوت أصوات الطيور ومقاطع الفيديو لإنشاء تجربتك المثالية.",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "اكتشف طيور جديدة",
     "description": "Feature tour: refresh button title"

@@ -94,13 +94,13 @@ const TOUR_STEPS = [
     position: 'top'
   },
   {
-    id: 'audio',
-    targetSelector: '.play-button, #volume-button',
+    id: 'volume',
+    targetSelector: '#volume-button',
     icon: 'images/svg/sound-on.svg',
-    titleKey: 'tourAudioTitle',
-    descriptionKey: 'tourAudioDescription',
-    fallbackTitle: 'Bird Calls',
-    fallbackDescription: 'Listen to beautiful bird songs! Tap to play or pause the bird\'s call and immerse yourself in the sounds of nature.',
+    titleKey: 'tourVolumeTitle',
+    descriptionKey: 'tourVolumeDescription',
+    fallbackTitle: 'Volume Control',
+    fallbackDescription: 'Adjust the volume to your preference. Control the sound of bird calls and videos to create your perfect birding experience.',
     position: 'top'
   },
   {
@@ -535,18 +535,8 @@ function renderStep(stepIndex) {
   
   // Create tooltip content
   const tooltip = createTooltip();
-
-  // For audio step, use different text if we're targeting the volume button (video mode)
-  let title, description;
-  if (step.id === 'audio' && targetElement && targetElement.id === 'volume-button') {
-    // Video mode: targeting volume control
-    title = getMessage('tourVolumeTitle', 'Volume Control');
-    description = getMessage('tourVolumeDescription', 'Adjust the volume to your preference. Videos include both visuals and sound for a complete birding experience.');
-  } else {
-    // Normal case: use the step's configured messages
-    title = getMessage(step.titleKey, step.fallbackTitle);
-    description = getMessage(step.descriptionKey, step.fallbackDescription);
-  }
+  const title = getMessage(step.titleKey, step.fallbackTitle);
+  const description = getMessage(step.descriptionKey, step.fallbackDescription);
   
   const isWelcome = step.isWelcome;
   const isComplete = step.isComplete;

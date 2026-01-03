@@ -1,0 +1,41 @@
+# Claude Code Rules for This Project
+
+## Package Manager
+
+**ALWAYS USE PNPM**
+
+- This project uses `pnpm` as the package manager
+- NEVER use `npm` commands
+- Always use `pnpm` equivalents:
+  - ❌ `npm install` → ✅ `pnpm install`
+  - ❌ `npm run build` → ✅ `pnpm run build`
+  - ❌ `npm test` → ✅ `pnpm test`
+  - ❌ `npm run check:i18n` → ✅ `pnpm run check:i18n`
+
+## Git Commit Policy
+
+**CRITICAL: NEVER AUTO-COMMIT**
+
+- DO NOT use git commit unless explicitly asked by the user with phrases like:
+  - "commit this"
+  - "create a commit"
+  - "git commit"
+  - "commit these changes"
+
+- When you complete work, simply inform the user what was changed
+- Let the user decide when and how to commit
+- The user may want to review changes, test them, or combine multiple changes into a single commit
+
+## What to do instead:
+1. Make the requested changes
+2. Tell the user what you changed
+3. Wait for explicit instructions to commit
+
+## Example:
+✅ CORRECT:
+User: "Can you fix the bug?"
+Assistant: *fixes bug* "I've fixed the bug in src/file.js by..."
+
+❌ INCORRECT:
+User: "Can you fix the bug?"
+Assistant: *fixes bug and commits* "I've fixed the bug and committed it..."

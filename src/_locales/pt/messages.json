@@ -823,6 +823,14 @@
     "message": "Ouça belos cantos de aves! Toque para reproduzir ou pausar e mergulhe nos sons da natureza.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "Controle de Volume",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Ajuste o volume conforme sua preferência. Controle o som dos cantos de aves e vídeos para criar sua experiência perfeita.",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "Descobrir Novas Aves",
     "description": "Feature tour: refresh button title"

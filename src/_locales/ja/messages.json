@@ -823,6 +823,14 @@
     "message": "美しい鳥のさえずりを聴こう！タップして再生・一時停止し、自然の音に浸りましょう。",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "音量調整",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "お好みの音量に調整してください。鳥のさえずりや動画の音をコントロールして、完璧なバードウォッチング体験を作りましょう。",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "新しい鳥を発見",
     "description": "Feature tour: refresh button title"

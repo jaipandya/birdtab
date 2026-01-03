@@ -823,6 +823,14 @@
     "message": "Écoutez de magnifiques chants d'oiseaux ! Appuyez pour lire ou mettre en pause et plongez dans les sons de la nature.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "Contrôle du Volume",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Ajustez le volume selon votre préférence. Contrôlez le son des chants d'oiseaux et des vidéos pour créer votre expérience parfaite.",
+    "description": "Feature tour: volume controls description"
+  },
   "tourRefreshTitle": {
     "message": "Découvrir de Nouveaux Oiseaux",
     "description": "Feature tour: refresh button title"
