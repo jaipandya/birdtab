@@ -1631,6 +1631,18 @@ p {
   letter-spacing: -0.01em;
 }
 
+.settings-modal .setting-label-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-modal .setting-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+}
+
 .settings-modal select {
   width: 100%;
   padding: 12px 14px;

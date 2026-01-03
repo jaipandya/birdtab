@@ -81,17 +81,23 @@ class SettingsModal {
           </div>
           <div class="settings-body">
             <div class="setting">
-              <label for="modal-region" data-i18n="birdingRegion">Birding Region</label>
+              <label for="modal-region" class="setting-label-with-icon">
+                <img src="images/svg/location.svg" alt="" width="18" height="18" class="setting-icon">
+                <span data-i18n="birdingRegion">Birding Region</span>
+              </label>
               <select id="modal-region" data-i18n-title="regionTooltip" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
                 <!-- Options will be populated by JavaScript -->
               </select>
               <p class="help-text" data-i18n="regionHelpText">This helps us show birds you might spot in your area.</p>
             </div>
-            
+
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/waveform.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                  </span>
                   <p class="help-text" data-i18n="autoPlayHelpText">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
                 </div>
                 <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
@@ -100,11 +106,14 @@ class SettingsModal {
                 </label>
               </div>
             </div>
-            
+
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span><span data-i18n="quietHours">Quiet Hours</span> <span id="modal-quiet-hours-text"></span></span>
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/moon.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span><span data-i18n="quietHours">Quiet Hours</span> <span id="modal-quiet-hours-text"></span></span>
+                  </span>
                   <p class="help-text" data-i18n="quietHoursHelpText">Mute bird songs during specified quiet hours.</p>
                 </div>
                 <label class="switch" data-i18n-title="quietHoursTooltip" title="Enable to automatically turn off auto-play during quiet hours">
@@ -113,11 +122,14 @@ class SettingsModal {
                 </label>
               </div>
             </div>
-            
+
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span data-i18n="quickAccessFeatures">Quick Access Features</span>
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/search.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="quickAccessFeatures">Quick Access Features</span>
+                  </span>
                   <p class="help-text" id="modal-productivity-help" data-i18n="productivityHelpText">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
                 </div>
                 <label class="switch" data-i18n-title="productivityTooltip" title="Show search box, most visited sites, and allow custom shortcuts">
@@ -130,7 +142,10 @@ class SettingsModal {
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
-                  <span data-i18n="videoMode">Video Mode</span>
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/video.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="videoMode">Video Mode</span>
+                  </span>
                   <p class="help-text" id="modal-video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available. Videos include sound.</p>
                 </div>
                 <label class="switch" data-i18n-title="videoModeTooltip" title="Enable to show bird videos instead of photos">
