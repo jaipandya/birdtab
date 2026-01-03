@@ -501,29 +501,42 @@ class QuizMode {
   }
 
   showQuizLoading() {
-    // Show loading state in quiz image container only (don't overwrite the whole content)
+    // Show loading text in question area for visual cohesion
+    const questionText = document.getElementById('quiz-question-text');
+    if (questionText) {
+      questionText.innerHTML = `<span class="loading-text">${chrome.i18n.getMessage('quizLoadingQuestions')}</span>`;
+    }
+
+    // Show skeleton loading state for image
     const imageContainer = document.getElementById('quiz-image-container');
     if (imageContainer) {
+      imageContainer.classList.add('loading');
       imageContainer.innerHTML = `
-        <div class="quiz-loading">
-          <div class="quiz-loading-spinner"></div>
-          <p class="quiz-loading-text">${chrome.i18n.getMessage('quizLoadingQuestions')}</p>
-        </div>
+        <div class="skeleton skeleton-image"></div>
       `;
     }
 
-    // Update question text to show loading
-    const questionText = document.getElementById('quiz-question-text');
-    if (questionText) {
-      questionText.textContent = chrome.i18n.getMessage('quizLoadingQuestions');
+    // Hide image meta during loading (will be shown when image loads)
+    const imageMeta = document.getElementById('quiz-image-meta');
+    if (imageMeta) {
+      imageMeta.style.visibility = 'hidden';
     }
 
-    // Disable options while loading
+    // Show skeleton options - preserves 2x2 grid layout
     const optionsContainer = document.getElementById('quiz-options');
     if (optionsContainer) {
       optionsContainer.innerHTML = `
-        <div class="quiz-loading-message">${chrome.i18n.getMessage('quizLoadingAnswers')}</div>
+        <div class="skeleton skeleton-option"></div>
+        <div class="skeleton skeleton-option"></div>
+        <div class="skeleton skeleton-option"></div>
+        <div class="skeleton skeleton-option"></div>
       `;
+    }
+
+    // Disable next button while loading
+    const nextButton = document.getElementById('quiz-next');
+    if (nextButton) {
+      nextButton.disabled = true;
     }
   }
 
@@ -661,21 +674,19 @@ class QuizMode {
       // Show loading for photographer if not available
       const imageMeta = document.getElementById('quiz-image-meta');
       if (imageMeta) {
+        imageMeta.style.visibility = 'visible';
         imageMeta.innerHTML = `${chrome.i18n.getMessage('photoBy')} <a href="#" id="quiz-photographer" target="_blank">${chrome.i18n.getMessage('loading')}</a>`;
       }
     }
 
-    // Show loading indicator for image
+    // Show skeleton loading indicator for image
     const imageContainer = document.getElementById('quiz-image-container');
-    imageContainer.innerHTML = '';
-
-    const loader = document.createElement('div');
-    loader.className = 'image-loader';
-    loader.innerHTML = `
-      <div class="spinner"></div>
-      <p>${chrome.i18n.getMessage('quizLoadingImage')}</p>
+    imageContainer.classList.add('loading');
+    imageContainer.innerHTML = `
+      <div class="image-loading-overlay">
+        <div class="spinner"></div>
+      </div>
     `;
-    imageContainer.appendChild(loader);
 
     // Load image - question should already have a valid imageUrl from ensureValidQuestionImages
     const imageUrl = question.bird.imageUrl;
@@ -690,9 +701,10 @@ class QuizMode {
     const img = new Image();
 
     img.onload = () => {
+      imageContainer.classList.remove('loading');
       imageContainer.innerHTML = '';
       const imageElement = document.createElement('img');
-      imageElement.className = 'quiz-image';
+      imageElement.className = 'quiz-image loaded';
       imageElement.src = imageUrl;
       imageElement.alt = `${question.bird.primaryComName} - Bird quiz image`;
       imageContainer.appendChild(imageElement);
@@ -712,9 +724,10 @@ class QuizMode {
 
       const retryImg = new Image();
       retryImg.onload = () => {
+        imageContainer.classList.remove('loading');
         imageContainer.innerHTML = '';
         const imageElement = document.createElement('img');
-        imageElement.className = 'quiz-image';
+        imageElement.className = 'quiz-image loaded';
         imageElement.src = newImageUrl;
         imageElement.alt = `${question.bird.primaryComName} - Bird quiz image`;
         imageContainer.appendChild(imageElement);
@@ -740,7 +753,7 @@ class QuizMode {
 
     img.src = imageUrl;
 
-    // Display options
+    // Display options with staggered animation
     const optionsContainer = document.getElementById('quiz-options');
     optionsContainer.innerHTML = '';
 
@@ -748,17 +761,31 @@ class QuizMode {
       const optionElement = document.createElement('div');
       optionElement.className = 'quiz-option';
       optionElement.textContent = option.name;
+      optionElement.style.opacity = '0';
 
       const optionHandler = () => this.selectOption(index);
       optionElement.addEventListener('click', optionHandler);
       this.eventListeners.push({ element: optionElement, event: 'click', handler: optionHandler });
 
       optionsContainer.appendChild(optionElement);
+
+      // Staggered fade-in animation
+      setTimeout(() => {
+        optionElement.classList.add('loaded');
+        optionElement.style.opacity = '';
+      }, index * 50);
     });
   }
 
   updateImageMeta(bird) {
+    const imageMeta = document.getElementById('quiz-image-meta');
     const photographerLink = document.getElementById('quiz-photographer');
+    
+    // Show the image meta container
+    if (imageMeta) {
+      imageMeta.style.visibility = 'visible';
+    }
+    
     if (photographerLink && bird.photographer) {
       photographerLink.textContent = bird.photographer;
       photographerLink.href = bird.photographerUrl || '#';
@@ -766,6 +793,7 @@ class QuizMode {
   }
   
   showImageLoadError(container, birdName) {
+    container.classList.remove('loading');
     container.innerHTML = `
       <div class="quiz-image-error">
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
