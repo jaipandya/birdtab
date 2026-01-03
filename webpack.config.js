@@ -106,6 +106,7 @@ module.exports = (env, argv) => {
           },
           { from: 'src/images', to: 'images' },
           { from: 'src/icons', to: 'icons' },
+          { from: 'src/fonts', to: 'fonts' },
           { from: 'src/_locales', to: '_locales' },
         ],
       }),
