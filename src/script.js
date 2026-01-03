@@ -1355,62 +1355,6 @@ function hideProgressBar() {
   }
 }
 
-// Check if video has audio track
-function videoHasAudio(videoEl) {
-  // Check various browser-specific properties
-  if (typeof videoEl.webkitAudioDecodedByteCount !== 'undefined') {
-    // Chrome/Safari - check after some playback
-    return videoEl.webkitAudioDecodedByteCount > 0;
-  }
-  if (typeof videoEl.mozHasAudio !== 'undefined') {
-    // Firefox
-    return videoEl.mozHasAudio;
-  }
-  if (videoEl.audioTracks && videoEl.audioTracks.length > 0) {
-    // Standard API (limited support)
-    return true;
-  }
-  // Assume has audio if we can't detect
-  return true;
-}
-
-// Update volume control visibility based on whether video has audio
-function updateVolumeControlForVideo() {
-  if (!video) return;
-
-  const videoEl = video; // Capture reference
-
-  // We need to wait a bit for audio to be detected after video starts playing
-  const checkAudio = () => {
-    // Safety check - video might have been unloaded
-    if (!videoEl || !video) return;
-    
-    const hasAudio = videoHasAudio(videoEl);
-    
-    if (!hasAudio) {
-      // Use existing hideAudioControls pattern
-      hideAudioControls();
-      log('Video has no audio track - hiding volume control');
-    }
-  };
-
-  // Check after video has been playing for a short time
-  // (webkitAudioDecodedByteCount only updates after some decoding)
-  const checkOnce = function() {
-    // Safety check - video might have been unloaded
-    if (!videoEl || !video || videoEl !== video) {
-      videoEl.removeEventListener('timeupdate', checkOnce);
-      return;
-    }
-    if (videoEl.currentTime > 0.5) {
-      checkAudio();
-      videoEl.removeEventListener('timeupdate', checkOnce);
-    }
-  };
-
-  video.addEventListener('timeupdate', checkOnce);
-}
-
 // Setup video controls (progress bar)
 function setupVideoControls() {
   if (!video) return;
@@ -1418,8 +1362,8 @@ function setupVideoControls() {
   // Create progress bar
   createVideoProgressBar();
 
-  // Check if video has audio and update volume control accordingly
-  updateVolumeControlForVideo();
+  // Volume control is always shown for video mode (even if video has no audio)
+  // This provides a consistent UI experience
 
   // Listen for timeupdate to update progress
   video.addEventListener('timeupdate', () => {
