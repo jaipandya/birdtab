@@ -72,6 +72,7 @@ async function delay(ms) {
 }
 
 // Fetch image information from Macaulay Library
+// Prefers landscape orientation images for better display in new tab
 async function getMacaulayImage(speciesCode) {
 
   // simulate a slow loading experience
@@ -86,15 +87,30 @@ async function getMacaulayImage(speciesCode) {
     log(`[CACHE MISS]: ${speciesCode}`);
   }
 
-  const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=photo`;
+  // Fetch multiple images to find a landscape one (width > height)
+  // Using count=5 for balance between finding landscape images and payload size
+  const url = `https://search.macaulaylibrary.org/api/v1/search?taxonCode=${speciesCode}&count=5&sort=rating_rank_desc&mediaType=photo`;
   const data = await fetchJson(url);
 
-  if (data.results?.content?.[0]) {
-    const image = data.results.content[0];
-    if (!image.mediaUrl) {
+  if (data.results?.content?.length > 0) {
+    // Prefer landscape images (width > height) for better new tab display
+    const landscapeImage = data.results.content.find(img => 
+      img.mediaUrl && img.width && img.height && img.width > img.height
+    );
+    
+    // Fall back to first image with mediaUrl if no landscape found
+    const image = landscapeImage || data.results.content.find(img => img.mediaUrl);
+    
+    if (!image) {
       const error = new Error('No image found in Macaulay Library');
       error.responseData = { hasResults: true, hasMediaUrl: false };
       throw error;
+    }
+
+    if (landscapeImage) {
+      log(`[LANDSCAPE IMAGE]: Found landscape image for ${speciesCode}`);
+    } else {
+      log(`[PORTRAIT FALLBACK]: No landscape image found for ${speciesCode}, using first available`);
     }
 
     const imageInfo = {
