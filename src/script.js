@@ -1616,6 +1616,7 @@ async function initializePage() {
       </video>
       ` : ''}
       <img src="" alt="${birdInfo.name}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
+      <div class="gradient-overlay"></div>
       <div class="info-panel">
         <div class="external-links">
           <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
