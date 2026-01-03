@@ -1018,10 +1018,14 @@ function setImageSource(imageUrl) {
 // Set up all video event listeners (play, pause, ended, buffering, errors, etc.)
 // This is extracted into a separate function so it can be reused when reloading video
 function setupVideoEventListeners(videoEl, fallbackToImage) {
+  // Track if video has started playing (for distinguishing loading vs buffering)
+  let hasStartedPlaying = false;
+
   // Handle buffering - show loading indicator when video is waiting for data
   videoEl.addEventListener('waiting', function () {
     log('Video buffering...');
-    showVideoLoadingIndicator();
+    // Only show "Buffering" if video has played before, otherwise it's initial load
+    showVideoLoadingIndicator(hasStartedPlaying);
   });
 
   // Handle buffering resolved - hide loading indicator when video can play
@@ -1031,6 +1035,7 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
 
   // Also hide loading indicator on playing event (in case canplaythrough doesn't fire)
   videoEl.addEventListener('playing', function () {
+    hasStartedPlaying = true;
     hideVideoLoadingIndicator();
   });
 
@@ -1189,14 +1194,26 @@ function setVideoSource() {
   videoEl.load();
 }
 
-// Show video loading indicator in top-left corner
-function showVideoLoadingIndicator() {
+// Show video loading indicator as a subtle pill badge
+// isBuffering: true for mid-playback buffering, false for initial load
+function showVideoLoadingIndicator(isBuffering = false) {
   // Don't show if already exists
-  if (document.querySelector('.video-loading-indicator')) return;
+  const existing = document.querySelector('.video-loading-indicator');
+  if (existing) {
+    // Update text if state changed
+    const textEl = existing.querySelector('.loading-text');
+    if (textEl) {
+      textEl.textContent = isBuffering ? 'Buffering' : 'Loading video';
+    }
+    return;
+  }
 
   const indicator = document.createElement('div');
   indicator.className = 'video-loading-indicator';
-  indicator.innerHTML = '<div class="loading-spinner"></div>';
+  indicator.innerHTML = `
+    <div class="loading-spinner"></div>
+    <span class="loading-text">${isBuffering ? 'Buffering' : 'Loading video'}</span>
+  `;
 
   const contentContainer = document.getElementById('content-container');
   if (contentContainer) {
@@ -1605,6 +1622,9 @@ async function initializePage() {
 
       setupVolumeControl();
       updateVolumeControl();
+
+      // Add click-to-pause on empty areas of the page
+      setupClickToPause();
     } else {
       // Image mode: just load the image
       setImageSource(birdInfo.imageUrl);
@@ -1938,6 +1958,36 @@ function pauseVideo() {
   }
 }
 
+// Set up click-to-pause functionality for video mode
+// Clicking anywhere on the page (except interactive elements) will pause the video
+function setupClickToPause() {
+  const contentContainer = document.getElementById('content-container');
+  if (!contentContainer) return;
+
+  contentContainer.addEventListener('click', function (e) {
+    // Only handle clicks when video is playing
+    if (!video || video.paused) return;
+
+    // List of interactive elements to ignore
+    const interactiveSelectors = [
+      'button', 'a', 'input', 'select', 'textarea',
+      '.icon-button', '.control-buttons', '.volume-control',
+      '.video-play-overlay', '.video-play-btn', '.share-container',
+      '.external-links', '.settings-modal', '.quiz-mode'
+    ];
+
+    // Check if click target or its parents match any interactive selector
+    const isInteractive = interactiveSelectors.some(selector => {
+      return e.target.closest(selector) !== null;
+    });
+
+    if (!isInteractive) {
+      e.preventDefault();
+      pauseVideo();
+    }
+  });
+}
+
 // Show poster image, hide video (for paused/ended/unloaded states)
 function showPosterImage() {
   const videoEl = document.querySelector('.background-video');
@@ -2203,9 +2253,11 @@ function initializeSearch() {
     }, (hasPermission) => {
       if (hasPermission && result.quickAccessEnabled) {
         searchContainer.style.display = 'block';
+        document.body.classList.add('quick-access-enabled');
         setupSearchListeners();
       } else {
         searchContainer.style.display = 'none';
+        document.body.classList.remove('quick-access-enabled');
       }
     });
   });
@@ -2408,7 +2460,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       searchContainer.style.display = changes.quickAccessEnabled.newValue ? 'block' : 'none';
 
       if (changes.quickAccessEnabled.newValue) {
+        document.body.classList.add('quick-access-enabled');
         setupSearchListeners();
+      } else {
+        document.body.classList.remove('quick-access-enabled');
       }
     }
 

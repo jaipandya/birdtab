@@ -194,6 +194,13 @@ body.loaded {
   animation: overlayFadeIn 0.3s ease;
 }
 
+/* Shift play button down when quick access panel is visible */
+.quick-access-enabled .video-play-overlay {
+  /* Move to bottom portion of screen to avoid overlap with search/top sites */
+  align-items: flex-end;
+  padding-bottom: 25vh;
+}
+
 @keyframes overlayFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -236,68 +243,55 @@ body.loaded {
   opacity: 0.7;
 }
 
-/* Video loading indicator - positioned in top-left corner */
-/* Margins match the info-panel padding (3rem left, 2.5rem equivalent for top) */
+/* Video loading/buffering indicator - minimal floating pill */
 .video-loading-indicator {
-  position: absolute;
-  top: 2.5rem;
-  left: 3rem;
-  width: 20px;
-  height: 20px;
-  z-index: 10;
-  animation: videoLoadingFadeIn 0.3s ease;
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 1.5rem;
+  z-index: 100;
+  animation: videoLoadingFadeIn 0.25s ease;
+  pointer-events: none;
 }
 
 @keyframes videoLoadingFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(6px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .video-loading-indicator .loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-top-color: rgba(255, 255, 255, 0.8);
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  animation: videoLoadingSpinnerSpin 0.9s linear infinite;
+  animation: videoLoadingSpinnerSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.video-loading-indicator .loading-text {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 @keyframes videoLoadingSpinnerSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Video buffering overlay - shown during mid-playback buffering */
-.video-buffering-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 4;
-  pointer-events: none;
-  animation: bufferingFadeIn 0.2s ease;
-}
-
-@keyframes bufferingFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.video-buffering-spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top-color: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  animation: bufferingSpinnerSpin 0.9s linear infinite;
-}
-
-@keyframes bufferingSpinnerSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }

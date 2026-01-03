@@ -755,9 +755,7 @@ html[dir="rtl"] .quiz-close-btn {
   font-weight: 500;
   color: #495057;
   margin: 0 0 8px 0;
-}
-
-.quiz-image-error-hint {
+}.quiz-image-error-hint {
   font-size: 14px;
   color: #868e96;
   margin: 0;
