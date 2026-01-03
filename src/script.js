@@ -82,7 +82,7 @@ class VideoVisibilityManager {
       // Video was unloaded - show play overlay, let user click to reload
       log('Tab visible after unload - showing play overlay');
       this.showPlayOverlay();
-      this.switchToPhotoCredits();
+      // Credits already show both photographer and videographer - no need to switch
     } else if (this.wasPlaying && this.video) {
       // Video still in memory - resume playback
       log('Tab visible < 30s - resuming video');
@@ -120,8 +120,7 @@ class VideoVisibilityManager {
     // Hide video controls (they don't make sense when video is unloaded)
     cleanupVideoControls();
 
-    // Switch to photo credits (we're showing the poster now)
-    this.switchToPhotoCredits();
+    // Credits already show both photographer and videographer - no need to switch
   }
 
   showPlayOverlay() {
@@ -212,7 +211,7 @@ class VideoVisibilityManager {
       log('Error reloading video, falling back to image mode');
       hideVideoLoadingIndicator();
       showPosterImage();
-      this.switchToPhotoCredits();
+      // Credits already show both photographer and videographer - no need to switch
       // Mark as unloaded so we don't try to play
       this.isUnloaded = true;
     };
@@ -224,7 +223,7 @@ class VideoVisibilityManager {
     const handleCanPlay = () => {
       hideVideoLoadingIndicator();
       markAsLoaded(); // Mark as successfully loaded
-      this.switchToVideoCredits();
+      // Credits already show both photographer and videographer
       // Re-setup video controls for the reloaded video
       setupVideoControls();
       // Video will be shown when play event fires
@@ -246,70 +245,6 @@ class VideoVisibilityManager {
     } catch (err) {
       log(`Error playing video after reload: ${err.message}`);
     }
-  }
-
-  switchToPhotoCredits() {
-    if (!this.birdData) return;
-
-    const creditsContainer = document.querySelector('.credits');
-    if (!creditsContainer) return;
-
-    // Build photo credits HTML
-    const photoCreditsHtml = `
-      <span class="credit-item">
-        <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-        <a href="${this.birdData.photographerUrl}" target="_blank">${this.birdData.photographer}</a>
-      </span>
-      ${this.birdData.mediaUrl ? `
-      <span class="credit-item">
-        <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
-        <a href="${this.birdData.recordistUrl}" target="_blank">${this.birdData.recordist}</a>
-      </span>
-      ` : ''}
-      <span class="credit-item">
-        via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
-      </span>
-      <span id="share-container" class="credit-item share-container">
-        <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
-          <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
-        </button>
-      </span>
-    `;
-
-    creditsContainer.innerHTML = photoCreditsHtml;
-    setupShareButton(); // Re-bind share button
-    log('Switched to photo credits');
-  }
-
-  switchToVideoCredits() {
-    if (!this.birdData) return;
-
-    const creditsContainer = document.querySelector('.credits');
-    if (!creditsContainer) return;
-
-    // Build video credits HTML - keep photo credits alongside video credits
-    const videoCreditsHtml = `
-      <span class="credit-item">
-        <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-        <a href="${this.birdData.photographerUrl}" target="_blank">${this.birdData.photographer}</a>
-      </span>
-      <span class="credit-item">
-        <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-        <a href="${this.birdData.videographerUrl}" target="_blank">${this.birdData.videographer}</a>
-      </span>
-      <span class="credit-item">
-        via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
-      </span>
-      <span id="share-container" class="credit-item share-container">
-        <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
-          <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
-        </button>
-      </span>
-    `;
-
-    creditsContainer.innerHTML = videoCreditsHtml;
-    setupShareButton(); // Re-bind share button
-    log('Switched to video credits');
   }
 
   destroy() {
@@ -1130,10 +1065,9 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     // Reset video to beginning for replay
     videoEl.currentTime = 0;
 
-    // Show play overlay for replay and switch to photo credits (showing poster)
+    // Show play overlay for replay (keep credits unchanged - both photo & video credits stay visible)
     if (videoVisibilityManager) {
       videoVisibilityManager.showPlayOverlay();
-      videoVisibilityManager.switchToPhotoCredits();
     }
   });
 
@@ -1143,10 +1077,9 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     updatePlayPauseButton();
     showVideoElement();
 
-    // Hide play overlay when video starts playing and switch to video credits
+    // Hide play overlay when video starts playing
     if (videoVisibilityManager) {
       videoVisibilityManager.hidePlayOverlay();
-      videoVisibilityManager.switchToVideoCredits();
     }
   });
 
@@ -1155,10 +1088,9 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     updatePlayPauseButton();
     showPosterImage();
 
-    // Show play overlay when paused and switch to photo credits (showing poster)
+    // Show play overlay when paused (keep credits unchanged - both photo & video credits stay visible)
     if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
       videoVisibilityManager.showPlayOverlay();
-      videoVisibilityManager.switchToPhotoCredits();
     }
   });
 
@@ -1202,7 +1134,7 @@ function setVideoSource() {
     if (videoVisibilityManager) {
       videoVisibilityManager.isUnloaded = true; // Mark as needing reload
       videoVisibilityManager.showPlayOverlay();
-      videoVisibilityManager.switchToPhotoCredits(); // Show photo credits while image is displayed
+      // Credits already show both photographer and videographer - no need to switch
     }
 
     // Keep video reference for retry attempts - don't destroy the manager
@@ -1225,10 +1157,7 @@ function setVideoSource() {
     // Setup video controls (progress bar + duration)
     setupVideoControls();
 
-    // Switch from photo credits to video credits
-    if (videoVisibilityManager) {
-      videoVisibilityManager.switchToVideoCredits();
-    }
+    // Credits already show both photographer and videographer in video mode
 
     // Note: We don't show video here - it will be shown when play event fires
     // If autoplay is disabled, poster remains visible until user clicks play

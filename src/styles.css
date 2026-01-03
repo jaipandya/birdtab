@@ -353,6 +353,13 @@ body.loaded {
   z-index: 1000;
 }
 
+/* Hide control buttons on smaller screens (mobile/small tablet) */
+@media (max-width: 767px) {
+  .control-buttons {
+    display: none;
+  }
+}
+
 .icon-button {
   width: 40px;
   height: 40px;
