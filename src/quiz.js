@@ -46,6 +46,11 @@ class QuizMode {
 
   setupKeyboardListener() {
     const keyboardHandler = (e) => {
+      // Don't trigger shortcuts when typing in input fields
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
       if (e.key.toLowerCase() === 'q') {
         e.preventDefault();
         if (!this.isActive) {
