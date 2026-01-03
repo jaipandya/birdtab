@@ -675,10 +675,6 @@
     "message": "شاهد هذا الطائر الجميل {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoLoading": {
-    "message": "جاري تحميل الفيديو...",
-    "description": "Tooltip text shown while video is loading"
-  },
   "videoAlt": {
     "message": "فيديو",
     "description": "Alt text for video icon"
@@ -815,14 +811,6 @@
     "message": "خصص تجربة BirdTab الخاصة بك. اختر منطقتك، فعّل التشغيل التلقائي والمزيد.",
     "description": "Feature tour: settings button description"
   },
-  "tourAudioTitle": {
-    "message": "أصوات الطيور",
-    "description": "Feature tour: audio controls title"
-  },
-  "tourAudioDescription": {
-    "message": "استمع إلى أصوات الطيور الجميلة! انقر للتشغيل أو الإيقاف واستمتع بأصوات الطبيعة.",
-    "description": "Feature tour: audio controls description"
-  },
   "tourVolumeTitle": {
     "message": "التحكم في مستوى الصوت",
     "description": "Feature tour: volume controls title"
@@ -858,10 +846,6 @@
   "tourFinishButton": {
     "message": "فهمت!",
     "description": "Feature tour: finish button text on last step"
-  },
-  "tourStepIndicator": {
-    "message": "الخطوة {current} من {total}",
-    "description": "Feature tour: step indicator text"
   },
   "resetTour": {
     "message": "إعادة تعيين جولة الميزات",

@@ -675,10 +675,6 @@
     "message": "Посмотрите на эту прекрасную птицу {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoLoading": {
-    "message": "Загрузка видео...",
-    "description": "Tooltip text shown while video is loading"
-  },
   "videoAlt": {
     "message": "Видео",
     "description": "Alt text for video icon"
@@ -815,14 +811,6 @@
     "message": "Настройте свой опыт BirdTab. Выберите регион, включите автовоспроизведение и многое другое.",
     "description": "Feature tour: settings button description"
   },
-  "tourAudioTitle": {
-    "message": "Пение Птиц",
-    "description": "Feature tour: audio controls title"
-  },
-  "tourAudioDescription": {
-    "message": "Слушайте красивое пение птиц! Нажмите для воспроизведения или паузы и погрузитесь в звуки природы.",
-    "description": "Feature tour: audio controls description"
-  },
   "tourVolumeTitle": {
     "message": "Регулировка Громкости",
     "description": "Feature tour: volume controls title"
@@ -858,10 +846,6 @@
   "tourFinishButton": {
     "message": "Понял!",
     "description": "Feature tour: finish button text on last step"
-  },
-  "tourStepIndicator": {
-    "message": "Шаг {current} из {total}",
-    "description": "Feature tour: step indicator text"
   },
   "resetTour": {
     "message": "Сбросить тур по функциям",

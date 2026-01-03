@@ -675,10 +675,6 @@
     "message": "この美しい{birdName}を見てください！",
     "description": "Default share text with bird name placeholder"
   },
-  "videoLoading": {
-    "message": "動画を読み込み中...",
-    "description": "Tooltip text shown while video is loading"
-  },
   "videoAlt": {
     "message": "動画",
     "description": "Alt text for video icon"
@@ -815,14 +811,6 @@
     "message": "BirdTab体験をカスタマイズ。地域を選択し、自動再生を有効にするなど。",
     "description": "Feature tour: settings button description"
   },
-  "tourAudioTitle": {
-    "message": "鳥の鳴き声",
-    "description": "Feature tour: audio controls title"
-  },
-  "tourAudioDescription": {
-    "message": "美しい鳥のさえずりを聴こう！タップして再生・一時停止し、自然の音に浸りましょう。",
-    "description": "Feature tour: audio controls description"
-  },
   "tourVolumeTitle": {
     "message": "音量調整",
     "description": "Feature tour: volume controls title"
@@ -858,10 +846,6 @@
   "tourFinishButton": {
     "message": "了解！",
     "description": "Feature tour: finish button text on last step"
-  },
-  "tourStepIndicator": {
-    "message": "ステップ {current} / {total}",
-    "description": "Feature tour: step indicator text"
   },
   "resetTour": {
     "message": "機能ツアーをリセット",

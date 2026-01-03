@@ -675,10 +675,6 @@
     "message": "Check out this beautiful {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoLoading": {
-    "message": "Loading video...",
-    "description": "Tooltip text shown while video is loading"
-  },
   "videoAlt": {
     "message": "Video",
     "description": "Alt text for video icon"
@@ -815,14 +811,6 @@
     "message": "Customize your BirdTab experience. Choose your region, enable auto-play for bird calls, and more.",
     "description": "Feature tour: settings button description"
   },
-  "tourAudioTitle": {
-    "message": "Bird Calls",
-    "description": "Feature tour: audio controls title"
-  },
-  "tourAudioDescription": {
-    "message": "Listen to beautiful bird songs! Tap to play or pause the bird's call and immerse yourself in the sounds of nature.",
-    "description": "Feature tour: audio controls description"
-  },
   "tourVolumeTitle": {
     "message": "Volume Control",
     "description": "Feature tour: volume controls title"
@@ -858,10 +846,6 @@
   "tourFinishButton": {
     "message": "Got it!",
     "description": "Feature tour: finish button text on last step"
-  },
-  "tourStepIndicator": {
-    "message": "Step {current} of {total}",
-    "description": "Feature tour: step indicator text"
   },
   "resetTour": {
     "message": "Reset Feature Tour",
