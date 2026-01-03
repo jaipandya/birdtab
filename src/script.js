@@ -1554,6 +1554,19 @@ async function initializePage() {
           <span class="credit-item">
             via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
           </span>
+          <span class="credit-item media-toggle-container">
+            <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
+              <input type="checkbox" id="media-toggle-switch" ${isVideoMode ? 'checked' : ''}>
+              <span class="media-toggle-slider">
+                <span class="media-toggle-icon media-toggle-photo">
+                  <img src="images/svg/camera.svg" alt="Photo" width="12" height="12">
+                </span>
+                <span class="media-toggle-icon media-toggle-video">
+                  <img src="images/svg/video.svg" alt="Video" width="12" height="12">
+                </span>
+              </span>
+            </label>
+          </span>
           <span id="share-container" class="credit-item share-container">
             <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip')}">
               <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt')}" width="16" height="16">
@@ -1625,6 +1638,9 @@ async function initializePage() {
 
       // Add click-to-pause on empty areas of the page
       setupClickToPause();
+
+      // Set up media toggle button (video/photo switch)
+      setupMediaToggle(false); // false = video mode
     } else {
       // Image mode: just load the image
       setImageSource(birdInfo.imageUrl);
@@ -1653,6 +1669,9 @@ async function initializePage() {
         log('No audio URL found in bird info');
         hideAudioControls();
       }
+
+      // Set up media toggle in image mode (for on-demand video fetch)
+      setupMediaToggle(true); // true = image mode
     }
 
 
@@ -1970,10 +1989,11 @@ function setupClickToPause() {
 
     // List of interactive elements to ignore
     const interactiveSelectors = [
-      'button', 'a', 'input', 'select', 'textarea',
+      'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
       '.video-play-overlay', '.video-play-btn', '.share-container',
-      '.external-links', '.settings-modal', '.quiz-mode'
+      '.external-links', '.settings-modal', '.quiz-mode',
+      '.media-toggle', '.media-toggle-container'
     ];
 
     // Check if click target or its parents match any interactive selector
@@ -1986,6 +2006,239 @@ function setupClickToPause() {
       pauseVideo();
     }
   });
+}
+
+// Set up media toggle switch (video/photo)
+// Allows quick switching between video and image mode for the current bird
+let isShowingVideo = true; // Track current display mode
+
+function setupMediaToggle(isImageMode = false) {
+  const toggleSwitch = document.getElementById('media-toggle-switch');
+  if (!toggleSwitch) return;
+
+  // Set initial state
+  isShowingVideo = !isImageMode;
+
+  toggleSwitch.addEventListener('change', async function () {
+    if (this.checked) {
+      // User wants to switch to video mode
+      if (isImageMode && !video) {
+        // Need to fetch video first
+        await fetchAndSwitchToVideo();
+      } else {
+        switchToVideoMode();
+      }
+    } else {
+      // Switch to photo mode
+      switchToPhotoMode();
+    }
+  });
+}
+
+// Fetch video for current bird and switch to video mode
+async function fetchAndSwitchToVideo() {
+  const toggleSwitch = document.getElementById('media-toggle-switch');
+  
+  if (!birdInfo || !birdInfo.speciesCode) {
+    log('No bird info available for video fetch');
+    if (toggleSwitch) toggleSwitch.checked = false;
+    return;
+  }
+  
+  // Show loading state
+  showVideoLoadingIndicator(false);
+  
+  try {
+    // Request video for current bird from background script
+    const response = await new Promise((resolve) => {
+      chrome.runtime.sendMessage({
+        action: 'getVideoForBird',
+        speciesCode: birdInfo.speciesCode
+      }, (result) => {
+        if (chrome.runtime.lastError) {
+          log(`Error fetching video: ${chrome.runtime.lastError.message}`);
+          resolve(null);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+    
+    if (response && response.videoUrl) {
+      // Store video info in birdInfo
+      birdInfo.videoUrl = response.videoUrl;
+      birdInfo.videographer = response.videographer;
+      birdInfo.videographerUrl = response.videographerUrl;
+      
+      // Create video element
+      await createVideoElement(response.videoUrl);
+      
+      // Update credits to show video credits
+      updateCreditsForVideoMode();
+      
+      // Switch to video mode
+      switchToVideoMode();
+      
+      log('Successfully fetched and switched to video mode');
+    } else {
+      // No video available
+      log('No video available for this bird');
+      if (toggleSwitch) {
+        toggleSwitch.checked = false;
+      }
+      // Could show a toast message here
+    }
+  } catch (error) {
+    log(`Error fetching video: ${error.message}`);
+    if (toggleSwitch) {
+      toggleSwitch.checked = false;
+    }
+  } finally {
+    hideVideoLoadingIndicator();
+  }
+}
+
+// Create video element dynamically
+async function createVideoElement(videoUrl) {
+  const contentContainer = document.getElementById('content-container');
+  const existingVideo = document.querySelector('.background-video');
+  
+  if (existingVideo) {
+    existingVideo.remove();
+  }
+  
+  // Create video element
+  const videoEl = document.createElement('video');
+  videoEl.className = 'background-video hidden';
+  videoEl.loop = true;
+  videoEl.playsInline = true;
+  videoEl.preload = 'metadata';
+  videoEl.poster = birdInfo.imageUrl;
+  videoEl.muted = isMuted;
+  videoEl.volume = isMuted ? 0 : volumeLevel;
+  
+  const source = document.createElement('source');
+  source.src = videoUrl;
+  source.type = 'video/mp4';
+  videoEl.appendChild(source);
+  
+  // Insert at the beginning of content container
+  const firstChild = contentContainer.firstChild;
+  contentContainer.insertBefore(videoEl, firstChild);
+  
+  // Store reference
+  video = videoEl;
+  
+  // Set up video event listeners
+  setupVideoEventListeners(videoEl, () => {
+    // Fallback to image if video fails
+    showPosterImage();
+  });
+  
+  // Initialize VideoVisibilityManager
+  if (videoVisibilityManager) {
+    videoVisibilityManager.destroy();
+  }
+  videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
+  
+  // Wait for video to be ready
+  return new Promise((resolve) => {
+    videoEl.addEventListener('canplay', () => resolve(), { once: true });
+    videoEl.load();
+  });
+}
+
+// Update credits display for video mode
+function updateCreditsForVideoMode() {
+  const credits = document.querySelector('.credits');
+  if (!credits || !birdInfo.videographer) return;
+  
+  // Check if video credit already exists
+  if (credits.querySelector('.credit-item-video')) return;
+  
+  // Find the "via Macaulay Library" credit and insert before it
+  const macaulayCredit = Array.from(credits.querySelectorAll('.credit-item')).find(
+    item => item.textContent.includes('Macaulay Library')
+  );
+  
+  const videoCredit = document.createElement('span');
+  videoCredit.className = 'credit-item credit-item-video';
+  videoCredit.innerHTML = `
+    <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
+    <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
+  `;
+  
+  if (macaulayCredit) {
+    credits.insertBefore(videoCredit, macaulayCredit);
+  }
+}
+
+function switchToPhotoMode() {
+  isShowingVideo = false;
+
+  // Pause video if playing
+  if (video && !video.paused) {
+    video.pause();
+    isPlaying = false;
+  }
+
+  // Show image, hide video
+  showPosterImage();
+
+  // Show audio play button if audio is available
+  const playBtn = document.getElementById('play-button');
+  if (playBtn && audio) {
+    playBtn.style.display = '';
+  }
+  updatePlayPauseButton();
+
+  // Remove play overlay completely
+  const playOverlay = document.querySelector('.video-play-overlay');
+  if (playOverlay) {
+    playOverlay.remove();
+  }
+
+  // Disable VideoVisibilityManager so it doesn't show overlay
+  if (videoVisibilityManager) {
+    videoVisibilityManager.destroy();
+    videoVisibilityManager = null;
+  }
+
+  log('Switched to photo mode');
+}
+
+function switchToVideoMode() {
+  isShowingVideo = true;
+
+  // Stop audio if playing (video has its own audio)
+  if (audio && !audio.paused) {
+    audio.pause();
+    isPlaying = false;
+  }
+
+  // Show video element
+  showVideoElement();
+
+  // Hide audio play button from control strip (video controls are on screen)
+  const playBtn = document.getElementById('play-button');
+  if (playBtn) {
+    playBtn.style.display = 'none';
+  }
+
+  // Reinitialize VideoVisibilityManager if needed
+  if (!videoVisibilityManager && video) {
+    videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
+  }
+
+  // Check autoplay setting and play video if enabled
+  chrome.storage.sync.get(['autoPlay'], (result) => {
+    const shouldAutoPlay = result.autoPlay !== false; // Default to true
+    if (shouldAutoPlay && video) {
+      playVideo();
+    }
+  });
+
+  log('Switched to video mode');
 }
 
 // Show poster image, hide video (for paused/ended/unloaded states)

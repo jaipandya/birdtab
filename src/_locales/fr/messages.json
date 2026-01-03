@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "Lecture automatique des chants d'oiseaux",
+    "message": "Lecture automatique des médias",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Joue automatiquement les chants d'oiseaux à chaque nouvel onglet. Les heures silencieuses remplacent ceci quand actives.",
+    "message": "Joue automatiquement les chants d'oiseaux en mode photo ou les vidéos en mode vidéo à chaque nouvel onglet. Les heures silencieuses remplacent ceci quand actives.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Activer pour jouer automatiquement les chants d'oiseaux lors de l'ouverture d'un nouvel onglet",
+    "message": "Activer pour jouer automatiquement les chants d'oiseaux ou les vidéos lors de l'ouverture d'un nouvel onglet",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "Voyez tous les oiseaux que vous avez découverts ! Cliquez ici pour revisiter vos favoris.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Mode Vidéo",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "Basculez entre photos et vidéos ! Activez ceci pour regarder les oiseaux en mouvement avec de magnifiques clips vidéo.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "Paramètres",

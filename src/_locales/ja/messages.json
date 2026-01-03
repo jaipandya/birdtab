@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "鳥の鳴き声を自動再生",
+    "message": "メディアを自動再生",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "新しいタブを開くたびに鳥の鳴き声を自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
+    "message": "新しいタブを開くたびに、フォトモードでは鳥の鳴き声を、ビデオモードではビデオを自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "新しいタブを開いたときに鳥の鳴き声を自動再生するよう有効にする",
+    "message": "新しいタブを開いたときに鳥の鳴き声またはビデオを自動再生するよう有効にする",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "発見したすべての鳥を見よう！ここをクリックしてお気に入りを再訪できます。",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "ビデオモード",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "写真とビデオを切り替えよう！これをオンにして、美しいビデオクリップで鳥の動きを観察しましょう。",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "設定",

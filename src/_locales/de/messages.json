@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "Vogelrufe automatisch abspielen",
+    "message": "Medien automatisch abspielen",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Vogelgesänge automatisch bei jedem neuen Tab abspielen. Ruhezeiten überschreiben dies wenn aktiv.",
+    "message": "Vogelgesänge im Fotomodus oder Videos im Videomodus automatisch bei jedem neuen Tab abspielen. Ruhezeiten überschreiben dies wenn aktiv.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Aktivieren, um Vogelrufe automatisch beim Öffnen eines neuen Tabs abzuspielen",
+    "message": "Aktivieren, um Vogelrufe oder Videos automatisch beim Öffnen eines neuen Tabs abzuspielen",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "Sehen Sie alle Vögel, die Sie entdeckt haben! Klicken Sie hier, um Ihre Favoriten erneut zu besuchen.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Videomodus",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "Wechseln Sie zwischen Fotos und Videos! Schalten Sie um, um Vögel in Bewegung mit wunderschönen Videoclips zu beobachten.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "Einstellungen",

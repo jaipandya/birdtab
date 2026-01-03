@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "تشغيل أصوات الطيور تلقائياً",
+    "message": "تشغيل الوسائط تلقائياً",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "تشغيل أصوات الطيور تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
+    "message": "تشغيل أصوات الطيور في وضع الصورة أو الفيديو في وضع الفيديو تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "تمكين التشغيل التلقائي لأصوات الطيور عند فتح علامة تبويب جديدة",
+    "message": "تمكين التشغيل التلقائي لأصوات الطيور أو الفيديو عند فتح علامة تبويب جديدة",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "شاهد جميع الطيور التي اكتشفتها! انقر هنا لإعادة زيارة المفضلة لديك.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "وضع الفيديو",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "قم بالتبديل بين الصور والفيديو! فعّل هذا لمشاهدة الطيور وهي تتحرك مع مقاطع فيديو جميلة.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "الإعدادات",

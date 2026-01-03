@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "自动播放鸟鸣",
+    "message": "自动播放媒体",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "每次打开新标签页时自动播放鸟鸣。安静时间激活时将覆盖此设置。",
+    "message": "每次打开新标签页时，在照片模式下自动播放鸟鸣，在视频模式下自动播放视频。安静时间激活时将覆盖此设置。",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "启用后在打开新标签页时自动播放鸟鸣",
+    "message": "启用后在打开新标签页时自动播放鸟鸣或视频",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "查看您发现的所有鸟类！点击这里重温您的收藏。",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "视频模式",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "在照片和视频之间切换！开启此功能，观看精美的鸟类视频片段。",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "设置",

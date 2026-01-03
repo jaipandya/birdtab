@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "Reproducir cantos automáticamente",
+    "message": "Reproducir medios automáticamente",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Reproducir cantos de aves automáticamente con cada nueva pestaña. Las horas silenciosas anularán esto cuando estén activas.",
+    "message": "Reproducir cantos de aves en modo foto o videos en modo video automáticamente con cada nueva pestaña. Las horas silenciosas anularán esto cuando estén activas.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Habilitar para reproducir automáticamente cantos de aves al abrir una nueva pestaña",
+    "message": "Habilitar para reproducir automáticamente cantos de aves o videos al abrir una nueva pestaña",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "¡Mira todas las aves que has descubierto! Haz clic aquí para revisitar tus favoritos.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Modo Video",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "¡Cambia entre fotos y videos! Actívalo para ver pájaros en movimiento con hermosos clips de video.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "Configuración",

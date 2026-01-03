@@ -808,6 +808,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     })();
     return true; // Indicates that the response is asynchronous
+  } else if (request.action === 'getVideoForBird') {
+    // Fetch video for a specific bird (on-demand, for mode toggle)
+    (async () => {
+      try {
+        log(`Fetching video for species: ${request.speciesCode}`);
+        const videoInfo = await getMacaulayVideo(request.speciesCode);
+        if (videoInfo && videoInfo.videoUrl) {
+          sendResponse({
+            videoUrl: videoInfo.videoUrl,
+            videographer: videoInfo.videographer,
+            videographerUrl: videoInfo.videographerUrl
+          });
+        } else {
+          sendResponse({ error: 'No video available' });
+        }
+      } catch (error) {
+        log(`Error fetching video: ${error.message}`);
+        sendResponse({ error: error.message });
+      }
+    })();
+    return true;
   }
 });
 

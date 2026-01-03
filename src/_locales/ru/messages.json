@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "Автовоспроизведение птичьих голосов",
+    "message": "Автовоспроизведение медиа",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Автоматически воспроизводить песни птиц с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
+    "message": "Автоматически воспроизводить голоса птиц в режиме фото или видео в режиме видео с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Включить автоматическое воспроизведение птичьих голосов при открытии новой вкладки",
+    "message": "Включить автоматическое воспроизведение голосов птиц или видео при открытии новой вкладки",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "Посмотрите всех обнаруженных птиц! Нажмите здесь, чтобы вернуться к избранным.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Режим видео",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "Переключайтесь между фото и видео! Включите это, чтобы наблюдать за птицами в движении с красивыми видеоклипами.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "Настройки",

@@ -28,7 +28,7 @@ import { log } from './logger.js';
 
 // Tour version - increment when adding new features to show tour again
 // Version history:
-// 1 - Initial tour with Settings, History, Quiz, Refresh, Audio
+// 1 - Initial tour with Video Mode, Settings, History, Quiz, Refresh, Audio
 const TOUR_VERSION = 1;
 
 // Feature spotlights for existing users
@@ -52,6 +52,16 @@ const TOUR_STEPS = [
     fallbackDescription: 'Let us show you around! This quick tour will help you discover all the features that make your birding experience special.',
     position: 'center',
     isWelcome: true
+  },
+  {
+    id: 'videoToggle',
+    targetSelector: '.media-toggle-container, .media-toggle',
+    icon: 'images/svg/video.svg',
+    titleKey: 'tourVideoToggleTitle',
+    descriptionKey: 'tourVideoToggleDescription',
+    fallbackTitle: 'Video Mode',
+    fallbackDescription: 'Switch between photos and videos! Toggle this to watch birds in motion with beautiful video clips.',
+    position: 'top'
   },
   {
     id: 'settings',

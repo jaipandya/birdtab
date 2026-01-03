@@ -100,15 +100,15 @@
     "description": "Help text for region selection"
   },
   "autoPlayBirdCalls": {
-    "message": "Auto-play bird calls",
+    "message": "Auto-play media",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Play bird songs automatically with each new tab. Quiet hours will override this when active.",
+    "message": "Automatically play bird calls in photo mode or videos in video mode with each new tab. Quiet hours will override this when active.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Enable to automatically play bird calls when you open a new tab",
+    "message": "Enable to automatically play bird calls or videos when you open a new tab",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -802,6 +802,14 @@
   "tourHistoryDescription": {
     "message": "See all the birds you've discovered! Click here to revisit your favorites and explore your birding journey.",
     "description": "Feature tour: history button description"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Video Mode",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "Switch between photos and videos! Toggle this to watch birds in motion with beautiful video clips.",
+    "description": "Feature tour: video toggle description"
   },
   "tourSettingsTitle": {
     "message": "Settings",

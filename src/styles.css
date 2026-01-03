@@ -879,6 +879,96 @@ p {
   opacity: 1;
 }
 
+/* Media Toggle Switch (Video/Photo) */
+.media-toggle-container {
+  margin-left: 0.25rem;
+}
+
+.media-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.media-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.media-toggle-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  overflow: hidden;
+}
+
+.media-toggle-slider:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.media-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 20px;
+  left: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.media-toggle input:checked + .media-toggle-slider::before {
+  transform: translateX(26px);
+}
+
+.media-toggle-icon {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.media-toggle-icon img {
+  width: 12px;
+  height: 12px;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+/* Photo icon - active (dark) when unchecked */
+.media-toggle-photo img {
+  filter: brightness(0);
+  opacity: 0.7;
+}
+
+/* Video icon - inactive (light) when unchecked */
+.media-toggle-video img {
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+}
+
+/* When checked (video mode): flip the states */
+.media-toggle input:checked + .media-toggle-slider .media-toggle-photo img {
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+}
+
+.media-toggle input:checked + .media-toggle-slider .media-toggle-video img {
+  filter: brightness(0);
+  opacity: 0.7;
+}
+
 .icon {
   width: 16px;
   height: 16px;
