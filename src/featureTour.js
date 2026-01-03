@@ -535,8 +535,18 @@ function renderStep(stepIndex) {
   
   // Create tooltip content
   const tooltip = createTooltip();
-  const title = getMessage(step.titleKey, step.fallbackTitle);
-  const description = getMessage(step.descriptionKey, step.fallbackDescription);
+
+  // For audio step, use different text if we're targeting the volume button (video mode)
+  let title, description;
+  if (step.id === 'audio' && targetElement && targetElement.id === 'volume-button') {
+    // Video mode: targeting volume control
+    title = getMessage('tourVolumeTitle', 'Volume Control');
+    description = getMessage('tourVolumeDescription', 'Adjust the volume to your preference. Videos include both visuals and sound for a complete birding experience.');
+  } else {
+    // Normal case: use the step's configured messages
+    title = getMessage(step.titleKey, step.fallbackTitle);
+    description = getMessage(step.descriptionKey, step.fallbackDescription);
+  }
   
   const isWelcome = step.isWelcome;
   const isComplete = step.isComplete;

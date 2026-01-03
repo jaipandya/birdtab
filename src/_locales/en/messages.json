@@ -823,6 +823,14 @@
     "message": "Listen to beautiful bird songs! Tap to play or pause the bird's call and immerse yourself in the sounds of nature.",
     "description": "Feature tour: audio controls description"
   },
+  "tourVolumeTitle": {
+    "message": "Volume Control",
+    "description": "Feature tour: volume controls title (video mode)"
+  },
+  "tourVolumeDescription": {
+    "message": "Adjust the volume to your preference. Videos include both visuals and sound for a complete birding experience.",
+    "description": "Feature tour: volume controls description (video mode)"
+  },
   "tourRefreshTitle": {
     "message": "Discover New Birds",
     "description": "Feature tour: refresh button title"
