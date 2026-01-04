@@ -919,6 +919,14 @@
     "message": "测试您的鸟类识别技能！来一个有趣的问答。",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "播放 / 暂停",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "控制鸟鸣播放。随时点击播放或暂停当前的鸟鸣声。",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "下一步",
     "description": "Feature tour: next button text"

@@ -919,6 +919,14 @@
     "message": "Testen Sie Ihre Vogelidentifikationsfähigkeiten! Machen Sie ein lustiges Quiz.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "Abspielen / Pause",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Steuern Sie die Wiedergabe von Vogelrufen. Klicken Sie, um jederzeit abzuspielen oder zu pausieren.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "Weiter",
     "description": "Feature tour: next button text"

@@ -919,6 +919,14 @@
     "message": "Проверьте свои навыки определения птиц! Пройдите весёлую викторину.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "Воспроизведение / Пауза",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Управляйте воспроизведением голосов птиц. Нажмите, чтобы воспроизвести или поставить на паузу.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "Далее",
     "description": "Feature tour: next button text"

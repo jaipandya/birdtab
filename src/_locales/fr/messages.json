@@ -919,6 +919,14 @@
     "message": "Testez vos compétences d'identification d'oiseaux ! Faites un quiz amusant.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "Lecture / Pause",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Contrôlez la lecture des chants d'oiseaux. Cliquez pour lire ou mettre en pause à tout moment.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "Suivant",
     "description": "Feature tour: next button text"

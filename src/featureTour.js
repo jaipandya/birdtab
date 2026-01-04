@@ -40,7 +40,7 @@ const FEATURE_SPOTLIGHTS = {
 };
 
 // Tour step configuration - ordered left to right as they appear in the UI
-// Button order in UI: Settings, History, Quiz, Refresh, Volume
+// Button order in UI: Settings, History, Quiz, Refresh, Volume, Play/Pause
 const TOUR_STEPS = [
   {
     id: 'welcome',
@@ -111,6 +111,16 @@ const TOUR_STEPS = [
     descriptionKey: 'tourVolumeDescription',
     fallbackTitle: 'Volume Control',
     fallbackDescription: 'Adjust the volume to your preference. Control the sound of bird calls and videos to create your perfect birding experience.',
+    position: 'top'
+  },
+  {
+    id: 'playPause',
+    targetSelector: '#play-button',
+    icon: 'images/svg/play.svg',
+    titleKey: 'tourPlayPauseTitle',
+    descriptionKey: 'tourPlayPauseDescription',
+    fallbackTitle: 'Play / Pause',
+    fallbackDescription: 'Control bird call playback. Click to play or pause the current bird song anytime.',
     position: 'top'
   },
   {
@@ -525,6 +535,26 @@ function getCurrentFeatureStepIndex() {
 }
 
 /**
+ * Check if there are any more valid feature steps after the current one
+ * A valid step is one where the target element exists in the DOM
+ */
+function hasMoreValidFeatureSteps(currentIndex) {
+  for (let i = currentIndex + 1; i < TOUR_STEPS.length; i++) {
+    const step = TOUR_STEPS[i];
+    // Skip complete step - we're only checking feature steps
+    if (step.isComplete) continue;
+    // If step has no target selector, it's valid (like welcome)
+    if (!step.targetSelector) continue;
+    // Check if target element exists
+    const targetElement = findTargetElement(step);
+    if (targetElement) {
+      return true; // Found a valid next feature step
+    }
+  }
+  return false; // No more valid feature steps
+}
+
+/**
  * Render the current tour step
  */
 function renderStep(stepIndex) {
@@ -551,18 +581,26 @@ function renderStep(stepIndex) {
   const isWelcome = step.isWelcome;
   const isComplete = step.isComplete;
   const isFirstFeatureStep = currentStep === 1;
-  const isLastFeatureStep = stepIndex === TOUR_STEPS.length - 2; // Before complete step
+  // Check if this is the last feature step by looking for more valid steps ahead
+  const isLastFeatureStep = !isWelcome && !isComplete && !hasMoreValidFeatureSteps(stepIndex);
   
-  // Build progress dots (only for feature steps, not welcome/complete)
-  const featureSteps = TOUR_STEPS.filter(s => !s.isWelcome && !s.isComplete);
-  const currentFeatureIndex = getCurrentFeatureStepIndex();
+  // Build progress dots (only for visible feature steps, not welcome/complete)
+  // Filter to only include steps with present target elements
+  const visibleFeatureSteps = TOUR_STEPS.filter(s => {
+    if (s.isWelcome || s.isComplete) return false;
+    if (!s.targetSelector) return true; // No selector means always visible
+    return findTargetElement(s) !== null;
+  });
+  
+  // Calculate the current step's position among visible steps
+  const currentVisibleIndex = visibleFeatureSteps.findIndex(s => s.id === step.id);
   
   let progressHtml = '';
   if (!isWelcome && !isComplete) {
     progressHtml = `
       <div class="tour-progress">
-        ${featureSteps.map((_, i) => `
-          <span class="tour-progress-dot ${i === currentFeatureIndex ? 'active' : ''} ${i < currentFeatureIndex ? 'completed' : ''}"></span>
+        ${visibleFeatureSteps.map((_, i) => `
+          <span class="tour-progress-dot ${i === currentVisibleIndex ? 'active' : ''} ${i < currentVisibleIndex ? 'completed' : ''}"></span>
         `).join('')}
       </div>
     `;

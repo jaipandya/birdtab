@@ -919,6 +919,14 @@
     "message": "鳥の識別スキルをテストしよう！楽しいクイズに挑戦。",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "再生 / 一時停止",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "鳥の鳴き声の再生を操作できます。いつでもクリックして再生または一時停止できます。",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "次へ",
     "description": "Feature tour: next button text"

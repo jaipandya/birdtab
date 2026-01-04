@@ -919,6 +919,14 @@
     "message": "Test your bird identification skills! Take a fun quiz to see how well you know your feathered friends.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "Play / Pause",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Control bird call playback. Click to play or pause the current bird song anytime.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "Next",
     "description": "Feature tour: next button text"

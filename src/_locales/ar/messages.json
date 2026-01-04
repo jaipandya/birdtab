@@ -919,6 +919,14 @@
     "message": "اختبر مهاراتك في التعرف على الطيور! خذ اختبارًا ممتعًا.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "تشغيل / إيقاف",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "تحكم في تشغيل أصوات الطيور. انقر للتشغيل أو الإيقاف في أي وقت.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "التالي",
     "description": "Feature tour: next button text"

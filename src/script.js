@@ -8,7 +8,7 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
-import { startTour, isTourCompleted } from './featureTour.js';
+import { startTour, isTourCompleted, getUnseenFeatureSpotlights, showFeatureSpotlight } from './featureTour.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -2901,6 +2901,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initializePage();
 
   // Check if feature tour should be shown (for new users after onboarding)
+  // Or if feature spotlights should be shown (for existing users with new features)
   try {
     const tourCompleted = await isTourCompleted();
     if (!tourCompleted) {
@@ -2909,6 +2910,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       setTimeout(() => {
         startTour();
       }, 1500);
+    } else {
+      // Check for new feature spotlights for existing users
+      const unseenSpotlights = await getUnseenFeatureSpotlights();
+      if (unseenSpotlights.length > 0) {
+        log(`Found ${unseenSpotlights.length} unseen feature spotlights`);
+        // Show the first unseen spotlight after a delay
+        setTimeout(() => {
+          const firstSpotlight = unseenSpotlights[0];
+          showFeatureSpotlight(firstSpotlight.featureKey);
+        }, 1500);
+      }
     }
   } catch (error) {
     log('Error checking feature tour status: ' + error.message);

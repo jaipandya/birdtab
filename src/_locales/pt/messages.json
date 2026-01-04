@@ -919,6 +919,14 @@
     "message": "Teste suas habilidades de identificação de aves! Faça um quiz divertido.",
     "description": "Feature tour: quiz button description"
   },
+  "tourPlayPauseTitle": {
+    "message": "Reproduzir / Pausar",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Controle a reprodução dos cantos das aves. Clique para reproduzir ou pausar a qualquer momento.",
+    "description": "Feature tour: play/pause button description"
+  },
   "tourNextButton": {
     "message": "Próximo",
     "description": "Feature tour: next button text"
