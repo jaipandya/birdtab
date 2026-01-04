@@ -315,6 +315,8 @@ function updateLoadingMessage() {
 // Note: No separate transaction here - this is captured as part of the page-load transaction
 // to reduce Sentry span usage (1000+ daily users × new tabs)
 const MAX_RETRIES = 1; // Reduced to 1 retry to minimize API load
+const IMAGE_MAX_RETRIES = 3; // More retries for image loading (transient network issues)
+const IMAGE_RETRY_DELAY = 2000; // 2 seconds between image retry attempts
 
 /**
  * Schedule a retry for getBirdInfo after a delay.
@@ -1007,11 +1009,27 @@ function getReviewPromptHTML() {
 }
 
 // New function to set image source and show it when loaded
-function setImageSource(imageUrl) {
+// Includes retry logic for transient network failures
+function setImageSource(imageUrl, retryCount = 0) {
   const img = document.querySelector('.background-image');
+  if (!img) return;
+  
   img.onload = function () {
     img.classList.remove('hidden');
   };
+  
+  img.onerror = function () {
+    if (retryCount < IMAGE_MAX_RETRIES) {
+      log(`Image load failed, retrying (${retryCount + 1}/${IMAGE_MAX_RETRIES})...`);
+      setTimeout(() => {
+        img.src = '';
+        setImageSource(imageUrl, retryCount + 1);
+      }, IMAGE_RETRY_DELAY);
+    } else {
+      log('Image failed to load after all retries');
+    }
+  };
+  
   img.src = imageUrl;
 }
 
@@ -2504,6 +2522,13 @@ function showPosterImage() {
   if (posterEl) {
     posterEl.classList.remove('hidden');
     posterEl.classList.remove('video-fallback');
+    
+    // Check if image failed to load (naturalWidth is 0 for failed/unloaded images)
+    // and retry loading if we have the URL available
+    if (posterEl.naturalWidth === 0 && birdInfo && birdInfo.imageUrl) {
+      log('Image not loaded, attempting to reload');
+      setImageSource(birdInfo.imageUrl);
+    }
   }
   log('Showing poster image');
 }
