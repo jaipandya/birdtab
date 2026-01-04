@@ -2706,6 +2706,6 @@ html[dir="rtl"] .share-menu-social {
 }
 
 .setting-label-with-icon .pro-badge {
-  margin-left: auto;
+  margin-left: 0;
   margin-right: 0;
 }
