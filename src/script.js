@@ -1977,11 +1977,19 @@ function pauseVideo() {
   }
 }
 
+// Track if click-to-pause is already set up to avoid duplicate listeners
+let clickToPauseSetup = false;
+
 // Set up click-to-pause functionality for video mode
 // Clicking anywhere on the page (except interactive elements) will pause the video
 function setupClickToPause() {
+  // Prevent duplicate event listeners
+  if (clickToPauseSetup) return;
+  
   const contentContainer = document.getElementById('content-container');
   if (!contentContainer) return;
+
+  clickToPauseSetup = true;
 
   contentContainer.addEventListener('click', function (e) {
     // Only handle clicks when video is playing
@@ -2143,7 +2151,11 @@ async function createVideoElement(videoUrl) {
   
   // Wait for video to be ready
   return new Promise((resolve) => {
-    videoEl.addEventListener('canplay', () => resolve(), { once: true });
+    videoEl.addEventListener('canplay', () => {
+      // Setup video controls (progress bar) once video is ready
+      setupVideoControls();
+      resolve();
+    }, { once: true });
     videoEl.load();
   });
 }
@@ -2229,6 +2241,9 @@ function switchToVideoMode() {
   if (!videoVisibilityManager && video) {
     videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
   }
+
+  // Setup click-to-pause functionality (enables clicking empty areas to pause video)
+  setupClickToPause();
 
   // Check autoplay setting and play video if enabled
   chrome.storage.sync.get(['autoPlay'], (result) => {

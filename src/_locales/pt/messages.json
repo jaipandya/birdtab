@@ -866,5 +866,21 @@
   "errorResettingTour": {
     "message": "Erro ao reiniciar o tour de recursos",
     "description": "Error message when tour reset fails"
+  },
+  "proBadge": {
+    "message": "Pro",
+    "description": "Badge text for premium features"
+  },
+  "highResImages": {
+    "message": "Imagens de Alta Resolução",
+    "description": "Label for high-resolution images feature"
+  },
+  "highResHelpText": {
+    "message": "Exibir fotos de pássaros em ultra alta resolução de 2400px para detalhes cristalinos.",
+    "description": "Help text for high-resolution images setting"
+  },
+  "highResTooltip": {
+    "message": "Ativar para mostrar imagens de alta resolução",
+    "description": "Tooltip for high-resolution images toggle"
   }
 }

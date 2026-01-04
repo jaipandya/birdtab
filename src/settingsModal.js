@@ -84,6 +84,7 @@ class SettingsModal {
               <label for="modal-region" class="setting-label-with-icon">
                 <img src="images/svg/location.svg" alt="" width="18" height="18" class="setting-icon">
                 <span data-i18n="birdingRegion">Birding Region</span>
+                <span class="pro-badge" data-i18n="proBadge">Pro</span>
               </label>
               <select id="modal-region" data-i18n-title="regionTooltip" title="Choose the region where you'd like to see birds from. You'll still see birds from around the world!">
                 <!-- Options will be populated by JavaScript -->
@@ -145,11 +146,29 @@ class SettingsModal {
                   <span class="setting-label-with-icon">
                     <img src="images/svg/video.svg" alt="" width="18" height="18" class="setting-icon">
                     <span data-i18n="videoMode">Video Mode</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
                   </span>
                   <p class="help-text" id="modal-video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available. Videos include sound.</p>
                 </div>
                 <label class="switch" data-i18n-title="videoModeTooltip" title="Enable to show bird videos instead of photos">
                   <input type="checkbox" id="modal-video-mode" aria-describedby="modal-video-mode-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/camera.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="highResImages">High-Resolution Images</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                  </span>
+                  <p class="help-text" id="modal-high-res-help" data-i18n="highResHelpText">Display ultra high-resolution 2400px bird photos for crystal-clear detail.</p>
+                </div>
+                <label class="switch" data-i18n-title="highResTooltip" title="Enable to show high-resolution images">
+                  <input type="checkbox" id="modal-high-res" aria-describedby="modal-high-res-help">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -177,6 +196,7 @@ class SettingsModal {
     this.quietHoursCheckbox = document.getElementById('modal-quiet-hours');
     this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
     this.videoModeCheckbox = document.getElementById('modal-video-mode');
+    this.highResCheckbox = document.getElementById('modal-high-res');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
     // Populate the region select
@@ -261,6 +281,9 @@ class SettingsModal {
     if (this.videoModeCheckbox) {
       this.videoModeCheckbox.addEventListener('change', () => this.saveSettings());
     }
+    if (this.highResCheckbox) {
+      this.highResCheckbox.addEventListener('change', () => this.saveSettings());
+    }
     
     // Make entire toggle container rows clickable
     this.bindToggleContainerClicks();
@@ -271,19 +294,19 @@ class SettingsModal {
    */
   bindToggleContainerClicks() {
     const toggleContainers = this.modal.querySelectorAll('.toggle-container');
-    
+
     toggleContainers.forEach(container => {
       container.style.cursor = 'pointer';
-      
+
       container.addEventListener('click', async (e) => {
         // Don't toggle if clicking directly on the switch or checkbox
         if (e.target.closest('.switch') || e.target.tagName === 'INPUT') {
           return;
         }
-        
+
         const checkbox = container.querySelector('input[type="checkbox"]');
         if (!checkbox) return;
-        
+
         // Special handling for productivity toggle (requires permission)
         if (checkbox.id === 'modal-enable-productivity') {
           checkbox.checked = !checkbox.checked;
@@ -347,7 +370,7 @@ class SettingsModal {
       return;
     }
 
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode'], (result) => {
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
 
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
@@ -363,6 +386,9 @@ class SettingsModal {
       }
       if (this.videoModeCheckbox) {
         this.videoModeCheckbox.checked = result.videoMode || false;
+      }
+      if (this.highResCheckbox) {
+        this.highResCheckbox.checked = result.highResImages || false;
       }
     });
   }
@@ -389,6 +415,9 @@ class SettingsModal {
     }
     if (this.videoModeCheckbox) {
       settings.videoMode = this.videoModeCheckbox.checked;
+    }
+    if (this.highResCheckbox) {
+      settings.highResImages = this.highResCheckbox.checked;
     }
 
     chrome.storage.sync.set(settings, () => {

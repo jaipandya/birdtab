@@ -866,5 +866,21 @@
   "errorResettingTour": {
     "message": "خطأ في إعادة تعيين جولة الميزات",
     "description": "Error message when tour reset fails"
+  },
+  "proBadge": {
+    "message": "Pro",
+    "description": "Badge text for premium features"
+  },
+  "highResImages": {
+    "message": "صور عالية الدقة",
+    "description": "Label for high-resolution images feature"
+  },
+  "highResHelpText": {
+    "message": "عرض صور طيور عالية الدقة بحجم 2400 بكسل للحصول على تفاصيل واضحة للغاية.",
+    "description": "Help text for high-resolution images setting"
+  },
+  "highResTooltip": {
+    "message": "تمكين لإظهار الصور عالية الدقة",
+    "description": "Tooltip for high-resolution images toggle"
   }
 }

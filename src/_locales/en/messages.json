@@ -866,5 +866,21 @@
   "errorResettingTour": {
     "message": "Error resetting the feature tour",
     "description": "Error message when tour reset fails"
+  },
+  "proBadge": {
+    "message": "Pro",
+    "description": "Badge text for premium features"
+  },
+  "highResImages": {
+    "message": "High-Resolution Images",
+    "description": "Label for high-resolution images feature"
+  },
+  "highResHelpText": {
+    "message": "Display ultra high-resolution 2400px bird photos for crystal-clear detail.",
+    "description": "Help text for high-resolution images setting"
+  },
+  "highResTooltip": {
+    "message": "Enable to show high-resolution images",
+    "description": "Tooltip for high-resolution images toggle"
   }
 }

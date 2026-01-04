@@ -82,6 +82,19 @@ async function getMacaulayImage(speciesCode) {
   const cachedData = await getCachedData(cacheKey);
   if (cachedData) {
     log(`[CACHE HIT]: ${speciesCode}`);
+
+    // Apply high-res transformation to cached data
+    try {
+      const settings = await chrome.storage.sync.get(['highResImages']);
+      if (settings.highResImages && cachedData.imageUrl) {
+        // Replace 1200 only at the end of the URL (before query params or end of string)
+        cachedData.imageUrl = cachedData.imageUrl.replace(/1200(\?|$)/, '2400$1');
+        log(`[HIGH-RES CACHE]: Using 2400px cached image for ${speciesCode}`);
+      }
+    } catch (error) {
+      log(`[HIGH-RES ERROR]: Failed to check high-res setting for cached data: ${error.message}`);
+    }
+
     return cachedData;
   } else {
     log(`[CACHE MISS]: ${speciesCode}`);
@@ -113,8 +126,22 @@ async function getMacaulayImage(speciesCode) {
       log(`[PORTRAIT FALLBACK]: No landscape image found for ${speciesCode}, using first available`);
     }
 
+    // Check if high-resolution images are enabled
+    let imageUrl = image.mediaUrl;
+    try {
+      const settings = await chrome.storage.sync.get(['highResImages']);
+      if (settings.highResImages) {
+        // Replace 1200 with 2400 only at the end of the URL (before query params or end of string)
+        imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
+        log(`[HIGH-RES]: Using 2400px image for ${speciesCode}`);
+      }
+    } catch (error) {
+      log(`[HIGH-RES ERROR]: Failed to check high-res setting: ${error.message}`);
+      // Continue with standard resolution on error
+    }
+
     const imageInfo = {
-      imageUrl: image.mediaUrl,
+      imageUrl: imageUrl,
       photographer: image.userDisplayName,
       photographerUrl: `https://macaulaylibrary.org/asset/${image.assetId}`
     };
@@ -349,13 +376,26 @@ async function getRandomCachedBirdInfo() {
       const videoData = items[`video_${speciesCode}`];
       const videoInfo = videoData?.value || null;
 
+      // Apply high-res transformation to cached image URL
+      let imageUrl = imageData.value.imageUrl;
+      try {
+        const settings = await chrome.storage.sync.get(['highResImages']);
+        if (settings.highResImages && imageUrl) {
+          // Replace 1200 with 2400 only at the end of the URL (before query params or end of string)
+          imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
+          log(`[HIGH-RES RANDOM CACHE]: Using 2400px image for ${speciesCode}`);
+        }
+      } catch (error) {
+        log(`[HIGH-RES ERROR]: Failed to check high-res setting for random cached bird: ${error.message}`);
+      }
+
       // Reconstruct complete bird info from cached data
       const birdInfo = {
         name: bird.primaryComName,
         scientificName: bird.scientificName,
         location: 'Cached', // We don't know the original region
         ebirdUrl: `https://ebird.org/species/${bird.speciesCode}`,
-        imageUrl: imageData.value.imageUrl,
+        imageUrl: imageUrl,
         photographer: imageData.value.photographer,
         photographerUrl: imageData.value.photographerUrl,
         mediaUrl: audioInfo?.mediaUrl,

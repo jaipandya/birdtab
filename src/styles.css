@@ -1776,8 +1776,8 @@ p {
 
 .settings-modal .setting {
   margin-bottom: 4px;
-  padding: 4px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   border: 1px solid transparent;
 }
@@ -2532,4 +2532,30 @@ html[dir="rtl"] .share-menu-social {
     width: 100%;
     min-width: auto;
   }
+}
+
+/* Pro Badge Styles - Subtle and Minimal */
+.pro-badge {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background: transparent;
+  color: var(--modal-text-secondary);
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-left: 6px;
+  user-select: none;
+  opacity: 0.7;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.setting-label-with-icon .pro-badge {
+  margin-left: auto;
+  margin-right: 0;
 }
