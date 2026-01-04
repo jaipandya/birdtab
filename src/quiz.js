@@ -133,6 +133,12 @@ class QuizMode {
       // Wait for first image to load before displaying question
       await this.ensureFirstImageLoaded();
 
+      // Guard: Check if quiz was closed during image loading
+      if (!this.isActive) {
+        log('startQuiz aborted: quiz was closed during initialization');
+        return;
+      }
+
       // Display first question
       await this.displayQuestion();
     } catch (error) {
@@ -638,15 +644,41 @@ class QuizMode {
   }
 
   async displayQuestion() {
+    // Guard: Check if quiz is still active and container exists
+    if (!this.isActive || !this.quizContainer || !document.body.contains(this.quizContainer)) {
+      log('displayQuestion aborted: quiz is no longer active or container removed');
+      return;
+    }
+
+    // Guard: Check if questions array is valid
+    if (!this.questions || this.currentQuestion >= this.questions.length) {
+      log('displayQuestion aborted: no valid question at current index');
+      return;
+    }
+
     const question = this.questions[this.currentQuestion];
+    if (!question) {
+      log('displayQuestion aborted: question is null');
+      return;
+    }
+
     this.selectedAnswer = null;
     this.hasAnswered = false;
 
-    // Update progress
+    // Update progress - with null checks for DOM elements
     const progressPercent = ((this.currentQuestion + 1) / 10) * 100;
-    document.getElementById('quiz-progress-fill').style.width = `${progressPercent}%`;
-    document.getElementById('quiz-current').textContent = this.currentQuestion + 1;
-    document.getElementById('quiz-score').textContent = this.score;
+    const progressFill = document.getElementById('quiz-progress-fill');
+    const currentEl = document.getElementById('quiz-current');
+    const scoreEl = document.getElementById('quiz-score');
+    
+    if (!progressFill || !currentEl || !scoreEl) {
+      log('displayQuestion aborted: required DOM elements not found');
+      return;
+    }
+    
+    progressFill.style.width = `${progressPercent}%`;
+    currentEl.textContent = this.currentQuestion + 1;
+    scoreEl.textContent = this.score;
 
     // Update question text (clear any loading state)
     const questionText = document.getElementById('quiz-question-text');
@@ -656,6 +688,10 @@ class QuizMode {
 
     // Update next button text
     const nextBtn = document.getElementById('quiz-next');
+    if (!nextBtn) {
+      log('displayQuestion aborted: next button not found');
+      return;
+    }
     if (this.currentQuestion === 9) {
       nextBtn.textContent = chrome.i18n.getMessage('quizShowResults');
     } else {
@@ -681,6 +717,10 @@ class QuizMode {
 
     // Show skeleton loading indicator for image
     const imageContainer = document.getElementById('quiz-image-container');
+    if (!imageContainer) {
+      log('displayQuestion aborted: image container not found');
+      return;
+    }
     imageContainer.classList.add('loading');
     imageContainer.innerHTML = `
       <div class="image-loading-overlay">
@@ -701,6 +741,10 @@ class QuizMode {
     const img = new Image();
 
     img.onload = () => {
+      // Guard: Check if quiz is still active and container exists
+      if (!this.isActive || !document.body.contains(imageContainer)) {
+        return;
+      }
       imageContainer.classList.remove('loading');
       imageContainer.innerHTML = '';
       const imageElement = document.createElement('img');
@@ -711,8 +755,18 @@ class QuizMode {
     };
 
     img.onerror = async () => {
+      // Guard: Check if quiz is still active
+      if (!this.isActive) {
+        return;
+      }
+      
       // If image fails to load, try to fetch a new one
       const imageInfo = await this.loadBirdImageFromCDN(question.bird.speciesCode);
+      
+      // Guard again after async operation
+      if (!this.isActive || !document.body.contains(imageContainer)) {
+        return;
+      }
       
       if (!imageInfo?.imageUrl) {
         // Show a friendly error message instead of default image
@@ -724,6 +778,10 @@ class QuizMode {
 
       const retryImg = new Image();
       retryImg.onload = () => {
+        // Guard: Check if quiz is still active and container exists
+        if (!this.isActive || !document.body.contains(imageContainer)) {
+          return;
+        }
         imageContainer.classList.remove('loading');
         imageContainer.innerHTML = '';
         const imageElement = document.createElement('img');
@@ -733,17 +791,23 @@ class QuizMode {
         imageContainer.appendChild(imageElement);
 
         // Update the question data with new image
-        question.bird.imageUrl = newImageUrl;
+        if (this.questions && this.questions[this.currentQuestion]) {
+          question.bird.imageUrl = newImageUrl;
 
-        // Update photographer info if we got new info
-        if (imageInfo.photographer) {
-          question.bird.photographer = imageInfo.photographer;
-          question.bird.photographerUrl = imageInfo.photographerUrl;
-          this.updateImageMeta(question.bird);
+          // Update photographer info if we got new info
+          if (imageInfo.photographer) {
+            question.bird.photographer = imageInfo.photographer;
+            question.bird.photographerUrl = imageInfo.photographerUrl;
+            this.updateImageMeta(question.bird);
+          }
         }
       };
 
       retryImg.onerror = () => {
+        // Guard: Check if quiz is still active and container exists
+        if (!this.isActive || !document.body.contains(imageContainer)) {
+          return;
+        }
         // Show a friendly error message instead of default image
         this.showImageLoadError(imageContainer, question.bird.primaryComName);
       };
@@ -755,6 +819,10 @@ class QuizMode {
 
     // Display options with staggered animation
     const optionsContainer = document.getElementById('quiz-options');
+    if (!optionsContainer) {
+      log('displayQuestion aborted: options container not found');
+      return;
+    }
     optionsContainer.innerHTML = '';
 
     question.options.forEach((option, index) => {
@@ -830,6 +898,11 @@ class QuizMode {
 
   submitAnswer() {
     if (this.selectedAnswer === null || this.hasAnswered) return;
+    
+    // Guard: Check if quiz is still active and has valid question
+    if (!this.isActive || !this.questions || !this.questions[this.currentQuestion]) {
+      return;
+    }
 
     const question = this.questions[this.currentQuestion];
     const selectedOption = question.options[this.selectedAnswer];
@@ -854,6 +927,8 @@ class QuizMode {
 
     // Update next button
     const nextBtn = document.getElementById('quiz-next');
+    if (!nextBtn) return;
+    
     if (this.currentQuestion === 9) {
       nextBtn.textContent = chrome.i18n.getMessage('quizShowResults');
     } else {
@@ -863,11 +938,18 @@ class QuizMode {
   }
 
   showAnswerFeedback() {
+    // Guard: Check if quiz is still active
+    if (!this.isActive || !this.questions || !this.questions[this.currentQuestion]) {
+      return;
+    }
+    
     const options = document.querySelectorAll('.quiz-option');
     const question = this.questions[this.currentQuestion];
 
     options.forEach((option, index) => {
       const optionData = question.options[index];
+      if (!optionData) return;
+      
       option.classList.add('disabled');
 
       if (optionData.isCorrect) {
@@ -878,15 +960,28 @@ class QuizMode {
     });
 
     // Update score display
-    document.getElementById('quiz-score').textContent = this.score;
+    const scoreEl = document.getElementById('quiz-score');
+    if (scoreEl) {
+      scoreEl.textContent = this.score;
+    }
   }
 
   async nextQuestion() {
+    // Guard: Check if quiz is still active
+    if (!this.isActive) {
+      log('nextQuestion aborted: quiz is no longer active');
+      return;
+    }
     this.currentQuestion++;
     await this.displayQuestion();
   }
 
   async preloadNextQuestionImage() {
+    // Guard: Check if quiz is still active
+    if (!this.isActive || !this.questions) {
+      return;
+    }
+    
     const nextQuestionIndex = this.currentQuestion + 1;
     if (nextQuestionIndex < this.questions.length && this.questions[nextQuestionIndex] && this.questions[nextQuestionIndex].bird) {
       const nextBird = this.questions[nextQuestionIndex].bird;
@@ -933,6 +1028,12 @@ class QuizMode {
   }
 
   showResults() {
+    // Guard: Check if quiz container still exists
+    if (!this.quizContainer || !document.body.contains(this.quizContainer)) {
+      log('showResults aborted: quiz container no longer exists');
+      return;
+    }
+    
     this.quizContainer.innerHTML = `
       <button class="quiz-close-btn" id="quiz-results-close" aria-label="Close quiz">
         <img src="images/svg/close.svg" alt="Close" width="20" height="20">
@@ -1058,6 +1159,12 @@ class QuizMode {
       this.exitQuiz();
       return;
     }
+    
+    // Prevent multiple exit modals from being created
+    const existingModal = document.querySelector('.quiz-exit-modal');
+    if (existingModal) {
+      return; // Modal already shown
+    }
 
     const exitModal = document.createElement('div');
     exitModal.className = 'quiz-exit-modal';
@@ -1079,6 +1186,10 @@ class QuizMode {
 
     if (!confirmButton || !cancelButton) {
       captureException(new Error('Exit confirmation buttons not found'), { tags: { component: 'QuizMode' } });
+      // Remove the modal if buttons weren't found to prevent it from being stuck
+      if (exitModal && exitModal.parentNode) {
+        document.body.removeChild(exitModal);
+      }
       return;
     }
 
@@ -1097,9 +1208,17 @@ class QuizMode {
         document.body.removeChild(exitModal);
       }
     };
+    
+    // Also allow clicking outside the modal content to cancel
+    const outsideClickHandler = (e) => {
+      if (e.target === exitModal) {
+        cancelHandler(e);
+      }
+    };
 
     confirmButton.addEventListener('click', confirmHandler);
     cancelButton.addEventListener('click', cancelHandler);
+    exitModal.addEventListener('click', outsideClickHandler);
 
     // Note: These don't need to be tracked in this.eventListeners since the modal will be removed
   }
@@ -1327,9 +1446,20 @@ class QuizMode {
 
     // Add click outside to close functionality
     const outsideClickHandler = (e) => {
+      // Guard: Check if quiz is still active
+      if (!this.isActive) {
+        return;
+      }
+      
+      // Check if click is on the close button (already handled separately)
+      const closeButton = document.getElementById('quiz-close');
+      if (closeButton && (e.target === closeButton || closeButton.contains(e.target))) {
+        return; // Let the close button handler deal with this
+      }
+      
       // Check if click is outside the quiz container
-      const quizContainer = document.querySelector('.quiz-container');
-      if (quizContainer && !quizContainer.contains(e.target)) {
+      const quizContainerInner = document.querySelector('.quiz-container');
+      if (quizContainerInner && !quizContainerInner.contains(e.target)) {
         // If on results page, exit directly, otherwise show confirmation
         if (this.currentQuestion >= 9 && this.answers.length === 10) {
           this.exitQuiz();
