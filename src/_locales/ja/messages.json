@@ -483,6 +483,78 @@
     "message": "クイズを終了",
     "description": "Button text to exit quiz mode"
   },
+  "quizShareResults": {
+    "message": "結果を共有",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "鳥クイズの結果",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareText": {
+    "message": "BirdTabの鳥クイズで{score}/10を獲得しました！",
+    "description": "Text used when sharing quiz results"
+  },
+  "quizShareCTA": {
+    "message": "birdtab.appであなたの鳥の知識をテストしよう",
+    "description": "Call to action text shown on shared quiz image"
+  },
+  "quizShareGenerating": {
+    "message": "生成中...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "生成に失敗しました",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "結果を共有",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "画像をダウンロード",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "ダウンロード完了！",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "クリップボードにコピー",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "コピーしました！",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "コピーに失敗しました",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "結果に戻る",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "/ 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "$1 正解",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "$1 不正解",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "鳥類識別結果",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "不明な鳥",
+    "description": "Fallback text for unknown bird name"
+  },
   "quizExitConfirmTitle": {
     "message": "クイズを終了しますか？",
     "description": "Title for quiz exit confirmation modal"
@@ -568,7 +640,7 @@
     "description": "Question review section title"
   },
   "correctAnswer": {
-    "message": "正解：{answer}",
+    "message": "正解：$1",
     "description": "Correct answer display"
   },
   "correct": {

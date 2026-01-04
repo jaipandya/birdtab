@@ -483,6 +483,78 @@
     "message": "退出测验",
     "description": "Button text to exit quiz mode"
   },
+  "quizShareResults": {
+    "message": "分享结果",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "鸟类测验结果",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareText": {
+    "message": "我在BirdTab鸟类测验中获得了{score}/10分！",
+    "description": "Text used when sharing quiz results"
+  },
+  "quizShareCTA": {
+    "message": "在birdtab.app测试你的鸟类知识",
+    "description": "Call to action text shown on shared quiz image"
+  },
+  "quizShareGenerating": {
+    "message": "生成中...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "生成失败",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "分享你的结果",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "下载图片",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "已下载！",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "复制到剪贴板",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "已复制！",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "复制失败",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "返回结果",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "/ 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "$1 正确",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "$1 错误",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "鸟类识别结果",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "未知鸟类",
+    "description": "Fallback text for unknown bird name"
+  },
   "quizExitConfirmTitle": {
     "message": "退出测验？",
     "description": "Title for quiz exit confirmation modal"
@@ -568,7 +640,7 @@
     "description": "Question review section title"
   },
   "correctAnswer": {
-    "message": "正确答案：{answer}",
+    "message": "正确答案：$1",
     "description": "Correct answer display"
   },
   "correct": {

@@ -483,6 +483,78 @@
     "message": "Quitter le Quiz",
     "description": "Button text to exit quiz mode"
   },
+  "quizShareResults": {
+    "message": "Partager les Résultats",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "Résultats du Quiz Oiseaux",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareText": {
+    "message": "J'ai obtenu {score}/10 au quiz oiseaux BirdTab !",
+    "description": "Text used when sharing quiz results"
+  },
+  "quizShareCTA": {
+    "message": "Testez vos connaissances sur birdtab.app",
+    "description": "Call to action text shown on shared quiz image"
+  },
+  "quizShareGenerating": {
+    "message": "Génération...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "Échec de la génération",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "Partagez vos Résultats",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "Télécharger l'image",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "Téléchargé !",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "Copier dans le presse-papiers",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "Copié !",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "Échec de la copie",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "Retour aux Résultats",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "sur 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "$1 correct",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "$1 incorrect",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "RÉSULTATS D'IDENTIFICATION",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "Oiseau inconnu",
+    "description": "Fallback text for unknown bird name"
+  },
   "quizExitConfirmTitle": {
     "message": "Quitter le Quiz ?",
     "description": "Title for quiz exit confirmation modal"
@@ -568,7 +640,7 @@
     "description": "Question review section title"
   },
   "correctAnswer": {
-    "message": "Bonne réponse : {answer}",
+    "message": "Bonne réponse : $1",
     "description": "Correct answer display"
   },
   "correct": {

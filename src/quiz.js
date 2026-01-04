@@ -1062,7 +1062,7 @@ class QuizMode {
                 <div class="quiz-result-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
                   <div class="quiz-result-bird">
                     ${index + 1}. ${answer.question.bird.primaryComName}
-                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', { answer: answer.correctAnswer })}</div>` : ''}
+                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', [answer.correctAnswer])}</div>` : ''}
                   </div>
                   <div class="quiz-result-status ${answer.isCorrect ? 'correct' : 'incorrect'}">
                     ${answer.isCorrect ? chrome.i18n.getMessage('correct') : chrome.i18n.getMessage('incorrect')}
@@ -1070,7 +1070,11 @@ class QuizMode {
                 </div>
               `).join('')}
             </div>
-            <div class="quiz-actions">
+            <div class="quiz-actions quiz-actions-results">
+              <button class="quiz-btn share" id="quiz-share-results">
+                <img src="images/svg/share.svg" alt="" width="16" height="16" class="quiz-share-icon">
+                ${chrome.i18n.getMessage('quizShareResults') || 'Share Results'}
+              </button>
               <button class="quiz-btn primary" id="quiz-restart">${chrome.i18n.getMessage('quizStartNewQuiz')}</button>
               <button class="quiz-btn secondary" id="quiz-exit">${chrome.i18n.getMessage('quizExitQuiz')}</button>
             </div>
@@ -1080,8 +1084,14 @@ class QuizMode {
     `;
 
     // Add event listeners and track them for cleanup
+    const shareButton = document.getElementById('quiz-share-results');
     const restartButton = document.getElementById('quiz-restart');
     const exitButton = document.getElementById('quiz-exit');
+
+    // Share results handler
+    const shareHandler = () => this.shareCollage();
+    shareButton.addEventListener('click', shareHandler);
+    this.eventListeners.push({ element: shareButton, event: 'click', handler: shareHandler });
 
     const restartHandler = async () => {
       // Reset quiz state without exiting the modal
@@ -1451,8 +1461,13 @@ class QuizMode {
         return;
       }
       
+      // Check if we're on share preview page - don't close on outside click
+      if (this._shareDataUrl) {
+        return;
+      }
+      
       // Check if click is on the close button (already handled separately)
-      const closeButton = document.getElementById('quiz-close');
+      const closeButton = document.getElementById('quiz-close') || document.getElementById('quiz-results-close') || document.getElementById('quiz-share-close');
       if (closeButton && (e.target === closeButton || closeButton.contains(e.target))) {
         return; // Let the close button handler deal with this
       }
@@ -1506,6 +1521,586 @@ class QuizMode {
     errorOkButton.addEventListener('click', () => {
       clearTimeout(timeoutId);
     });
+  }
+
+  // ==========================================
+  // SHAREABLE RESULTS COLLAGE FUNCTIONALITY
+  // ==========================================
+
+  /**
+   * Draw a rounded rectangle on the canvas
+   */
+  drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+
+  /**
+   * Draw a checkmark icon on the canvas
+   */
+  drawCheckmark(ctx, x, y, size) {
+    ctx.save();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = size / 6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x - size / 3, y);
+    ctx.lineTo(x - size / 10, y + size / 3);
+    ctx.lineTo(x + size / 3, y - size / 4);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /**
+   * Draw an X icon on the canvas
+   */
+  drawCross(ctx, x, y, size) {
+    ctx.save();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = size / 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x - size / 4, y - size / 4);
+    ctx.lineTo(x + size / 4, y + size / 4);
+    ctx.moveTo(x + size / 4, y - size / 4);
+    ctx.lineTo(x - size / 4, y + size / 4);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /**
+   * Load the BirdTab logo from extension assets
+   * @returns {Promise<HTMLImageElement>} - Loaded logo image
+   */
+  async loadBirdTabLogo() {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Failed to load BirdTab logo'));
+      // Use chrome.runtime.getURL to get the correct path to extension assets
+      img.src = chrome.runtime.getURL('icons/icon128.png');
+    });
+  }
+
+  /**
+   * Generate a shareable collage image from quiz results
+   * Professional, clean design optimized for social sharing
+   * @returns {Promise<string>} - Data URL of the generated image
+   */
+  async generateShareableCollage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200;
+    canvas.height = 630;
+    const ctx = canvas.getContext('2d');
+
+    // Design system colors - Clean, minimal palette
+    const colors = {
+      bgDark: '#0a0a0a',
+      bgCard: '#141414',
+      textPrimary: '#ffffff',
+      textSecondary: '#a3a3a3',
+      textMuted: '#525252',
+      correct: '#22c55e',
+      incorrect: '#ef4444',
+      border: '#262626',
+      accent: '#fafafa'
+    };
+
+    // Fill solid dark background
+    ctx.fillStyle = colors.bgDark;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // ===== LEFT SIDE: Score & Branding =====
+    const leftPanelWidth = 400;
+    
+    // Subtle gradient on left panel
+    const leftGradient = ctx.createLinearGradient(0, 0, leftPanelWidth, canvas.height);
+    leftGradient.addColorStop(0, '#0f0f0f');
+    leftGradient.addColorStop(1, '#0a0a0a');
+    ctx.fillStyle = leftGradient;
+    ctx.fillRect(0, 0, leftPanelWidth, canvas.height);
+
+    // Vertical separator line
+    ctx.strokeStyle = colors.border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(leftPanelWidth, 40);
+    ctx.lineTo(leftPanelWidth, canvas.height - 40);
+    ctx.stroke();
+
+    // Load and draw BirdTab logo
+    const logoX = 50;
+    const logoY = 50;
+    try {
+      const logo = await this.loadBirdTabLogo();
+      ctx.drawImage(logo, logoX, logoY, 48, 48);
+    } catch (error) {
+      log(`Failed to load logo: ${error.message}`);
+    }
+    
+    // BirdTab text next to logo
+    ctx.fillStyle = colors.textPrimary;
+    ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('BirdTab', logoX + 60, logoY + 24);
+
+    // Score section - centered in left panel
+    const scoreCenterX = leftPanelWidth / 2;
+    const scoreCenterY = 280;
+    
+    // Large score number
+    ctx.font = '700 120px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.fillStyle = colors.textPrimary;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.score.toString(), scoreCenterX, scoreCenterY);
+    
+    // "out of 10" text
+    ctx.font = '400 24px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.fillStyle = colors.textSecondary;
+    ctx.fillText(chrome.i18n.getMessage('quizShareOutOf') || 'out of 10', scoreCenterX, scoreCenterY + 70);
+
+    // Score message
+    ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.fillStyle = colors.textMuted;
+    ctx.fillText(this.getScoreMessage(this.score), scoreCenterX, scoreCenterY + 110);
+
+    // Correct/Incorrect summary pills
+    const pillY = scoreCenterY + 160;
+    const pillWidth = 120;
+    const pillHeight = 36;
+    const pillGap = 16;
+    
+    // Correct pill (left)
+    const correctCount = this.answers.filter(a => a.isCorrect).length;
+    const correctPillX = scoreCenterX - pillWidth - pillGap / 2;
+    this.drawPill(ctx, correctPillX, pillY, pillWidth, pillHeight, colors.correct, '0.15');
+    ctx.fillStyle = colors.correct;
+    ctx.font = '600 13px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const correctText = chrome.i18n.getMessage('quizShareCorrectCount', [correctCount]) || `${correctCount} correct`;
+    ctx.fillText(`✓ ${correctText}`, correctPillX + pillWidth / 2, pillY + pillHeight / 2);
+    
+    // Incorrect pill (right)
+    const incorrectCount = this.answers.filter(a => !a.isCorrect).length;
+    const incorrectPillX = scoreCenterX + pillGap / 2;
+    this.drawPill(ctx, incorrectPillX, pillY, pillWidth, pillHeight, colors.incorrect, '0.15');
+    ctx.fillStyle = colors.incorrect;
+    const incorrectText = chrome.i18n.getMessage('quizShareIncorrectCount', [incorrectCount]) || `${incorrectCount} incorrect`;
+    ctx.fillText(`✗ ${incorrectText}`, incorrectPillX + pillWidth / 2, pillY + pillHeight / 2);
+
+    // Footer CTA
+    ctx.font = '400 14px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.fillStyle = colors.textMuted;
+    ctx.textAlign = 'center';
+    ctx.fillText('birdtab.app', scoreCenterX, canvas.height - 40);
+
+    // ===== RIGHT SIDE: Bird List =====
+    const rightStartX = leftPanelWidth + 50;
+    const rightWidth = canvas.width - leftPanelWidth - 100;
+    const listStartY = 40;
+    const rowHeight = 52;  // Slightly smaller to fit with bottom margin
+    const cardPadding = 20;
+
+    // Section header
+    ctx.font = '500 14px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+    ctx.fillStyle = colors.textMuted;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(chrome.i18n.getMessage('quizShareResultsHeader') || 'BIRD IDENTIFICATION RESULTS', rightStartX, listStartY + 10);
+
+    // Draw each bird result row
+    for (let i = 0; i < this.answers.length && i < 10; i++) {
+      const answer = this.answers[i];
+      const y = listStartY + 35 + i * rowHeight;
+      const cardHeight = rowHeight - 6;
+
+      // Row background - subtle card
+      ctx.fillStyle = colors.bgCard;
+      this.drawRoundedRect(ctx, rightStartX, y, rightWidth, cardHeight, 8);
+      ctx.fill();
+
+      // Left accent bar
+      ctx.fillStyle = answer.isCorrect ? colors.correct : colors.incorrect;
+      this.drawRoundedRect(ctx, rightStartX, y, 3, cardHeight, 2);
+      ctx.fill();
+
+      // Row number
+      ctx.font = '500 14px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+      ctx.fillStyle = colors.textMuted;
+      ctx.textAlign = 'right';
+      ctx.fillText(`${i + 1}`, rightStartX + cardPadding + 20, y + cardHeight / 2 + 5);
+
+      // Bird name
+      const birdName = answer.question?.bird?.primaryComName || chrome.i18n.getMessage('quizShareUnknownBird') || 'Unknown Bird';
+      ctx.font = '400 16px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
+      ctx.fillStyle = colors.textPrimary;
+      ctx.textAlign = 'left';
+      
+      // Truncate name if needed
+      let displayName = birdName;
+      const maxNameWidth = rightWidth - 120;
+      while (ctx.measureText(displayName).width > maxNameWidth && displayName.length > 3) {
+        displayName = displayName.slice(0, -4) + '...';
+      }
+      ctx.fillText(displayName, rightStartX + cardPadding + 40, y + cardHeight / 2 + 5);
+
+      // Status indicator on right
+      const statusX = rightStartX + rightWidth - 35;
+      const statusY = y + cardHeight / 2;
+      
+      // Circle background
+      ctx.beginPath();
+      ctx.arc(statusX, statusY, 12, 0, Math.PI * 2);
+      ctx.fillStyle = answer.isCorrect ? colors.correct : colors.incorrect;
+      ctx.fill();
+
+      // Check or X
+      if (answer.isCorrect) {
+        this.drawCheckmark(ctx, statusX, statusY, 10);
+      } else {
+        this.drawCross(ctx, statusX, statusY, 10);
+      }
+    }
+
+    return canvas.toDataURL('image/png');
+  }
+
+  /**
+   * Draw a pill-shaped background
+   */
+  drawPill(ctx, x, y, width, height, color, opacity) {
+    ctx.fillStyle = color.replace(')', `, ${opacity})`).replace('rgb', 'rgba');
+    if (!color.startsWith('rgb')) {
+      // Convert hex to rgba
+      const r = parseInt(color.slice(1, 3), 16);
+      const g = parseInt(color.slice(3, 5), 16);
+      const b = parseInt(color.slice(5, 7), 16);
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    this.drawRoundedRect(ctx, x, y, width, height, height / 2);
+    ctx.fill();
+  }
+
+  /**
+   * Download the generated collage image
+   * @param {string} dataUrl - Data URL of the image to download
+   */
+  downloadCollage(dataUrl) {
+    const link = document.createElement('a');
+    link.download = 'birdtab-quiz-results.png';
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  /**
+   * Share the quiz results collage
+   * Shows a preview page with the generated image and share/download options
+   */
+  async shareCollage() {
+    // Show loading state on button
+    const shareBtn = document.getElementById('quiz-share-results');
+    const originalContent = shareBtn?.innerHTML;
+    if (shareBtn) {
+      shareBtn.disabled = true;
+      shareBtn.innerHTML = `<span class="quiz-share-spinner"></span> ${chrome.i18n.getMessage('quizShareGenerating') || 'Generating...'}`;
+    }
+
+    try {
+      const dataUrl = await this.generateShareableCollage();
+      
+      // Restore button state BEFORE capturing resultsHTML
+      if (shareBtn) {
+        shareBtn.innerHTML = originalContent;
+        shareBtn.disabled = false;
+      }
+      
+      // Show the preview page with the generated image
+      this.showSharePreview(dataUrl);
+      
+    } catch (error) {
+      log(`Error generating collage: ${error.message}`);
+      captureException(error, { tags: { operation: 'shareCollage', component: 'QuizMode' } });
+      
+      // Show error to user
+      if (shareBtn) {
+        shareBtn.innerHTML = `${chrome.i18n.getMessage('quizShareError') || 'Failed to generate'}`;
+        setTimeout(() => {
+          shareBtn.innerHTML = originalContent;
+          shareBtn.disabled = false;
+        }, 2000);
+      }
+      return;
+    }
+  }
+
+  /**
+   * Show the share preview page with the generated collage
+   * @param {string} dataUrl - Data URL of the generated image
+   */
+  showSharePreview(dataUrl) {
+    // Store reference to current results HTML to restore later
+    const resultsHTML = this.quizContainer.innerHTML;
+    
+    // Create share preview page
+    this.quizContainer.innerHTML = `
+      <button class="quiz-close-btn" id="quiz-share-close" aria-label="${chrome.i18n.getMessage('closeQuiz') || 'Close'}">
+        <img src="images/svg/close.svg" alt="${chrome.i18n.getMessage('closeAlt') || 'Close'}" width="20" height="20">
+      </button>
+      <div class="quiz-container quiz-share-preview">
+        <div class="quiz-header">
+          <div class="quiz-meta">
+            <span>${chrome.i18n.getMessage('quizShareTitle') || 'Bird Quiz Results'}</span>
+          </div>
+          <h1 class="quiz-question-title">${chrome.i18n.getMessage('quizSharePreviewTitle') || 'Share Your Results'}</h1>
+        </div>
+        
+        <div class="quiz-content quiz-share-content">
+          <div class="quiz-share-image-container">
+            <img src="${dataUrl}" alt="Quiz Results Collage" class="quiz-share-preview-image" />
+          </div>
+          
+          <div class="quiz-share-actions">
+            <button class="quiz-btn share-action download" id="quiz-download-image">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              ${chrome.i18n.getMessage('quizShareDownload') || 'Download Image'}
+            </button>
+            <button class="quiz-btn share-action copy" id="quiz-copy-image">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              ${chrome.i18n.getMessage('quizShareCopyImage') || 'Copy to Clipboard'}
+            </button>
+          </div>
+          
+          <div class="quiz-share-back">
+            <button class="quiz-btn secondary" id="quiz-share-back">
+              ${chrome.i18n.getMessage('quizShareBack') || 'Back to Results'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Store dataUrl and resultsHTML for later use
+    this._shareDataUrl = dataUrl;
+    this._resultsHTML = resultsHTML;
+
+    // Setup event listeners
+    this.setupSharePreviewListeners();
+  }
+
+  /**
+   * Setup event listeners for the share preview page
+   */
+  setupSharePreviewListeners() {
+    const closeBtn = document.getElementById('quiz-share-close');
+    const downloadBtn = document.getElementById('quiz-download-image');
+    const copyBtn = document.getElementById('quiz-copy-image');
+    const backBtn = document.getElementById('quiz-share-back');
+
+    // Close button - exit quiz
+    if (closeBtn) {
+      const closeHandler = () => this.exitQuiz();
+      closeBtn.addEventListener('click', closeHandler);
+      this.eventListeners.push({ element: closeBtn, event: 'click', handler: closeHandler });
+    }
+
+    // Download button
+    if (downloadBtn) {
+      const downloadHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.downloadCollage(this._shareDataUrl);
+        // Show feedback
+        downloadBtn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          ${chrome.i18n.getMessage('quizShareDownloaded') || 'Downloaded!'}
+        `;
+        setTimeout(() => {
+          downloadBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            ${chrome.i18n.getMessage('quizShareDownload') || 'Download Image'}
+          `;
+        }, 2000);
+      };
+      downloadBtn.addEventListener('click', downloadHandler);
+      this.eventListeners.push({ element: downloadBtn, event: 'click', handler: downloadHandler });
+    }
+
+    // Copy to clipboard button
+    if (copyBtn) {
+      const copyHandler = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          // Convert data URL to blob
+          const response = await fetch(this._shareDataUrl);
+          const blob = await response.blob();
+          
+          // Try to copy image to clipboard
+          if (navigator.clipboard && navigator.clipboard.write) {
+            const item = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([item]);
+            
+            // Show success feedback
+            copyBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              ${chrome.i18n.getMessage('quizShareCopied') || 'Copied!'}
+            `;
+          } else {
+            throw new Error('Clipboard API not available');
+          }
+        } catch (error) {
+          log(`Failed to copy image to clipboard: ${error.message}`);
+          copyBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            ${chrome.i18n.getMessage('quizShareCopyFailed') || 'Copy failed'}
+          `;
+        }
+        
+        // Reset button after delay
+        setTimeout(() => {
+          copyBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            ${chrome.i18n.getMessage('quizShareCopyImage') || 'Copy to Clipboard'}
+          `;
+        }, 2000);
+      };
+      copyBtn.addEventListener('click', copyHandler);
+      this.eventListeners.push({ element: copyBtn, event: 'click', handler: copyHandler });
+    }
+
+    // Back button - return to results
+    if (backBtn) {
+      const backHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.returnToResults();
+      };
+      backBtn.addEventListener('click', backHandler);
+      this.eventListeners.push({ element: backBtn, event: 'click', handler: backHandler });
+    }
+  }
+
+  /**
+   * Return to the results page from share preview
+   */
+  returnToResults() {
+    if (this._resultsHTML) {
+      // Clean up share preview listeners (elements will be replaced)
+      this.eventListeners = this.eventListeners.filter(listener => listener.persist);
+      
+      this.quizContainer.innerHTML = this._resultsHTML;
+      
+      // Re-setup event listeners for results page
+      this.setupResultsEventListeners();
+      
+      // Clean up stored data
+      delete this._shareDataUrl;
+      delete this._resultsHTML;
+    }
+  }
+
+  /**
+   * Setup event listeners for results page (called when returning from share preview)
+   */
+  setupResultsEventListeners() {
+    const shareButton = document.getElementById('quiz-share-results');
+    const restartButton = document.getElementById('quiz-restart');
+    const exitButton = document.getElementById('quiz-exit');
+    const resultsCloseButton = document.getElementById('quiz-results-close');
+
+    // Share results handler
+    if (shareButton) {
+      const shareHandler = () => this.shareCollage();
+      shareButton.addEventListener('click', shareHandler);
+      this.eventListeners.push({ element: shareButton, event: 'click', handler: shareHandler });
+    }
+
+    // Restart handler
+    if (restartButton) {
+      const restartHandler = async () => {
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.questions = [];
+        this.answers = [];
+        this.selectedAnswer = null;
+        this.hasAnswered = false;
+        this.imageLoadingQueue = [];
+        this.isLoadingImages = false;
+
+        try {
+          const region = await this.getCurrentRegion();
+          const birds = await this.getCachedBirds(region);
+
+          if (!birds || birds.length < 10) {
+            this.showError(chrome.i18n.getMessage('quizErrorNotEnoughBirds'));
+            return;
+          }
+
+          await this.prepareQuestions(birds);
+          this.updateQuizUIForNewQuiz();
+          this.showQuizLoading();
+          await this.ensureFirstImageLoaded();
+          await this.displayQuestion();
+        } catch (error) {
+          log(`Error restarting quiz: ${error.message}`);
+          captureException(error, { tags: { operation: 'restartQuiz', component: 'QuizMode' } });
+          this.showError(chrome.i18n.getMessage('quizErrorGeneral'));
+        }
+      };
+      restartButton.addEventListener('click', restartHandler);
+      this.eventListeners.push({ element: restartButton, event: 'click', handler: restartHandler });
+    }
+
+    // Exit handler
+    if (exitButton) {
+      const exitHandler = () => this.exitQuiz();
+      exitButton.addEventListener('click', exitHandler);
+      this.eventListeners.push({ element: exitButton, event: 'click', handler: exitHandler });
+    }
+
+    // Close button
+    if (resultsCloseButton) {
+      const closeHandler = () => this.exitQuiz();
+      resultsCloseButton.addEventListener('click', closeHandler);
+      this.eventListeners.push({ element: resultsCloseButton, event: 'click', handler: closeHandler });
+    }
   }
 }
 
