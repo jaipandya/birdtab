@@ -37,6 +37,7 @@ class VideoVisibilityManager {
     this.lastPlaybackPosition = 0;
     this.isUnloaded = false;
     this.unloadTimeout = null;
+    this.pauseIndicatorTimeout = null; // Track pause indicator timeout
     this.UNLOAD_DELAY = 30000; // 30 seconds
 
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
@@ -124,10 +125,51 @@ class VideoVisibilityManager {
     // Credits already show both photographer and videographer - no need to switch
   }
 
+  showPauseIndicator() {
+    // Clear any existing pause indicator timeout
+    if (this.pauseIndicatorTimeout) {
+      clearTimeout(this.pauseIndicatorTimeout);
+      this.pauseIndicatorTimeout = null;
+    }
+
+    // Remove any existing pause indicator
+    const existingIndicator = document.querySelector('.video-pause-indicator');
+    if (existingIndicator) existingIndicator.remove();
+
+    const indicator = document.createElement('div');
+    indicator.className = 'video-pause-indicator';
+    indicator.innerHTML = `
+      <div class="pause-icon-container">
+        <img src="images/svg/pause.svg" alt="Paused" width="56" height="56">
+      </div>
+    `;
+
+    const contentContainer = document.getElementById('content-container');
+    if (contentContainer) {
+      contentContainer.appendChild(indicator);
+    }
+
+    // After the pause indicator fades out, show the play overlay
+    this.pauseIndicatorTimeout = setTimeout(() => {
+      this.pauseIndicatorTimeout = null;
+
+      // Remove the pause indicator
+      const pauseIndicator = document.querySelector('.video-pause-indicator');
+      if (pauseIndicator) pauseIndicator.remove();
+
+      // Show the play overlay
+      this.showPlayOverlay();
+    }, 600); // Duration matches the CSS animation
+  }
+
   showPlayOverlay() {
     // Remove existing overlay if present
     const existing = document.querySelector('.video-play-overlay');
     if (existing) existing.remove();
+
+    // Remove any existing pause indicator (in case we're called directly)
+    const pauseIndicator = document.querySelector('.video-pause-indicator');
+    if (pauseIndicator) pauseIndicator.remove();
 
     const overlay = document.createElement('div');
     overlay.className = 'video-play-overlay';
@@ -157,8 +199,18 @@ class VideoVisibilityManager {
   }
 
   hidePlayOverlay() {
+    // Cancel any pending pause indicator timeout
+    if (this.pauseIndicatorTimeout) {
+      clearTimeout(this.pauseIndicatorTimeout);
+      this.pauseIndicatorTimeout = null;
+    }
+
     const overlay = document.querySelector('.video-play-overlay');
     if (overlay) overlay.remove();
+
+    // Also remove pause indicator if present
+    const pauseIndicator = document.querySelector('.video-pause-indicator');
+    if (pauseIndicator) pauseIndicator.remove();
   }
 
   async reloadAndPlay() {
@@ -1133,9 +1185,9 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     updatePlayPauseButton();
     showPosterImage();
 
-    // Show play overlay when paused (keep credits unchanged - both photo & video credits stay visible)
+    // Show pause indicator followed by play overlay when paused (keep credits unchanged - both photo & video credits stay visible)
     if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
-      videoVisibilityManager.showPlayOverlay();
+      videoVisibilityManager.showPauseIndicator();
     }
   });
 
