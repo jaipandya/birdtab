@@ -658,6 +658,32 @@ body.loaded {
   filter: brightness(0) invert(1);
 }
 
+.error-modal-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.error-modal-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.error-modal-btn.secondary:active {
+  transform: translateY(0);
+}
+
+.error-modal-btn.secondary img {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.error-modal-btn.secondary:hover img {
+  opacity: 1;
+}
+
 .error-details {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.4);
@@ -846,8 +872,8 @@ p {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Add slightly more gap before share icon */
-.credits .share-container {
+/* Add consistent gap for icon group (feedback + share icons) */
+.credits .credit-icon-group {
   margin-left: 0.5rem;
 }
 
@@ -881,8 +907,8 @@ p {
 }
 
 /* Media Toggle Switch (Video/Photo) */
-.media-toggle-container {
-  margin-left: 0.25rem;
+.credits .media-toggle-container {
+  margin-left: 0.5rem;
 }
 
 .media-toggle {
@@ -1689,7 +1715,7 @@ p {
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 0;
-  max-width: 420px;
+  max-width: 500px;
   width: 92%;
   max-height: 85vh;
   overflow-y: auto;
@@ -1781,9 +1807,43 @@ p {
   text-align: left;
 }
 
+.settings-footer {
+  padding: 12px var(--modal-spacing);
+  border-top: 1px solid var(--modal-border);
+  text-align: center;
+}
+
+.feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--modal-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.feedback-link:hover {
+  color: var(--modal-text-primary);
+  background-color: var(--modal-hover-bg);
+}
+
+.feedback-icon {
+  opacity: 0.7;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+
+.feedback-link:hover .feedback-icon {
+  opacity: 1;
+}
+
 .settings-modal .setting {
-  margin-bottom: 4px;
-  padding: 12px;
+  margin-bottom: 2px;
+  padding: 10px;
   border-radius: 10px;
   transition: all 0.2s ease;
   border: 1px solid transparent;
@@ -2292,6 +2352,31 @@ html[dir="rtl"] .history-footer {
 }
 
 .share-inline-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.feedback-inline-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  padding: 4px;
+  margin: -4px;
+  text-decoration: none;
+}
+
+.feedback-inline-link:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.feedback-inline-link img {
   width: 16px;
   height: 16px;
 }

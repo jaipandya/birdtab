@@ -35,14 +35,6 @@
     "message": "录音师",
     "description": "Label for audio recordist credit"
   },
-  "viaText": {
-    "message": "通过",
-    "description": "Text before Macaulay Library link"
-  },
-  "macaulayLibrary": {
-    "message": "麦考利图书馆",
-    "description": "Name of Macaulay Library"
-  },
   "openSettings": {
     "message": "打开设置",
     "description": "Aria label for settings button"
@@ -487,14 +479,6 @@
     "message": "鸟类测验结果",
     "description": "Title used when sharing quiz results"
   },
-  "quizShareText": {
-    "message": "我在BirdTab鸟类测验中获得了{score}/10分！",
-    "description": "Text used when sharing quiz results"
-  },
-  "quizShareCTA": {
-    "message": "在birdtab.app测试你的鸟类知识",
-    "description": "Call to action text shown on shared quiz image"
-  },
   "quizShareGenerating": {
     "message": "生成中...",
     "description": "Button text while generating share image"
@@ -610,14 +594,6 @@
   "quizLoadingQuestions": {
     "message": "正在准备测验...",
     "description": "Loading message when preparing quiz questions"
-  },
-  "quizLoadingAnswers": {
-    "message": "正在加载测验答案...",
-    "description": "Loading message when loading quiz answer options"
-  },
-  "quizLoadingImage": {
-    "message": "正在加载鸟类图片...",
-    "description": "Loading message when loading bird image"
   },
   "photoBy": {
     "message": "照片拍摄者",
@@ -766,6 +742,26 @@
   "videoNotAvailableForBird": {
     "message": "此鸟类没有可用的视频",
     "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "正在加载音频",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "正在加载视频",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "缓冲中",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "来自",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "麦考利图书馆",
+    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "查看历史",
@@ -944,11 +940,15 @@
     "description": "Label for high-resolution images feature"
   },
   "highResHelpText": {
-    "message": "显示超高分辨率2400px鸟类照片，呈现清晰细节。",
+    "message": "显示超高分辨率鸟类照片，呈现清晰细节。",
     "description": "Help text for high-resolution images setting"
   },
   "highResTooltip": {
     "message": "启用以显示高分辨率图片",
     "description": "Tooltip for high-resolution images toggle"
+  },
+  "sendFeedback": {
+    "message": "发送反馈",
+    "description": "Link text for sending feedback to support"
   }
 }

@@ -35,14 +35,6 @@
     "message": "Enregistreur",
     "description": "Label for audio recordist credit"
   },
-  "viaText": {
-    "message": "via",
-    "description": "Text before Macaulay Library link"
-  },
-  "macaulayLibrary": {
-    "message": "Bibliothèque Macaulay",
-    "description": "Name of Macaulay Library"
-  },
   "openSettings": {
     "message": "Ouvrir les paramètres",
     "description": "Aria label for settings button"
@@ -487,14 +479,6 @@
     "message": "Résultats du Quiz Oiseaux",
     "description": "Title used when sharing quiz results"
   },
-  "quizShareText": {
-    "message": "J'ai obtenu {score}/10 au quiz oiseaux BirdTab !",
-    "description": "Text used when sharing quiz results"
-  },
-  "quizShareCTA": {
-    "message": "Testez vos connaissances sur birdtab.app",
-    "description": "Call to action text shown on shared quiz image"
-  },
   "quizShareGenerating": {
     "message": "Génération...",
     "description": "Button text while generating share image"
@@ -610,14 +594,6 @@
   "quizLoadingQuestions": {
     "message": "Préparation de votre quiz...",
     "description": "Loading message when preparing quiz questions"
-  },
-  "quizLoadingAnswers": {
-    "message": "Chargement des réponses...",
-    "description": "Loading message when loading quiz answer options"
-  },
-  "quizLoadingImage": {
-    "message": "Chargement de l'image d'oiseau...",
-    "description": "Loading message when loading bird image"
   },
   "photoBy": {
     "message": "Photo par",
@@ -748,7 +724,7 @@
     "description": "Label for video mode setting"
   },
   "videoModeHelpText": {
-    "message": "Afficher des vidéos d'oiseaux au lieu de photos lorsque disponibles. Les vidéos incluent leur propre audio de l'enregistrement.",
+    "message": "Afficher des vidéos d'oiseaux au lieu de photos lorsque disponibles.",
     "description": "Help text for video mode setting"
   },
   "videoModeTooltip": {
@@ -766,6 +742,26 @@
   "videoNotAvailableForBird": {
     "message": "Aucune vidéo disponible pour cet oiseau",
     "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "Chargement de l'audio",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "Chargement de la vidéo",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "Mise en mémoire tampon",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "via",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "Bibliothèque Macaulay",
+    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "Historique de visualisation",
@@ -944,11 +940,15 @@
     "description": "Label for high-resolution images feature"
   },
   "highResHelpText": {
-    "message": "Affichez des photos d'oiseaux ultra haute résolution de 2400px pour des détails parfaitement nets.",
+    "message": "Affichez des photos d'oiseaux ultra haute résolution pour des détails parfaitement nets.",
     "description": "Help text for high-resolution images setting"
   },
   "highResTooltip": {
     "message": "Activer pour afficher les images haute résolution",
     "description": "Tooltip for high-resolution images toggle"
+  },
+  "sendFeedback": {
+    "message": "Envoyer des commentaires",
+    "description": "Link text for sending feedback to support"
   }
 }

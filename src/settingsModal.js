@@ -174,10 +174,16 @@ class SettingsModal {
               </div>
             </div>
           </div>
+          <div class="settings-footer">
+            <a href="mailto:support@birdtab.app" class="feedback-link">
+              <img src="images/svg/message.svg" alt="" width="16" height="16" class="feedback-icon">
+              <span data-i18n="sendFeedback">Send Feedback</span>
+            </a>
+          </div>
         </div>
       </div>
     `;
-    
+
     // Add modal to body
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     

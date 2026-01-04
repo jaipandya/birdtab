@@ -869,6 +869,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     })();
     return true;
+  } else if (request.action === 'getAudioForBird') {
+    // Fetch audio for a specific bird (on-demand, for mode toggle from video to photo)
+    (async () => {
+      try {
+        log(`Fetching audio for species: ${request.speciesCode}`);
+        const audioInfo = await getMacaulayAudio(request.speciesCode);
+        if (audioInfo && audioInfo.mediaUrl) {
+          sendResponse({
+            mediaUrl: audioInfo.mediaUrl,
+            recordist: audioInfo.recordist,
+            recordistUrl: audioInfo.recordistUrl
+          });
+        } else {
+          sendResponse({ error: 'No audio available' });
+        }
+      } catch (error) {
+        log(`Error fetching audio: ${error.message}`);
+        sendResponse({ error: error.message });
+      }
+    })();
+    return true;
   }
 });
 

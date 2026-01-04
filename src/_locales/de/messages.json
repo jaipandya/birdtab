@@ -35,14 +35,6 @@
     "message": "Tontechniker",
     "description": "Label for audio recordist credit"
   },
-  "viaText": {
-    "message": "über",
-    "description": "Text before Macaulay Library link"
-  },
-  "macaulayLibrary": {
-    "message": "Macaulay Bibliothek",
-    "description": "Name of Macaulay Library"
-  },
   "openSettings": {
     "message": "Einstellungen öffnen",
     "description": "Aria label for settings button"
@@ -136,7 +128,7 @@
     "description": "Label for productivity features toggle"
   },
   "productivityHelpText": {
-    "message": "Suchfeld, Top-Seiten und benutzerdefinierte Verknüpfungen für verbesserte Produktivität aktivieren.",
+    "message": "Suchfeld, Top-Seiten und benutzerdefinierte Verknüpfungen aktivieren.",
     "description": "Help text for productivity features"
   },
   "productivityTooltip": {
@@ -487,14 +479,6 @@
     "message": "Vogelquiz-Ergebnisse",
     "description": "Title used when sharing quiz results"
   },
-  "quizShareText": {
-    "message": "Ich habe {score}/10 beim BirdTab Vogelquiz erreicht!",
-    "description": "Text used when sharing quiz results"
-  },
-  "quizShareCTA": {
-    "message": "Teste dein Vogelwissen auf birdtab.app",
-    "description": "Call to action text shown on shared quiz image"
-  },
   "quizShareGenerating": {
     "message": "Wird erstellt...",
     "description": "Button text while generating share image"
@@ -610,14 +594,6 @@
   "quizLoadingQuestions": {
     "message": "Quiz wird vorbereitet...",
     "description": "Loading message when preparing quiz questions"
-  },
-  "quizLoadingAnswers": {
-    "message": "Quiz-Antworten werden geladen...",
-    "description": "Loading message when loading quiz answer options"
-  },
-  "quizLoadingImage": {
-    "message": "Vogelbild wird geladen...",
-    "description": "Loading message when loading bird image"
   },
   "photoBy": {
     "message": "Foto von",
@@ -748,7 +724,7 @@
     "description": "Label for video mode setting"
   },
   "videoModeHelpText": {
-    "message": "Zeige Vogelvideos statt Fotos, wenn verfügbar. Videos enthalten ihren eigenen Ton aus der Aufnahme.",
+    "message": "Zeige Vogelvideos statt Fotos, wenn verfügbar.",
     "description": "Help text for video mode setting"
   },
   "videoModeTooltip": {
@@ -766,6 +742,26 @@
   "videoNotAvailableForBird": {
     "message": "Kein Video für diesen Vogel verfügbar",
     "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "Audio wird geladen",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "Video wird geladen",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "Pufferung",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "über",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "Macaulay Bibliothek",
+    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "Anzeigeverlauf",
@@ -944,11 +940,15 @@
     "description": "Label for high-resolution images feature"
   },
   "highResHelpText": {
-    "message": "Zeigen Sie ultrahochauflösende 2400px Vogelfotos für kristallklare Details an.",
+    "message": "Zeigen Sie ultrahochauflösende Vogelfotos für kristallklare Details an.",
     "description": "Help text for high-resolution images setting"
   },
   "highResTooltip": {
     "message": "Aktivieren, um hochauflösende Bilder anzuzeigen",
     "description": "Tooltip for high-resolution images toggle"
+  },
+  "sendFeedback": {
+    "message": "Feedback senden",
+    "description": "Link text for sending feedback to support"
   }
 }

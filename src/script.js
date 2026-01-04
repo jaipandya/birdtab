@@ -1199,11 +1199,14 @@ function setVideoSource() {
 function showVideoLoadingIndicator(isBuffering = false) {
   // Don't show if already exists
   const existing = document.querySelector('.video-loading-indicator');
+  const bufferingText = chrome.i18n.getMessage('buffering') || 'Buffering';
+  const loadingVideoText = chrome.i18n.getMessage('loadingVideo') || 'Loading video';
+  
   if (existing) {
     // Update text if state changed
     const textEl = existing.querySelector('.loading-text');
     if (textEl) {
-      textEl.textContent = isBuffering ? 'Buffering' : 'Loading video';
+      textEl.textContent = isBuffering ? bufferingText : loadingVideoText;
     }
     return;
   }
@@ -1212,7 +1215,7 @@ function showVideoLoadingIndicator(isBuffering = false) {
   indicator.className = 'video-loading-indicator';
   indicator.innerHTML = `
     <div class="loading-spinner"></div>
-    <span class="loading-text">${isBuffering ? 'Buffering' : 'Loading video'}</span>
+    <span class="loading-text">${isBuffering ? bufferingText : loadingVideoText}</span>
   `;
 
   const contentContainer = document.getElementById('content-container');
@@ -1224,6 +1227,33 @@ function showVideoLoadingIndicator(isBuffering = false) {
 // Hide video loading indicator
 function hideVideoLoadingIndicator() {
   const indicator = document.querySelector('.video-loading-indicator');
+  if (indicator) {
+    indicator.remove();
+  }
+}
+
+// Show audio loading indicator (similar to video but for audio fetch)
+function showAudioLoadingIndicator() {
+  // Don't show if already exists
+  const existing = document.querySelector('.audio-loading-indicator');
+  if (existing) return;
+
+  const indicator = document.createElement('div');
+  indicator.className = 'video-loading-indicator audio-loading-indicator'; // Reuse video loading styles
+  indicator.innerHTML = `
+    <div class="loading-spinner"></div>
+    <span class="loading-text">${chrome.i18n.getMessage('loadingAudio') || 'Loading audio'}</span>
+  `;
+
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.appendChild(indicator);
+  }
+}
+
+// Hide audio loading indicator
+function hideAudioLoadingIndicator() {
+  const indicator = document.querySelector('.audio-loading-indicator');
   if (indicator) {
     indicator.remove();
   }
@@ -1434,9 +1464,14 @@ function switchToImageModeCredits() {
     </span>
     ` : ''}
     <span class="credit-item">
-      via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+      ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
     </span>
-    <span id="share-container" class="credit-item share-container">
+    <span class="credit-item credit-icon-group">
+      <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
+        <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
+      </a>
+    </span>
+    <span id="share-container" class="credit-item share-container credit-icon-group">
       <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
         <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
       </button>
@@ -1585,7 +1620,7 @@ async function initializePage() {
         <p class="credits">
           ${creditsHtml}
           <span class="credit-item">
-            via <a href="https://www.macaulaylibrary.org/" target="_blank">Macaulay Library</a>
+            ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
           </span>
           <span class="credit-item media-toggle-container">
             <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
@@ -1603,7 +1638,12 @@ async function initializePage() {
               </span>
             </label>
           </span>
-          <span id="share-container" class="credit-item share-container">
+          <span class="credit-item credit-icon-group">
+            <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
+              <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
+            </a>
+          </span>
+          <span id="share-container" class="credit-item share-container credit-icon-group">
             <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip')}">
               <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt')}" width="16" height="16">
             </button>
@@ -2076,8 +2116,8 @@ function setupMediaToggle(isImageMode = false) {
         switchToVideoMode();
       }
     } else {
-      // Switch to photo mode
-      switchToPhotoMode();
+      // Switch to photo mode (may need to fetch audio on-demand)
+      await switchToPhotoMode();
     }
   });
 }
@@ -2259,7 +2299,34 @@ function updateCreditsForVideoMode() {
   }
 }
 
-function switchToPhotoMode() {
+// Update credits display for photo mode (add audio credit if available)
+function updateCreditsForPhotoMode() {
+  const credits = document.querySelector('.credits');
+  if (!credits || !birdInfo.recordist) return;
+  
+  // Check if audio credit already exists
+  if (credits.querySelector('.credit-item-audio')) return;
+  
+  // Find the camera credit (photo credit) and insert after it
+  const cameraCredit = credits.querySelector('.credit-item');
+  if (!cameraCredit) return;
+  
+  const audioCredit = document.createElement('span');
+  audioCredit.className = 'credit-item credit-item-audio';
+  audioCredit.innerHTML = `
+    <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
+    <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+  `;
+  
+  // Insert after the camera credit
+  if (cameraCredit.nextSibling) {
+    credits.insertBefore(audioCredit, cameraCredit.nextSibling);
+  } else {
+    credits.appendChild(audioCredit);
+  }
+}
+
+async function switchToPhotoMode() {
   isShowingVideo = false;
 
   // Pause video if playing
@@ -2271,12 +2338,8 @@ function switchToPhotoMode() {
   // Show image, hide video
   showPosterImage();
 
-  // Show audio play button if audio is available
-  const playBtn = document.getElementById('play-button');
-  if (playBtn && audio) {
-    playBtn.style.display = '';
-  }
-  updatePlayPauseButton();
+  // Clean up video-related UI
+  cleanupVideoControls();
 
   // Remove play overlay completely
   const playOverlay = document.querySelector('.video-play-overlay');
@@ -2290,6 +2353,99 @@ function switchToPhotoMode() {
     videoVisibilityManager = null;
   }
 
+  // Initialize audio - fetch on-demand if not available (e.g., when coming from video mode)
+  if (birdInfo && !birdInfo.mediaUrl && birdInfo.speciesCode) {
+    log('Audio not available, fetching on-demand for photo mode');
+    
+    // Show loading indicator for audio fetch
+    showAudioLoadingIndicator();
+    
+    try {
+      const response = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({
+          action: 'getAudioForBird',
+          speciesCode: birdInfo.speciesCode
+        }, (result) => {
+          if (chrome.runtime.lastError) {
+            log(`Error fetching audio: ${chrome.runtime.lastError.message}`);
+            resolve(null);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+
+      if (response && response.mediaUrl) {
+        // Store audio info in birdInfo
+        birdInfo.mediaUrl = response.mediaUrl;
+        birdInfo.recordist = response.recordist;
+        birdInfo.recordistUrl = response.recordistUrl;
+        log('Successfully fetched audio for photo mode');
+        
+        // Update credits to show audio credit
+        updateCreditsForPhotoMode();
+      } else {
+        log('No audio available for this bird');
+      }
+    } catch (error) {
+      log(`Error fetching audio: ${error.message}`);
+    } finally {
+      hideAudioLoadingIndicator();
+    }
+  }
+
+  // Update credits if audio info already exists
+  if (birdInfo && birdInfo.recordist) {
+    updateCreditsForPhotoMode();
+  }
+
+  // Initialize audio if available
+  if (birdInfo && birdInfo.mediaUrl) {
+    // Create audio object if it doesn't exist
+    if (!audio) {
+      audio = new Audio(birdInfo.mediaUrl);
+      audio.currentTime = 4; // Skip recordist commentary
+      audio.muted = isMuted;
+      audio.volume = isMuted ? 0 : volumeLevel;
+      audio.onended = () => {
+        isPlaying = false;
+        updatePlayPauseButton();
+      };
+      log('Created audio player for photo mode');
+    }
+
+    // Create play button if it doesn't exist
+    let playBtn = document.getElementById('play-button');
+    if (!playBtn) {
+      playBtn = document.createElement('button');
+      playBtn.id = 'play-button';
+      playBtn.classList.add('icon-button', 'play-button');
+      playBtn.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+      playBtn.title = chrome.i18n.getMessage('playTooltip');
+      playBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        await togglePlay();
+      });
+      document.querySelector('.control-buttons').appendChild(playBtn);
+      log('Created play button for photo mode');
+    }
+
+    // Show audio controls
+    playBtn.style.display = '';
+    showAudioControls();
+
+    // Check autoplay setting and play audio if enabled
+    chrome.storage.sync.get(['autoPlay'], (result) => {
+      const shouldAutoPlay = result.autoPlay !== false; // Default to true
+      if (shouldAutoPlay && audio && !isPlaying) {
+        playAudio();
+      }
+    });
+  }
+
+  updatePlayPauseButton();
+
   log('Switched to photo mode');
 }
 
@@ -2298,17 +2454,21 @@ function switchToVideoMode() {
 
   // Stop audio if playing (video has its own audio)
   if (audio && !audio.paused) {
-    audio.pause();
-    isPlaying = false;
+    pauseAudio();
   }
-
-  // Show video element
-  showVideoElement();
 
   // Hide audio play button from control strip (video controls are on screen)
   const playBtn = document.getElementById('play-button');
   if (playBtn) {
     playBtn.style.display = 'none';
+  }
+
+  // Show video element
+  showVideoElement();
+
+  // Setup video controls (progress bar) if video exists
+  if (video) {
+    setupVideoControls();
   }
 
   // Reinitialize VideoVisibilityManager if needed
@@ -2324,6 +2484,9 @@ function switchToVideoMode() {
     const shouldAutoPlay = result.autoPlay !== false; // Default to true
     if (shouldAutoPlay && video) {
       playVideo();
+    } else if (videoVisibilityManager) {
+      // Show play overlay if not auto-playing
+      videoVisibilityManager.showPlayOverlay();
     }
   });
 

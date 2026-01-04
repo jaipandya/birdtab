@@ -35,14 +35,6 @@
     "message": "Recordist",
     "description": "Label for audio recordist credit"
   },
-  "viaText": {
-    "message": "via",
-    "description": "Text before Macaulay Library link"
-  },
-  "macaulayLibrary": {
-    "message": "Macaulay Library",
-    "description": "Name of Macaulay Library"
-  },
   "openSettings": {
     "message": "Open settings",
     "description": "Aria label for settings button"
@@ -136,7 +128,7 @@
     "description": "Label for productivity features toggle"
   },
   "productivityHelpText": {
-    "message": "Enable search box, top sites, and custom shortcuts for enhanced productivity.",
+    "message": "Enable search box, top sites, and custom shortcuts.",
     "description": "Help text for productivity features"
   },
   "productivityTooltip": {
@@ -487,14 +479,6 @@
     "message": "Bird Quiz Results",
     "description": "Title used when sharing quiz results"
   },
-  "quizShareText": {
-    "message": "I scored {score}/10 on the BirdTab bird quiz!",
-    "description": "Text used when sharing quiz results"
-  },
-  "quizShareCTA": {
-    "message": "Test your bird knowledge at birdtab.app",
-    "description": "Call to action text shown on shared quiz image"
-  },
   "quizShareGenerating": {
     "message": "Generating...",
     "description": "Button text while generating share image"
@@ -614,14 +598,6 @@
   "quizLoadingQuestions": {
     "message": "Preparing your quiz...",
     "description": "Loading message when preparing quiz questions"
-  },
-  "quizLoadingAnswers": {
-    "message": "Loading quiz answers...",
-    "description": "Loading message when loading quiz answer options"
-  },
-  "quizLoadingImage": {
-    "message": "Loading bird image...",
-    "description": "Loading message when loading bird image"
   },
   "photoBy": {
     "message": "Photo by",
@@ -748,7 +724,7 @@
     "description": "Label for video mode setting"
   },
   "videoModeHelpText": {
-    "message": "Show bird videos instead of photos when available. Videos include their own audio from the recording.",
+    "message": "Show bird videos instead of photos when available.",
     "description": "Help text for video mode setting"
   },
   "videoModeTooltip": {
@@ -766,6 +742,26 @@
   "videoNotAvailableForBird": {
     "message": "No video available for this bird",
     "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "Loading audio",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "Loading video",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "Buffering",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "via",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "Macaulay Library",
+    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "Viewing History",
@@ -944,11 +940,15 @@
     "description": "Label for high-resolution images feature"
   },
   "highResHelpText": {
-    "message": "Display ultra high-resolution 2400px bird photos for crystal-clear detail.",
+    "message": "Display ultra high-resolution bird photos for crystal-clear detail.",
     "description": "Help text for high-resolution images setting"
   },
   "highResTooltip": {
     "message": "Enable to show high-resolution images",
     "description": "Tooltip for high-resolution images toggle"
+  },
+  "sendFeedback": {
+    "message": "Send Feedback",
+    "description": "Link text for sending feedback to support"
   }
 }

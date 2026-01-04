@@ -35,14 +35,6 @@
     "message": "録音者",
     "description": "Label for audio recordist credit"
   },
-  "viaText": {
-    "message": "経由",
-    "description": "Text before Macaulay Library link"
-  },
-  "macaulayLibrary": {
-    "message": "マコーレー図書館",
-    "description": "Name of Macaulay Library"
-  },
   "openSettings": {
     "message": "設定を開く",
     "description": "Aria label for settings button"
@@ -487,14 +479,6 @@
     "message": "鳥クイズの結果",
     "description": "Title used when sharing quiz results"
   },
-  "quizShareText": {
-    "message": "BirdTabの鳥クイズで{score}/10を獲得しました！",
-    "description": "Text used when sharing quiz results"
-  },
-  "quizShareCTA": {
-    "message": "birdtab.appであなたの鳥の知識をテストしよう",
-    "description": "Call to action text shown on shared quiz image"
-  },
   "quizShareGenerating": {
     "message": "生成中...",
     "description": "Button text while generating share image"
@@ -610,14 +594,6 @@
   "quizLoadingQuestions": {
     "message": "クイズを準備中...",
     "description": "Loading message when preparing quiz questions"
-  },
-  "quizLoadingAnswers": {
-    "message": "クイズの選択肢を読み込み中...",
-    "description": "Loading message when loading quiz answer options"
-  },
-  "quizLoadingImage": {
-    "message": "鳥の画像を読み込み中...",
-    "description": "Loading message when loading bird image"
   },
   "photoBy": {
     "message": "撮影者",
@@ -748,7 +724,7 @@
     "description": "Label for video mode setting"
   },
   "videoModeHelpText": {
-    "message": "利用可能な場合、写真の代わりに鳥の動画を表示します。動画には録音された音声が含まれています。",
+    "message": "利用可能な場合、写真の代わりに鳥の動画を表示します。",
     "description": "Help text for video mode setting"
   },
   "videoModeTooltip": {
@@ -766,6 +742,26 @@
   "videoNotAvailableForBird": {
     "message": "この鳥の動画はありません",
     "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "音声を読み込み中",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "動画を読み込み中",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "バッファ中",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "提供元",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "マコーレー図書館",
+    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "表示履歴",
@@ -944,11 +940,15 @@
     "description": "Label for high-resolution images feature"
   },
   "highResHelpText": {
-    "message": "超高解像度2400pxの鳥の写真を表示して、鮮明なディテールをお楽しみください。",
+    "message": "超高解像度鳥の写真を表示して、鮮明なディテールをお楽しみください。",
     "description": "Help text for high-resolution images setting"
   },
   "highResTooltip": {
     "message": "有効にすると高解像度画像を表示します",
     "description": "Tooltip for high-resolution images toggle"
+  },
+  "sendFeedback": {
+    "message": "フィードバックを送信",
+    "description": "Link text for sending feedback to support"
   }
 }
