@@ -45,7 +45,6 @@ class SettingsModal {
     this.escapeHandler = null;
     this.abortController = new AbortController();
     
-    this.settingsButton = document.getElementById('settings-button');
     this.createModal();
     this.initializeElements();
     this.bindEvents();
@@ -217,14 +216,16 @@ class SettingsModal {
   }
 
   bindEvents() {
-    // Settings button click
-    if (this.settingsButton) {
-      this.settingsButton.addEventListener('click', (e) => {
+    // Settings button click - use event delegation to handle button replacement
+    // This ensures clicks work even if the button is replaced in the DOM
+    document.addEventListener('click', (e) => {
+      const settingsBtn = e.target.closest('#settings-button');
+      if (settingsBtn) {
         e.preventDefault();
         e.stopPropagation();
         this.open();
-      });
-    }
+      }
+    }, { signal: this.abortController.signal });
 
     // Close button click
     if (this.closeButton) {
@@ -342,9 +343,10 @@ class SettingsModal {
     this.modal.classList.add('hidden');
     this.isOpen = false;
     
-    // Return focus to settings button
-    if (this.settingsButton) {
-      this.settingsButton.focus();
+    // Return focus to settings button (query fresh in case DOM was replaced)
+    const settingsBtn = document.getElementById('settings-button');
+    if (settingsBtn) {
+      settingsBtn.focus();
     }
   }
 
@@ -359,7 +361,6 @@ class SettingsModal {
     
     // Clear references
     this.modal = null;
-    this.settingsButton = null;
     this.escapeHandler = null;
     
     // Clear module-level instance
