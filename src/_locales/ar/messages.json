@@ -459,10 +459,6 @@
     "message": "السؤال {currentQuestion} من {totalQuestions}",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "النتيجة: {score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "السؤال التالي",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "طائر غير معروف",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "الخروج من الاختبار؟",
     "description": "Title for quiz exit confirmation modal"
@@ -623,17 +623,9 @@
     "message": "صورة بواسطة",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "اكتمل الاختبار!",
-    "description": "Title for quiz completion"
-  },
   "quizResults": {
     "message": "نتائج الاختبار",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "النتيجة النهائية: {score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "مراجعة الأسئلة",

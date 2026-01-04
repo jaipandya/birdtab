@@ -459,10 +459,6 @@
     "message": "Pregunta {currentQuestion} de {totalQuestions}",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "Puntuación: {score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "Siguiente Pregunta",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "Ave desconocida",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "¿Salir del Quiz?",
     "description": "Title for quiz exit confirmation modal"
@@ -623,17 +623,9 @@
     "message": "Foto por",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "¡Quiz Completado!",
-    "description": "Title for quiz completion"
-  },
   "quizResults": {
     "message": "Resultados del Quiz",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "Puntuación Final: {score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "Revisión de Preguntas",

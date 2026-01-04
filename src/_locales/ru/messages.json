@@ -459,10 +459,6 @@
     "message": "Вопрос {currentQuestion} из {totalQuestions}",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "Счет: {score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "Следующий вопрос",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "Неизвестная птица",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "Выйти из викторины?",
     "description": "Title for quiz exit confirmation modal"
@@ -623,17 +623,9 @@
     "message": "Фото",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "Викторина завершена!",
-    "description": "Quiz complete title"
-  },
   "quizResults": {
     "message": "Результаты викторины",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "Итоговый счет: {score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "Обзор вопросов",

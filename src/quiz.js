@@ -561,7 +561,6 @@ class QuizMode {
           </div>
           <div class="quiz-meta">
             <span>${chrome.i18n.getMessage('quizProgress').replace('{currentQuestion}', '<span id="quiz-current">1</span>').replace('{totalQuestions}', '10')}</span>
-            <span>${chrome.i18n.getMessage('quizScore').replace('{score}', '<span id="quiz-score">0</span>').replace('{total}', '10')}</span>
           </div>
         </div>
         
@@ -669,16 +668,14 @@ class QuizMode {
     const progressPercent = ((this.currentQuestion + 1) / 10) * 100;
     const progressFill = document.getElementById('quiz-progress-fill');
     const currentEl = document.getElementById('quiz-current');
-    const scoreEl = document.getElementById('quiz-score');
     
-    if (!progressFill || !currentEl || !scoreEl) {
+    if (!progressFill || !currentEl) {
       log('displayQuestion aborted: required DOM elements not found');
       return;
     }
     
     progressFill.style.width = `${progressPercent}%`;
     currentEl.textContent = this.currentQuestion + 1;
-    scoreEl.textContent = this.score;
 
     // Update question text (clear any loading state)
     const questionText = document.getElementById('quiz-question-text');
@@ -944,26 +941,16 @@ class QuizMode {
     }
     
     const options = document.querySelectorAll('.quiz-option');
-    const question = this.questions[this.currentQuestion];
 
+    // Only show which option was selected - don't reveal correct/incorrect
+    // The reveal happens on the results page
     options.forEach((option, index) => {
-      const optionData = question.options[index];
-      if (!optionData) return;
-      
       option.classList.add('disabled');
 
-      if (optionData.isCorrect) {
-        option.classList.add('correct');
-      } else if (index === this.selectedAnswer) {
-        option.classList.add('incorrect');
+      if (index === this.selectedAnswer) {
+        option.classList.add('selected-confirmed');
       }
     });
-
-    // Update score display
-    const scoreEl = document.getElementById('quiz-score');
-    if (scoreEl) {
-      scoreEl.textContent = this.score;
-    }
   }
 
   async nextQuestion() {
@@ -1035,17 +1022,13 @@ class QuizMode {
     }
     
     this.quizContainer.innerHTML = `
-      <button class="quiz-close-btn" id="quiz-results-close" aria-label="Close quiz">
-        <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+      <button class="quiz-close-btn" id="quiz-results-close" aria-label="${chrome.i18n.getMessage('closeQuiz')}">
+        <img src="images/svg/close.svg" alt="${chrome.i18n.getMessage('closeAlt')}" width="20" height="20">
       </button>
       <div class="quiz-container">
         <div class="quiz-header">
           <div class="quiz-progress-bar">
             <div class="quiz-progress-fill" style="width: 100%"></div>
-          </div>
-          <div class="quiz-meta">
-            <span>${chrome.i18n.getMessage('quizComplete')}</span>
-            <span>${chrome.i18n.getMessage('finalScore', { score: this.score })}</span>
           </div>
           <h1 class="quiz-question-title">${chrome.i18n.getMessage('quizResults')}</h1>
         </div>
@@ -1060,12 +1043,15 @@ class QuizMode {
               <h3 class="quiz-results-title">${chrome.i18n.getMessage('questionReview')}</h3>
               ${this.answers.map((answer, index) => `
                 <div class="quiz-result-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
-                  <div class="quiz-result-bird">
-                    ${index + 1}. ${answer.question.bird.primaryComName}
-                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', [answer.correctAnswer])}</div>` : ''}
+                  <div class="quiz-result-thumbnail-wrapper">
+                    <img src="${answer.question.bird.imageUrl}" alt="${answer.question.bird.primaryComName}" class="quiz-result-thumbnail" />
+                    <div class="quiz-result-badge ${answer.isCorrect ? 'correct' : 'incorrect'}">
+                      ${answer.isCorrect ? '✓' : '✗'}
+                    </div>
                   </div>
-                  <div class="quiz-result-status ${answer.isCorrect ? 'correct' : 'incorrect'}">
-                    ${answer.isCorrect ? chrome.i18n.getMessage('correct') : chrome.i18n.getMessage('incorrect')}
+                  <div class="quiz-result-info">
+                    <div class="quiz-result-bird-name">${answer.question.bird.primaryComName}</div>
+                    ${!answer.isCorrect ? `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', [answer.correctAnswer])}</div>` : ''}
                   </div>
                 </div>
               `).join('')}
@@ -1381,7 +1367,6 @@ class QuizMode {
           </div>
           <div class="quiz-meta">
             <span>${chrome.i18n.getMessage('quizProgress').replace('{currentQuestion}', '<span id="quiz-current">1</span>').replace('{totalQuestions}', '10')}</span>
-            <span>${chrome.i18n.getMessage('quizScore').replace('{score}', '<span id="quiz-score">0</span>').replace('{total}', '10')}</span>
           </div>
         </div>
         
@@ -1871,7 +1856,7 @@ class QuizMode {
         
         <div class="quiz-content quiz-share-content">
           <div class="quiz-share-image-container">
-            <img src="${dataUrl}" alt="Quiz Results Collage" class="quiz-share-preview-image" />
+            <img src="${dataUrl}" alt="${chrome.i18n.getMessage('quizShareCollageAlt')}" class="quiz-share-preview-image" />
           </div>
           
           <div class="quiz-share-actions">

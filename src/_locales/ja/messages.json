@@ -459,10 +459,6 @@
     "message": "問題 {currentQuestion} / {totalQuestions}",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "スコア: {score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "次の問題",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "不明な鳥",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "クイズを終了しますか？",
     "description": "Title for quiz exit confirmation modal"
@@ -623,17 +623,9 @@
     "message": "撮影者",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "クイズ完了！",
-    "description": "Quiz complete title"
-  },
   "quizResults": {
     "message": "クイズ結果",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "最終スコア：{score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "問題の振り返り",

@@ -459,10 +459,6 @@
     "message": "Question {currentQuestion} of {totalQuestions}",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "Score: {score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "Next Question",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "Unknown Bird",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "Exit Quiz?",
     "description": "Title for quiz exit confirmation modal"
@@ -627,17 +627,9 @@
     "message": "Photo by",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "Quiz Complete!",
-    "description": "Title for quiz completion"
-  },
   "quizResults": {
     "message": "Quiz Results",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "Final Score: {score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "Question Review",

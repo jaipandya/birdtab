@@ -459,10 +459,6 @@
     "message": "第 {currentQuestion} 题，共 {totalQuestions} 题",
     "description": "Progress indicator in quiz mode"
   },
-  "quizScore": {
-    "message": "得分：{score}/{total}",
-    "description": "Score display in quiz mode"
-  },
   "quizNextQuestion": {
     "message": "下一题",
     "description": "Button text for next question"
@@ -555,6 +551,10 @@
     "message": "未知鸟类",
     "description": "Fallback text for unknown bird name"
   },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
   "quizExitConfirmTitle": {
     "message": "退出测验？",
     "description": "Title for quiz exit confirmation modal"
@@ -623,17 +623,9 @@
     "message": "照片拍摄者",
     "description": "Text before photographer credit"
   },
-  "quizComplete": {
-    "message": "测验完成！",
-    "description": "Quiz complete title"
-  },
   "quizResults": {
     "message": "测验结果",
     "description": "Title for quiz results section"
-  },
-  "finalScore": {
-    "message": "最终得分：{score}/10",
-    "description": "Final score display"
   },
   "questionReview": {
     "message": "题目回顾",
