@@ -260,10 +260,12 @@ class TopSites {
       img.onerror = () => {
         // Fallback to default icon if favicon fails to load
         favicon.innerHTML = this.getDefaultIcon();
+        favicon.classList.add('has-fallback-icon');
       };
       favicon.appendChild(img);
     } else {
       favicon.innerHTML = this.getDefaultIcon();
+      favicon.classList.add('has-fallback-icon');
     }
 
     // Create title element
@@ -275,7 +277,7 @@ class TopSites {
     if (site.isCustom) {
       siteDiv.classList.add('custom-shortcut');
 
-      // Add remove button (Chrome-style)
+      // Add remove button (Chrome-style) - only for custom shortcuts
       const removeButton = document.createElement('div');
       removeButton.className = 'remove-shortcut';
       removeButton.innerHTML = '×';
