@@ -709,7 +709,7 @@ body.loaded {
   width: 100%;
   padding: 1rem 2rem 2rem;
   text-align: left;
-  z-index: 2;
+  z-index: 100;
 }
 
 @media (min-width: 768px) {
