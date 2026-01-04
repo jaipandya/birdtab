@@ -326,11 +326,8 @@ class SettingsModal {
     this.modal.classList.remove('hidden');
     this.isOpen = true;
     
-    // Focus trap - focus the first focusable element
-    const firstFocusable = this.modal.querySelector('select, input, button');
-    if (firstFocusable) {
-      setTimeout(() => firstFocusable.focus(), 100);
-    }
+    // Don't auto-focus any element to avoid visual highlight
+    // Focus will be managed naturally when user interacts with keyboard
   }
 
   close() {

@@ -1589,13 +1589,16 @@ async function initializePage() {
           </span>
           <span class="credit-item media-toggle-container">
             <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
-              <input type="checkbox" id="media-toggle-switch" ${isVideoMode ? 'checked' : ''}>
-              <span class="media-toggle-slider">
+              <input type="checkbox" id="media-toggle-switch" ${isVideoMode ? 'checked' : ''} 
+                     aria-label="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}"
+                     role="switch"
+                     aria-checked="${isVideoMode ? 'true' : 'false'}">
+              <span class="media-toggle-slider" aria-hidden="true">
                 <span class="media-toggle-icon media-toggle-photo">
-                  <img src="images/svg/camera.svg" alt="Photo" width="12" height="12">
+                  <img src="images/svg/camera.svg" alt="" width="12" height="12">
                 </span>
                 <span class="media-toggle-icon media-toggle-video">
-                  <img src="images/svg/video.svg" alt="Video" width="12" height="12">
+                  <img src="images/svg/video.svg" alt="" width="12" height="12">
                 </span>
               </span>
             </label>
@@ -2061,6 +2064,9 @@ function setupMediaToggle(isImageMode = false) {
   isShowingVideo = !isImageMode;
 
   toggleSwitch.addEventListener('change', async function () {
+    // Update aria-checked for accessibility
+    this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+    
     if (this.checked) {
       // User wants to switch to video mode
       if (isImageMode && !video) {
@@ -2082,7 +2088,10 @@ async function fetchAndSwitchToVideo() {
   
   if (!birdInfo || !birdInfo.speciesCode) {
     log('No bird info available for video fetch');
-    if (toggleSwitch) toggleSwitch.checked = false;
+    if (toggleSwitch) {
+      toggleSwitch.checked = false;
+      toggleSwitch.setAttribute('aria-checked', 'false');
+    }
     return;
   }
   
@@ -2106,6 +2115,12 @@ async function fetchAndSwitchToVideo() {
     });
     
     if (response && response.videoUrl) {
+      // Check if user switched back to photo mode while we were fetching
+      if (!toggleSwitch || !toggleSwitch.checked) {
+        log('User switched back to photo mode during video fetch, aborting');
+        return;
+      }
+      
       // Store video info in birdInfo
       birdInfo.videoUrl = response.videoUrl;
       birdInfo.videographer = response.videographer;
@@ -2113,6 +2128,16 @@ async function fetchAndSwitchToVideo() {
       
       // Create video element
       await createVideoElement(response.videoUrl);
+      
+      // Check again if user switched back during video element creation
+      if (!toggleSwitch || !toggleSwitch.checked) {
+        log('User switched back to photo mode during video creation, aborting');
+        // Stop the video that was just created
+        if (video && !video.paused) {
+          video.pause();
+        }
+        return;
+      }
       
       // Update credits to show video credits
       updateCreditsForVideoMode();
@@ -2126,6 +2151,7 @@ async function fetchAndSwitchToVideo() {
       log('No video available for this bird');
       if (toggleSwitch) {
         toggleSwitch.checked = false;
+        toggleSwitch.setAttribute('aria-checked', 'false');
       }
       // Show toast notification to inform user
       showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
@@ -2134,6 +2160,7 @@ async function fetchAndSwitchToVideo() {
     log(`Error fetching video: ${error.message}`);
     if (toggleSwitch) {
       toggleSwitch.checked = false;
+      toggleSwitch.setAttribute('aria-checked', 'false');
     }
     // Show toast notification for error
     showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
@@ -2182,6 +2209,7 @@ async function createVideoElement(videoUrl) {
     const toggleSwitch = document.getElementById('media-toggle-switch');
     if (toggleSwitch) {
       toggleSwitch.checked = false;
+      toggleSwitch.setAttribute('aria-checked', 'false');
     }
     isShowingVideo = false;
     
