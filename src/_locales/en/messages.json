@@ -539,6 +539,14 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "Image unavailable",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Can you identify this bird?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
   "quizExitConfirmTitle": {
     "message": "Exit Quiz?",
     "description": "Title for quiz exit confirmation modal"
@@ -546,6 +554,10 @@
   "quizExitConfirmMessage": {
     "message": "Are you sure you want to exit the quiz? Your progress will be lost.",
     "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Are you sure you want to close?",
+    "description": "Message for quiz exit confirmation on results/share page"
   },
   "quizExitConfirm": {
     "message": "Exit Quiz",

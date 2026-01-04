@@ -539,6 +539,18 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "图片不可用",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "你能识别这只鸟吗？",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "确定要关闭吗？",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
   "quizExitConfirmTitle": {
     "message": "退出测验？",
     "description": "Title for quiz exit confirmation modal"

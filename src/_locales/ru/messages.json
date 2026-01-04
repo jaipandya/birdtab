@@ -539,6 +539,18 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "Изображение недоступно",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Можете ли вы определить эту птицу?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Вы уверены, что хотите закрыть?",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
   "quizExitConfirmTitle": {
     "message": "Выйти из викторины?",
     "description": "Title for quiz exit confirmation modal"

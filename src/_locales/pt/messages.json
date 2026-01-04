@@ -539,6 +539,18 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "Imagem indisponível",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Você consegue identificar este pássaro?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Tem certeza de que deseja fechar?",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
   "quizExitConfirmTitle": {
     "message": "Sair do Quiz?",
     "description": "Title for quiz exit confirmation modal"

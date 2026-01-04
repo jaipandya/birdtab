@@ -22,6 +22,12 @@ html[dir="rtl"] .quiz-close-btn {
   right: auto;
 }
 
+/* Ensure close button is visible on all pages */
+.quiz-share-preview .quiz-close-btn {
+  top: 20px;
+  right: 20px;
+}
+
 /* Import better fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=SF+Pro+Display:wght@400;500;600;700&display=swap');
 
@@ -127,13 +133,13 @@ html[dir="rtl"] .quiz-close-btn {
 
 .quiz-close-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 20px;
+  right: 20px;
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   display: flex;
   align-items: center;

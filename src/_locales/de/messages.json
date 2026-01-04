@@ -539,6 +539,18 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "Bild nicht verfügbar",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Können Sie diesen Vogel identifizieren?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Möchten Sie wirklich schließen?",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
   "quizExitConfirmTitle": {
     "message": "Quiz verlassen?",
     "description": "Title for quiz exit confirmation modal"

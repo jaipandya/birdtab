@@ -539,6 +539,18 @@
     "message": "Quiz Results Collage",
     "description": "Alt text for the quiz results share image"
   },
+  "quizImageUnavailable": {
+    "message": "الصورة غير متوفرة",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "هل يمكنك تحديد هذا الطائر؟",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "هل أنت متأكد أنك تريد الإغلاق؟",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
   "quizExitConfirmTitle": {
     "message": "الخروج من الاختبار؟",
     "description": "Title for quiz exit confirmation modal"
