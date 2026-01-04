@@ -699,6 +699,10 @@
     "message": "Видео недоступно: Ваше соединение медленное (2G/3G) или включена экономия трафика. Показано фото для экономии данных.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "Видео для этой птицы недоступно",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "История просмотров",
     "description": "Title for history modal"

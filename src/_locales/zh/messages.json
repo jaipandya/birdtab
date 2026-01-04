@@ -699,6 +699,10 @@
     "message": "视频不可用：您的网络连接较慢（2G/3G）或已启用省流量模式。为节省流量，正在显示照片。",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "此鸟类没有可用的视频",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "查看历史",
     "description": "Title for history modal"

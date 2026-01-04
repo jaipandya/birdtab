@@ -699,6 +699,10 @@
     "message": "Video no disponible: Tu conexión es lenta (2G/3G) o el ahorro de datos está activado. Mostrando foto para ahorrar datos.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "No hay video disponible para este pájaro",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "Historial de Visualización",
     "description": "Title for history modal"

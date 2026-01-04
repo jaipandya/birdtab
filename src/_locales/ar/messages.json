@@ -699,6 +699,10 @@
     "message": "الفيديو غير متاح: اتصالك بطيء (2G/3G) أو تم تفعيل موفر البيانات. يتم عرض الصورة لتوفير البيانات.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "لا يوجد فيديو متاح لهذا الطائر",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "سجل المشاهدة",
     "description": "Title for history modal"

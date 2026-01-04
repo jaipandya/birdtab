@@ -1229,6 +1229,39 @@ function hideVideoLoadingIndicator() {
   }
 }
 
+// Show a toast notification message
+// type: 'info' (default), 'success', 'error'
+function showToast(message, type = 'info') {
+  // Remove existing toast if present
+  const existingToast = document.querySelector('.toast-notification');
+  if (existingToast) {
+    existingToast.remove();
+  }
+
+  // Create new toast
+  const toast = document.createElement('div');
+  toast.className = `toast-notification toast-${type}`;
+  toast.textContent = message;
+  
+  // Add to document
+  document.body.appendChild(toast);
+  
+  // Show toast with animation after a brief delay
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 50);
+  
+  // Hide and remove toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.remove();
+      }
+    }, 300);
+  }, 3000);
+}
+
 // Video progress bar controller
 let progressHideTimeout = null;
 
@@ -2094,13 +2127,16 @@ async function fetchAndSwitchToVideo() {
       if (toggleSwitch) {
         toggleSwitch.checked = false;
       }
-      // Could show a toast message here
+      // Show toast notification to inform user
+      showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
     }
   } catch (error) {
     log(`Error fetching video: ${error.message}`);
     if (toggleSwitch) {
       toggleSwitch.checked = false;
     }
+    // Show toast notification for error
+    showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
   } finally {
     hideVideoLoadingIndicator();
   }
@@ -2141,6 +2177,16 @@ async function createVideoElement(videoUrl) {
   setupVideoEventListeners(videoEl, () => {
     // Fallback to image if video fails
     showPosterImage();
+    
+    // Revert toggle switch to image mode
+    const toggleSwitch = document.getElementById('media-toggle-switch');
+    if (toggleSwitch) {
+      toggleSwitch.checked = false;
+    }
+    isShowingVideo = false;
+    
+    // Show toast notification
+    showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
   });
   
   // Initialize VideoVisibilityManager

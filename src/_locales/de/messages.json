@@ -699,6 +699,10 @@
     "message": "Video nicht verfügbar: Ihre Verbindung ist langsam (2G/3G) oder der Datensparmodus ist aktiviert. Foto wird angezeigt, um Daten zu sparen.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "Kein Video für diesen Vogel verfügbar",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "Anzeigeverlauf",
     "description": "Title for history modal"

@@ -699,6 +699,10 @@
     "message": "Video unavailable: Your connection is slow (2G/3G) or data saver is enabled. Showing photo instead to save bandwidth.",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "No video available for this bird",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "Viewing History",
     "description": "Title for history modal"

@@ -699,6 +699,10 @@
     "message": "動画が利用できません：接続が遅い（2G/3G）か、データセーバーが有効になっています。データを節約するため写真を表示しています。",
     "description": "Tooltip explaining why video is unavailable due to slow connection"
   },
+  "videoNotAvailableForBird": {
+    "message": "この鳥の動画はありません",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
   "historyTitle": {
     "message": "表示履歴",
     "description": "Title for history modal"
