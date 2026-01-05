@@ -53,6 +53,8 @@ class QuizMode {
     this.abortController = null; // For cancelling pending requests
     this.eventListeners = []; // Track event listeners for cleanup
     this.onQuizStart = options.onQuizStart || null; // Callback when quiz starts
+    this.loadingProgress = 0; // Track image loading progress (0-100%)
+    this.totalImagesToLoad = QUIZ_TOTAL_QUESTIONS; // Total images to preload
 
     this.setupKeyboardListener();
   }
@@ -468,11 +470,23 @@ class QuizMode {
   }
 
   async startImagePreloading() {
+    // Reset loading progress
+    this.loadingProgress = 0;
+    
     // Load first question's image with priority
     await this.loadQuestionImage(0, true);
+    this.incrementLoadingProgress();
     
     // Start preloading remaining images in background (non-priority)
     this.preloadRemainingImages();
+  }
+
+  /**
+   * Increment loading progress when an image successfully loads
+   */
+  incrementLoadingProgress() {
+    this.loadingProgress += (100 / this.totalImagesToLoad);
+    this.updateLoadingProgress(Math.min(100, this.loadingProgress));
   }
 
   async ensureFirstImageLoaded() {
@@ -518,20 +532,32 @@ class QuizMode {
   async preloadRemainingImages() {
     for (let i = 1; i < this.questions.length; i++) {
       const bird = this.questions?.[i]?.bird;
-      if (!bird || bird.imageUrl) continue;
+      if (!bird || bird.imageUrl) {
+        // If already loaded, count it towards progress
+        this.incrementLoadingProgress();
+        continue;
+      }
 
       // Check cache first
       const cachedInfo = await this.getBirdImage(bird.speciesCode);
       if (cachedInfo?.imageUrl) {
         this.updateQuestionImage(i, cachedInfo);
+        this.incrementLoadingProgress();
         continue;
       }
 
       // Load in background without priority
       const questionIndex = i; // Capture for closure
       this.loadBirdImageFromCDN(bird.speciesCode, false)
-        .then(info => this.updateQuestionImage(questionIndex, info))
-        .catch(error => log(`Failed to preload image for ${bird.primaryComName}: ${error.message}`));
+        .then(info => {
+          this.updateQuestionImage(questionIndex, info);
+          this.incrementLoadingProgress();
+        })
+        .catch(error => {
+          log(`Failed to preload image for ${bird.primaryComName}: ${error.message}`);
+          // Still increment progress even on failure to avoid getting stuck
+          this.incrementLoadingProgress();
+        });
     }
   }
 
@@ -645,6 +671,28 @@ class QuizMode {
     if (nextButton) {
       nextButton.disabled = true;
     }
+
+    // Hide the "Question X of 10" text during loading
+    const progressMeta = document.querySelector('.quiz-meta');
+    if (progressMeta) {
+      progressMeta.style.visibility = 'hidden';
+    }
+
+    // Initialize loading progress bar
+    this.updateLoadingProgress(0);
+  }
+
+  /**
+   * Update the loading progress bar during initial quiz setup
+   * @param {number} progress - Progress percentage (0-100)
+   */
+  updateLoadingProgress(progress) {
+    const progressBar = this.getElement('quiz-progress-fill');
+    
+    if (progressBar) {
+      progressBar.style.width = `${progress}%`;
+      progressBar.style.transition = 'width 0.3s ease';
+    }
   }
 
   showQuizUI() {
@@ -709,6 +757,12 @@ class QuizMode {
     if (!elements) {
       log('displayQuestion aborted: required DOM elements not found');
       return;
+    }
+
+    // Show the "Question X of 10" text now that we're displaying actual questions
+    const progressMeta = document.querySelector('.quiz-meta');
+    if (progressMeta) {
+      progressMeta.style.visibility = 'visible';
     }
 
     const progressPercent = ((this.currentQuestion + 1) / QUIZ_TOTAL_QUESTIONS) * 100;
@@ -976,6 +1030,7 @@ class QuizMode {
     this.hasAnswered = false;
     this.imageLoadingQueue = [];
     this.isLoadingImages = false;
+    this.loadingProgress = 0;
   }
 
   /**
