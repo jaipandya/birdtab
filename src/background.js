@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-import { initSentry, captureException, captureMessage, addBreadcrumb } from './sentry.js';
+import { initSentry, captureException, addBreadcrumb, reportApiError } from './sentry.js';
 import { log } from './logger.js';
 
 // Initialize Sentry for background script
@@ -272,6 +272,9 @@ async function fetchJson(url, timeoutMs = 25000, maxRetries = 1) {
         networkError.originalError = error.name;
       }
 
+      // Store the wrapped error so it gets thrown if retries are exhausted
+      lastError = networkError;
+
       // Retry network errors if user is online (transient network glitches)
       // Don't retry if offline - it's pointless and wastes resources
       if (attempt < maxRetries && navigator.onLine) {
@@ -446,32 +449,13 @@ async function getBirdsByRegion(region) {
   } catch (error) {
     log(`Error fetching birds: ${error.message}`);
 
-    // Distinguish between network errors (user issue) and API errors (our issue)
-    if (error.isNetworkError) {
-      // Network connectivity issue - log as warning
-      // Include cached bird count for impact assessment and online status for debugging
-      const cachedBirdCount = await getCachedBirdCount();
-      captureMessage('Network error fetching birds from API', 'warning', {
-        tags: {
-          operation: 'getBirdsByRegion',
-          errorType: 'network'
-        },
-        extra: {
-          region,
-          errorMessage: error.message,
-          cachedBirdCount
-        }
-      });
-    } else {
-      // API errors, data errors, or other issues - log as error
-      captureException(error, {
-        tags: { operation: 'getBirdsByRegion' },
-        extra: {
-          region,
-          statusCode: error.statusCode // Include HTTP status if available
-        }
-      });
-    }
+    // Report error with appropriate severity based on classification
+    const cachedBirdCount = await getCachedBirdCount();
+    reportApiError(error, {
+      operation: 'getBirdsByRegion',
+      extra: { region },
+      cachedBirdCount
+    });
 
     const cachedData = await getCachedData(cacheKey);
     if (cachedData) {
@@ -541,39 +525,14 @@ async function fetchBirdInfo(region, videoMode = false) {
       // Image fetch failed - try to use a previously cached complete bird
       log(`Error fetching image: ${error.message}`);
 
-      // Report network errors and 5xx server errors as warnings (not our bug)
-      // - Network errors: user's network issue
-      // - 5xx errors: transient issues on Macaulay Library's servers
-      // Report data errors (4xx, missing images) as errors (issues we might fix)
-      if (error.isNetworkError || error.message?.includes('Failed to fetch') || error.isServerError) {
-        const errorType = error.isServerError ? 'serverError' : 'network';
-        const cachedBirdCount = await getCachedBirdCount();
-        captureMessage(`${errorType === 'serverError' ? 'Server' : 'Network'} error fetching bird image`, 'warning', {
-          tags: {
-            operation: 'getMacaulayImage',
-            component: 'background',
-            errorType,
-            statusCode: error.statusCode || 'unknown'
-          },
-          extra: {
-            speciesCode: bird.speciesCode,
-            region,
-            errorMessage: error.message,
-            cachedBirdCount
-          }
-        });
-      } else {
-        // Data errors (missing images, 4xx client errors) - report as errors
-        captureException(error, {
-          tags: { operation: 'getMacaulayImage', component: 'background' },
-          extra: {
-            speciesCode: bird.speciesCode,
-            region,
-            responseData: error.responseData,
-            statusCode: error.statusCode
-          }
-        });
-      }
+      // Report error with appropriate severity based on classification
+      const cachedBirdCount = await getCachedBirdCount();
+      reportApiError(error, {
+        operation: 'getMacaulayImage',
+        component: 'background',
+        extra: { speciesCode: bird.speciesCode, region },
+        cachedBirdCount
+      });
       
       const cachedBirdInfo = await getRandomCachedBirdInfo();
       if (cachedBirdInfo) {
@@ -678,32 +637,14 @@ async function preloadNextBird(region, videoMode = false) {
   } catch (error) {
     log(`Error preloading next bird: ${error.message}`);
 
-    // Network and 5xx server errors during preload are expected - log as info
-    // Preload is an optimization, not critical functionality
-    // - Network errors: user offline, etc.
-    // - 5xx errors: transient issues on Macaulay Library's servers
-    if (error.isNetworkError || error.message?.includes('Failed to fetch') || error.isServerError) {
-      const errorType = error.isServerError ? 'serverError' : 'network';
-      const cachedBirdCount = await getCachedBirdCount();
-      captureMessage(`${errorType === 'serverError' ? 'Server' : 'Network'} error during bird preload`, 'info', {
-        tags: {
-          operation: 'preloadNextBird',
-          errorType,
-          statusCode: error.statusCode || 'unknown'
-        },
-        extra: {
-          region,
-          errorMessage: error.message,
-          cachedBirdCount
-        }
-      });
-    } else {
-      // Non-network/non-server errors (data issues, bugs) should still be reported as errors
-      captureException(error, {
-        tags: { operation: 'preloadNextBird' },
-        extra: { region, statusCode: error.statusCode }
-      });
-    }
+    // Preload is an optimization, not critical - use 'info' level for transient errors
+    const cachedBirdCount = await getCachedBirdCount();
+    reportApiError(error, {
+      operation: 'preloadNextBird',
+      transientLevel: 'info',
+      extra: { region },
+      cachedBirdCount
+    });
   }
 }
 

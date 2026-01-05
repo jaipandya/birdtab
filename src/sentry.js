@@ -618,4 +618,137 @@ export function setPerformanceContext(operation, data = {}) {
   }
 }
 
+/**
+ * Classify an error as transient (infrastructure/network) or data (bugs/missing content).
+ * 
+ * Transient errors (not our bug - report as warning/info):
+ * - Network errors: user offline, DNS failure, "Failed to fetch"
+ * - 5xx server errors: server-side issues on external APIs
+ * - 407: Proxy authentication required (user's proxy/firewall issue)
+ * - 408: Request timeout (network/server performance issue)
+ * - 429: Rate limiting (temporary restriction)
+ * 
+ * Data errors (potentially our bug - report as exception):
+ * - 404: Not found (missing bird data)
+ * - Other 4xx: Bad request, authentication issues
+ * - Parsing/validation errors
+ * 
+ * @param {Error} error - The error to classify
+ * @returns {{ isTransient: boolean, type: string, label: string }}
+ */
+export function classifyError(error) {
+  // HTTP status codes that indicate transient/infrastructure issues (not our bug)
+  const TRANSIENT_HTTP_CODES = {
+    407: 'Proxy',      // Proxy authentication required - user's proxy/firewall
+    408: 'Timeout',    // Request timeout - network/server slowness
+    429: 'RateLimit'   // Rate limiting - temporary throttling
+  };
+
+  // Determine if this is a network error (no HTTP response at all)
+  const isNetworkError = error.isNetworkError || error.message?.includes('Failed to fetch');
+  
+  // Determine if this is a server-side error (5xx)
+  const isServerError = error.isServerError;
+  
+  // Determine if this is a transient HTTP error (specific 4xx codes)
+  const isTransientHttpCode = TRANSIENT_HTTP_CODES.hasOwnProperty(error.statusCode);
+
+  // Overall: is this error transient (not our bug)?
+  const isTransient = isNetworkError || isServerError || isTransientHttpCode;
+
+  // Determine error type and human-readable label
+  let type, label;
+  
+  if (isNetworkError) {
+    type = 'network';
+    label = error.isTimeout ? 'Timeout' : 'Network';
+  } else if (isServerError) {
+    type = 'serverError';
+    label = 'Server';
+  } else if (isTransientHttpCode) {
+    type = 'transientHttp';
+    label = TRANSIENT_HTTP_CODES[error.statusCode];
+  } else if (error.statusCode) {
+    type = 'httpError';
+    label = `HTTP ${error.statusCode}`;
+  } else {
+    type = 'unknown';
+    label = 'Unknown';
+  }
+
+  return { isTransient, type, label };
+}
+
+/**
+ * Report an API/network error to Sentry with consistent formatting.
+ * Transient errors are reported as messages (warning/info level).
+ * Data errors are reported as exceptions.
+ * 
+ * Use this for API calls and network operations where you need to 
+ * distinguish between infrastructure issues and actual bugs.
+ * 
+ * @param {Error} error - The error to report
+ * @param {Object} options - Reporting options
+ * @param {string} options.operation - The operation that failed (e.g., 'getBirdsByRegion')
+ * @param {string} [options.component] - Optional component name
+ * @param {string} [options.transientLevel='warning'] - Sentry level for transient errors
+ * @param {Object} [options.extra={}] - Additional context to include
+ * @param {number} [options.cachedBirdCount] - Pre-fetched cached bird count (to avoid async)
+ * @returns {{ isTransient: boolean, type: string, label: string }}
+ */
+export function reportApiError(error, { operation, component, transientLevel = 'warning', extra = {}, cachedBirdCount }) {
+  const { isTransient, type, label } = classifyError(error);
+
+  // Build common tags
+  const tags = {
+    operation,
+    errorType: type,
+    statusCode: error.statusCode || 'unknown',
+    isTransient: isTransient ? 'true' : 'false'  // Tag for filtering in Sentry
+  };
+  if (component) {
+    tags.component = component;
+  }
+
+  // Build common extra data
+  const fullErrorMessage = error.message || 'No error message';
+  const extraData = {
+    ...extra,
+    errorMessage: fullErrorMessage,
+    cachedBirdCount,
+    hasCache: cachedBirdCount > 0,  // Context for impact assessment
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : undefined
+  };
+
+  // Build fingerprint for consistent grouping
+  // Groups by: operation + error type + status code
+  // Examples:
+  //   ['getMacaulayImage', 'network', 'unknown']
+  //   ['getBirdsByRegion', 'serverError', '503']
+  //   ['preloadNextBird', 'httpError', '404']
+  const fingerprint = [operation, type, tags.statusCode];
+
+  if (isTransient) {
+    // Report transient errors as messages with warning/info level
+    // Include full error message in title for visibility (Sentry will handle display)
+    captureMessage(`${label} error during ${operation}: ${fullErrorMessage}`, transientLevel, {
+      tags,
+      extra: extraData,
+      fingerprint
+    });
+  } else {
+    // Report data errors as exceptions for investigation
+    captureException(error, {
+      tags,
+      extra: {
+        ...extraData,
+        responseData: error.responseData  // Include API response for debugging
+      },
+      fingerprint
+    });
+  }
+
+  return { isTransient, type, label };
+}
+
 export { Sentry };
