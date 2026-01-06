@@ -9,7 +9,10 @@
     <h1 data-i18n="settingsTitle">BirdTab Settings</h1>
     
     <div class="setting">
-        <label for="region" data-i18n="birdingRegion">Birding Region</label>
+        <label for="region" class="setting-label-with-icon">
+            <span data-i18n="birdingRegion">Birding Region</span>
+            <span class="pro-badge" data-i18n="proBadge">Pro</span>
+        </label>
         <select id="region" data-i18n-title="regionTooltip">
             <!-- Options will be populated by JavaScript -->
         </select>
@@ -49,6 +52,38 @@
             </div>
             <label class="switch" data-i18n-title="productivityTooltip">
                 <input type="checkbox" id="enable-productivity" aria-describedby="productivity-help">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="setting">
+        <div class="toggle-container">
+            <div class="toggle-text">
+                <span class="setting-label-with-icon">
+                    <span data-i18n="videoMode">Video Mode</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                </span>
+                <p class="help-text" id="video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available. Videos include sound.</p>
+            </div>
+            <label class="switch" data-i18n-title="videoModeTooltip">
+                <input type="checkbox" id="video-mode" aria-describedby="video-mode-help">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="setting">
+        <div class="toggle-container">
+            <div class="toggle-text">
+                <span class="setting-label-with-icon">
+                    <span data-i18n="highResImages">High-Resolution Images</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                </span>
+                <p class="help-text" id="high-res-help" data-i18n="highResHelpText">Display ultra high-resolution 2400px bird photos for crystal-clear detail.</p>
+            </div>
+            <label class="switch" data-i18n-title="highResTooltip">
+                <input type="checkbox" id="high-res" aria-describedby="high-res-help">
                 <span class="slider round"></span>
             </label>
         </div>

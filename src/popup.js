@@ -28,15 +28,20 @@ document.addEventListener('DOMContentLoaded', function () {
   const saveNotification = document.getElementById('save-notification');
   const quietHoursTextElement = document.getElementById('quiet-hours-text');
   const enableProductivityCheckbox = document.getElementById('enable-productivity');
+  const videoModeCheckbox = document.getElementById('video-mode');
+  const highResCheckbox = document.getElementById('high-res');
 
   // Populate the region select
   populateRegionSelect(regionSelect);
 
   // Load current settings
-  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours'], function (result) {
+  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode', 'highResImages'], function (result) {
     regionSelect.value = result.region || 'US';
     autoPlayCheckbox.checked = result.autoPlay || false;
     quietHoursCheckbox.checked = result.quietHours || false;
+    enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
+    videoModeCheckbox.checked = result.videoMode || false;
+    highResCheckbox.checked = result.highResImages || false;
   });
 
   // Update quiet hours text
@@ -47,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const settings = {
       region: regionSelect.value,
       autoPlay: autoPlayCheckbox.checked,
-      quietHours: quietHoursCheckbox.checked
+      quietHours: quietHoursCheckbox.checked,
+      videoMode: videoModeCheckbox.checked,
+      highResImages: highResCheckbox.checked
     };
     
     chrome.storage.sync.set(settings, function () {
@@ -81,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
   regionSelect.addEventListener('change', saveSettings);
   autoPlayCheckbox.addEventListener('change', saveSettings);
   quietHoursCheckbox.addEventListener('change', saveSettings);
+  videoModeCheckbox.addEventListener('change', saveSettings);
+  highResCheckbox.addEventListener('change', saveSettings);
 
   // Debug buttons - only exist in development builds
   // Safe null checks prevent errors in production where debug section is removed
@@ -182,11 +191,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-
-  // Check quick access features enabled state
-  chrome.storage.sync.get(['quickAccessEnabled'], (result) => {
-    enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
-  });
 
   // Handle productivity toggle with improved error handling
   enableProductivityCheckbox.addEventListener('change', async function() {
