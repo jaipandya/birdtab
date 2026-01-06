@@ -1900,6 +1900,20 @@ p {
   transition: all 0.2s ease;
 }
 
+/* When feedback-link is the footer itself (entire footer clickable) */
+.settings-footer.feedback-link {
+  display: flex;
+  justify-content: center;
+  padding: 16px var(--modal-spacing);
+  border-radius: 0;
+  font-size: 14px;
+}
+
+.settings-footer.feedback-link .feedback-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .feedback-link:hover {
   color: var(--modal-text-primary);
   background-color: var(--modal-hover-bg);

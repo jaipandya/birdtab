@@ -49,9 +49,6 @@ class SettingsModal {
     this.initializeElements();
     this.bindEvents();
     this.loadSettings();
-    
-    // Auto-cleanup on page unload
-    window.addEventListener('beforeunload', () => this.destroy(), { once: true });
   }
 
 
@@ -173,12 +170,10 @@ class SettingsModal {
               </div>
             </div>
           </div>
-          <div class="settings-footer">
-            <a href="mailto:support@birdtab.app" class="feedback-link">
-              <img src="images/svg/message.svg" alt="" width="16" height="16" class="feedback-icon">
-              <span data-i18n="sendFeedback">Send Feedback</span>
-            </a>
-          </div>
+          <a href="mailto:support@birdtab.app" class="settings-footer feedback-link">
+            <img src="images/svg/message.svg" alt="" width="16" height="16" class="feedback-icon">
+            <span data-i18n="sendFeedback">Send Feedback</span>
+          </a>
         </div>
       </div>
     `;
@@ -246,9 +241,14 @@ class SettingsModal {
     }
 
     // Prevent modal content clicks from closing modal
+    // BUT allow links (like mailto:) to work normally
     const modalContent = this.modal ? this.modal.querySelector('.settings-content') : null;
     if (modalContent) {
       modalContent.addEventListener('click', (e) => {
+        // Don't stop propagation for links - let them navigate normally
+        if (e.target.closest('a[href]')) {
+          return;
+        }
         e.stopPropagation();
       });
     }
