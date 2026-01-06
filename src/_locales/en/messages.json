@@ -970,5 +970,13 @@
   "sendFeedback": {
     "message": "Send Feedback",
     "description": "Link text for sending feedback to support"
+  },
+  "chromeTabTooltip": {
+    "message": "Open default Chrome new tab page",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Chrome Tab",
+    "description": "Text label for Chrome tab link"
   }
 }

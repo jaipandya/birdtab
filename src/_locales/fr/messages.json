@@ -967,6 +967,14 @@
     "message": "Activer pour afficher les images haute résolution",
     "description": "Tooltip for high-resolution images toggle"
   },
+  "chromeTabTooltip": {
+    "message": "Ouvrir la page nouvel onglet Chrome par défaut",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Onglet Chrome",
+    "description": "Text label for Chrome tab link"
+  },
   "sendFeedback": {
     "message": "Envoyer des commentaires",
     "description": "Link text for sending feedback to support"

@@ -967,6 +967,14 @@
     "message": "启用以显示高分辨率图片",
     "description": "Tooltip for high-resolution images toggle"
   },
+  "chromeTabTooltip": {
+    "message": "打开默认的Chrome新标签页",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Chrome标签页",
+    "description": "Text label for Chrome tab link"
+  },
   "sendFeedback": {
     "message": "发送反馈",
     "description": "Link text for sending feedback to support"

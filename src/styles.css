@@ -14,6 +14,11 @@ html[dir="rtl"] body {
 }
 
 /* RTL overrides for specific elements */
+html[dir="rtl"] .chrome-tab-link {
+  right: auto;
+  left: 2rem;
+}
+
 html[dir="rtl"] .external-links {
   flex-direction: row;
 }
@@ -1244,6 +1249,56 @@ p {
 
 .info-icon:not([data-tooltip]) {
   display: none;
+}
+
+/* Chrome Tab Link - Top Right */
+.chrome-tab-link {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10000;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
+}
+
+.chrome-tab-link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.chrome-tab-link:hover .chrome-tab-icon {
+  animation: chromeIconRotate 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.chrome-tab-icon {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+.chrome-tab-text {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+@keyframes chromeIconRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hide Chrome tab link on smaller screens (mobile/small tablet) */
+@media (max-width: 767px) {
+  .chrome-tab-link {
+    display: none;
+  }
 }
 
 .external-links {

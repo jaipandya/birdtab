@@ -967,6 +967,14 @@
     "message": "Aktivieren, um hochauflösende Bilder anzuzeigen",
     "description": "Tooltip for high-resolution images toggle"
   },
+  "chromeTabTooltip": {
+    "message": "Standard Chrome-Neuer-Tab-Seite öffnen",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Chrome-Tab",
+    "description": "Text label for Chrome tab link"
+  },
   "sendFeedback": {
     "message": "Feedback senden",
     "description": "Link text for sending feedback to support"

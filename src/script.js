@@ -1853,6 +1853,13 @@ async function initializePage() {
       }
     });
 
+    // Setup Chrome tab link
+    document.getElementById('chrome-tab-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      chrome.tabs.create({ url: 'chrome://new-tab-page' });
+    });
+
     // Setup share functionality
     setupShareButton();
 
