@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Continuar",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "¿Ves un banner en la parte inferior?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "Es el nuevo pie de página de Chrome. Para ocultarlo, haz clic derecho y selecciona 'Ocultar pie de página en la página de nueva pestaña'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Más información",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Cerrar notificación",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Продолжить",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Видите баннер внизу?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "Это новый нижний колонтитул Chrome. Чтобы скрыть его, нажмите правой кнопкой мыши и выберите 'Скрыть нижний колонтитул на странице новой вкладки'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Узнать больше",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Закрыть уведомление",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

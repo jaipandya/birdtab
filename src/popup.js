@@ -4,6 +4,7 @@ import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, updateUserContext } from './sentry.js';
 import { showPermissionDialog } from './permissionDialog.js';
+import { resetChromeFooterNotification } from './chromeFooterNotification.js';
 
 import { log } from './logger.js';
 
@@ -179,17 +180,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const resetTourButton = document.getElementById('reset-tour');
   if (resetTourButton) {
-    resetTourButton.addEventListener('click', function () {
-      chrome.storage.sync.set({ featureTourVersion: 0 }, function () {
-        if (chrome.runtime.lastError) {
-          log('Error resetting tour: ' + chrome.runtime.lastError.message);
-          const errorMsg = chrome.i18n.getMessage('errorResettingTour') || 'Error resetting the feature tour';
-          alert(errorMsg);
-          return;
-        }
+    resetTourButton.addEventListener('click', async function () {
+      try {
+        // Reset the feature tour version
+        await new Promise((resolve, reject) => {
+          chrome.storage.sync.set({ featureTourVersion: 0 }, function () {
+            if (chrome.runtime.lastError) {
+              reject(chrome.runtime.lastError);
+            } else {
+              resolve();
+            }
+          });
+        });
+        
+        // Also reset the Chrome footer notification
+        await resetChromeFooterNotification();
+        
         const successMsg = chrome.i18n.getMessage('tourReset') || 'Feature tour has been reset. It will show again on the next page load.';
         alert(successMsg);
-      });
+      } catch (error) {
+        log('Error resetting tour: ' + error.message);
+        const errorMsg = chrome.i18n.getMessage('errorResettingTour') || 'Error resetting the feature tour';
+        alert(errorMsg);
+      }
     });
   }
 

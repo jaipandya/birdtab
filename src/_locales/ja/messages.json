@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "続行",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "画面下部にバナーが表示されていますか？",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "これはChromeの新しいフッターです。非表示にするには、右クリックして「新しいタブページでフッターを非表示」を選択してください。",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "詳細を見る",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "通知を閉じる",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

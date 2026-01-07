@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Continue",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Seeing a banner at the bottom?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "That's Chrome's new footer. To hide it, right-click it and select 'Hide Footer on New Tab Page'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Learn more",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Close notification",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

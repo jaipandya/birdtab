@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Continuar",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Está vendo um banner na parte inferior?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "É o novo rodapé do Chrome. Para ocultá-lo, clique com o botão direito e selecione 'Ocultar rodapé na página Nova guia'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Saiba mais",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Fechar notificação",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

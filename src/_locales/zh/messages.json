@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "继续",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "看到底部有横幅吗？",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "这是 Chrome 的新页脚。要隐藏它，请右键点击并选择「在新标签页上隐藏页脚」。",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "了解更多",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "关闭通知",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

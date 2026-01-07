@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Weiter",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Sehen Sie ein Banner am unteren Rand?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "Das ist Chromes neue Fußzeile. Um sie auszublenden, klicken Sie mit der rechten Maustaste darauf und wählen Sie 'Fußzeile auf neuer Tab-Seite ausblenden'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Mehr erfahren",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Benachrichtigung schließen",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "Continuer",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Vous voyez une bannière en bas ?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "C'est le nouveau pied de page de Chrome. Pour le masquer, faites un clic droit dessus et sélectionnez 'Masquer le pied de page sur la page Nouvel onglet'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "En savoir plus",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Fermer la notification",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }

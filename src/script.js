@@ -8,8 +8,9 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
-import { startTour, isTourCompleted, getUnseenFeatureSpotlights, showFeatureSpotlight } from './featureTour.js';
+import { startTour, isTourCompleted, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { showPermissionDialog } from './permissionDialog.js';
+import { initChromeFooterNotification } from './chromeFooterNotification.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -3067,6 +3068,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const tourCompleted = await isTourCompleted();
     if (!tourCompleted) {
+      // Set callback to show Chrome footer notification when tour ends
+      setOnTourEndCallback(() => {
+        log('Tour ended, showing Chrome footer notification');
+        initChromeFooterNotification(2000);
+      });
+      
       // Delay tour start to let UI fully render and user orient themselves
       log('Feature tour not completed, scheduling tour start');
       setTimeout(() => {
@@ -3082,6 +3089,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           const firstSpotlight = unseenSpotlights[0];
           showFeatureSpotlight(firstSpotlight.featureKey);
         }, 1500);
+      } else {
+        // No spotlights to show - initialize Chrome footer notification
+        // This only shows on Chrome, after tour is complete, and if not dismissed
+        initChromeFooterNotification(2500);
       }
     }
   } catch (error) {

@@ -877,6 +877,16 @@ export function startTour() {
   window.addEventListener('resize', resizeHandler);
 }
 
+// Callback to be called when tour ends
+let onTourEndCallback = null;
+
+/**
+ * Set a callback to be called when the tour ends
+ */
+export function setOnTourEndCallback(callback) {
+  onTourEndCallback = callback;
+}
+
 /**
  * End the feature tour
  */
@@ -928,6 +938,13 @@ export async function endTour(markComplete = true) {
   if (markComplete) {
     await markTourCompleted();
     log('Feature tour marked as completed');
+    
+    // Call the callback if set
+    if (onTourEndCallback) {
+      setTimeout(() => {
+        onTourEndCallback();
+      }, 500); // Small delay after tour ends
+    }
   }
 }
 
@@ -945,5 +962,6 @@ export default {
   isTourActive,
   resetTour,
   showFeatureSpotlight,
-  getUnseenFeatureSpotlights
+  getUnseenFeatureSpotlights,
+  setOnTourEndCallback
 };

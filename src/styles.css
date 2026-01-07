@@ -3013,3 +3013,218 @@ html[dir="rtl"] .share-menu-social {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   Chrome Footer Notification
+   A subtle notification informing users about Chrome's new footer bar
+   ========================================================================== */
+
+.chrome-footer-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 340px;
+  background: rgba(28, 28, 30, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 1500;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.chrome-footer-notification.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.chrome-footer-notification.exiting {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* Close button (X) */
+.chrome-footer-notification-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.chrome-footer-notification-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 1);
+}
+
+.chrome-footer-notification-close:focus-visible {
+  outline: 2px solid rgba(52, 199, 89, 0.6);
+  outline-offset: 2px;
+}
+
+/* Content container */
+.chrome-footer-notification-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Screenshot image */
+.chrome-footer-notification-image {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.chrome-footer-notification-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Text content */
+.chrome-footer-notification-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 24px;
+}
+
+.chrome-footer-notification-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.chrome-footer-notification-description {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Actions container */
+.chrome-footer-notification-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+/* Got it / Dismiss button */
+.chrome-footer-notification-dismiss {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(52, 199, 89, 0.9);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chrome-footer-notification-dismiss:hover {
+  background: rgba(52, 199, 89, 1);
+  transform: translateY(-1px);
+}
+
+.chrome-footer-notification-dismiss:active {
+  transform: translateY(0);
+}
+
+.chrome-footer-notification-dismiss:focus-visible {
+  outline: 2px solid rgba(52, 199, 89, 0.6);
+  outline-offset: 2px;
+}
+
+/* Learn more link */
+.chrome-footer-notification-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.chrome-footer-notification-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chrome-footer-notification-link svg {
+  transition: transform 0.2s ease;
+}
+
+.chrome-footer-notification-link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* RTL Support */
+html[dir="rtl"] .chrome-footer-notification {
+  right: auto;
+  left: 24px;
+}
+
+html[dir="rtl"] .chrome-footer-notification-close {
+  right: auto;
+  left: 12px;
+}
+
+html[dir="rtl"] .chrome-footer-notification-text {
+  padding-right: 0;
+  padding-left: 24px;
+}
+
+/* Hide on smaller screens where Chrome footer is less relevant */
+@media (max-width: 768px) {
+  .chrome-footer-notification {
+    display: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .chrome-footer-notification {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+  
+  .chrome-footer-notification.visible {
+    transform: none;
+  }
+  
+  .chrome-footer-notification.exiting {
+    transform: none;
+  }
+}

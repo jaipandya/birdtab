@@ -1006,5 +1006,21 @@
   "continue": {
     "message": "متابعة",
     "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "هل ترى شريطًا في الأسفل؟",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "هذا هو تذييل Chrome الجديد. لإخفائه، انقر بزر الماوس الأيمن عليه واختر 'إخفاء التذييل في صفحة علامة التبويب الجديدة'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "معرفة المزيد",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "إغلاق الإشعار",
+    "description": "Aria label for close button on Chrome footer notification"
   }
 }
