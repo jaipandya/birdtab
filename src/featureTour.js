@@ -29,14 +29,15 @@ import { log } from './logger.js';
 // Tour version - increment when adding new features to show tour again
 // Version history:
 // 1 - Initial tour with Video Mode, Settings, History, Quiz, Refresh, Audio
-const TOUR_VERSION = 1;
+// 2 - Added Chrome Tab shortcut feature spotlight
+const TOUR_VERSION = 2;
 
 // Feature spotlights for existing users
 // When adding new features, add them here with minVersion set to current TOUR_VERSION
 // This allows existing users to see just the new feature without full tour
 const FEATURE_SPOTLIGHTS = {
-  // Example for future feature:
-  // 'videoMode': { stepId: 'video', minVersion: 2 }
+  // Chrome Tab shortcut - shows existing users how to access default Chrome new tab
+  'chromeTab': { stepId: 'chromeTab', minVersion: 2 }
 };
 
 // Tour step configuration - ordered left to right as they appear in the UI
