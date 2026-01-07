@@ -931,6 +931,14 @@
     "message": "Contrôlez la lecture des chants d'oiseaux. Cliquez pour lire ou mettre en pause à tout moment.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Nouvel Onglet Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Besoin d'accéder à votre page nouvel onglet Chrome par défaut ? Cliquez ici pour l'ouvrir dans un nouvel onglet.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Suivant",
     "description": "Feature tour: next button text"

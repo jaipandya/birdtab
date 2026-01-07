@@ -931,6 +931,14 @@
     "message": "Controle a reprodução dos cantos das aves. Clique para reproduzir ou pausar a qualquer momento.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Nova Guia do Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Precisa acessar sua página padrão de nova guia do Chrome? Clique aqui para abri-la em uma nova guia.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Próximo",
     "description": "Feature tour: next button text"

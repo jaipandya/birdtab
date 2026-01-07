@@ -931,6 +931,14 @@
     "message": "Управляйте воспроизведением голосов птиц. Нажмите, чтобы воспроизвести или поставить на паузу.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Новая вкладка Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Нужен доступ к стандартной странице новой вкладки Chrome? Нажмите здесь, чтобы открыть её в новой вкладке.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Далее",
     "description": "Feature tour: next button text"

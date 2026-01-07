@@ -124,6 +124,16 @@ const TOUR_STEPS = [
     position: 'top'
   },
   {
+    id: 'chromeTab',
+    targetSelector: '.chrome-tab-icon',
+    icon: 'images/svg/external-link.svg',
+    titleKey: 'tourChromeTabTitle',
+    descriptionKey: 'tourChromeTabDescription',
+    fallbackTitle: 'Chrome New Tab',
+    fallbackDescription: 'Need to access your default Chrome new tab page? Click here anytime to open it in a new tab.',
+    position: 'bottom'
+  },
+  {
     id: 'complete',
     targetSelector: null, // No target - centered completion message
     icon: null,

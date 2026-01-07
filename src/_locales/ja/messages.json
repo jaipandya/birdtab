@@ -931,6 +931,14 @@
     "message": "鳥の鳴き声の再生を操作できます。いつでもクリックして再生または一時停止できます。",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Chromeの新しいタブ",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "デフォルトのChromeの新しいタブページにアクセスしたい場合は、ここをクリックして新しいタブで開けます。",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "次へ",
     "description": "Feature tour: next button text"

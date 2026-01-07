@@ -931,6 +931,14 @@
     "message": "تحكم في تشغيل أصوات الطيور. انقر للتشغيل أو الإيقاف في أي وقت.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "علامة تبويب Chrome جديدة",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "هل تحتاج إلى الوصول إلى صفحة علامة التبويب الجديدة الافتراضية في Chrome؟ انقر هنا لفتحها في علامة تبويب جديدة.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "التالي",
     "description": "Feature tour: next button text"

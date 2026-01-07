@@ -931,6 +931,14 @@
     "message": "控制鸟鸣播放。随时点击播放或暂停当前的鸟鸣声。",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Chrome新标签页",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "需要访问您的默认Chrome新标签页？点击这里随时在新标签页中打开它。",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "下一步",
     "description": "Feature tour: next button text"

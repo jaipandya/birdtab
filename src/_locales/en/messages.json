@@ -931,6 +931,14 @@
     "message": "Control bird call playback. Click to play or pause the current bird song anytime.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Chrome New Tab",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Need to access your default Chrome new tab page? Click here anytime to open it in a new tab.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Next",
     "description": "Feature tour: next button text"

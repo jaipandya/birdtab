@@ -931,6 +931,14 @@
     "message": "Controla la reproducción de cantos de aves. Haz clic para reproducir o pausar en cualquier momento.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Nueva Pestaña de Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "¿Necesitas acceder a tu página de nueva pestaña predeterminada de Chrome? Haz clic aquí para abrirla en una nueva pestaña.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Siguiente",
     "description": "Feature tour: next button text"

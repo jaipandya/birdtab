@@ -931,6 +931,14 @@
     "message": "Steuern Sie die Wiedergabe von Vogelrufen. Klicken Sie, um jederzeit abzuspielen oder zu pausieren.",
     "description": "Feature tour: play/pause button description"
   },
+  "tourChromeTabTitle": {
+    "message": "Chrome Neuer Tab",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Benötigen Sie Zugriff auf Ihre Standard-Chrome-Neuer-Tab-Seite? Klicken Sie hier, um sie jederzeit in einem neuen Tab zu öffnen.",
+    "description": "Feature tour: Chrome tab link description"
+  },
   "tourNextButton": {
     "message": "Weiter",
     "description": "Feature tour: next button text"

@@ -124,9 +124,7 @@ function createNotificationElement() {
              rel="noopener noreferrer" 
              class="chrome-footer-notification-link">
             ${learnMore}
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.5 2.5H9.5V7.5M9.5 2.5L2.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <img src="images/svg/external-link.svg" alt="" width="12" height="12" class="external-link-icon">
           </a>
           <button class="chrome-footer-notification-dismiss">${getMessage('tourGotIt', 'Got it')}</button>
         </div>
