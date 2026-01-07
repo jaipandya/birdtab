@@ -982,5 +982,29 @@
   "sendFeedback": {
     "message": "Enviar feedback",
     "description": "Link text for sending feedback to support"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTab precisa de permissões adicionais",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "Para exibir seus sites mais visitados e atalhos personalizados, o BirdTab precisa de acesso a recursos adicionais do navegador.",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "Valorizamos e protegemos sua privacidade. Saiba mais em nossa",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "Política de Privacidade",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "Voltar",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "Continuar",
+    "description": "Button text to continue/confirm"
   }
 }

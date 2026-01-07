@@ -3,6 +3,7 @@ import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { log } from './logger.js';
 import { captureException } from './sentry.js';
+import { showPermissionDialog } from './permissionDialog.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -433,11 +434,30 @@ class SettingsModal {
   async handleProductivityToggle(isEnabled) {
     try {
       if (isEnabled) {
-        // Request permissions when enabling productivity features
+        log('Showing permission dialog before Chrome permission request');
+
+        // Show permission dialog first
+        const userConfirmed = await showPermissionDialog({
+          title: 'permissionDialogTitle',
+          subtitle: 'permissionDialogSubtitle',
+          privacyText: 'permissionDialogPrivacy',
+          privacyLinkText: 'privacyPolicy',
+          privacyLinkUrl: 'https://birdtab.app/privacy',
+          cancelText: 'goBack',
+          confirmText: 'continue'
+        });
+
+        if (!userConfirmed) {
+          // User clicked "Go back", revert the toggle
+          this.enableProductivityCheckbox.checked = false;
+          return;
+        }
+
+        // User clicked "Continue", now request Chrome permissions
         const granted = await chrome.permissions.request({
           permissions: ['topSites', 'favicon']
         });
-        
+
         if (granted) {
           // Permission granted, save the setting
           this.saveSettings();
@@ -449,7 +469,7 @@ class SettingsModal {
       } else {
         // Save settings first, then try to remove permissions
         this.saveSettings();
-        
+
         // Try to remove permissions (non-blocking, failure is OK)
         try {
           await chrome.permissions.remove({

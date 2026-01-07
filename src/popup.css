@@ -355,3 +355,119 @@ input:checked + .slider:before {
   align-items: center;
   gap: 4px;
 }
+
+/* ===== Permission Dialog (adapted for popup) ===== */
+.permission-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.permission-dialog-visible {
+  opacity: 1;
+}
+
+.permission-dialog-closing {
+  opacity: 0;
+}
+
+.permission-dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.permission-dialog-content {
+  position: relative;
+  z-index: 1;
+  padding: 24px 16px;
+  text-align: center;
+  transform: scale(0.95);
+  transition: transform 0.2s ease-out;
+}
+
+.permission-dialog-visible .permission-dialog-content {
+  transform: scale(1);
+}
+
+.permission-dialog-closing .permission-dialog-content {
+  transform: scale(0.95);
+}
+
+.permission-dialog-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.permission-dialog-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.permission-dialog-privacy {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+}
+
+.permission-dialog-privacy a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.permission-dialog-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.permission-dialog-btn {
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.permission-dialog-btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.permission-dialog-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.permission-dialog-btn-confirm {
+  background: #4CAF50;
+  border: none;
+  color: #fff;
+}
+
+.permission-dialog-btn-confirm:hover {
+  background: #45a049;
+}

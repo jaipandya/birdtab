@@ -3,6 +3,7 @@ import './popup.css';
 import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, updateUserContext } from './sentry.js';
+import { showPermissionDialog } from './permissionDialog.js';
 
 import { log } from './logger.js';
 
@@ -195,17 +196,37 @@ document.addEventListener('DOMContentLoaded', function () {
   // Handle productivity toggle with improved error handling
   enableProductivityCheckbox.addEventListener('change', async function() {
     const isEnabled = this.checked;
-    
+    const checkbox = this;
+
     try {
       if (isEnabled) {
-        // Request permissions when enabling productivity features
+        log('Showing permission dialog before Chrome permission request');
+
+        // Show permission dialog first
+        const userConfirmed = await showPermissionDialog({
+          title: 'permissionDialogTitle',
+          subtitle: 'permissionDialogSubtitle',
+          privacyText: 'permissionDialogPrivacy',
+          privacyLinkText: 'privacyPolicy',
+          privacyLinkUrl: 'https://birdtab.app/privacy',
+          cancelText: 'goBack',
+          confirmText: 'continue'
+        });
+
+        if (!userConfirmed) {
+          // User clicked "Go back", revert the toggle
+          checkbox.checked = false;
+          return;
+        }
+
+        // User clicked "Continue", now request Chrome permissions
         const granted = await chrome.permissions.request({
           permissions: ['topSites', 'favicon']
         });
-        
+
         if (granted) {
           // Permission granted, enable quick access features
-          chrome.storage.sync.set({ 
+          chrome.storage.sync.set({
             quickAccessEnabled: isEnabled
           }, function() {
             if (chrome.runtime.lastError) {
@@ -216,12 +237,12 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         } else {
           // Permission denied, revert the toggle
-          this.checked = false;
+          checkbox.checked = false;
           alert(getMessage('permissionRequired'));
         }
       } else {
         // Disable quick access features
-        chrome.storage.sync.set({ 
+        chrome.storage.sync.set({
           quickAccessEnabled: isEnabled
         }, function() {
           if (chrome.runtime.lastError) {
@@ -230,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
           showSaveNotification();
         });
-        
+
         // Try to remove permissions (non-blocking, failure is OK)
         try {
           await chrome.permissions.remove({
@@ -248,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tags: { operation: 'productivityToggle' },
         extra: { isEnabled, permissions: ['topSites', 'favicon'] }
       });
-      this.checked = !isEnabled; // Revert on error
+      checkbox.checked = !isEnabled; // Revert on error
       alert(getMessage('somethingWentWrong'));
     }
   });

@@ -9,6 +9,7 @@ import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
 import { startTour, isTourCompleted, getUnseenFeatureSpotlights, showFeatureSpotlight } from './featureTour.js';
+import { showPermissionDialog } from './permissionDialog.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -2914,6 +2915,80 @@ function checkOnboardingStatus() {
   });
 }
 
+/**
+ * Check if quick access is enabled in settings but permissions are missing
+ * This handles the case where settings are synced from another device but permissions aren't
+ */
+async function checkSyncedQuickAccessPermissions() {
+  try {
+    // Get the quick access setting from storage
+    const result = await new Promise((resolve) => {
+      chrome.storage.sync.get(['quickAccessEnabled'], resolve);
+    });
+
+    // If quick access is not enabled, nothing to do
+    if (!result.quickAccessEnabled) {
+      return;
+    }
+
+    // Check if we have the required permissions
+    const hasPermissions = await chrome.permissions.contains({
+      permissions: ['topSites', 'favicon']
+    });
+
+    // If we have permissions, nothing to do
+    if (hasPermissions) {
+      return;
+    }
+
+    // Settings say enabled, but permissions are missing
+    // This likely means settings synced from another device
+    log('Quick access enabled but permissions missing - showing permission dialog');
+    addBreadcrumb('Synced quick access detected without permissions', 'info', 'info');
+
+    // Show permission dialog
+    const userConfirmed = await showPermissionDialog({
+      title: 'permissionDialogTitle',
+      subtitle: 'permissionDialogSubtitle',
+      privacyText: 'permissionDialogPrivacy',
+      privacyLinkText: 'privacyPolicy',
+      privacyLinkUrl: 'https://birdtab.app/privacy',
+      cancelText: 'goBack',
+      confirmText: 'continue'
+    });
+
+    if (!userConfirmed) {
+      // User declined, disable quick access to match permission state
+      log('User declined permissions - disabling quick access');
+      await new Promise((resolve) => {
+        chrome.storage.sync.set({ quickAccessEnabled: false }, resolve);
+      });
+      return;
+    }
+
+    // User confirmed, request permissions
+    const granted = await chrome.permissions.request({
+      permissions: ['topSites', 'favicon']
+    });
+
+    if (!granted) {
+      // Permission denied, disable quick access
+      log('Permission denied - disabling quick access');
+      await new Promise((resolve) => {
+        chrome.storage.sync.set({ quickAccessEnabled: false }, resolve);
+      });
+    } else {
+      log('Permissions granted for synced quick access');
+      addBreadcrumb('Permissions granted for synced quick access', 'info', 'info');
+    }
+  } catch (error) {
+    log('Error checking synced quick access permissions: ' + error.message);
+    captureException(error, {
+      tags: { operation: 'checkSyncedQuickAccessPermissions' }
+    });
+  }
+}
+
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
   // Start performance monitoring transaction
@@ -2933,6 +3008,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   log('Onboarding complete, initializing UI components first');
+
+  // Check if quick access is enabled but permissions are missing (synced from another device)
+  await checkSyncedQuickAccessPermissions();
 
   // Load volume settings initially
   chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {

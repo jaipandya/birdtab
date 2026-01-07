@@ -982,5 +982,29 @@
   "sendFeedback": {
     "message": "フィードバックを送信",
     "description": "Link text for sending feedback to support"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTabには追加の権限が必要です",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "よく訪れるサイトやカスタムショートカットを表示するには、BirdTabに追加のブラウザ機能へのアクセスが必要です。",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "私たちはあなたのプライバシーを大切にし、保護しています。詳しくは",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "プライバシーポリシー",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "戻る",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "続行",
+    "description": "Button text to continue/confirm"
   }
 }

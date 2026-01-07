@@ -982,5 +982,29 @@
   "sendFeedback": {
     "message": "发送反馈",
     "description": "Link text for sending feedback to support"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTab 需要额外权限",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "为了显示您最常访问的网站和自定义快捷方式，BirdTab 需要访问额外的浏览器功能。",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "我们重视并保护您的隐私。了解更多请查看我们的",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "隐私政策",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "返回",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "继续",
+    "description": "Button text to continue/confirm"
   }
 }

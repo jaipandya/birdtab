@@ -982,5 +982,29 @@
   "sendFeedback": {
     "message": "إرسال ملاحظات",
     "description": "Link text for sending feedback to support"
+  },
+  "permissionDialogTitle": {
+    "message": "يحتاج BirdTab إلى أذونات إضافية",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "لعرض المواقع الأكثر زيارة والاختصارات المخصصة، يحتاج BirdTab إلى الوصول إلى ميزات إضافية في المتصفح.",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "نحن نقدر ونحمي خصوصيتك. تعرف على المزيد في",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "سياسة الخصوصية",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "رجوع",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "متابعة",
+    "description": "Button text to continue/confirm"
   }
 }

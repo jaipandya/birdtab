@@ -2852,3 +2852,164 @@ html[dir="rtl"] .share-menu-social {
   margin-left: 0;
   margin-right: 0;
 }
+
+/* ===== Permission Dialog ===== */
+.permission-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.permission-dialog-visible {
+  opacity: 1;
+}
+
+.permission-dialog-closing {
+  opacity: 0;
+}
+
+.permission-dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.permission-dialog-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  padding: 48px 40px;
+  text-align: center;
+  transform: scale(0.95);
+  transition: transform 0.2s ease-out;
+}
+
+.permission-dialog-visible .permission-dialog-content {
+  transform: scale(1);
+}
+
+.permission-dialog-closing .permission-dialog-content {
+  transform: scale(0.95);
+}
+
+.permission-dialog-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #fff;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.permission-dialog-subtitle {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.permission-dialog-privacy {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.permission-dialog-privacy a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.permission-dialog-privacy a:hover {
+  color: #fff;
+}
+
+.permission-dialog-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.permission-dialog-btn {
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 140px;
+}
+
+.permission-dialog-btn-cancel {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.permission-dialog-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.permission-dialog-btn-cancel:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.permission-dialog-btn-confirm {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.permission-dialog-btn-confirm:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.permission-dialog-btn-confirm:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .permission-dialog-content {
+    padding: 32px 24px;
+    margin: 0 16px;
+  }
+
+  .permission-dialog-title {
+    font-size: 1.75rem;
+  }
+
+  .permission-dialog-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .permission-dialog-buttons {
+    flex-direction: column;
+  }
+
+  .permission-dialog-btn {
+    width: 100%;
+  }
+}

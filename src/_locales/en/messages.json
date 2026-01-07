@@ -982,5 +982,29 @@
   "chromeTabText": {
     "message": "Chrome Tab",
     "description": "Text label for Chrome tab link"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTab Needs Additional Permissions",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "To display your most visited sites and custom shortcuts, BirdTab needs access to additional browser features.",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "We value and protect your privacy. Learn more in our",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "Privacy Policy",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "Go back",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "Continue",
+    "description": "Button text to continue/confirm"
   }
 }
