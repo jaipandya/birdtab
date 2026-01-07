@@ -1068,7 +1068,7 @@ class QuizMode {
       const statusClass = answer.isCorrect ? 'correct' : 'incorrect';
       const badge = answer.isCorrect ? '✓' : '✗';
       const incorrectHint = answer.isCorrect ? '' : 
-        `<div class="quiz-result-correct-answer">${chrome.i18n.getMessage('correctAnswer', [answer.correctAnswer])}</div>`;
+        `<div class="quiz-result-your-answer">${chrome.i18n.getMessage('yourAnswer', [answer.selectedAnswer])}</div>`;
       
       return `
         <div class="quiz-result-item ${statusClass}">

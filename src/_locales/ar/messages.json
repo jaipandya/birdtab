@@ -623,6 +623,10 @@
     "message": "الإجابة الصحيحة: $1",
     "description": "Shows the correct answer for a question"
   },
+  "yourAnswer": {
+    "message": "إجابتك: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
   "correct": {
     "message": "صحيح",
     "description": "Indicates a correct answer"

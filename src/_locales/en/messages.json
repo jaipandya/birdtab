@@ -627,6 +627,10 @@
     "message": "Correct answer: $1",
     "description": "Shows the correct answer for a question"
   },
+  "yourAnswer": {
+    "message": "Your answer: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
   "correct": {
     "message": "Correct",
     "description": "Indicates a correct answer"

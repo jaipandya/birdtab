@@ -623,6 +623,10 @@
     "message": "Правильный ответ: $1",
     "description": "Correct answer display"
   },
+  "yourAnswer": {
+    "message": "Ваш ответ: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
   "correct": {
     "message": "Правильно",
     "description": "Correct answer indicator"

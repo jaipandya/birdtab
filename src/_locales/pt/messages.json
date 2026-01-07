@@ -623,6 +623,10 @@
     "message": "Resposta correta: $1",
     "description": "Correct answer display"
   },
+  "yourAnswer": {
+    "message": "Sua resposta: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
   "correct": {
     "message": "Correto",
     "description": "Correct answer indicator"

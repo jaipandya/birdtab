@@ -623,6 +623,10 @@
     "message": "正确答案：$1",
     "description": "Correct answer display"
   },
+  "yourAnswer": {
+    "message": "你的答案：$1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
   "correct": {
     "message": "正确",
     "description": "Correct answer indicator"
