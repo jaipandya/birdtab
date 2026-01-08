@@ -808,6 +808,13 @@ async function playVideo() {
       log('Video playback interrupted');
       return;
     }
+
+    // NotSupportedError occurs when video source failed to load (network issue)
+    if (error.name === 'NotSupportedError') {
+      log('Video unavailable (network issue)');
+      return;
+    }
+
     console.error('Error playing video:', error);
     captureException(error, {
       tags: { operation: 'playVideo' },
@@ -968,6 +975,13 @@ async function playAudio() {
     // Don't log this as an error - it's normal behavior
     if (error.name === 'AbortError') {
       log('Audio playback interrupted (user opened another tab)');
+      return;
+    }
+
+    // NotSupportedError occurs when audio source failed to load (network issue)
+    // This is expected on slow/unreliable connections - not a bug
+    if (error.name === 'NotSupportedError') {
+      log('Audio unavailable (network issue)');
       return;
     }
 
