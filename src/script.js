@@ -8,7 +8,7 @@ import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
-import { startTour, isTourCompleted, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
+import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 
@@ -3080,8 +3080,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check if feature tour should be shown (for new users after onboarding)
   // Or if feature spotlights should be shown (for existing users with new features)
   try {
-    const tourCompleted = await isTourCompleted();
-    if (!tourCompleted) {
+    // First check if user has completed ANY version of the tour
+    const completedAnyTour = await hasCompletedAnyTour();
+    
+    if (!completedAnyTour) {
+      // New user - show full tour
       // Set callback to show Chrome footer notification when tour ends
       setOnTourEndCallback(() => {
         log('Tour ended, showing Chrome footer notification');
@@ -3094,7 +3097,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         startTour();
       }, 1500);
     } else {
-      // Check for new feature spotlights for existing users
+      // Existing user - check for new feature spotlights
+      // This handles users who completed an older version and need to see new features
       const unseenSpotlights = await getUnseenFeatureSpotlights();
       if (unseenSpotlights.length > 0) {
         log(`Found ${unseenSpotlights.length} unseen feature spotlights`);

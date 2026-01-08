@@ -222,6 +222,24 @@ export function getTourVersion() {
 }
 
 /**
+ * Check if user has completed any version of the tour (not necessarily current)
+ * Used to determine if user should see full tour vs feature spotlights
+ * Returns true if user has seen any tour version (storedVersion > 0)
+ */
+export async function hasCompletedAnyTour() {
+  return new Promise((resolve) => {
+    if (!chrome?.storage?.sync) {
+      resolve(false);
+      return;
+    }
+    chrome.storage.sync.get(['featureTourVersion'], (result) => {
+      const storedVersion = result.featureTourVersion || 0;
+      resolve(storedVersion > 0);
+    });
+  });
+}
+
+/**
  * Check if a specific feature spotlight has been seen
  */
 async function isFeatureSpotlightSeen(featureKey) {
@@ -974,5 +992,6 @@ export default {
   resetTour,
   showFeatureSpotlight,
   getUnseenFeatureSpotlights,
-  setOnTourEndCallback
+  setOnTourEndCallback,
+  hasCompletedAnyTour
 };

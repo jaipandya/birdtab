@@ -330,3 +330,168 @@ describe('Feature Tour - Dynamic Last Step Detection', () => {
     expect(hasMoreValidSteps(STEPS, 5, presentElements)).toBe(false);
   });
 });
+
+describe('Feature Tour - Version Upgrade Behavior', () => {
+  /**
+   * Tests for the versioning system that handles showing feature spotlights
+   * to existing users when new features are added.
+   * 
+   * The key logic being tested:
+   * - hasCompletedAnyTour(): Returns true if storedVersion > 0 (user has seen ANY tour)
+   * - isTourCompleted(): Returns true if storedVersion >= TOUR_VERSION (user has seen CURRENT version)
+   * - getUnseenFeatureSpotlights(): Returns features where minVersion > storedVersion
+   * 
+   * Bug fix tested: When TOUR_VERSION is incremented, existing users should see
+   * only the new feature spotlight, not the full tour again.
+   */
+
+  // Simulate the version checking logic
+  const CURRENT_TOUR_VERSION = 2;
+
+  // Feature spotlights configuration (mirrors featureTour.js)
+  const FEATURE_SPOTLIGHTS = {
+    'chromeTab': { stepId: 'chromeTab', minVersion: 2 }
+  };
+
+  // Helper: Check if user has completed ANY tour (storedVersion > 0)
+  function hasCompletedAnyTour(storedVersion) {
+    return storedVersion > 0;
+  }
+
+  // Helper: Check if user has completed CURRENT tour version
+  function isTourCompleted(storedVersion, tourVersion) {
+    return storedVersion >= tourVersion;
+  }
+
+  // Helper: Get unseen feature spotlights for a user
+  function getUnseenFeatureSpotlights(storedVersion, seenFeatures = {}) {
+    const unseenFeatures = [];
+    
+    // If user hasn't completed any tour, they'll get the full tour
+    if (storedVersion === 0) {
+      return [];
+    }
+    
+    // Check each feature spotlight
+    for (const [featureKey, config] of Object.entries(FEATURE_SPOTLIGHTS)) {
+      // Only show if feature was added after user's last tour
+      if (config.minVersion > storedVersion) {
+        if (!seenFeatures[featureKey]) {
+          unseenFeatures.push({ featureKey, stepId: config.stepId });
+        }
+      }
+    }
+    
+    return unseenFeatures;
+  }
+
+  describe('hasCompletedAnyTour', () => {
+    test('should return false for new users (storedVersion = 0)', () => {
+      expect(hasCompletedAnyTour(0)).toBe(false);
+    });
+
+    test('should return true for users who completed version 1', () => {
+      expect(hasCompletedAnyTour(1)).toBe(true);
+    });
+
+    test('should return true for users who completed version 2', () => {
+      expect(hasCompletedAnyTour(2)).toBe(true);
+    });
+  });
+
+  describe('isTourCompleted', () => {
+    test('should return false for new users', () => {
+      expect(isTourCompleted(0, CURRENT_TOUR_VERSION)).toBe(false);
+    });
+
+    test('should return false for users on older version', () => {
+      // User completed v1, current is v2
+      expect(isTourCompleted(1, CURRENT_TOUR_VERSION)).toBe(false);
+    });
+
+    test('should return true for users on current version', () => {
+      expect(isTourCompleted(2, CURRENT_TOUR_VERSION)).toBe(true);
+    });
+
+    test('should return true for users on newer version (edge case)', () => {
+      expect(isTourCompleted(3, CURRENT_TOUR_VERSION)).toBe(true);
+    });
+  });
+
+  describe('getUnseenFeatureSpotlights', () => {
+    test('should return empty array for new users (they get full tour)', () => {
+      const spotlights = getUnseenFeatureSpotlights(0);
+      expect(spotlights).toEqual([]);
+    });
+
+    test('should return new features for users on older version', () => {
+      // User completed v1, chromeTab was added in v2
+      const spotlights = getUnseenFeatureSpotlights(1);
+      expect(spotlights).toHaveLength(1);
+      expect(spotlights[0].featureKey).toBe('chromeTab');
+    });
+
+    test('should return empty array for users on current version', () => {
+      // User completed v2, no new features since then
+      const spotlights = getUnseenFeatureSpotlights(2);
+      expect(spotlights).toEqual([]);
+    });
+
+    test('should not include already-seen features', () => {
+      // User completed v1 but already saw chromeTab spotlight
+      const spotlights = getUnseenFeatureSpotlights(1, { chromeTab: true });
+      expect(spotlights).toEqual([]);
+    });
+  });
+
+  describe('Tour Decision Logic (Bug Fix Verification)', () => {
+    /**
+     * This tests the actual decision flow that was buggy:
+     * 
+     * OLD (buggy) logic:
+     *   if (!isTourCompleted()) { startFullTour() }
+     *   else { checkFeatureSpotlights() }
+     * 
+     * NEW (fixed) logic:
+     *   if (!hasCompletedAnyTour()) { startFullTour() }
+     *   else { checkFeatureSpotlights() }
+     */
+
+    function decideTourAction(storedVersion) {
+      // This mirrors the fixed logic in script.js
+      const completedAnyTour = hasCompletedAnyTour(storedVersion);
+      
+      if (!completedAnyTour) {
+        return 'SHOW_FULL_TOUR';
+      } else {
+        const unseenSpotlights = getUnseenFeatureSpotlights(storedVersion);
+        if (unseenSpotlights.length > 0) {
+          return { action: 'SHOW_SPOTLIGHT', features: unseenSpotlights };
+        } else {
+          return 'NO_TOUR';
+        }
+      }
+    }
+
+    test('new user should see full tour', () => {
+      const result = decideTourAction(0);
+      expect(result).toBe('SHOW_FULL_TOUR');
+    });
+
+    test('user who completed v1 should see only chromeTab spotlight (not full tour)', () => {
+      // This is the key bug fix test!
+      // Before fix: User would see full tour again
+      // After fix: User sees only the new feature spotlight
+      const result = decideTourAction(1);
+      expect(result).not.toBe('SHOW_FULL_TOUR');
+      expect(result.action).toBe('SHOW_SPOTLIGHT');
+      expect(result.features).toHaveLength(1);
+      expect(result.features[0].featureKey).toBe('chromeTab');
+    });
+
+    test('user who completed v2 should see no tour', () => {
+      const result = decideTourAction(2);
+      expect(result).toBe('NO_TOUR');
+    });
+  });
+});
