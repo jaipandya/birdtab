@@ -192,6 +192,7 @@ body.loaded {
 }
 
 /* Video play overlay - shown when returning to tab after unload */
+/* z-index 1000: Above info-panel (100) and control-buttons (1000), but below share-menu (1001), modals (2000+), and feature tour (9998+) */
 .video-play-overlay {
   position: absolute;
   top: 0;
@@ -202,7 +203,7 @@ body.loaded {
   align-items: center;
   justify-content: center;
   background: transparent;
-  z-index: 5;
+  z-index: 1000;
   pointer-events: none; /* Allow clicks through to elements beneath */
   cursor: pointer;
   animation: overlayFadeIn 0.3s ease;
@@ -258,6 +259,7 @@ body.loaded {
 }
 
 /* Video pause indicator - YouTube-like brief pause symbol */
+/* z-index 1000: Same as video-play-overlay, above panels but below interactive overlays */
 .video-pause-indicator {
   position: absolute;
   top: 0;
@@ -267,7 +269,7 @@ body.loaded {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5;
+  z-index: 1000;
   pointer-events: none;
   animation: pauseIndicatorFade 0.6s ease forwards;
 }
