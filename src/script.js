@@ -11,6 +11,7 @@ import { log } from './logger.js';
 import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
+import { initAnalytics, trackSessionStart, trackFeature } from './analytics.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -947,6 +948,9 @@ async function playAudio() {
     await audio.play();
     isPlaying = true;
     updatePlayPauseButton();
+    
+    // Track audio play (only track user-initiated plays, not auto-play)
+    trackFeature('audio_play');
 
     // Fade in the audio gradually to the current volume level
     const targetVolume = isMuted ? 0 : volumeLevel;
@@ -1632,6 +1636,26 @@ async function initializePage() {
 
     log('Bird info received, updating page content');
 
+    // Track session start with user settings and bird info
+    try {
+      const settings = await new Promise((resolve) => {
+        chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled'], resolve);
+      });
+      trackSessionStart({
+        region: settings.region || 'US',
+        videoMode: settings.videoMode || false,
+        autoPlay: settings.autoPlay || false,
+        quietHours: settings.quietHours || false,
+        highResImages: settings.highResImages || false,
+        quickAccessEnabled: settings.quickAccessEnabled || false,
+        speciesCode: birdInfo.speciesCode || null,
+        hasAudio: !!birdInfo.mediaUrl,
+        hasVideo: !!birdInfo.videoUrl,
+      });
+    } catch (analyticsError) {
+      log(`Analytics error: ${analyticsError.message}`);
+    }
+
     const contentContainer = document.getElementById('content-container');
 
     // Determine if we're in video mode (video mode enabled AND video available)
@@ -1852,6 +1876,7 @@ async function initializePage() {
     document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      trackFeature('refresh');
       window.location.reload();
     });
 
@@ -2199,6 +2224,9 @@ function setupMediaToggle(isImageMode = false) {
   toggleSwitch.addEventListener('change', async function () {
     // Update aria-checked for accessibility
     this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+    
+    // Track video mode toggle
+    trackFeature('video_toggle', { enabled: this.checked });
     
     if (this.checked) {
       // User wants to switch to video mode
@@ -2666,6 +2694,19 @@ function setupExternalLinks() {
   ebirdLink.addEventListener('mouseleave', () => {
     ebirdLink.querySelector('img').src = 'images/svg/ebird-default.svg';
   });
+
+  // Track eBird link clicks
+  ebirdLink.addEventListener('click', () => {
+    trackFeature('ebird_click');
+  });
+
+  // Also track bird name link clicks (goes to eBird)
+  const birdNameLink = document.querySelector('.bird-name-link');
+  if (birdNameLink) {
+    birdNameLink.addEventListener('click', () => {
+      trackFeature('ebird_click');
+    });
+  }
 }
 
 // Share functionality
@@ -2681,6 +2722,7 @@ function getShareText() {
 function copyToClipboard() {
   const shareUrl = getShareUrl();
   navigator.clipboard.writeText(shareUrl).then(() => {
+    trackFeature('share', { method: 'copy_link' });
     const copyBtn = document.querySelector('.share-menu-copy-btn');
     if (copyBtn) {
       copyBtn.textContent = chrome.i18n.getMessage('linkCopied') || 'Copied!';
@@ -2696,6 +2738,7 @@ function copyToClipboard() {
 }
 
 function shareToTwitter() {
+  trackFeature('share', { method: 'twitter' });
   const shareUrl = getShareUrl();
   const shareText = getShareText();
   window.open(
@@ -2707,6 +2750,7 @@ function shareToTwitter() {
 }
 
 function shareToFacebook() {
+  trackFeature('share', { method: 'facebook' });
   const shareUrl = getShareUrl();
   window.open(
     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
@@ -2717,6 +2761,7 @@ function shareToFacebook() {
 }
 
 function shareToWhatsApp() {
+  trackFeature('share', { method: 'whatsapp' });
   const shareUrl = getShareUrl();
   const shareText = getShareText();
   window.open(
@@ -2811,25 +2856,9 @@ function handleEscapeShareMenu(event) {
   }
 }
 
-async function handleShare() {
-  // Check if native share is available (mobile/touch devices)
-  const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
-  
-  if (isMobile && navigator.share) {
-    try {
-      await navigator.share({
-        title: `${birdInfo.name} | BirdTab`,
-        text: getShareText(),
-        url: getShareUrl(),
-      });
-      return;
-    } catch (err) {
-      if (err.name === 'AbortError') return;
-      // Fall through to show menu if native share fails
-    }
-  }
-  
-  // On desktop or if native share unavailable, toggle dropdown
+function handleShare() {
+  // Always show the custom share menu popup in the extension
+  // (Native share API is not used since this is a Chrome extension that always runs in a browser)
   if (showShareMenu) {
     closeShareMenu();
   } else {
@@ -3008,6 +3037,9 @@ async function checkSyncedQuickAccessPermissions() {
 document.addEventListener('DOMContentLoaded', async () => {
   // Start performance monitoring transaction
   const transaction = startTransaction('page-load', 'navigation');
+
+  // Initialize analytics (PostHog)
+  await initAnalytics('newtab');
 
   // Localize the page immediately
   localizeHtml();
