@@ -8,7 +8,7 @@
  * 
  * Features:
  * - No host permissions required (PostHog capture API supports CORS)
- * - Memory-only persistence (no cookies/localStorage in extension context)
+ * - localStorage persistence for event batching across tabs
  * - Reuses existing visitorId from chrome.storage.local
  * - Skips tracking in development mode (unpacked extension)
  * - Automatic browser/OS/screen context from posthog-js-lite
@@ -16,7 +16,7 @@
  * Privacy & Performance:
  * - Non-blocking: All analytics calls are asynchronous and batched
  * - Respects Do Not Track (DNT): Analytics disabled when user has DNT enabled
- * - No cookies: Uses memory persistence only
+ * - Events batched and sent every 2 minutes or after 15 events accumulate
  * - EU data residency: Data sent to eu.i.posthog.com for GDPR compliance
  * 
  * Events tracked:
@@ -30,6 +30,7 @@
 import PostHog from 'posthog-js-lite';
 import { CONFIG } from './config.js';
 import { log, error as logError } from './logger.js';
+import { getOrCreateVisitorId } from './shared.js';
 
 // PostHog instance
 let posthog = null;
@@ -37,26 +38,6 @@ let posthog = null;
 // Track initialization state
 let analyticsInitialized = false;
 let analyticsInitializing = false;
-
-/**
- * Get or create a unique visitor ID for anonymous user tracking.
- * Reuses the same visitorId used by Sentry for consistency.
- */
-async function getOrCreateVisitorId() {
-  try {
-    const result = await chrome.storage.local.get('visitorId');
-    if (result.visitorId) {
-      return result.visitorId;
-    }
-
-    const newId = crypto.randomUUID();
-    await chrome.storage.local.set({ visitorId: newId });
-    return newId;
-  } catch (error) {
-    logError('Failed to get/create visitor ID:', error);
-    return `session-${crypto.randomUUID()}`;
-  }
-}
 
 /**
  * Check if user has enabled Do Not Track in their browser
@@ -153,8 +134,9 @@ export async function initAnalytics(component = 'unknown') {
       // API host - EU region for GDPR compliance
       host: CONFIG.POSTHOG.API_HOST || 'https://eu.i.posthog.com',
       
-      // Memory persistence - required for extension context (no localStorage/cookies)
-      persistence: 'memory',
+      // Use localStorage for persistence - events accumulate across tabs
+      // and are sent in batches for better performance
+      persistence: 'localStorage',
       
       // Disable autocapture - we track specific events only
       autocapture: false,
@@ -172,13 +154,13 @@ export async function initAnalytics(component = 'unknown') {
         isIdentifiedId: true,
       },
       
-      // Flush interval in milliseconds (default is 10000)
-      // Using 3 seconds for new tab extension where sessions are short
-      flushInterval: 3000,
+      // Flush interval: 120 seconds (2 minutes)
+      // Events accumulate in localStorage and are sent in batches
+      flushInterval: 120000,
       
-      // Flush at size (default is 20)
-      // Using 5 for more responsive batching, though rarely reached in typical sessions
-      flushAt: 5,
+      // Flush when 15 events have accumulated
+      // Whichever comes first: 2 minutes or 15 events
+      flushAt: 15,
     });
 
     // Note: We don't call posthog.identify() here because:
@@ -195,22 +177,13 @@ export async function initAnalytics(component = 'unknown') {
 
     analyticsInitialized = true;
     analyticsInitializing = false;
-    log(`PostHog analytics initialized for ${component} (posthog-js-lite)`);
+    log(`PostHog analytics initialized for ${component} (posthog-js-lite, localStorage persistence)`);
 
-    // Flush events on page unload
-    if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => {
-        if (posthog) {
-          posthog.flush();
-        }
-      });
-      
-      window.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden' && posthog) {
-          posthog.flush();
-        }
-      });
-    }
+    // Note: We intentionally don't flush on beforeunload or visibilitychange
+    // Events are persisted in localStorage and will be sent:
+    // - When 15 events accumulate (across all tabs)
+    // - Or after 2 minutes (whichever comes first)
+    // This reduces network requests and lets events batch naturally
 
   } catch (error) {
     analyticsInitializing = false;
@@ -270,6 +243,18 @@ export function trackFeature(featureName, properties = {}) {
 }
 
 /**
+ * Calculate days since install from installTime
+ * 
+ * @param {number|null} installTime - Install timestamp from chrome.storage.local
+ * @returns {number} Days since install, or -1 if unknown
+ */
+function getDaysSinceInstall(installTime) {
+  if (!installTime) return -1;
+  const now = Date.now();
+  return Math.floor((now - installTime) / (1000 * 60 * 60 * 24));
+}
+
+/**
  * Track session start with user settings
  * Called when a new tab is opened
  * 
@@ -277,8 +262,9 @@ export function trackFeature(featureName, properties = {}) {
  * cohort analysis (e.g., "users with video mode enabled")
  * 
  * @param {Object} settings - User settings and bird info
+ * @param {number|null} installTime - Install timestamp from chrome.storage.local
  */
-export function trackSessionStart(settings = {}) {
+export function trackSessionStart(settings = {}, installTime = null) {
   // Get Chrome UI locale for i18n planning
   let locale = 'unknown';
   try {
@@ -286,6 +272,9 @@ export function trackSessionStart(settings = {}) {
   } catch (e) {
     // Ignore - locale will remain 'unknown'
   }
+
+  // Calculate user tenure
+  const daysSinceInstall = getDaysSinceInstall(installTime);
 
   track('session_start', {
     // User settings
@@ -304,11 +293,27 @@ export function trackSessionStart(settings = {}) {
     species_code: settings.speciesCode || null,
     has_audio: settings.hasAudio || false,
     has_video: settings.hasVideo || false,
+    
+    // User tenure (for cohort analysis)
+    // PostHog can bucket this value using breakdown bins
+    days_since_install: daysSinceInstall,
   });
   
-  // Flush immediately - session_start is our most critical event
-  // and new tab sessions can be very short (user glances and navigates away)
-  flush();
+  // Note: We don't flush immediately anymore
+  // Events accumulate in localStorage and batch send every 2 min or 15 events
+}
+
+/**
+ * Track quiz started
+ * 
+ * Call this when the user opens/starts the quiz
+ * 
+ * @param {number} totalQuestions - Total questions in the quiz
+ */
+export function trackQuizStarted(totalQuestions) {
+  track('quiz_started', {
+    total_questions: totalQuestions,
+  });
 }
 
 /**
@@ -327,6 +332,22 @@ export function trackQuizCompleted(score, total, durationSec) {
     total,
     duration_sec: durationSec,
     score_percent: total > 0 ? Math.round((score / total) * 100) : 0,
+  });
+}
+
+/**
+ * Track quiz abandoned
+ * 
+ * Call this when user closes quiz without completing
+ * 
+ * @param {number} questionsAnswered - Number of questions answered before abandoning
+ * @param {number} totalQuestions - Total questions in the quiz
+ */
+export function trackQuizAbandoned(questionsAnswered, totalQuestions) {
+  track('quiz_abandoned', {
+    questions_answered: questionsAnswered,
+    total_questions: totalQuestions,
+    completion_percent: totalQuestions > 0 ? Math.round((questionsAnswered / totalQuestions) * 100) : 0,
   });
 }
 
@@ -351,6 +372,32 @@ export function trackOnboardingCompleted(region, autoPlay) {
 export function trackTourCompleted(stepsViewed) {
   track('tour_completed', {
     steps_viewed: stepsViewed,
+  });
+}
+
+/**
+ * Track review prompt shown
+ * 
+ * @param {number} daysSinceInstall - Days since extension install
+ * @param {number} newTabCount - Number of new tabs opened
+ */
+export function trackReviewPromptShown(daysSinceInstall, newTabCount) {
+  track('review_prompt_shown', {
+    days_since_install: daysSinceInstall,
+    new_tab_count: newTabCount,
+  });
+}
+
+/**
+ * Track review prompt action
+ * 
+ * @param {string} action - Action taken: 'left_review', 'maybe_later', or 'dismissed'
+ * @param {number} daysSinceInstall - Days since extension install
+ */
+export function trackReviewPromptAction(action, daysSinceInstall) {
+  track('review_prompt_action', {
+    action: action,
+    days_since_install: daysSinceInstall,
   });
 }
 

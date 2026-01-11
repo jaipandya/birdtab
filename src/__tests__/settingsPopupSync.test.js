@@ -36,6 +36,11 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain('id="modal-quiet-hours"');
     });
 
+    test('popup.html should have clock checkbox matching settingsModal', () => {
+      expect(popupHTML).toContain('id="clock-display"');
+      expect(settingsModalJS).toContain('id="modal-clock-display"');
+    });
+
     test('popup.html should have productivity checkbox matching settingsModal', () => {
       expect(popupHTML).toContain('id="enable-productivity"');
       expect(settingsModalJS).toContain('id="modal-enable-productivity"');
@@ -64,6 +69,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupJS).toContain("getElementById('region')");
       expect(popupJS).toContain("getElementById('auto-play')");
       expect(popupJS).toContain("getElementById('quiet-hours')");
+      expect(popupJS).toContain("getElementById('clock-display')");
       expect(popupJS).toContain("getElementById('enable-productivity')");
       expect(popupJS).toContain("getElementById('video-mode')");
       expect(popupJS).toContain("getElementById('high-res')");
@@ -73,6 +79,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain("getElementById('modal-region')");
       expect(settingsModalJS).toContain("getElementById('modal-auto-play')");
       expect(settingsModalJS).toContain("getElementById('modal-quiet-hours')");
+      expect(settingsModalJS).toContain("getElementById('modal-clock-display')");
       expect(settingsModalJS).toContain("getElementById('modal-enable-productivity')");
       expect(settingsModalJS).toContain("getElementById('modal-video-mode')");
       expect(settingsModalJS).toContain("getElementById('modal-high-res')");
@@ -84,6 +91,7 @@ describe('Settings and Popup Menu Sync', () => {
       'region',
       'autoPlay',
       'quietHours',
+      'clockEnabled',
       'quickAccessEnabled',
       'videoMode',
       'highResImages'
@@ -116,6 +124,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupJS).toContain('region: regionSelect.value');
       expect(popupJS).toContain('autoPlay: autoPlayCheckbox.checked');
       expect(popupJS).toContain('quietHours: quietHoursCheckbox.checked');
+      expect(popupJS).toContain('clockEnabled: clockDisplayCheckbox.checked');
       expect(popupJS).toContain('videoMode: videoModeCheckbox.checked');
       expect(popupJS).toContain('highResImages: highResCheckbox.checked');
     });
@@ -125,6 +134,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain('settings.region = this.regionSelect.value');
       expect(settingsModalJS).toContain('settings.autoPlay = this.autoPlayCheckbox.checked');
       expect(settingsModalJS).toContain('settings.quietHours = this.quietHoursCheckbox.checked');
+      expect(settingsModalJS).toContain('settings.clockEnabled = this.clockDisplayCheckbox.checked');
       expect(settingsModalJS).toContain('settings.quickAccessEnabled = this.enableProductivityCheckbox.checked');
       expect(settingsModalJS).toContain('settings.videoMode = this.videoModeCheckbox.checked');
       expect(settingsModalJS).toContain('settings.highResImages = this.highResCheckbox.checked');
@@ -136,19 +146,22 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupJS).toContain("regionSelect.addEventListener('change', saveSettings)");
       expect(popupJS).toContain("autoPlayCheckbox.addEventListener('change', saveSettings)");
       expect(popupJS).toContain("quietHoursCheckbox.addEventListener('change', saveSettings)");
+      expect(popupJS).toContain("clockDisplayCheckbox.addEventListener('change', saveSettings)");
       expect(popupJS).toContain("videoModeCheckbox.addEventListener('change', saveSettings)");
       expect(popupJS).toContain("highResCheckbox.addEventListener('change', saveSettings)");
     });
 
     test('popup.js should have special handler for productivity toggle', () => {
       expect(popupJS).toContain("enableProductivityCheckbox.addEventListener('change'");
-      expect(popupJS).toContain('chrome.permissions.request');
+      // Permission handling is now extracted to quickAccessPermissions.js
+      expect(popupJS).toContain('handleQuickAccessToggle');
     });
 
     test('settingsModal.js should have event listeners for all settings', () => {
       expect(settingsModalJS).toContain("this.regionSelect.addEventListener('change'");
       expect(settingsModalJS).toContain("this.autoPlayCheckbox.addEventListener('change'");
       expect(settingsModalJS).toContain("this.quietHoursCheckbox.addEventListener('change'");
+      expect(settingsModalJS).toContain("this.clockDisplayCheckbox.addEventListener('change'");
       expect(settingsModalJS).toContain("this.videoModeCheckbox.addEventListener('change'");
       expect(settingsModalJS).toContain("this.highResCheckbox.addEventListener('change'");
     });
@@ -159,6 +172,7 @@ describe('Settings and Popup Menu Sync', () => {
       'birdingRegion',
       'autoPlayBirdCalls',
       'quietHours',
+      'clockDisplay',
       'quickAccessFeatures',
       'videoMode',
       'highResImages',
@@ -183,6 +197,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupHTML).toContain('data-i18n="regionHelpText"');
       expect(popupHTML).toContain('data-i18n="autoPlayHelpText"');
       expect(popupHTML).toContain('data-i18n="quietHoursHelpText"');
+      expect(popupHTML).toContain('data-i18n="clockDisplayHelpText"');
       expect(popupHTML).toContain('data-i18n="productivityHelpText"');
       expect(popupHTML).toContain('data-i18n="videoModeHelpText"');
       expect(popupHTML).toContain('data-i18n="highResHelpText"');
@@ -192,6 +207,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain('data-i18n="regionHelpText"');
       expect(settingsModalJS).toContain('data-i18n="autoPlayHelpText"');
       expect(settingsModalJS).toContain('data-i18n="quietHoursHelpText"');
+      expect(settingsModalJS).toContain('data-i18n="clockDisplayHelpText"');
       expect(settingsModalJS).toContain('data-i18n="productivityHelpText"');
       expect(settingsModalJS).toContain('data-i18n="videoModeHelpText"');
       expect(settingsModalJS).toContain('data-i18n="highResHelpText"');
@@ -203,6 +219,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupJS).toContain('const regionSelect');
       expect(popupJS).toContain('const autoPlayCheckbox');
       expect(popupJS).toContain('const quietHoursCheckbox');
+      expect(popupJS).toContain('const clockDisplayCheckbox');
       expect(popupJS).toContain('const enableProductivityCheckbox');
       expect(popupJS).toContain('const videoModeCheckbox');
       expect(popupJS).toContain('const highResCheckbox');
@@ -212,6 +229,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain('this.regionSelect =');
       expect(settingsModalJS).toContain('this.autoPlayCheckbox =');
       expect(settingsModalJS).toContain('this.quietHoursCheckbox =');
+      expect(settingsModalJS).toContain('this.clockDisplayCheckbox =');
       expect(settingsModalJS).toContain('this.enableProductivityCheckbox =');
       expect(settingsModalJS).toContain('this.videoModeCheckbox =');
       expect(settingsModalJS).toContain('this.highResCheckbox =');
@@ -223,19 +241,20 @@ describe('Settings and Popup Menu Sync', () => {
       const popupToggles = (popupHTML.match(/class="toggle-container"/g) || []).length;
       const modalToggles = (settingsModalJS.match(/class="toggle-container"/g) || []).length;
       
+      // Both have 6 toggles: autoPlay, quietHours, clock, quickAccess, videoMode, highRes
       expect(popupToggles).toBe(modalToggles);
+      expect(popupToggles).toBe(6);
     });
 
     test('both should handle productivity permissions the same way', () => {
-      // Both should request permissions
-      expect(popupJS).toContain('chrome.permissions.request');
-      expect(settingsModalJS).toContain('chrome.permissions.request');
+      // Both should use the shared handleQuickAccessToggle function
+      // which internally handles chrome.permissions.request with topSites/favicon
+      expect(popupJS).toContain('handleQuickAccessToggle');
+      expect(settingsModalJS).toContain('handleQuickAccessToggle');
       
-      // Both should handle topSites and favicon permissions
-      expect(popupJS).toContain("'topSites'");
-      expect(popupJS).toContain("'favicon'");
-      expect(settingsModalJS).toContain("'topSites'");
-      expect(settingsModalJS).toContain("'favicon'");
+      // Both should import from quickAccessPermissions.js
+      expect(popupJS).toContain("from './quickAccessPermissions.js'");
+      expect(settingsModalJS).toContain("from './quickAccessPermissions.js'");
     });
   });
 });

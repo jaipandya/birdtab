@@ -11,7 +11,7 @@ import { log } from './logger.js';
 import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
-import { initAnalytics, trackSessionStart, trackFeature } from './analytics.js';
+import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock } from './clock.js';
 
 // Initialize Sentry for content script
@@ -25,6 +25,7 @@ let fadeAudioInterval = null; // Interval for fading audio in/out
 let video; // Video element for video mode
 let isPlaying = false;
 let shouldShowReviewPrompt = false;
+let reviewPromptData = null; // Data for review prompt analytics
 let birdInfo;
 let quizMode;
 let saveVolumeTimeout = null;
@@ -1060,6 +1061,16 @@ function checkAndPrepareReviewPrompt() {
       const frequencyCondition = now - lastReviewPrompt > timeDelay;
 
       shouldShowReviewPrompt = timeCondition && activityCondition && frequencyCondition;
+      
+      // Store data for analytics tracking
+      if (shouldShowReviewPrompt) {
+        const daysSinceInstall = Math.floor((now - installTime) / (1000 * 60 * 60 * 24));
+        reviewPromptData = {
+          daysSinceInstall,
+          newTabCount
+        };
+      }
+      
       resolve(shouldShowReviewPrompt);
     });
   });
@@ -1639,9 +1650,14 @@ async function initializePage() {
 
     // Track session start with user settings and bird info
     try {
-      const settings = await new Promise((resolve) => {
-        chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockEnabled'], resolve);
-      });
+      const [settings, localData] = await Promise.all([
+        new Promise((resolve) => {
+          chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockEnabled'], resolve);
+        }),
+        new Promise((resolve) => {
+          chrome.storage.local.get(['installTime'], resolve);
+        })
+      ]);
       trackSessionStart({
         region: settings.region || 'US',
         videoMode: settings.videoMode || false,
@@ -1653,7 +1669,7 @@ async function initializePage() {
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
         hasVideo: !!birdInfo.videoUrl,
-      });
+      }, localData.installTime || null);
     } catch (analyticsError) {
       log(`Analytics error: ${analyticsError.message}`);
     }
@@ -1911,6 +1927,11 @@ async function initializePage() {
     if (shouldShowReviewPrompt) {
       document.body.insertAdjacentHTML('beforeend', getReviewPromptHTML());
       addReviewPromptListeners();
+      
+      // Track review prompt shown
+      if (reviewPromptData) {
+        trackReviewPromptShown(reviewPromptData.daysSinceInstall, reviewPromptData.newTabCount);
+      }
     }
 
     setupExternalLinks();
@@ -2005,6 +2026,8 @@ function retryHandler() {
 }
 
 function addReviewPromptListeners() {
+  const daysSinceInstall = reviewPromptData?.daysSinceInstall || -1;
+  
   document.getElementById('leave-review').addEventListener('click', () => {
     if (process.env.BROWSER === 'edge') {
       chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
@@ -2012,16 +2035,19 @@ function addReviewPromptListeners() {
       chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn' });
     }
     chrome.storage.local.set({ reviewLeft: true });
+    trackReviewPromptAction('left_review', daysSinceInstall);
     dismissPrompt();
   });
 
   document.getElementById('maybe-later').addEventListener('click', () => {
     chrome.storage.local.set({ lastReviewPrompt: Date.now() });
+    trackReviewPromptAction('maybe_later', daysSinceInstall);
     dismissPrompt();
   });
 
   document.getElementById('no-thanks').addEventListener('click', () => {
     chrome.storage.local.set({ reviewDismissed: true });
+    trackReviewPromptAction('dismissed', daysSinceInstall);
     dismissPrompt();
   });
 }

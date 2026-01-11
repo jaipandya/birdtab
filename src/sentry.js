@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/browser';
 import { CONFIG } from './config.js';
 import { log, error as logError, warn as logWarn } from './logger.js';
+import { getOrCreateVisitorId } from './shared.js';
 
 // Track if Sentry is initialized
 let sentryInitialized = false;
@@ -36,25 +37,6 @@ const BROWSER_ONLY_INTEGRATIONS = ['BrowserTracing', 'TryCatch', 'Breadcrumbs', 
 // Span status codes
 const SPAN_STATUS_OK = 1;
 const SPAN_STATUS_ERROR = 2;
-
-/**
- * Get or create a unique visitor ID for anonymous user tracking.
- */
-async function getOrCreateVisitorId() {
-  try {
-    const result = await chrome.storage.local.get('visitorId');
-    if (result.visitorId) {
-      return result.visitorId;
-    }
-
-    const newId = crypto.randomUUID();
-    await chrome.storage.local.set({ visitorId: newId });
-    return newId;
-  } catch (error) {
-    logError('Failed to get/create visitor ID:', error);
-    return `session-${crypto.randomUUID()}`;
-  }
-}
 
 /**
  * Sanitize URL by removing query params and hash

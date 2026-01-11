@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const regionSelect = document.getElementById('region');
   const autoPlayCheckbox = document.getElementById('auto-play');
   const quietHoursCheckbox = document.getElementById('quiet-hours');
+  const clockDisplayCheckbox = document.getElementById('clock-display');
   const resetOnboardingButton = document.getElementById('reset-onboarding');
   const deleteCacheButton = document.getElementById('delete-cache');
   const saveNotification = document.getElementById('save-notification');
@@ -37,10 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
   populateRegionSelect(regionSelect);
 
   // Load current settings
-  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode', 'highResImages'], function (result) {
+  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockEnabled', 'quickAccessEnabled', 'videoMode', 'highResImages'], function (result) {
     regionSelect.value = result.region || 'US';
     autoPlayCheckbox.checked = result.autoPlay || false;
     quietHoursCheckbox.checked = result.quietHours || false;
+    clockDisplayCheckbox.checked = result.clockEnabled || false;
     enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
     videoModeCheckbox.checked = result.videoMode || false;
     highResCheckbox.checked = result.highResImages || false;
@@ -55,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
       region: regionSelect.value,
       autoPlay: autoPlayCheckbox.checked,
       quietHours: quietHoursCheckbox.checked,
+      clockEnabled: clockDisplayCheckbox.checked,
       videoMode: videoModeCheckbox.checked,
       highResImages: highResCheckbox.checked
     };
@@ -90,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
   regionSelect.addEventListener('change', saveSettings);
   autoPlayCheckbox.addEventListener('change', saveSettings);
   quietHoursCheckbox.addEventListener('change', saveSettings);
+  clockDisplayCheckbox.addEventListener('change', saveSettings);
   videoModeCheckbox.addEventListener('change', saveSettings);
   highResCheckbox.addEventListener('change', saveSettings);
 
