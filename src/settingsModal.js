@@ -1,9 +1,8 @@
 import { populateRegionSelect } from './shared.js';
 import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
-import { log } from './logger.js';
-import { captureException } from './sentry.js';
-import { showPermissionDialog } from './permissionDialog.js';
+import { log, warn } from './logger.js';
+import { handleQuickAccessToggle } from './quickAccessPermissions.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -125,6 +124,23 @@ class SettingsModal {
               <div class="toggle-container">
                 <div class="toggle-text">
                   <span class="setting-label-with-icon">
+                    <img src="images/svg/clock.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="clockDisplay">Show Clock</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                  </span>
+                  <p class="help-text" id="modal-clock-help" data-i18n="clockDisplayHelpText">Display a large clock in the center of your new tab.</p>
+                </div>
+                <label class="switch" data-i18n-title="clockDisplayTooltip" title="Show current time on new tab page">
+                  <input type="checkbox" id="modal-clock-display" aria-describedby="modal-clock-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
                     <img src="images/svg/search.svg" alt="" width="18" height="18" class="setting-icon">
                     <span data-i18n="quickAccessFeatures">Quick Access Features</span>
                   </span>
@@ -195,6 +211,7 @@ class SettingsModal {
     this.regionSelect = document.getElementById('modal-region');
     this.autoPlayCheckbox = document.getElementById('modal-auto-play');
     this.quietHoursCheckbox = document.getElementById('modal-quiet-hours');
+    this.clockDisplayCheckbox = document.getElementById('modal-clock-display');
     this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
     this.videoModeCheckbox = document.getElementById('modal-video-mode');
     this.highResCheckbox = document.getElementById('modal-high-res');
@@ -279,6 +296,9 @@ class SettingsModal {
     }
     if (this.quietHoursCheckbox) {
       this.quietHoursCheckbox.addEventListener('change', () => this.saveSettings());
+    }
+    if (this.clockDisplayCheckbox) {
+      this.clockDisplayCheckbox.addEventListener('change', () => this.saveSettings());
     }
     // Special handler for productivity features with permission request
     if (this.enableProductivityCheckbox) {
@@ -371,11 +391,11 @@ class SettingsModal {
   loadSettings() {
     // Load current settings from storage
     if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available');
+      warn('Chrome storage API not available');
       return;
     }
 
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockEnabled', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
 
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
@@ -385,6 +405,9 @@ class SettingsModal {
       }
       if (this.quietHoursCheckbox) {
         this.quietHoursCheckbox.checked = result.quietHours || false;
+      }
+      if (this.clockDisplayCheckbox) {
+        this.clockDisplayCheckbox.checked = result.clockEnabled || false;
       }
       if (this.enableProductivityCheckbox) {
         this.enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
@@ -400,7 +423,7 @@ class SettingsModal {
 
   saveSettings() {
     if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available');
+      warn('Chrome storage API not available');
       return;
     }
 
@@ -414,6 +437,9 @@ class SettingsModal {
     }
     if (this.quietHoursCheckbox) {
       settings.quietHours = this.quietHoursCheckbox.checked;
+    }
+    if (this.clockDisplayCheckbox) {
+      settings.clockEnabled = this.clockDisplayCheckbox.checked;
     }
     if (this.enableProductivityCheckbox) {
       settings.quickAccessEnabled = this.enableProductivityCheckbox.checked;
@@ -432,62 +458,11 @@ class SettingsModal {
   }
 
   async handleProductivityToggle(isEnabled) {
-    try {
-      if (isEnabled) {
-        log('Showing permission dialog before Chrome permission request');
-
-        // Show permission dialog first
-        const userConfirmed = await showPermissionDialog({
-          title: 'permissionDialogTitle',
-          subtitle: 'permissionDialogSubtitle',
-          privacyText: 'permissionDialogPrivacy',
-          privacyLinkText: 'privacyPolicy',
-          privacyLinkUrl: 'https://birdtab.app/privacy',
-          cancelText: 'goBack',
-          confirmText: 'continue'
-        });
-
-        if (!userConfirmed) {
-          // User clicked "Go back", revert the toggle
-          this.enableProductivityCheckbox.checked = false;
-          return;
-        }
-
-        // User clicked "Continue", now request Chrome permissions
-        const granted = await chrome.permissions.request({
-          permissions: ['topSites', 'favicon']
-        });
-
-        if (granted) {
-          // Permission granted, save the setting
-          this.saveSettings();
-        } else {
-          // Permission denied, revert the toggle
-          this.enableProductivityCheckbox.checked = false;
-          alert(getMessage('permissionRequired'));
-        }
-      } else {
-        // Save settings first, then try to remove permissions
-        this.saveSettings();
-
-        // Try to remove permissions (non-blocking, failure is OK)
-        try {
-          await chrome.permissions.remove({
-            permissions: ['topSites', 'favicon']
-          });
-        } catch (error) {
-          log('Could not remove permissions (this is usually harmless): ' + error.message);
-        }
-      }
-    } catch (error) {
-      log('Error with productivity toggle: ' + error.message);
-      captureException(error, {
-        tags: { operation: 'productivityToggle', component: 'settingsModal' },
-        extra: { isEnabled }
-      });
-      this.enableProductivityCheckbox.checked = !isEnabled; // Revert on error
-      alert(getMessage('somethingWentWrong'));
-    }
+    await handleQuickAccessToggle(isEnabled, {
+      onSuccess: () => this.showSaveNotification(),
+      onRevert: () => { this.enableProductivityCheckbox.checked = !isEnabled; },
+      component: 'settingsModal'
+    });
   }
 
   showSaveNotification() {

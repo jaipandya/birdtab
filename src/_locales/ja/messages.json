@@ -1030,5 +1030,37 @@
   "chromeFooterClose": {
     "message": "通知を閉じる",
     "description": "Aria label for close button on Chrome footer notification"
+  },
+  "clockDisplay": {
+    "message": "時計を表示",
+    "description": "Label for clock display toggle in settings"
+  },
+  "clockDisplayHelpText": {
+    "message": "検索ボックスの上に大きな時計を表示します。",
+    "description": "Help text for clock display setting"
+  },
+  "clockDisplayTooltip": {
+    "message": "新しいタブページに現在時刻を表示",
+    "description": "Tooltip for clock display toggle"
+  },
+  "clock24Hour": {
+    "message": "24時間形式",
+    "description": "Option to use 24-hour time format"
+  },
+  "clockShowSeconds": {
+    "message": "秒を表示",
+    "description": "Option to display seconds in the clock"
+  },
+  "clockOptionsAriaLabel": {
+    "message": "時計のオプション",
+    "description": "Aria label for clock options button"
+  },
+  "hideTopSites": {
+    "message": "よく使うサイトを非表示",
+    "description": "Option to hide the most visited sites grid"
+  },
+  "quickAccessOptionsAriaLabel": {
+    "message": "クイックアクセスオプション",
+    "description": "Aria label for quick access options button"
   }
 }

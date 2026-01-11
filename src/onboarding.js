@@ -2,10 +2,12 @@ import './onboarding.css';
 import { populateRegionSelect } from './shared.js';
 import { localizeHtml } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
+import { initAnalytics, trackOnboardingCompleted } from './analytics.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Initialize Sentry and start transaction
   initSentry('onboarding');
+  await initAnalytics('onboarding');
   const transaction = startTransaction('onboarding-flow', 'navigation');
   
   // Localize immediately
@@ -56,6 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return;
       }
+      
+      // Track onboarding completion only after settings are successfully saved
+      trackOnboardingCompleted(selectedRegion, autoPlayEnabled);
       
       if (transaction) {
         transaction.setStatus('ok');

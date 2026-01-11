@@ -12,6 +12,7 @@ import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotli
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature } from './analytics.js';
+import { initClock } from './clock.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -1639,7 +1640,7 @@ async function initializePage() {
     // Track session start with user settings and bird info
     try {
       const settings = await new Promise((resolve) => {
-        chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled'], resolve);
+        chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockEnabled'], resolve);
       });
       trackSessionStart({
         region: settings.region || 'US',
@@ -1648,6 +1649,7 @@ async function initializePage() {
         quietHours: settings.quietHours || false,
         highResImages: settings.highResImages || false,
         quickAccessEnabled: settings.quickAccessEnabled || false,
+        clockEnabled: settings.clockEnabled || false,
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
         hasVideo: !!birdInfo.videoUrl,
@@ -1898,6 +1900,7 @@ async function initializePage() {
     document.getElementById('chrome-tab-link').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      trackFeature('chrome_tab_click');
       chrome.tabs.create({ url: 'chrome://new-tab-page' });
     });
 
@@ -3080,6 +3083,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     captureException(error, {
       tags: { operation: 'initializeTopSites' }
+    });
+  }
+
+  // Initialize clock display
+  try {
+    await initClock();
+  } catch (error) {
+    captureException(error, {
+      tags: { operation: 'initializeClock' }
     });
   }
 

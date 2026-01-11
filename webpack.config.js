@@ -110,14 +110,24 @@ module.exports = (env, argv) => {
           { from: 'src/_locales', to: '_locales' },
         ],
       }),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+      }),
+      // DefinePlugin for build-time constants
+      // PostHog key selection: use POSTHOG_API_KEY_PROD for production, POSTHOG_API_KEY_DEV for development
       new DefinePlugin({
         'process.env.BROWSER': JSON.stringify(isEdge ? 'edge' : 'chrome'),
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
         'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
+        // PostHog: Use POSTHOG_API_KEY_PROD for production builds, POSTHOG_API_KEY_DEV for development
+        'process.env.POSTHOG_API_KEY': JSON.stringify(
+          isProduction 
+            ? (process.env.POSTHOG_API_KEY_PROD || 'phc_YOUR_PROJECT_API_KEY_HERE')
+            : (process.env.POSTHOG_API_KEY_DEV || 'phc_YOUR_PROJECT_API_KEY_HERE')
+        ),
       }),
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-      }),
+      // Dotenv loads other .env variables (Sentry, etc.)
+      // Note: Don't use POSTHOG_API_KEY in .env - use POSTHOG_API_KEY_DEV and POSTHOG_API_KEY_PROD instead
       new Dotenv({
         systemvars: true, // Load system environment variables as well
         silent: true, // Hide errors if .env is missing (e.g. in CI)

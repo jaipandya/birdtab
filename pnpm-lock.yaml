@@ -11,6 +11,9 @@ importers:
       '@sentry/browser':
         specifier: ^10.32.1
         version: 10.32.1
+      posthog-js-lite:
+        specifier: ^4.2.6
+        version: 4.2.6
     devDependencies:
       '@babel/core':
         specifier: ^7.24.7
@@ -955,6 +958,9 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@posthog/core@1.9.1':
+    resolution: {integrity: sha512-kRb1ch2dhQjsAapZmu6V66551IF2LnCbc1rnrQqnR7ArooVyJN9KOPXre16AJ3ObJz2eTfuP7x25BMyS2Y5Exw==}
 
   '@sentry-internal/browser-utils@10.32.1':
     resolution: {integrity: sha512-sjLLep1es3rTkbtAdTtdpc/a6g7v7bK5YJiZJsUigoJ4NTiFeMI5uIDCxbH/tjJ1q23YE1LzVn7T96I+qBRjHA==}
@@ -2820,6 +2826,9 @@ packages:
     resolution: {integrity: sha512-0vzE+lAiG7hZl1/9I8yzKLx3aR9Xbof3fBHKunvMfOCYAtMhrsnccJY2iTURb9EZd5+pLuiNV9/c/GZJOHsgIw==}
     engines: {node: ^10 || ^12 || >=14}
 
+  posthog-js-lite@4.2.6:
+    resolution: {integrity: sha512-hp7RtBPBAHp6GpsJfT4QXc4nKZKb6woMBhR0ih2b+d+DYlFr3o33UBpJlPRcaaXStMJsdcdCmKi7vMs9MRI3Og==}
+
   pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
 
@@ -4631,6 +4640,10 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.2.9': {}
+
+  '@posthog/core@1.9.1':
+    dependencies:
+      cross-spawn: 7.0.6
 
   '@sentry-internal/browser-utils@10.32.1':
     dependencies:
@@ -6656,6 +6669,10 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.0.1
       source-map-js: 1.2.0
+
+  posthog-js-lite@4.2.6:
+    dependencies:
+      '@posthog/core': 1.9.1
 
   pretty-error@4.0.0:
     dependencies:

@@ -1,5 +1,7 @@
 import { captureException } from './sentry.js';
-import { warn } from './logger.js';
+import { warn, log } from './logger.js';
+import { createOptionsMenu } from './optionsMenu.js';
+import { getOptionsTriggerSvg } from './optionsTrigger.js';
 
 /**
  * Top Sites module for displaying most visited websites
@@ -11,6 +13,8 @@ class TopSites {
     this.container = null;
     this.isInitialized = false;
     this.updateTimeout = null;
+    this.optionsMenu = null;
+    this.hideTopSites = false;
   }
 
   /**
@@ -60,10 +64,48 @@ class TopSites {
       </div>
     `;
 
-    // Insert after search container
+    // Insert after search container and wrap both in a quick-access wrapper
     const searchContainer = document.getElementById('search-container');
     if (searchContainer) {
-      searchContainer.insertAdjacentElement('afterend', this.container);
+      // Check if wrapper already exists
+      let quickAccessWrapper = document.getElementById('quick-access-wrapper');
+      if (!quickAccessWrapper) {
+        // Create the wrapper and wrap search container
+        quickAccessWrapper = document.createElement('div');
+        quickAccessWrapper.id = 'quick-access-wrapper';
+        quickAccessWrapper.className = 'quick-access-wrapper';
+        
+        // Add clock container to the wrapper
+        // Clock is positioned above search box for simpler logic
+        // The quick-access-options-trigger is positioned relative to the search-and-sites area
+        quickAccessWrapper.innerHTML = `
+          <div id="clock-container" class="clock-container hidden">
+            <div class="clock-wrapper">
+              <div id="clock-time" class="clock-time"></div>
+              <button id="clock-options-trigger" class="clock-options-trigger" aria-label="${chrome.i18n.getMessage('clockOptionsAriaLabel') || 'Clock options'}">
+                ${getOptionsTriggerSvg()}
+              </button>
+            </div>
+          </div>
+          <div class="search-and-sites">
+            <button id="quick-access-options-trigger" class="quick-access-options-trigger" aria-label="${chrome.i18n.getMessage('quickAccessOptionsAriaLabel') || 'Quick access options'}">
+              ${getOptionsTriggerSvg()}
+            </button>
+          </div>
+        `;
+        
+        // Insert wrapper before search container
+        searchContainer.parentNode.insertBefore(quickAccessWrapper, searchContainer);
+        
+        // Move search container into the search-and-sites area (before the options trigger)
+        const searchAndSites = quickAccessWrapper.querySelector('.search-and-sites');
+        searchAndSites.insertBefore(searchContainer, searchAndSites.firstChild);
+      }
+      
+      // Add top sites container to the search-and-sites area (after search, before options trigger)
+      const searchAndSites = quickAccessWrapper.querySelector('.search-and-sites');
+      const optionsTrigger = searchAndSites.querySelector('.quick-access-options-trigger');
+      searchAndSites.insertBefore(this.container, optionsTrigger);
     } else {
       // Fallback: insert before content container
       const contentContainer = document.getElementById('content-container');
@@ -133,6 +175,16 @@ class TopSites {
   async loadAndDisplay() {
     try {
       const settings = await this.getSettings();
+      this.hideTopSites = settings.hideTopSites || false;
+      
+      // If hide top sites is enabled, hide everything (both top sites and custom shortcuts)
+      if (this.hideTopSites) {
+        this.hide();
+        // Still initialize the options menu so users can toggle the setting back
+        this.initOptionsMenu();
+        return;
+      }
+      
       const sites = [];
 
       // Get custom shortcuts if quick access is enabled
@@ -141,7 +193,7 @@ class TopSites {
         sites.push(...customShortcuts);
       }
 
-      // Get top sites from Chrome API with error handling
+      // Get top sites from Chrome API
       let topSites = [];
       try {
         topSites = await chrome.topSites.get();
@@ -157,9 +209,11 @@ class TopSites {
         sites.push(...uniqueTopSites);
       }
 
-      if (sites.length > 0) {
+      // Show if we have sites OR if quick access is enabled (for add shortcut button)
+      if (sites.length > 0 || settings.quickAccessEnabled) {
         await this.renderTopSites(sites); // Pass all sites, renderTopSites will handle the limit
         this.show();
+        this.initOptionsMenu();
       } else {
         this.hide();
       }
@@ -386,7 +440,8 @@ class TopSites {
     return new Promise((resolve) => {
       try {
         chrome.storage.sync.get([
-          'quickAccessEnabled'
+          'quickAccessEnabled',
+          'hideTopSites'
         ], (result) => {
           if (chrome.runtime.lastError) {
             captureException(new Error(chrome.runtime.lastError.message), {
@@ -491,12 +546,17 @@ class TopSites {
       if (namespace === 'sync') {
         const relevantChanges = [
           'quickAccessEnabled',
-          'customShortcuts'
+          'customShortcuts',
+          'hideTopSites'
         ];
 
         const hasRelevantChanges = relevantChanges.some(key => changes.hasOwnProperty(key));
 
         if (hasRelevantChanges) {
+          // Update local state for hideTopSites
+          if (changes.hideTopSites !== undefined) {
+            this.hideTopSites = changes.hideTopSites.newValue || false;
+          }
           // Debounce multiple rapid changes
           this.updateVisibility();
         }
@@ -507,6 +567,45 @@ class TopSites {
 
     // Store reference for cleanup
     this.storageChangeListener = handleStorageChange;
+  }
+
+  /**
+   * Initialize the options menu for top sites settings
+   */
+  initOptionsMenu() {
+    const quickAccessWrapper = document.getElementById('quick-access-wrapper');
+    const trigger = quickAccessWrapper?.querySelector('#quick-access-options-trigger');
+    const searchContainer = document.getElementById('search-container');
+    
+    if (!trigger || !quickAccessWrapper || !searchContainer) return;
+    
+    // Destroy existing menu if any
+    if (this.optionsMenu) {
+      this.optionsMenu.destroy();
+    }
+    
+    // Create options that read current state when menu is opened
+    const getOptions = () => [
+      {
+        type: 'toggle',
+        label: chrome.i18n.getMessage('hideTopSites') || 'Hide top sites',
+        checked: this.hideTopSites,
+        onChange: async (checked) => {
+          this.hideTopSites = checked;
+          // Save to storage
+          await chrome.storage.sync.set({ hideTopSites: checked });
+          log(`Hide top sites toggled: ${checked}`);
+        }
+      }
+    ];
+    
+    this.optionsMenu = createOptionsMenu({
+      triggerElement: trigger,
+      anchorElement: searchContainer, // Anchor to search container for consistent positioning like clock
+      menuId: 'quick-access-options-menu',
+      position: 'right',
+      getOptions // Pass factory function instead of static options
+    });
   }
 
   /**
@@ -746,6 +845,12 @@ class TopSites {
     if (this.storageChangeListener) {
       chrome.storage.onChanged.removeListener(this.storageChangeListener);
       this.storageChangeListener = null;
+    }
+
+    // Destroy options menu
+    if (this.optionsMenu) {
+      this.optionsMenu.destroy();
+      this.optionsMenu = null;
     }
 
     // Remove container from DOM

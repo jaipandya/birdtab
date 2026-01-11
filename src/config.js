@@ -29,6 +29,19 @@ export const CONFIG = {
 
     // Enable debug mode (set to true only when debugging Sentry issues)
     DEBUG: false
+  },
+
+  // PostHog Analytics Configuration
+  // No host permissions required - PostHog's capture API supports CORS natively
+  POSTHOG: {
+    // Project API Key - injected from environment variables via webpack
+    // Development: POSTHOG_API_KEY_DEV (from .env)
+    // Production: POSTHOG_API_KEY (from .env)
+    // Falls back to placeholder if not set
+    API_KEY: process.env.POSTHOG_API_KEY || 'phc_YOUR_PROJECT_API_KEY_HERE',
+
+    // API Host - EU region for GDPR compliance (Frankfurt, Germany)
+    API_HOST: 'https://eu.i.posthog.com'
   }
 };
 

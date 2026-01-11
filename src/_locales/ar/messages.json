@@ -1030,5 +1030,37 @@
   "chromeFooterClose": {
     "message": "إغلاق الإشعار",
     "description": "Aria label for close button on Chrome footer notification"
+  },
+  "clockDisplay": {
+    "message": "إظهار الساعة",
+    "description": "Label for clock display toggle in settings"
+  },
+  "clockDisplayHelpText": {
+    "message": "عرض ساعة كبيرة فوق مربع البحث.",
+    "description": "Help text for clock display setting"
+  },
+  "clockDisplayTooltip": {
+    "message": "إظهار الوقت الحالي في صفحة علامة تبويب جديدة",
+    "description": "Tooltip for clock display toggle"
+  },
+  "clock24Hour": {
+    "message": "ساعة 24 ساعة",
+    "description": "Option to use 24-hour time format"
+  },
+  "clockShowSeconds": {
+    "message": "إظهار الثواني",
+    "description": "Option to display seconds in the clock"
+  },
+  "clockOptionsAriaLabel": {
+    "message": "خيارات الساعة",
+    "description": "Aria label for clock options button"
+  },
+  "hideTopSites": {
+    "message": "إخفاء المواقع الأكثر زيارة",
+    "description": "Option to hide the most visited sites grid"
+  },
+  "quickAccessOptionsAriaLabel": {
+    "message": "خيارات الوصول السريع",
+    "description": "Aria label for quick access options button"
   }
 }

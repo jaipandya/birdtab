@@ -41,6 +41,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@sentry/browser": "^10.32.1"
+    "@sentry/browser": "^10.32.1",
+    "posthog-js-lite": "^4.2.6"
   }
 }

@@ -1,6 +1,7 @@
 import { captureException } from './sentry.js';
 import './quiz.css';
 import { log } from './logger.js';
+import { trackQuizCompleted } from './analytics.js';
 
 /*
  * IMAGE PRELOADING OPTIMIZATION STRATEGY
@@ -55,6 +56,7 @@ class QuizMode {
     this.onQuizStart = options.onQuizStart || null; // Callback when quiz starts
     this.loadingProgress = 0; // Track image loading progress (0-100%)
     this.totalImagesToLoad = QUIZ_TOTAL_QUESTIONS; // Total images to preload
+    this.quizStartTime = null; // Track quiz start time for analytics
 
     this.setupKeyboardListener();
   }
@@ -319,6 +321,7 @@ class QuizMode {
   async startQuiz() {
     try {
       this.onQuizStart?.();
+      this.quizStartTime = Date.now(); // Track quiz start time for analytics
 
       const region = await this.getCurrentRegion();
       let birds = await this.getCachedBirds(region);
@@ -1038,6 +1041,7 @@ class QuizMode {
    */
   async restartQuiz() {
     this.resetQuizState();
+    this.quizStartTime = Date.now(); // Reset timer for analytics
 
     try {
       const region = await this.getCurrentRegion();
@@ -1123,6 +1127,12 @@ class QuizMode {
       log('showResults aborted: quiz container no longer exists');
       return;
     }
+    
+    // Track quiz completion with score and duration
+    const durationSec = this.quizStartTime 
+      ? Math.round((Date.now() - this.quizStartTime) / 1000) 
+      : 0;
+    trackQuizCompleted(this.score, QUIZ_TOTAL_QUESTIONS, durationSec);
     
     this.quizContainer.innerHTML = this.generateResultsHTML();
     this.setupResultsEventListeners();

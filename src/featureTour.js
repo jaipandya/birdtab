@@ -25,6 +25,7 @@
 
 import './featureTour.css';
 import { log } from './logger.js';
+import { trackTourCompleted } from './analytics.js';
 
 // Tour version - increment when adding new features to show tour again
 // Version history:
@@ -967,6 +968,10 @@ export async function endTour(markComplete = true) {
   if (markComplete) {
     await markTourCompleted();
     log('Feature tour marked as completed');
+    
+    // Track tour completion with steps viewed
+    // currentStep is 0-indexed, so add 1 for human-readable count
+    trackTourCompleted(currentStep + 1);
     
     // Call the callback if set
     if (onTourEndCallback) {
