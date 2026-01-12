@@ -42,7 +42,12 @@ export const CONFIG = {
 
     // API Host - EU region for GDPR compliance (Frankfurt, Germany)
     API_HOST: 'https://eu.i.posthog.com'
-  }
+  },
+
+  // Uninstall URL Signing - HMAC secret for validating visitor IDs
+  // This prevents URL tampering on the uninstall feedback page
+  // The same secret must be configured on the website (api.birdtab.app)
+  UNINSTALL_SECRET: process.env.UNINSTALL_SECRET || 'birdtab-uninstall-secret-change-in-prod'
 };
 
 export default CONFIG;

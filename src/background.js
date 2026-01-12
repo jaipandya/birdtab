@@ -1,6 +1,7 @@
 import { CONFIG } from './config.js';
 import { initSentry, captureException, addBreadcrumb, reportApiError } from './sentry.js';
 import { log } from './logger.js';
+import { getOrCreateVisitorId } from './shared.js';
 
 // Initialize Sentry for background script
 initSentry('background');
@@ -893,15 +894,77 @@ chrome.runtime.onInstalled.addListener(function (details) {
       newTabCount: 0
     });
 
-    // Set the uninstall URL
-    chrome.runtime.setUninstallURL('https://tally.so/r/wzZyDR', () => {
+    // Set the uninstall URL with visitor ID for PostHog tracking
+    setPersonalizedUninstallURL();
+  }
+});
+
+/**
+ * Generate HMAC-SHA256 signature for URL signing
+ * Uses Web Crypto API available in service workers
+ */
+async function generateSignature(data, secret) {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const dataToSign = encoder.encode(data);
+  
+  // Import the secret as a crypto key
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  // Sign the data
+  const signature = await crypto.subtle.sign('HMAC', key, dataToSign);
+  
+  // Convert to hex string
+  const hashArray = Array.from(new Uint8Array(signature));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  
+  return hashHex;
+}
+
+/**
+ * Set personalized uninstall URL with visitor ID for PostHog tracking
+ * This allows us to track uninstalls in PostHog analytics
+ * 
+ * The URL is signed with HMAC-SHA256 to prevent tampering:
+ * - id: visitor ID
+ * - ts: timestamp (for expiry checking)
+ * - sig: HMAC signature of "id:ts"
+ */
+async function setPersonalizedUninstallURL() {
+  try {
+    const visitorId = await getOrCreateVisitorId();
+    const timestamp = Date.now();
+    
+    // Generate signature: HMAC-SHA256(visitorId:timestamp, secret)
+    const dataToSign = `${visitorId}:${timestamp}`;
+    const signature = await generateSignature(dataToSign, CONFIG.UNINSTALL_SECRET);
+    
+    // Build signed URL
+    const uninstallUrl = `https://api.birdtab.app/uninstall?id=${encodeURIComponent(visitorId)}&ts=${timestamp}&sig=${signature}`;
+    
+    chrome.runtime.setUninstallURL(uninstallUrl, () => {
       if (chrome.runtime.lastError) {
         log('Error setting uninstall URL: ' + chrome.runtime.lastError.message);
       } else {
-        log('Uninstall URL set successfully');
+        log('Uninstall URL set successfully with signed visitor ID');
+      }
+    });
+  } catch (error) {
+    log('Error creating personalized uninstall URL: ' + error.message);
+    captureException(error);
+    // Fallback to generic uninstall URL without tracking
+    chrome.runtime.setUninstallURL('https://api.birdtab.app/uninstall', () => {
+      if (chrome.runtime.lastError) {
+        log('Error setting fallback uninstall URL: ' + chrome.runtime.lastError.message);
       }
     });
   }
-});
+}
 
 log('Background script loaded');
