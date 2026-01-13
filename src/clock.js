@@ -205,6 +205,8 @@ export function showClock() {
   
   container.classList.remove('hidden');
   isVisible = true;
+  // Add class to body for video play/pause button positioning
+  document.body.classList.add('quick-access-has-clock');
   startClockInterval();
   initOptionsMenu();
   log('Clock shown');
@@ -219,6 +221,8 @@ export function hideClock() {
   
   container.classList.add('hidden');
   isVisible = false;
+  // Remove class from body
+  document.body.classList.remove('quick-access-has-clock');
   stopClockInterval();
   
   if (optionsMenu) {

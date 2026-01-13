@@ -421,6 +421,8 @@ class TopSites {
   show() {
     if (this.container) {
       this.container.classList.remove('hidden');
+      // Add class to body for video play/pause button positioning
+      document.body.classList.add('quick-access-has-top-sites');
     }
   }
 
@@ -430,6 +432,8 @@ class TopSites {
   hide() {
     if (this.container) {
       this.container.classList.add('hidden');
+      // Remove class from body - video play/pause can be centered
+      document.body.classList.remove('quick-access-has-top-sites');
     }
   }
 
