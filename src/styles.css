@@ -410,7 +410,7 @@ body.loaded {
   height: 4px;
   opacity: 0;
   transition: opacity 0.3s ease, height 0.2s ease;
-  z-index: 10;
+  z-index: 150;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.15);
 }
