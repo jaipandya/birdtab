@@ -884,6 +884,12 @@ function checkOnboarding() {
 chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason === 'install' || details.reason === 'update') {
     checkOnboarding();
+    
+    // Set/refresh the uninstall URL with visitor ID for PostHog tracking
+    // This needs to be called on both install AND update to ensure:
+    // 1. New installs get the correct uninstall URL
+    // 2. Updates refresh the URL with the latest secret (in case it changed)
+    setPersonalizedUninstallURL();
   }
 
   // This helps in tracking the number of new tabs opened by the user
@@ -893,9 +899,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
       installTime: Date.now(),
       newTabCount: 0
     });
-
-    // Set the uninstall URL with visitor ID for PostHog tracking
-    setPersonalizedUninstallURL();
   }
 });
 
