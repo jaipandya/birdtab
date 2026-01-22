@@ -1457,6 +1457,86 @@ p {
   outline-offset: 2px;
 }
 
+/* Clock Styles */
+.clock-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.clock-container.hidden {
+  display: none !important;
+}
+
+.clock-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock-time {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300; /* Thin elegant font */
+  font-size: 6rem;
+  color: #ffffff;
+  line-height: 1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline; /* Align seconds to baseline */
+}
+
+.clock-seconds {
+  font-size: 0.33em; /* 1/3 size */
+  font-weight: 400; /* Slightly bolder for readability at small size */
+  margin-left: 0.15em; /* Small gap */
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums; /* Fixed width */
+  min-width: 1.25em; /* Ensure enough space for 2 digits */
+  letter-spacing: 0;
+}
+
+/* Clock options trigger */
+.clock-options-trigger {
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: opacity 0.2s ease 0.3s, background-color 0.2s ease, color 0.2s ease;
+  opacity: 0;
+}
+
+.clock-wrapper:hover .clock-options-trigger,
+.clock-options-trigger:hover,
+.clock-options-trigger:focus {
+  opacity: 1;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.clock-options-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .clock-time {
+    font-size: 4rem;
+  }
+}
+
 .search-container {
   display: none; /* Hidden by default */
   width: 100%;

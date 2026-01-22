@@ -41,31 +41,32 @@ function getClockOptionsTrigger() {
 }
 
 /**
- * Format the current time based on user preferences
+ * Get the time components based on user preferences
  * @param {Date} date - The date to format
- * @returns {string} Formatted time string
+ * @returns {Object} Object containing mainTime (HH:MM) and seconds (SS or null)
  */
-function formatTime(date) {
+function getTimeComponents(date) {
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  
-  let timeStr;
-  
+  const secs = date.getSeconds();
+
+  let mainTime;
+
   if (is24HourFormat) {
-    // 24-hour format: 14:30 or 14:30:45
-    timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    // 24-hour format: 14:30
+    mainTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   } else {
-    // 12-hour format without AM/PM: 2:30 or 2:30:45
+    // 12-hour format without AM/PM: 2:30
     const displayHours = hours % 12 || 12;
-    timeStr = `${displayHours}:${minutes.toString().padStart(2, '0')}`;
+    mainTime = `${displayHours}:${minutes.toString().padStart(2, '0')}`;
   }
-  
+
+  let secondsStr = null;
   if (showSeconds) {
-    timeStr += `:${seconds.toString().padStart(2, '0')}`;
+    secondsStr = secs.toString().padStart(2, '0');
   }
-  
-  return timeStr;
+
+  return { mainTime, secondsStr };
 }
 
 /**
@@ -74,9 +75,19 @@ function formatTime(date) {
 function updateClock() {
   const timeElement = getClockTimeElement();
   if (!timeElement) return;
-  
+
   const now = new Date();
-  timeElement.textContent = formatTime(now);
+  const { mainTime, secondsStr } = getTimeComponents(now);
+
+  if (secondsStr) {
+    // Render with seconds: HH:MM<span class="clock-seconds">SS</span>
+    // Note: No colon between main time and seconds as per requirements
+    // Using innerHTML is safe here as the content is generated from numbers
+    timeElement.innerHTML = `<span class="clock-main">${mainTime}</span><span class="clock-seconds">${secondsStr}</span>`;
+  } else {
+    // Render just HH:MM
+    timeElement.textContent = mainTime;
+  }
 }
 
 /**
@@ -86,7 +97,7 @@ function updateClock() {
 function getDelayToNextUpdate() {
   const now = new Date();
   const milliseconds = now.getMilliseconds();
-  
+
   if (showSeconds) {
     // Update every second - sync to second boundary
     return 1000 - milliseconds;
@@ -104,14 +115,14 @@ function getDelayToNextUpdate() {
 function startClockInterval() {
   // Clear any existing interval and timeout
   stopClockInterval();
-  
+
   // Update immediately
   updateClock();
-  
+
   // Wait for next boundary, then update at the appropriate interval
   const delayToNext = getDelayToNextUpdate();
   const updateInterval = showSeconds ? 1000 : 60000;
-  
+
   clockSyncTimeout = setTimeout(() => {
     clockSyncTimeout = null; // Clear reference after firing
     updateClock();
@@ -148,14 +159,14 @@ function getClockWrapper() {
 function initOptionsMenu() {
   const trigger = getClockOptionsTrigger();
   const wrapper = getClockWrapper();
-  
+
   if (!trigger || !wrapper) return;
-  
+
   // Destroy existing menu if any
   if (optionsMenu) {
     optionsMenu.destroy();
   }
-  
+
   // Create options that read current state when menu is opened
   const getOptions = () => [
     {
@@ -183,7 +194,7 @@ function initOptionsMenu() {
       }
     }
   ];
-  
+
   optionsMenu = createOptionsMenu({
     triggerElement: trigger,
     anchorElement: wrapper,
@@ -202,7 +213,7 @@ export function showClock() {
     log('Clock container not found');
     return;
   }
-  
+
   container.classList.remove('hidden');
   isVisible = true;
   // Add class to body for video play/pause button positioning
@@ -218,18 +229,18 @@ export function showClock() {
 export function hideClock() {
   const container = getClockContainer();
   if (!container) return;
-  
+
   container.classList.add('hidden');
   isVisible = false;
   // Remove class from body
   document.body.classList.remove('quick-access-has-clock');
   stopClockInterval();
-  
+
   if (optionsMenu) {
     optionsMenu.destroy();
     optionsMenu = null;
   }
-  
+
   log('Clock hidden');
 }
 
@@ -264,23 +275,23 @@ export async function initClock() {
   try {
     // Clean up existing listeners to prevent duplicates
     cleanupListeners();
-    
+
     // Get clock settings from storage
     const result = await new Promise((resolve) => {
       chrome.storage.sync.get(['clockEnabled', 'clockFormat24Hour', 'clockShowSeconds'], resolve);
     });
-    
+
     is24HourFormat = result.clockFormat24Hour || false;
     showSeconds = result.clockShowSeconds || false;
-    
+
     if (result.clockEnabled) {
       showClock();
     }
-    
+
     // Create and store storage change listener
     storageChangeListener = (changes, areaName) => {
       if (areaName !== 'sync') return;
-      
+
       if (changes.clockEnabled) {
         if (changes.clockEnabled.newValue) {
           showClock();
@@ -288,17 +299,17 @@ export async function initClock() {
           hideClock();
         }
       }
-      
+
       if (changes.clockFormat24Hour !== undefined) {
         setClockFormat(changes.clockFormat24Hour.newValue);
       }
-      
+
       if (changes.clockShowSeconds !== undefined) {
         setShowSeconds(changes.clockShowSeconds.newValue);
       }
     };
     chrome.storage.onChanged.addListener(storageChangeListener);
-    
+
     log('Clock initialized');
   } catch (error) {
     log('Error initializing clock: ' + error.message);
@@ -321,15 +332,15 @@ function cleanupListeners() {
 export function destroyClock() {
   stopClockInterval();
   isVisible = false;
-  
+
   if (optionsMenu) {
     optionsMenu.destroy();
     optionsMenu = null;
   }
-  
+
   // Clean up event listeners
   cleanupListeners();
-  
+
   log('Clock destroyed');
 }
 
