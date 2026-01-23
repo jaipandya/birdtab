@@ -1055,6 +1055,50 @@
     "message": "时钟选项",
     "description": "Aria label for clock options button"
   },
+  "switchToTimer": {
+    "message": "切换到计时器",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "切换到时钟",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "开始",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "暂停",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "继续",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "重置",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "时",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "分",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "秒",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "计时器选项",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "闹钟声",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
   "hideTopSites": {
     "message": "隐藏常用网站",
     "description": "Option to hide the most visited sites grid"

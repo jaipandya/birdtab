@@ -1055,6 +1055,50 @@
     "message": "時計のオプション",
     "description": "Aria label for clock options button"
   },
+  "switchToTimer": {
+    "message": "タイマーに切り替え",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "時計に切り替え",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "開始",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "一時停止",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "再開",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "リセット",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "時",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "分",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "秒",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "タイマーのオプション",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "アラーム音",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
   "hideTopSites": {
     "message": "よく使うサイトを非表示",
     "description": "Option to hide the most visited sites grid"

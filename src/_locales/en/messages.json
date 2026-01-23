@@ -1055,6 +1055,50 @@
     "message": "Clock options",
     "description": "Aria label for clock options button"
   },
+  "switchToTimer": {
+    "message": "Switch to Timer",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "Switch to Clock",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "Start",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "Pause",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "Resume",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "Reset",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "h",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "m",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "s",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "Timer options",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "Alarm sound",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
   "hideTopSites": {
     "message": "Hide top sites",
     "description": "Option to hide the most visited sites grid"

@@ -78,10 +78,12 @@ class TopSites {
         // Add clock container to the wrapper
         // Clock is positioned above search box for simpler logic
         // The quick-access-options-trigger is positioned relative to the search-and-sites area
+        // Timer display is inside clock-wrapper, hidden by default (user can switch between clock/timer)
         quickAccessWrapper.innerHTML = `
           <div id="clock-container" class="clock-container hidden">
             <div class="clock-wrapper">
               <div id="clock-time" class="clock-time"></div>
+              <div id="timer-display" class="timer-display hidden"></div>
               <button id="clock-options-trigger" class="clock-options-trigger" aria-label="${chrome.i18n.getMessage('clockOptionsAriaLabel') || 'Clock options'}">
                 ${getOptionsTriggerSvg()}
               </button>

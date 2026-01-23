@@ -13,6 +13,7 @@ import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock } from './clock.js';
+import { initTimer } from './timer.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -3118,6 +3119,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     captureException(error, {
       tags: { operation: 'initializeClock' }
+    });
+  }
+
+  // Initialize timer (alternative to clock)
+  try {
+    await initTimer();
+  } catch (error) {
+    captureException(error, {
+      tags: { operation: 'initializeTimer' }
     });
   }
 

@@ -1055,6 +1055,50 @@
     "message": "Opciones de reloj",
     "description": "Aria label for clock options button"
   },
+  "switchToTimer": {
+    "message": "Cambiar a Temporizador",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "Cambiar a Reloj",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "Iniciar",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "Pausar",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "Continuar",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "Reiniciar",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "h",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "m",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "s",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "Opciones del temporizador",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "Sonido de alarma",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
   "hideTopSites": {
     "message": "Ocultar sitios principales",
     "description": "Option to hide the most visited sites grid"

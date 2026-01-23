@@ -1055,6 +1055,50 @@
     "message": "Настройки часов",
     "description": "Aria label for clock options button"
   },
+  "switchToTimer": {
+    "message": "Переключить на таймер",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "Переключить на часы",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "Старт",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "Пауза",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "Продолжить",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "Сбросить",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "ч",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "м",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "с",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "Настройки таймера",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "Звук будильника",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
   "hideTopSites": {
     "message": "Скрыть популярные сайты",
     "description": "Option to hide the most visited sites grid"

@@ -192,6 +192,27 @@ function initOptionsMenu() {
         // Save to storage
         await chrome.storage.sync.set({ clockShowSeconds: checked });
       }
+    },
+    {
+      type: 'divider'
+    },
+    {
+      type: 'button',
+      label: getMessage('switchToTimer') || 'Switch to Timer',
+      onClick: async () => {
+        // Hide clock time but keep container visible for timer
+        hideClock(false);
+        
+        // Import and show timer
+        const { showTimer } = await import('./timer.js');
+        showTimer();
+        
+        // Update storage
+        await chrome.storage.sync.set({ 
+          clockEnabled: false, 
+          timerEnabled: true 
+        });
+      }
     }
   ];
 
@@ -205,15 +226,30 @@ function initOptionsMenu() {
 }
 
 /**
+ * Get the timer display element
+ * @returns {HTMLElement|null}
+ */
+function getTimerDisplay() {
+  return document.getElementById('timer-display');
+}
+
+/**
  * Show the clock
  */
 export function showClock() {
   const container = getClockContainer();
+  const clockTime = getClockTimeElement();
+  const timerDisplay = getTimerDisplay();
+  
   if (!container) {
     log('Clock container not found');
     return;
   }
 
+  // Show clock time, hide timer display
+  if (clockTime) clockTime.classList.remove('hidden');
+  if (timerDisplay) timerDisplay.classList.add('hidden');
+  
   container.classList.remove('hidden');
   isVisible = true;
   // Add class to body for video play/pause button positioning
@@ -225,15 +261,25 @@ export function showClock() {
 
 /**
  * Hide the clock
+ * @param {boolean} hideContainer - Whether to hide the entire container (default: true)
  */
-export function hideClock() {
+export function hideClock(hideContainer = true) {
   const container = getClockContainer();
+  const clockTime = getClockTimeElement();
+  
   if (!container) return;
 
-  container.classList.add('hidden');
+  // Always hide the clock time element
+  if (clockTime) clockTime.classList.add('hidden');
+  
+  // Only hide the container if requested (not when switching to timer)
+  if (hideContainer) {
+    container.classList.add('hidden');
+    // Remove class from body
+    document.body.classList.remove('quick-access-has-clock');
+  }
+  
   isVisible = false;
-  // Remove class from body
-  document.body.classList.remove('quick-access-has-clock');
   stopClockInterval();
 
   if (optionsMenu) {
