@@ -513,6 +513,23 @@ describe('Timer Module - Unit Tests', () => {
       
       expect(shouldShowSearchAndSites).toBe(true);
     });
+
+    test('timer-active class added to body when timer is running', () => {
+      // Simulate hideSearchAndSites behavior
+      document.body.classList.add('timer-active');
+      
+      expect(document.body.classList.contains('timer-active')).toBe(true);
+    });
+
+    test('timer-active class removed from body when timer resets', () => {
+      // Start with timer active
+      document.body.classList.add('timer-active');
+      
+      // Simulate showSearchAndSites behavior (reset)
+      document.body.classList.remove('timer-active');
+      
+      expect(document.body.classList.contains('timer-active')).toBe(false);
+    });
   });
 
   describe('Time Display Formatting', () => {

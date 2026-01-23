@@ -93,22 +93,31 @@ function getSearchAndSites() {
 
 /**
  * Hide the search box and top sites when timer is active
+ * Also adds body class for video play button positioning
  */
 function hideSearchAndSites() {
   const searchAndSites = getSearchAndSites();
   if (searchAndSites) {
     searchAndSites.classList.add('timer-active-hidden');
   }
+  
+  // Add timer-active class for video play button positioning
+  // This ensures the play button is shifted down to avoid the timer display
+  document.body.classList.add('timer-active');
 }
 
 /**
  * Show the search box and top sites when timer is in setup mode
+ * Also removes body class for video play button positioning
  */
 function showSearchAndSites() {
   const searchAndSites = getSearchAndSites();
   if (searchAndSites) {
     searchAndSites.classList.remove('timer-active-hidden');
   }
+  
+  // Remove timer-active class - play button can go back to normal position
+  document.body.classList.remove('timer-active');
 }
 
 /**
