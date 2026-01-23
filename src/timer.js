@@ -782,7 +782,8 @@ function updateRunningDisplay() {
  * Update the browser tab title with timer
  */
 function updateTabTitle() {
-  if (timerState === TIMER_STATE.RUNNING) {
+  // Only update title if timer is visible and running
+  if (timerState === TIMER_STATE.RUNNING && isVisible) {
     const timeStr = formatTimeDisplay(remainingTime, true);
     document.title = `${timeStr} - ${originalTitle}`;
   }
@@ -792,11 +793,14 @@ function updateTabTitle() {
  * Flash the tab title when finished
  */
 function flashTabTitle() {
+  // Only flash if timer is visible
+  if (!isVisible) return;
+  
   let flashCount = 0;
   const flashInterval = setInterval(() => {
-    if (flashCount >= 10 || timerState !== TIMER_STATE.FINISHED) {
+    if (flashCount >= 10 || timerState !== TIMER_STATE.FINISHED || !isVisible) {
       clearInterval(flashInterval);
-      if (timerState === TIMER_STATE.FINISHED) {
+      if (timerState === TIMER_STATE.FINISHED && isVisible) {
         document.title = `0:00 - ${originalTitle}`;
       }
       return;
@@ -1289,8 +1293,16 @@ export function hideTimer() {
   // Stop countdown if running
   stopCountdown();
   
+  // Stop alarm if playing
+  stopAlarm();
+  
   // Restore original title
-  document.title = originalTitle;
+  if (originalTitle) {
+    document.title = originalTitle;
+  } else {
+    // Fallback: use getBaseTitle to clean up any timer prefix
+    document.title = getBaseTitle();
+  }
   
   // Show search and sites again
   showSearchAndSites();
@@ -1316,6 +1328,18 @@ export async function initTimer() {
     
     if (timerEnabled) {
       showTimer();
+    } else {
+      // Timer is disabled - reset any running state to prevent inconsistency
+      // This ensures the timer doesn't continue updating titles when not visible
+      if (timerState === TIMER_STATE.RUNNING || timerState === TIMER_STATE.PAUSED) {
+        timerState = TIMER_STATE.SETUP;
+        remainingTime = 0;
+        // Clear the state in storage to prevent other tabs from restoring it
+        await chrome.storage.local.set({
+          timerState: TIMER_STATE.SETUP,
+          timerRemainingTime: 0
+        });
+      }
     }
     
     // Create and store storage change listener
