@@ -395,7 +395,7 @@ class SettingsModal {
       return;
     }
 
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockEnabled', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
 
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
@@ -407,7 +407,8 @@ class SettingsModal {
         this.quietHoursCheckbox.checked = result.quietHours || false;
       }
       if (this.clockDisplayCheckbox) {
-        this.clockDisplayCheckbox.checked = result.clockEnabled || false;
+        // Checkbox is checked if clock OR timer is enabled
+        this.clockDisplayCheckbox.checked = (result.clockDisplayMode === 'clock' || result.clockDisplayMode === 'timer');
       }
       if (this.enableProductivityCheckbox) {
         this.enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
@@ -427,33 +428,45 @@ class SettingsModal {
       return;
     }
 
-    const settings = {};
+    // For clock display, we need to check current mode to preserve timer state
+    chrome.storage.sync.get(['clockDisplayMode'], (currentSettings) => {
+      const settings = {};
 
-    if (this.regionSelect) {
-      settings.region = this.regionSelect.value;
-    }
-    if (this.autoPlayCheckbox) {
-      settings.autoPlay = this.autoPlayCheckbox.checked;
-    }
-    if (this.quietHoursCheckbox) {
-      settings.quietHours = this.quietHoursCheckbox.checked;
-    }
-    if (this.clockDisplayCheckbox) {
-      settings.clockEnabled = this.clockDisplayCheckbox.checked;
-    }
-    if (this.enableProductivityCheckbox) {
-      settings.quickAccessEnabled = this.enableProductivityCheckbox.checked;
-    }
-    if (this.videoModeCheckbox) {
-      settings.videoMode = this.videoModeCheckbox.checked;
-    }
-    if (this.highResCheckbox) {
-      settings.highResImages = this.highResCheckbox.checked;
-    }
+      if (this.regionSelect) {
+        settings.region = this.regionSelect.value;
+      }
+      if (this.autoPlayCheckbox) {
+        settings.autoPlay = this.autoPlayCheckbox.checked;
+      }
+      if (this.quietHoursCheckbox) {
+        settings.quietHours = this.quietHoursCheckbox.checked;
+      }
+      if (this.clockDisplayCheckbox) {
+        let clockDisplayMode = 'off';
 
-    chrome.storage.sync.set(settings, () => {
-      // Settings saved successfully - show notification
-      this.showSaveNotification();
+        if (this.clockDisplayCheckbox.checked) {
+          // If checkbox is enabled, preserve current mode (clock or timer)
+          // Default to 'clock' if not set
+          const currentMode = currentSettings.clockDisplayMode || 'off';
+          clockDisplayMode = (currentMode === 'timer') ? 'timer' : 'clock';
+        }
+
+        settings.clockDisplayMode = clockDisplayMode;
+      }
+      if (this.enableProductivityCheckbox) {
+        settings.quickAccessEnabled = this.enableProductivityCheckbox.checked;
+      }
+      if (this.videoModeCheckbox) {
+        settings.videoMode = this.videoModeCheckbox.checked;
+      }
+      if (this.highResCheckbox) {
+        settings.highResImages = this.highResCheckbox.checked;
+      }
+
+      chrome.storage.sync.set(settings, () => {
+        // Settings saved successfully - show notification
+        this.showSaveNotification();
+      });
     });
   }
 

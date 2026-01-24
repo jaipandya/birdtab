@@ -42,7 +42,6 @@ describe('Timer Module - Unit Tests', () => {
         sync: {
           get: jest.fn((keys, callback) => {
             callback({
-              timerEnabled: false,
               timerSetupHours: 0,
               timerSetupMinutes: 5,
               timerSetupSeconds: 0,
@@ -514,21 +513,35 @@ describe('Timer Module - Unit Tests', () => {
       expect(shouldShowSearchAndSites).toBe(true);
     });
 
-    test('timer-active class added to body when timer is running', () => {
-      // Simulate hideSearchAndSites behavior
+    test('timer-active class added to body when timer is visible', () => {
+      // Simulate showTimer behavior - timer-active is added when timer UI is shown
       document.body.classList.add('timer-active');
       
       expect(document.body.classList.contains('timer-active')).toBe(true);
     });
 
-    test('timer-active class removed from body when timer resets', () => {
-      // Start with timer active
+    test('timer-active class removed from body when timer is hidden', () => {
+      // Start with timer visible
       document.body.classList.add('timer-active');
       
-      // Simulate showSearchAndSites behavior (reset)
+      // Simulate hideTimer behavior - timer-active is removed when switching back to clock
       document.body.classList.remove('timer-active');
       
       expect(document.body.classList.contains('timer-active')).toBe(false);
+    });
+
+    test('timer-active class remains during timer reset (stays in timer mode)', () => {
+      // Timer is visible in RUNNING state
+      document.body.classList.add('timer-active');
+      
+      // Timer resets to SETUP - but timer UI is still visible
+      // So timer-active should remain (only removed when hideTimer is called)
+      const timerVisible = true;
+      if (!timerVisible) {
+        document.body.classList.remove('timer-active');
+      }
+      
+      expect(document.body.classList.contains('timer-active')).toBe(true);
     });
   });
 

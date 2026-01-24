@@ -202,15 +202,14 @@ function initOptionsMenu() {
       onClick: async () => {
         // Hide clock time but keep container visible for timer
         hideClock(false);
-        
+
         // Import and show timer
         const { showTimer } = await import('./timer.js');
         showTimer();
-        
-        // Update storage
-        await chrome.storage.sync.set({ 
-          clockEnabled: false, 
-          timerEnabled: true 
+
+        // Update storage - use new clockDisplayMode enum
+        await chrome.storage.sync.set({
+          clockDisplayMode: 'timer'
         });
       }
     }
@@ -322,29 +321,21 @@ export async function initClock() {
     // Clean up existing listeners to prevent duplicates
     cleanupListeners();
 
-    // Get clock settings from storage
+    // Get clock settings from storage (visibility is handled by script.js)
     const result = await new Promise((resolve) => {
-      chrome.storage.sync.get(['clockEnabled', 'clockFormat24Hour', 'clockShowSeconds'], resolve);
+      chrome.storage.sync.get(['clockFormat24Hour', 'clockShowSeconds'], resolve);
     });
 
     is24HourFormat = result.clockFormat24Hour || false;
     showSeconds = result.clockShowSeconds || false;
 
-    if (result.clockEnabled) {
-      showClock();
-    }
+    // Note: showClock() is called by script.js based on clockDisplayMode
+    // We no longer check clockEnabled here
 
-    // Create and store storage change listener
+    // Create and store storage change listener for format changes only
+    // (Mode changes are handled in script.js)
     storageChangeListener = (changes, areaName) => {
       if (areaName !== 'sync') return;
-
-      if (changes.clockEnabled) {
-        if (changes.clockEnabled.newValue) {
-          showClock();
-        } else {
-          hideClock();
-        }
-      }
 
       if (changes.clockFormat24Hour !== undefined) {
         setClockFormat(changes.clockFormat24Hour.newValue);

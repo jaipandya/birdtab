@@ -91,7 +91,7 @@ describe('Settings and Popup Menu Sync', () => {
       'region',
       'autoPlay',
       'quietHours',
-      'clockEnabled',
+      'clockDisplayMode',
       'quickAccessEnabled',
       'videoMode',
       'highResImages'
@@ -124,7 +124,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(popupJS).toContain('region: regionSelect.value');
       expect(popupJS).toContain('autoPlay: autoPlayCheckbox.checked');
       expect(popupJS).toContain('quietHours: quietHoursCheckbox.checked');
-      expect(popupJS).toContain('clockEnabled: clockDisplayCheckbox.checked');
+      expect(popupJS).toContain('clockDisplayMode: clockDisplayMode');
       expect(popupJS).toContain('videoMode: videoModeCheckbox.checked');
       expect(popupJS).toContain('highResImages: highResCheckbox.checked');
     });
@@ -134,7 +134,7 @@ describe('Settings and Popup Menu Sync', () => {
       expect(settingsModalJS).toContain('settings.region = this.regionSelect.value');
       expect(settingsModalJS).toContain('settings.autoPlay = this.autoPlayCheckbox.checked');
       expect(settingsModalJS).toContain('settings.quietHours = this.quietHoursCheckbox.checked');
-      expect(settingsModalJS).toContain('settings.clockEnabled = this.clockDisplayCheckbox.checked');
+      expect(settingsModalJS).toContain('settings.clockDisplayMode = clockDisplayMode');
       expect(settingsModalJS).toContain('settings.quickAccessEnabled = this.enableProductivityCheckbox.checked');
       expect(settingsModalJS).toContain('settings.videoMode = this.videoModeCheckbox.checked');
       expect(settingsModalJS).toContain('settings.highResImages = this.highResCheckbox.checked');

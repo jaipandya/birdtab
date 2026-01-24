@@ -38,11 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
   populateRegionSelect(regionSelect);
 
   // Load current settings
-  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockEnabled', 'quickAccessEnabled', 'videoMode', 'highResImages'], function (result) {
+  chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'videoMode', 'highResImages'], function (result) {
     regionSelect.value = result.region || 'US';
     autoPlayCheckbox.checked = result.autoPlay || false;
     quietHoursCheckbox.checked = result.quietHours || false;
-    clockDisplayCheckbox.checked = result.clockEnabled || false;
+    // Checkbox is checked if clock OR timer is enabled
+    clockDisplayCheckbox.checked = (result.clockDisplayMode === 'clock' || result.clockDisplayMode === 'timer');
     enableProductivityCheckbox.checked = result.quickAccessEnabled || false;
     videoModeCheckbox.checked = result.videoMode || false;
     highResCheckbox.checked = result.highResImages || false;
@@ -53,28 +54,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to save settings
   function saveSettings() {
-    const settings = {
-      region: regionSelect.value,
-      autoPlay: autoPlayCheckbox.checked,
-      quietHours: quietHoursCheckbox.checked,
-      clockEnabled: clockDisplayCheckbox.checked,
-      videoMode: videoModeCheckbox.checked,
-      highResImages: highResCheckbox.checked
-    };
-    
-    chrome.storage.sync.set(settings, function () {
-      if (chrome.runtime.lastError) {
-        captureException(new Error('Failed to save settings'), {
-          tags: { operation: 'saveSettings' },
-          extra: { error: chrome.runtime.lastError.message, settings }
-        });
-        return;
+    // For clock display, we need to check current mode to preserve timer state
+    chrome.storage.sync.get(['clockDisplayMode'], function(currentSettings) {
+      let clockDisplayMode = 'off';
+
+      if (clockDisplayCheckbox.checked) {
+        // If checkbox is enabled, preserve current mode (clock or timer)
+        // Default to 'clock' if not set
+        const currentMode = currentSettings.clockDisplayMode || 'off';
+        clockDisplayMode = (currentMode === 'timer') ? 'timer' : 'clock';
       }
-      
-      // Update Sentry user context with new settings
-      updateUserContext(settings);
-      
-      showSaveNotification();
+
+      const settings = {
+        region: regionSelect.value,
+        autoPlay: autoPlayCheckbox.checked,
+        quietHours: quietHoursCheckbox.checked,
+        clockDisplayMode: clockDisplayMode,
+        videoMode: videoModeCheckbox.checked,
+        highResImages: highResCheckbox.checked
+      };
+
+      chrome.storage.sync.set(settings, function () {
+        if (chrome.runtime.lastError) {
+          captureException(new Error('Failed to save settings'), {
+            tags: { operation: 'saveSettings' },
+            extra: { error: chrome.runtime.lastError.message, settings }
+          });
+          return;
+        }
+
+        // Update Sentry user context with new settings
+        updateUserContext(settings);
+
+        showSaveNotification();
+      });
     });
   }
 

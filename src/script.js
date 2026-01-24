@@ -12,11 +12,18 @@ import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotli
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
-import { initClock } from './clock.js';
-import { initTimer } from './timer.js';
+import { initClock, showClock, hideClock } from './clock.js';
+import { initTimer, showTimer, hideTimer } from './timer.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
+
+// Clock display mode constants
+const CLOCK_DISPLAY_MODES = {
+  OFF: 'off',
+  CLOCK: 'clock',
+  TIMER: 'timer'
+};
 
 let isMuted = false;
 let volumeLevel = CONFIG.DEFAULT_VOLUME;
@@ -32,6 +39,106 @@ let quizMode;
 let saveVolumeTimeout = null;
 let showShareMenu = false;
 let videoVisibilityManager = null; // Manages video visibility and memory
+
+/**
+ * Migrate from legacy clockEnabled to new clockDisplayMode enum
+ * @returns {Promise<string>} The clock display mode ('off', 'clock', or 'timer')
+ */
+async function migrateClockSettings() {
+  const storage = await new Promise((resolve) => {
+    chrome.storage.sync.get(['clockDisplayMode', 'clockEnabled'], resolve);
+  });
+
+  // If new format already exists, validate and return it
+  if (storage.clockDisplayMode !== undefined) {
+    // Validate mode value
+    if (Object.values(CLOCK_DISPLAY_MODES).includes(storage.clockDisplayMode)) {
+      return storage.clockDisplayMode;
+    } else {
+      // Invalid value found, reset to off
+      log(`Invalid clockDisplayMode found: ${storage.clockDisplayMode}, resetting to 'off'`);
+      await chrome.storage.sync.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
+      return CLOCK_DISPLAY_MODES.OFF;
+    }
+  }
+
+  // One-time migration from old format
+  const mode = storage.clockEnabled ? CLOCK_DISPLAY_MODES.CLOCK : CLOCK_DISPLAY_MODES.OFF;
+
+  // Set new format only - don't touch clockEnabled for backward compatibility
+  await chrome.storage.sync.set({ clockDisplayMode: mode });
+
+  // TODO: Remove 'clockEnabled' key 5 versions after current (check manifest.json for current version)
+  // Before removing, verify <1% of active users are on old versions via Chrome Web Store analytics
+  // await chrome.storage.sync.remove(['clockEnabled']);
+
+  log(`Migrated clock settings to mode: ${mode}`);
+  return mode;
+}
+
+/**
+ * Initialize clock display (clock or timer) based on mode
+ * Handles migration and sets up storage listeners
+ */
+async function initClockDisplay() {
+  // Migrate and get current mode
+  const mode = await migrateClockSettings();
+
+  // Initialize both clock and timer modules (but don't show them yet)
+  await initClock();
+  await initTimer();
+
+  // Show the appropriate display based on mode
+  switch (mode) {
+    case CLOCK_DISPLAY_MODES.CLOCK:
+      showClock();
+      break;
+    case CLOCK_DISPLAY_MODES.TIMER:
+      showTimer();
+      break;
+    default:
+      // Both hidden
+      break;
+  }
+
+  // Listen for mode changes
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== 'sync') return;
+
+    if (changes.clockDisplayMode) {
+      const newMode = changes.clockDisplayMode.newValue;
+
+      // Validate mode value
+      if (!Object.values(CLOCK_DISPLAY_MODES).includes(newMode)) {
+        log(`Invalid clockDisplayMode: ${newMode}, defaulting to 'off'`);
+        chrome.storage.sync.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
+        return;
+      }
+
+      // Note: When user clicks the "Switch to Clock/Timer" buttons, the click handler
+      // immediately calls show/hide functions for responsive UI, then updates storage.
+      // This listener will fire after and call show/hide again, which is harmless since
+      // both showClock() and showTimer() are idempotent (safe to call multiple times).
+      // This ensures consistency across all tabs and handles settings changes.
+      switch (newMode) {
+        case CLOCK_DISPLAY_MODES.CLOCK:
+          hideTimer();
+          showClock();
+          break;
+        case CLOCK_DISPLAY_MODES.TIMER:
+          hideClock();
+          showTimer();
+          break;
+        case CLOCK_DISPLAY_MODES.OFF:
+          hideClock();
+          hideTimer();
+          break;
+      }
+    }
+  });
+
+  log(`Clock display initialized with mode: ${mode}`);
+}
 
 // Video Visibility Manager - handles tab visibility, memory management, and state
 class VideoVisibilityManager {
@@ -155,7 +262,8 @@ class VideoVisibilityManager {
       contentContainer.appendChild(indicator);
     }
 
-    // After the pause indicator fades out, show the play overlay
+    // Show the play overlay after a brief delay (before pause indicator finishes)
+    // This creates a seamless transition with no visible gap
     this.pauseIndicatorTimeout = setTimeout(() => {
       this.pauseIndicatorTimeout = null;
 
@@ -165,7 +273,7 @@ class VideoVisibilityManager {
 
       // Show the play overlay
       this.showPlayOverlay();
-    }, 600); // Duration matches the CSS animation
+    }, 280); // Show play slightly before pause indicator finishes fading (at 70% of animation)
   }
 
   showPlayOverlay() {
@@ -1653,7 +1761,7 @@ async function initializePage() {
     try {
       const [settings, localData] = await Promise.all([
         new Promise((resolve) => {
-          chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockEnabled'], resolve);
+          chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockDisplayMode'], resolve);
         }),
         new Promise((resolve) => {
           chrome.storage.local.get(['installTime'], resolve);
@@ -1666,7 +1774,7 @@ async function initializePage() {
         quietHours: settings.quietHours || false,
         highResImages: settings.highResImages || false,
         quickAccessEnabled: settings.quickAccessEnabled || false,
-        clockEnabled: settings.clockEnabled || false,
+        clockDisplayMode: settings.clockDisplayMode || 'off',
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
         hasVideo: !!birdInfo.videoUrl,
@@ -3113,21 +3221,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Initialize clock display
+  // Initialize clock display (handles both clock and timer)
   try {
-    await initClock();
+    await initClockDisplay();
   } catch (error) {
     captureException(error, {
-      tags: { operation: 'initializeClock' }
-    });
-  }
-
-  // Initialize timer (alternative to clock)
-  try {
-    await initTimer();
-  } catch (error) {
-    captureException(error, {
-      tags: { operation: 'initializeTimer' }
+      tags: { operation: 'initializeClockDisplay' }
     });
   }
 

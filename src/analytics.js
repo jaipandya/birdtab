@@ -284,16 +284,16 @@ export function trackSessionStart(settings = {}, installTime = null) {
     quiet_hours: settings.quietHours || false,
     high_res: settings.highResImages || false,
     quick_access: settings.quickAccessEnabled || false,
-    clock_enabled: settings.clockEnabled || false,
-    
+    clock_display_mode: settings.clockDisplayMode || 'off',
+
     // Browser locale for i18n planning
     locale: locale,
-    
+
     // Content info
     species_code: settings.speciesCode || null,
     has_audio: settings.hasAudio || false,
     has_video: settings.hasVideo || false,
-    
+
     // User tenure (for cohort analysis)
     // PostHog can bucket this value using breakdown bins
     days_since_install: daysSinceInstall,

@@ -6,6 +6,7 @@
 import { log } from './logger.js';
 import { getMessage } from './i18n.js';
 import { createOptionsMenu } from './optionsMenu.js';
+import { trackFeature } from './analytics.js';
 
 // Timer states
 const TIMER_STATE = {
@@ -92,32 +93,23 @@ function getSearchAndSites() {
 }
 
 /**
- * Hide the search box and top sites when timer is active
- * Also adds body class for video play button positioning
+ * Hide the search box and top sites when timer is active (not in setup mode)
  */
 function hideSearchAndSites() {
   const searchAndSites = getSearchAndSites();
   if (searchAndSites) {
     searchAndSites.classList.add('timer-active-hidden');
   }
-  
-  // Add timer-active class for video play button positioning
-  // This ensures the play button is shifted down to avoid the timer display
-  document.body.classList.add('timer-active');
 }
 
 /**
  * Show the search box and top sites when timer is in setup mode
- * Also removes body class for video play button positioning
  */
 function showSearchAndSites() {
   const searchAndSites = getSearchAndSites();
   if (searchAndSites) {
     searchAndSites.classList.remove('timer-active-hidden');
   }
-  
-  // Remove timer-active class - play button can go back to normal position
-  document.body.classList.remove('timer-active');
 }
 
 /**
@@ -644,6 +636,11 @@ function startTimer() {
   // Save state
   saveTimerState();
   
+  // Track timer start with exact duration for analytics
+  trackFeature('timer_start', {
+    duration_seconds: totalDuration
+  });
+  
   log('Timer started');
 }
 
@@ -756,7 +753,7 @@ function updateCountdown() {
     
     // Play alarm sound (if enabled)
     playAlarm();
-    
+
     log('Timer finished');
   }
   
@@ -825,6 +822,24 @@ function flashTabTitle() {
   }, 500);
 }
 
+// Pre-defined chirp pattern for bird-like alarm (static, computed once)
+const ALARM_CHIRP_PATTERN = Object.freeze([
+  // First chirp sequence
+  { time: 0, freq: 1200 },
+  { time: 0.3, freq: 1400 },
+  { time: 0.5, freq: 1100 },
+  // Pause
+  // Second chirp sequence
+  { time: 1.5, freq: 1300 },
+  { time: 1.8, freq: 1500 },
+  { time: 2.0, freq: 1200 },
+]);
+const ALARM_PATTERN_DURATION = 3; // seconds per pattern cycle
+const ALARM_REPEAT_COUNT = 5;
+
+// Shared gain node for master volume control (reused across chirps)
+let alarmMasterGain = null;
+
 /**
  * Create a gentle bird-like alarm sound using AudioContext
  * @returns {AudioContext|null}
@@ -832,6 +847,12 @@ function flashTabTitle() {
 function createAlarmSound() {
   try {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create a master gain node for efficient volume control and cleanup
+    alarmMasterGain = audioContext.createGain();
+    alarmMasterGain.connect(audioContext.destination);
+    alarmMasterGain.gain.value = 1;
+    
     return audioContext;
   } catch (error) {
     log('Error creating audio context: ' + error.message);
@@ -841,6 +862,7 @@ function createAlarmSound() {
 
 /**
  * Play a gentle bird chirp sound
+ * Uses a shared gain node for efficiency
  * @param {AudioContext} audioContext
  * @param {number} startTime - When to start the chirp
  * @param {number} frequency - Base frequency
@@ -849,8 +871,9 @@ function playChirp(audioContext, startTime, frequency) {
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
   
+  // Connect through master gain for efficient global control
   oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
+  gainNode.connect(alarmMasterGain);
   
   oscillator.type = 'sine';
   oscillator.frequency.setValueAtTime(frequency, startTime);
@@ -864,6 +887,8 @@ function playChirp(audioContext, startTime, frequency) {
   
   oscillator.start(startTime);
   oscillator.stop(startTime + 0.25);
+  
+  // Oscillators auto-disconnect after stopping, no need to track them
 }
 
 /**
@@ -916,26 +941,14 @@ async function playAlarm() {
   alarmAudio = createAlarmSound();
   if (!alarmAudio) return;
   
-  // Play a series of bird-like chirps
+  // Schedule all chirps using pre-defined pattern
   const currentTime = alarmAudio.currentTime;
-  const pattern = [
-    // First chirp sequence
-    { time: 0, freq: 1200 },
-    { time: 0.3, freq: 1400 },
-    { time: 0.5, freq: 1100 },
-    // Pause
-    // Second chirp sequence
-    { time: 1.5, freq: 1300 },
-    { time: 1.8, freq: 1500 },
-    { time: 2.0, freq: 1200 },
-  ];
-  
-  // Repeat the pattern a few times
-  for (let repeat = 0; repeat < 5; repeat++) {
-    const offset = repeat * 3;
-    pattern.forEach(chirp => {
+  for (let repeat = 0; repeat < ALARM_REPEAT_COUNT; repeat++) {
+    const offset = repeat * ALARM_PATTERN_DURATION;
+    for (let i = 0; i < ALARM_CHIRP_PATTERN.length; i++) {
+      const chirp = ALARM_CHIRP_PATTERN[i];
       playChirp(alarmAudio, currentTime + offset + chirp.time, chirp.freq);
-    });
+    }
   }
   
   // Auto-stop after ALARM_DURATION
@@ -951,6 +964,17 @@ async function stopAlarm() {
   if (alarmTimeout) {
     clearTimeout(alarmTimeout);
     alarmTimeout = null;
+  }
+  
+  // Instantly silence by setting master gain to 0
+  // This is more efficient than stopping individual oscillators
+  if (alarmMasterGain) {
+    try {
+      alarmMasterGain.gain.setValueAtTime(0, alarmAudio ? alarmAudio.currentTime : 0);
+    } catch (error) {
+      // Ignore errors if context is already closed
+    }
+    alarmMasterGain = null;
   }
   
   if (alarmAudio) {
@@ -1113,7 +1137,6 @@ async function loadTimerState() {
     const [syncResult, localResult] = await Promise.all([
       new Promise(resolve => {
         chrome.storage.sync.get([
-          'timerEnabled',
           'timerSetupHours',
           'timerSetupMinutes',
           'timerSetupSeconds',
@@ -1129,22 +1152,22 @@ async function loadTimerState() {
         ], resolve);
       })
     ]);
-    
+
     // Load setup values
     if (syncResult.timerSetupHours !== undefined) setupHours = syncResult.timerSetupHours;
     if (syncResult.timerSetupMinutes !== undefined) setupMinutes = syncResult.timerSetupMinutes;
     if (syncResult.timerSetupSeconds !== undefined) setupSeconds = syncResult.timerSetupSeconds;
-    
+
     // Load alarm setting (defaults to false)
     alarmEnabled = syncResult.timerAlarmEnabled || false;
-    
+
     // Load running state if any
     if (localResult.timerState && localResult.timerState !== TIMER_STATE.SETUP) {
       // Check if the timer was running and calculate elapsed time
       if (localResult.timerState === TIMER_STATE.RUNNING && localResult.timerLastUpdate) {
         const elapsed = Math.floor((Date.now() - localResult.timerLastUpdate) / 1000);
         remainingTime = Math.max(0, localResult.timerRemainingTime - elapsed);
-        
+
         if (remainingTime <= 0) {
           // Timer finished while tab was closed - reset to setup mode for new tabs
           timerState = TIMER_STATE.SETUP;
@@ -1163,14 +1186,13 @@ async function loadTimerState() {
         timerState = localResult.timerState;
         remainingTime = localResult.timerRemainingTime || 0;
       }
-      
+
       totalDuration = localResult.timerTotalDuration || totalDuration;
     }
-    
-    return syncResult.timerEnabled || false;
+
+    // No return value needed - visibility is controlled by script.js based on clockDisplayMode
   } catch (error) {
     log('Error loading timer state: ' + error.message);
-    return false;
   }
 }
 
@@ -1210,20 +1232,20 @@ function initOptionsMenu() {
         if (timerState === TIMER_STATE.RUNNING) {
           pauseTimer();
         }
-        
+
         // Stop alarm if playing
         stopAlarm();
-        
+
         // Hide timer, show clock
         hideTimer();
-        
+
         // Import and show clock
         const { showClock } = await import('./clock.js');
         showClock();
-        
-        await chrome.storage.sync.set({ 
-          clockEnabled: true, 
-          timerEnabled: false 
+
+        // Update storage - use new clockDisplayMode enum
+        await chrome.storage.sync.set({
+          clockDisplayMode: 'clock'
         });
       }
     }
@@ -1258,8 +1280,12 @@ export function showTimer() {
   
   isVisible = true;
   
-  // Add class to body for positioning
+  // Add class to body for positioning (clock area visible)
   document.body.classList.add('quick-access-has-clock');
+  
+  // Add timer-active class for video play button positioning
+  // This ensures the play button is shifted down to avoid the timer display
+  document.body.classList.add('timer-active');
   
   // Store original title (use getBaseTitle to avoid nested prefixes)
   originalTitle = getBaseTitle();
@@ -1316,6 +1342,9 @@ export function hideTimer() {
   // Show search and sites again
   showSearchAndSites();
   
+  // Remove timer-active class - play button can go back to normal position
+  document.body.classList.remove('timer-active');
+  
   if (optionsMenu) {
     optionsMenu.destroy();
     optionsMenu = null;
@@ -1331,51 +1360,30 @@ export async function initTimer() {
   try {
     // Clean up existing listeners
     cleanupListeners();
-    
-    // Load state from storage
-    const timerEnabled = await loadTimerState();
-    
-    if (timerEnabled) {
-      showTimer();
-    } else {
-      // Timer is disabled - reset any running state to prevent inconsistency
-      // This ensures the timer doesn't continue updating titles when not visible
-      if (timerState === TIMER_STATE.RUNNING || timerState === TIMER_STATE.PAUSED) {
-        timerState = TIMER_STATE.SETUP;
-        remainingTime = 0;
-        // Clear the state in storage to prevent other tabs from restoring it
-        await chrome.storage.local.set({
-          timerState: TIMER_STATE.SETUP,
-          timerRemainingTime: 0
-        });
-      }
-    }
-    
+
+    // Load state from storage (visibility is handled by script.js)
+    await loadTimerState();
+
+    // Note: showTimer() is called by script.js based on clockDisplayMode
+    // We no longer check timerEnabled here
+
     // Create and store storage change listener
     storageChangeListener = (changes, areaName) => {
-      // Handle sync storage changes (timerEnabled toggle)
+      // Handle sync storage changes
       if (areaName === 'sync') {
-        if (changes.timerEnabled) {
-          if (changes.timerEnabled.newValue) {
-            showTimer();
-          } else {
-            hideTimer();
-          }
-        }
-        
         // Handle alarm setting changes
         if (changes.timerAlarmEnabled !== undefined) {
           alarmEnabled = changes.timerAlarmEnabled.newValue;
         }
       }
-      
+
       // Handle local storage changes (timer state sync across tabs)
       if (areaName === 'local' && isVisible && !isReactingToStorageChange) {
         handleStorageStateChange(changes);
       }
     };
     chrome.storage.onChanged.addListener(storageChangeListener);
-    
+
     log('Timer initialized');
   } catch (error) {
     log('Error initializing timer: ' + error.message);
