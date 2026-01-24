@@ -210,7 +210,6 @@ body.loaded {
   pointer-events: none;
   /* Allow clicks through to elements beneath */
   cursor: pointer;
-  animation: overlayFadeIn 0.3s ease;
 }
 
 /* Shift play button down when top sites are visible (without clock) */
@@ -244,6 +243,17 @@ body.loaded {
 /* Clock only (no search bar, no top sites) - keep centered, no shift needed */
 
 @keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Subtle fade in for play button after pause */
+@keyframes playOverlaySubtleFadeIn {
   from {
     opacity: 0;
   }
@@ -306,7 +316,7 @@ body.loaded {
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
-  animation: pauseIndicatorFade 0.6s ease forwards;
+  animation: pauseIndicatorFade 0.4s ease forwards;
 }
 
 /* Shift pause indicator down when top sites are visible (without clock) - matches play overlay */
@@ -338,22 +348,18 @@ body.loaded {
 @keyframes pauseIndicatorFade {
   0% {
     opacity: 0;
-    transform: scale(0.8);
   }
 
-  20% {
-    opacity: 1;
-    transform: scale(1);
+  15% {
+    opacity: 0.6;
   }
 
-  80% {
-    opacity: 1;
-    transform: scale(1);
+  70% {
+    opacity: 0.6;
   }
 
   100% {
     opacity: 0;
-    transform: scale(1.1);
   }
 }
 
@@ -1539,7 +1545,7 @@ p {
   font-size: 6rem;
   color: #ffffff;
   line-height: 1;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   letter-spacing: -0.02em;
   display: flex;
   align-items: baseline;
