@@ -1106,5 +1106,37 @@
   "quickAccessOptionsAriaLabel": {
     "message": "快速访问选项",
     "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "隐藏时钟？",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "您可以随时在设置中重新显示。",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "隐藏快速访问？",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "搜索和常用网站将被隐藏。您可以在设置中重新显示。",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "隐藏时钟",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "隐藏快速访问",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "隐藏",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "Button text to cancel an action"
   }
 }

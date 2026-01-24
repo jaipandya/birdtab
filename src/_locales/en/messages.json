@@ -1106,5 +1106,37 @@
   "quickAccessOptionsAriaLabel": {
     "message": "Quick access options",
     "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "Hide Clock?",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "You can show it again anytime from Settings.",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "Hide Quick Access?",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "Search and top sites will be hidden. You can show them again from Settings.",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "Hide clock",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "Hide quick access",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "Hide",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "Button text to cancel an action"
   }
 }

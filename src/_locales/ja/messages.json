@@ -1106,5 +1106,37 @@
   "quickAccessOptionsAriaLabel": {
     "message": "クイックアクセスオプション",
     "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "時計を非表示にしますか？",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "設定からいつでも再表示できます。",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "クイックアクセスを非表示にしますか？",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "検索とよくアクセスするサイトが非表示になります。設定から再表示できます。",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "時計を非表示",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "クイックアクセスを非表示",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "非表示",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "キャンセル",
+    "description": "Button text to cancel an action"
   }
 }

@@ -1106,5 +1106,37 @@
   "quickAccessOptionsAriaLabel": {
     "message": "Options d'accès rapide",
     "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "Masquer l'horloge ?",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "Vous pouvez la réafficher à tout moment depuis les Paramètres.",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "Masquer l'accès rapide ?",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "La recherche et les sites principaux seront masqués. Vous pouvez les réafficher depuis les Paramètres.",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "Masquer l'horloge",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "Masquer l'accès rapide",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "Masquer",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "Annuler",
+    "description": "Button text to cancel an action"
   }
 }

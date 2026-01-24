@@ -2,6 +2,8 @@ import { captureException } from './sentry.js';
 import { warn, log } from './logger.js';
 import { createOptionsMenu } from './optionsMenu.js';
 import { getOptionsTriggerSvg } from './optionsTrigger.js';
+import { getCloseTriggerSvg } from './closeTrigger.js';
+import { showConfirmationDialog } from './confirmationDialog.js';
 
 /**
  * Top Sites module for displaying most visited websites
@@ -25,6 +27,12 @@ class TopSites {
 
     // Create the container element
     this.createContainer();
+
+    // Initialize close buttons for panels
+    this.initCloseButtons();
+
+    // Initialize options menu (always, so it works even without top sites permission)
+    this.initOptionsMenu();
 
     // Check settings immediately to show container if enabled
     const settings = await this.getSettings();
@@ -82,6 +90,9 @@ class TopSites {
         quickAccessWrapper.innerHTML = `
           <div id="clock-container" class="clock-container hidden">
             <div class="clock-wrapper">
+              <button id="clock-close-trigger" class="clock-close-trigger" aria-label="${chrome.i18n.getMessage('clockCloseAriaLabel') || 'Hide clock'}">
+                ${getCloseTriggerSvg()}
+              </button>
               <div id="clock-time" class="clock-time"></div>
               <div id="timer-display" class="timer-display hidden"></div>
               <button id="clock-options-trigger" class="clock-options-trigger" aria-label="${chrome.i18n.getMessage('clockOptionsAriaLabel') || 'Clock options'}">
@@ -90,6 +101,9 @@ class TopSites {
             </div>
           </div>
           <div class="search-and-sites">
+            <button id="quick-access-close-trigger" class="quick-access-close-trigger" aria-label="${chrome.i18n.getMessage('quickAccessCloseAriaLabel') || 'Hide quick access'}">
+              ${getCloseTriggerSvg()}
+            </button>
             <button id="quick-access-options-trigger" class="quick-access-options-trigger" aria-label="${chrome.i18n.getMessage('quickAccessOptionsAriaLabel') || 'Quick access options'}">
               ${getOptionsTriggerSvg()}
             </button>
@@ -628,51 +642,93 @@ class TopSites {
     const quickAccessWrapper = document.getElementById('quick-access-wrapper');
     const trigger = quickAccessWrapper?.querySelector('#quick-access-options-trigger');
     const searchContainer = document.getElementById('search-container');
-    
+
     if (!trigger || !quickAccessWrapper || !searchContainer) return;
-    
+
     // Destroy existing menu if any
     if (this.optionsMenu) {
       this.optionsMenu.destroy();
     }
-    
-    // Create options that read current state when menu is opened
-    const getOptions = () => [
-      {
-        type: 'toggle',
-        label: chrome.i18n.getMessage('showTopSites') || 'Show top sites',
-        checked: !this.hideTopSites,
-        onChange: async (checked) => {
-          if (checked) {
-            // User wants to SHOW top sites - check permission first
-            const hasPermission = await this.checkTopSitesPermission();
 
-            if (!hasPermission) {
-              const granted = await this.requestTopSitesPermission();
-              if (!granted) {
-                // Permission denied - revert toggle
-                if (this.optionsMenu) {
-                  this.optionsMenu.updateOption(0, false);
+    // Create options that read current state when menu is opened
+    // This is an async function to check permission status and read fresh settings
+    const getOptions = async () => {
+      // Check if permission is granted - if not, toggle should be OFF
+      const hasPermission = await this.checkTopSitesPermission();
+      // Always read fresh from storage to handle reinstall scenarios
+      const settings = await this.getSettings();
+      const hideTopSites = settings.hideTopSites || false;
+      const isEnabled = hasPermission && !hideTopSites;
+
+      return [
+        {
+          type: 'toggle',
+          label: chrome.i18n.getMessage('showTopSites') || 'Show top sites',
+          checked: isEnabled,
+          onChange: async (checked) => {
+            if (checked) {
+              // User wants to SHOW top sites - check permission first
+              const currentPermission = await this.checkTopSitesPermission();
+
+              if (!currentPermission) {
+                const granted = await this.requestTopSitesPermission();
+                if (!granted) {
+                  // Permission denied - revert toggle
+                  if (this.optionsMenu) {
+                    this.optionsMenu.updateOption(0, false);
+                  }
+                  return;
                 }
-                return;
               }
             }
-          }
 
-          this.hideTopSites = !checked;
-          // Save to storage
-          await chrome.storage.sync.set({ hideTopSites: !checked });
-          log(`Show top sites toggled: ${checked}`);
+            this.hideTopSites = !checked;
+            // Save to storage
+            await chrome.storage.sync.set({ hideTopSites: !checked });
+            log(`Show top sites toggled: ${checked}`);
+          }
         }
-      }
-    ];
-    
+      ];
+    };
+
     this.optionsMenu = createOptionsMenu({
       triggerElement: trigger,
       anchorElement: searchContainer, // Anchor to search container for consistent positioning like clock
       menuId: 'quick-access-options-menu',
       position: 'right',
       getOptions // Pass factory function instead of static options
+    });
+  }
+
+  /**
+   * Initialize close buttons for clock and quick access panels
+   */
+  initCloseButtons() {
+    const clockCloseBtn = document.getElementById('clock-close-trigger');
+    const qaCloseBtn = document.getElementById('quick-access-close-trigger');
+
+    clockCloseBtn?.addEventListener('click', async () => {
+      const confirmed = await showConfirmationDialog({
+        title: 'hideClockTitle',
+        subtitle: 'hideClockSubtitle',
+        cancelText: 'cancel',
+        confirmText: 'hide'
+      });
+      if (confirmed) {
+        chrome.storage.sync.set({ clockDisplayMode: 'off' });
+      }
+    });
+
+    qaCloseBtn?.addEventListener('click', async () => {
+      const confirmed = await showConfirmationDialog({
+        title: 'hideQuickAccessTitle',
+        subtitle: 'hideQuickAccessSubtitle',
+        cancelText: 'cancel',
+        confirmText: 'hide'
+      });
+      if (confirmed) {
+        chrome.storage.sync.set({ quickAccessEnabled: false });
+      }
     });
   }
 

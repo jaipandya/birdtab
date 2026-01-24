@@ -1106,5 +1106,37 @@
   "quickAccessOptionsAriaLabel": {
     "message": "Параметры быстрого доступа",
     "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "Скрыть часы?",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "Вы можете снова показать их в любое время в Настройках.",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "Скрыть быстрый доступ?",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "Поиск и часто посещаемые сайты будут скрыты. Вы можете показать их снова в Настройках.",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "Скрыть часы",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "Скрыть быстрый доступ",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "Скрыть",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "Отмена",
+    "description": "Button text to cancel an action"
   }
 }

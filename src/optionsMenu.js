@@ -24,15 +24,16 @@ export function createOptionsMenu(config) {
   
   /**
    * Create the menu DOM element
+   * @param {Array} options - The options array to render
    */
-  function createMenuElement() {
+  function createMenuElement(options) {
     // Remove existing menu if any
     const existing = document.getElementById(menuId);
     if (existing) existing.remove();
-    
-    // Get fresh options (supports both static options and factory function)
-    currentOptions = getOptions ? getOptions() : staticOptions;
-    
+
+    // Store current options
+    currentOptions = options;
+
     const menu = document.createElement('div');
     menu.id = menuId;
     menu.className = 'options-menu';
@@ -189,26 +190,36 @@ export function createOptionsMenu(config) {
   /**
    * Open the menu
    */
-  function open() {
+  async function open() {
     if (isOpen) return;
-    
-    menuElement = createMenuElement();
-    
+
+    // Get fresh options (supports both static options and async factory function)
+    let options;
+    if (getOptions) {
+      const result = getOptions();
+      // Support both sync and async getOptions
+      options = result instanceof Promise ? await result : result;
+    } else {
+      options = staticOptions;
+    }
+
+    menuElement = createMenuElement(options);
+
     // Position after a frame to ensure dimensions are calculated
     requestAnimationFrame(() => {
       positionMenu();
       menuElement.classList.add('options-menu-visible');
       menuElement.setAttribute('aria-hidden', 'false');
     });
-    
+
     isOpen = true;
-    
+
     // Close when clicking outside
     setTimeout(() => {
       document.addEventListener('click', handleOutsideClick);
       document.addEventListener('keydown', handleKeydown);
     }, 0);
-    
+
     log(`Options menu ${menuId} opened`);
   }
   
@@ -239,11 +250,11 @@ export function createOptionsMenu(config) {
   /**
    * Toggle menu open/close
    */
-  function toggle() {
+  async function toggle() {
     if (isOpen) {
       close();
     } else {
-      open();
+      await open();
     }
   }
   
