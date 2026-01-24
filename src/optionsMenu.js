@@ -106,11 +106,28 @@ export function createOptionsMenu(config) {
         option._checkbox = checkbox;
       } else if (option.type === 'button') {
         // Simple button option
+        // Wrap icon and label together to prevent space-between from spreading them
+        const contentWrapper = document.createElement('div');
+        contentWrapper.className = 'options-menu-button-content';
+
+        // Add icon if provided
+        if (option.icon) {
+          const icon = document.createElement('img');
+          icon.src = option.icon;
+          icon.alt = '';
+          icon.width = 18;
+          icon.height = 18;
+          icon.className = 'options-menu-icon';
+          contentWrapper.appendChild(icon);
+        }
+
         const label = document.createElement('span');
         label.className = 'options-menu-label';
         label.textContent = option.label;
-        item.appendChild(label);
-        
+        contentWrapper.appendChild(label);
+
+        item.appendChild(contentWrapper);
+
         item.addEventListener('click', () => {
           if (option.onClick) {
             option.onClick();

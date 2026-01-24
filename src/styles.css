@@ -1526,32 +1526,37 @@ p {
   height: 32px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   /* Delay fade-out so user has time to reach the trigger */
-  transition: opacity 0.2s ease 0.3s, background-color 0.2s ease, color 0.2s ease;
+  /* Visibility toggle needs to wait for the opacity transition to finish (1s delay + 0.2s duration = 1.2s) */
+  transition: opacity 0.2s ease 1s, background-color 0.2s ease, color 0.2s ease, visibility 0s linear 1.2s;
   opacity: 0;
+  visibility: hidden;
 }
 
-.search-and-sites:hover .quick-access-options-trigger,
-.quick-access-options-trigger:hover,
-.quick-access-options-trigger:focus {
+/* Only show trigger when clock or timer is visible */
+body.quick-access-has-clock .search-and-sites:hover .quick-access-options-trigger,
+body.quick-access-has-clock .quick-access-options-trigger:hover,
+body.quick-access-has-clock .quick-access-options-trigger:focus {
   opacity: 1;
+  visibility: visible;
   /* Instant fade-in, no delay */
-  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, visibility 0s linear;
 }
 
-.quick-access-options-trigger:hover {
+body.quick-access-has-clock .quick-access-options-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.quick-access-options-trigger:focus-visible {
+body.quick-access-has-clock .quick-access-options-trigger:focus-visible {
   opacity: 1;
+  visibility: visible;
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
@@ -1616,7 +1621,7 @@ p {
   height: 32px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1635,7 +1640,7 @@ p {
 
 .clock-options-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 @media (max-width: 768px) {
@@ -3629,7 +3634,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
   background: transparent;
   border: none;
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   opacity: 0;
   /* Delay fade-out so user has time to reach the trigger */
@@ -3646,7 +3651,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
 
 .clock-options-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .clock-options-trigger:focus-visible {
@@ -4087,6 +4092,18 @@ html[dir="rtl"] .chrome-footer-notification-text {
 
 .options-menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.options-menu-button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-menu-icon {
+  opacity: 0.9;
+  flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(100%);
 }
 
 .options-menu-label {

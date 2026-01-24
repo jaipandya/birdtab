@@ -199,6 +199,7 @@ function initOptionsMenu() {
     {
       type: 'button',
       label: getMessage('switchToTimer') || 'Switch to Timer',
+      icon: 'images/svg/timer.svg',
       onClick: async () => {
         // Hide clock time but keep container visible for timer
         hideClock(false);

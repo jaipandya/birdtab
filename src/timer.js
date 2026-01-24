@@ -1227,6 +1227,7 @@ function initOptionsMenu() {
     {
       type: 'button',
       label: getMessage('switchToClock') || 'Switch to Clock',
+      icon: 'images/svg/clock.svg',
       onClick: async () => {
         // Stop timer if running
         if (timerState === TIMER_STATE.RUNNING) {
