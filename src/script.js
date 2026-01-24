@@ -532,7 +532,7 @@ async function getBirdInfo(retryCount = 0) {
           // "Receiving end does not exist" = service worker was terminated
           // "message channel closed" = message port closed before response
           const isServiceWorkerError = errorMsg.includes('Receiving end does not exist') ||
-                                       errorMsg.includes('message channel closed');
+            errorMsg.includes('message channel closed');
 
           if (isServiceWorkerError && scheduleRetry(resolve, reject, retryCount, 'Service worker communication error')) {
             return;
@@ -1000,6 +1000,9 @@ function createAudioPlayer(mediaUrl) {
   playButton.classList.add('icon-button', 'play-button');
   playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
   playButton.title = chrome.i18n.getMessage('playTooltip');
+  playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
+  // Ensure keyboard accessibility
+  playButton.tabIndex = 0;
   playButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -1059,7 +1062,7 @@ async function playAudio() {
     await audio.play();
     isPlaying = true;
     updatePlayPauseButton();
-    
+
     // Track audio play (only track user-initiated plays, not auto-play)
     trackFeature('audio_play');
 
@@ -1170,7 +1173,7 @@ function checkAndPrepareReviewPrompt() {
       const frequencyCondition = now - lastReviewPrompt > timeDelay;
 
       shouldShowReviewPrompt = timeCondition && activityCondition && frequencyCondition;
-      
+
       // Store data for analytics tracking
       if (shouldShowReviewPrompt) {
         const daysSinceInstall = Math.floor((now - installTime) / (1000 * 60 * 60 * 24));
@@ -1179,7 +1182,7 @@ function checkAndPrepareReviewPrompt() {
           newTabCount
         };
       }
-      
+
       resolve(shouldShowReviewPrompt);
     });
   });
@@ -1206,11 +1209,11 @@ function getReviewPromptHTML() {
 function setImageSource(imageUrl, retryCount = 0) {
   const img = document.querySelector('.background-image');
   if (!img) return;
-  
+
   img.onload = function () {
     img.classList.remove('hidden');
   };
-  
+
   img.onerror = function () {
     if (retryCount < IMAGE_MAX_RETRIES) {
       log(`Image load failed, retrying (${retryCount + 1}/${IMAGE_MAX_RETRIES})...`);
@@ -1222,7 +1225,7 @@ function setImageSource(imageUrl, retryCount = 0) {
       log('Image failed to load after all retries');
     }
   };
-  
+
   img.src = imageUrl;
 }
 
@@ -1412,7 +1415,7 @@ function showVideoLoadingIndicator(isBuffering = false) {
   const existing = document.querySelector('.video-loading-indicator');
   const bufferingText = chrome.i18n.getMessage('buffering') || 'Buffering';
   const loadingVideoText = chrome.i18n.getMessage('loadingVideo') || 'Loading video';
-  
+
   if (existing) {
     // Update text if state changed
     const textEl = existing.querySelector('.loading-text');
@@ -1483,15 +1486,15 @@ function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast-notification toast-${type}`;
   toast.textContent = message;
-  
+
   // Add to document
   document.body.appendChild(toast);
-  
+
   // Show toast with animation after a brief delay
   setTimeout(() => {
     toast.classList.add('show');
   }, 50);
-  
+
   // Hide and remove toast after 3 seconds
   setTimeout(() => {
     toast.classList.remove('show');
@@ -2036,7 +2039,7 @@ async function initializePage() {
     if (shouldShowReviewPrompt) {
       document.body.insertAdjacentHTML('beforeend', getReviewPromptHTML());
       addReviewPromptListeners();
-      
+
       // Track review prompt shown
       if (reviewPromptData) {
         trackReviewPromptShown(reviewPromptData.daysSinceInstall, reviewPromptData.newTabCount);
@@ -2077,7 +2080,7 @@ function showErrorModal(errorMessage) {
     showNetworkErrorState();
     return;
   }
-  
+
   const errorModal = document.getElementById('error-modal');
   const errorDetails = errorModal.querySelector('.error-details');
   errorDetails.textContent = `${chrome.i18n.getMessage('errorDetails')}: ${errorMessage}`;
@@ -2092,7 +2095,7 @@ function showErrorModal(errorMessage) {
 // Show beautiful network error state when no cached birds are available
 function showNetworkErrorState() {
   document.body.classList.add('loaded');
-  
+
   const contentContainer = document.getElementById('content-container');
   contentContainer.innerHTML = `
     <div class="network-error-container">
@@ -2121,7 +2124,7 @@ function showNetworkErrorState() {
       </div>
     </div>
   `;
-  
+
   // Add event listener for retry button
   document.getElementById('network-retry-button').addEventListener('click', () => {
     window.location.reload();
@@ -2136,7 +2139,7 @@ function retryHandler() {
 
 function addReviewPromptListeners() {
   const daysSinceInstall = reviewPromptData?.daysSinceInstall || -1;
-  
+
   document.getElementById('leave-review').addEventListener('click', () => {
     if (process.env.BROWSER === 'edge') {
       chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
@@ -2181,9 +2184,11 @@ function updateVolumeControl() {
   }
 
   if (volumeSlider) {
-    volumeSlider.value = Math.round(volumeLevel * 100);
+    // Reverse the exponential calculation for slider position: slider = sqrt(volume) * 100
+    const sliderValue = Math.round(Math.sqrt(volumeLevel) * 100);
+    volumeSlider.value = sliderValue;
     // Update CSS custom property for visual feedback
-    volumeSlider.style.setProperty('--volume-percentage', `${volumeLevel * 100}%`);
+    volumeSlider.style.setProperty('--volume-percentage', `${sliderValue}%`);
   }
 }
 
@@ -2205,9 +2210,54 @@ function setupVolumeControl() {
     toggleMute();
   });
 
+  // Volume button keyboard handler (Arrow keys)
+  volumeButton.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      e.stopPropagation();
+      // Increase volume
+      // Calculate next step based on exponential curve to make it feel natural
+      // Current slider position:
+      const currentSlider = Math.sqrt(volumeLevel);
+      // Move slider by 5%
+      const newSlider = Math.min(1, currentSlider + 0.05);
+      const newVolume = Math.pow(newSlider, 2);
+      setVolume(newVolume);
+
+      // Expand slider visually for feedback
+      sliderContainer.classList.add('visible');
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => {
+        sliderContainer.classList.remove('visible');
+      }, 1000);
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      e.stopPropagation();
+      // Decrease volume
+      const currentSlider = Math.sqrt(volumeLevel);
+      const newSlider = Math.max(0, currentSlider - 0.05);
+      const newVolume = Math.pow(newSlider, 2);
+      setVolume(newVolume);
+
+      // Expand slider visually for feedback
+      sliderContainer.classList.add('visible');
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => {
+        sliderContainer.classList.remove('visible');
+      }, 1000);
+    }
+  });
+
   // Volume slider change handler
   volumeSlider.addEventListener('input', (e) => {
-    const newVolume = parseFloat(e.target.value) / 100;
+    // strict linear volume control
+    // const newVolume = parseFloat(e.target.value) / 100;
+
+    // Non-linear volume control (exponential)
+    // Helps with finer control at lower volumes
+    // Volume = (slider/100)^2
+    const sliderValue = parseFloat(e.target.value) / 100;
+    const newVolume = Math.pow(sliderValue, 2);
     setVolume(newVolume);
   });
 
@@ -2317,7 +2367,7 @@ let clickToPauseSetup = false;
 function setupClickToPause() {
   // Prevent duplicate event listeners
   if (clickToPauseSetup) return;
-  
+
   const contentContainer = document.getElementById('content-container');
   if (!contentContainer) return;
 
@@ -2362,10 +2412,10 @@ function setupMediaToggle(isImageMode = false) {
   toggleSwitch.addEventListener('change', async function () {
     // Update aria-checked for accessibility
     this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
-    
+
     // Track video mode toggle
     trackFeature('video_toggle', { enabled: this.checked });
-    
+
     if (this.checked) {
       // User wants to switch to video mode
       if (isImageMode && !video) {
@@ -2384,7 +2434,7 @@ function setupMediaToggle(isImageMode = false) {
 // Fetch video for current bird and switch to video mode
 async function fetchAndSwitchToVideo() {
   const toggleSwitch = document.getElementById('media-toggle-switch');
-  
+
   if (!birdInfo || !birdInfo.speciesCode) {
     log('No bird info available for video fetch');
     if (toggleSwitch) {
@@ -2393,10 +2443,10 @@ async function fetchAndSwitchToVideo() {
     }
     return;
   }
-  
+
   // Show loading state
   showVideoLoadingIndicator(false);
-  
+
   try {
     // Request video for current bird from background script
     const response = await new Promise((resolve) => {
@@ -2412,22 +2462,22 @@ async function fetchAndSwitchToVideo() {
         }
       });
     });
-    
+
     if (response && response.videoUrl) {
       // Check if user switched back to photo mode while we were fetching
       if (!toggleSwitch || !toggleSwitch.checked) {
         log('User switched back to photo mode during video fetch, aborting');
         return;
       }
-      
+
       // Store video info in birdInfo
       birdInfo.videoUrl = response.videoUrl;
       birdInfo.videographer = response.videographer;
       birdInfo.videographerUrl = response.videographerUrl;
-      
+
       // Create video element
       await createVideoElement(response.videoUrl);
-      
+
       // Check again if user switched back during video element creation
       if (!toggleSwitch || !toggleSwitch.checked) {
         log('User switched back to photo mode during video creation, aborting');
@@ -2437,13 +2487,13 @@ async function fetchAndSwitchToVideo() {
         }
         return;
       }
-      
+
       // Update credits to show video credits
       updateCreditsForVideoMode();
-      
+
       // Switch to video mode
       switchToVideoMode();
-      
+
       log('Successfully fetched and switched to video mode');
     } else {
       // No video available
@@ -2472,11 +2522,11 @@ async function fetchAndSwitchToVideo() {
 async function createVideoElement(videoUrl) {
   const contentContainer = document.getElementById('content-container');
   const existingVideo = document.querySelector('.background-video');
-  
+
   if (existingVideo) {
     existingVideo.remove();
   }
-  
+
   // Create video element
   const videoEl = document.createElement('video');
   videoEl.className = 'background-video hidden';
@@ -2486,24 +2536,24 @@ async function createVideoElement(videoUrl) {
   videoEl.poster = birdInfo.imageUrl;
   videoEl.muted = isMuted;
   videoEl.volume = isMuted ? 0 : volumeLevel;
-  
+
   const source = document.createElement('source');
   source.src = videoUrl;
   source.type = 'video/mp4';
   videoEl.appendChild(source);
-  
+
   // Insert at the beginning of content container
   const firstChild = contentContainer.firstChild;
   contentContainer.insertBefore(videoEl, firstChild);
-  
+
   // Store reference
   video = videoEl;
-  
+
   // Set up video event listeners
   setupVideoEventListeners(videoEl, () => {
     // Fallback to image if video fails
     showPosterImage();
-    
+
     // Revert toggle switch to image mode
     const toggleSwitch = document.getElementById('media-toggle-switch');
     if (toggleSwitch) {
@@ -2511,17 +2561,17 @@ async function createVideoElement(videoUrl) {
       toggleSwitch.setAttribute('aria-checked', 'false');
     }
     isShowingVideo = false;
-    
+
     // Show toast notification
     showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
   });
-  
+
   // Initialize VideoVisibilityManager
   if (videoVisibilityManager) {
     videoVisibilityManager.destroy();
   }
   videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
-  
+
   // Wait for video to be ready
   return new Promise((resolve) => {
     videoEl.addEventListener('canplay', () => {
@@ -2537,22 +2587,22 @@ async function createVideoElement(videoUrl) {
 function updateCreditsForVideoMode() {
   const credits = document.querySelector('.credits');
   if (!credits || !birdInfo.videographer) return;
-  
+
   // Check if video credit already exists
   if (credits.querySelector('.credit-item-video')) return;
-  
+
   // Find the "via Macaulay Library" credit and insert before it
   const macaulayCredit = Array.from(credits.querySelectorAll('.credit-item')).find(
     item => item.textContent.includes('Macaulay Library')
   );
-  
+
   const videoCredit = document.createElement('span');
   videoCredit.className = 'credit-item credit-item-video';
   videoCredit.innerHTML = `
     <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
     <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
   `;
-  
+
   if (macaulayCredit) {
     credits.insertBefore(videoCredit, macaulayCredit);
   }
@@ -2562,21 +2612,21 @@ function updateCreditsForVideoMode() {
 function updateCreditsForPhotoMode() {
   const credits = document.querySelector('.credits');
   if (!credits || !birdInfo.recordist) return;
-  
+
   // Check if audio credit already exists
   if (credits.querySelector('.credit-item-audio')) return;
-  
+
   // Find the camera credit (photo credit) and insert after it
   const cameraCredit = credits.querySelector('.credit-item');
   if (!cameraCredit) return;
-  
+
   const audioCredit = document.createElement('span');
   audioCredit.className = 'credit-item credit-item-audio';
   audioCredit.innerHTML = `
     <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
     <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
   `;
-  
+
   // Insert after the camera credit
   if (cameraCredit.nextSibling) {
     credits.insertBefore(audioCredit, cameraCredit.nextSibling);
@@ -2615,10 +2665,10 @@ async function switchToPhotoMode() {
   // Initialize audio - fetch on-demand if not available (e.g., when coming from video mode)
   if (birdInfo && !birdInfo.mediaUrl && birdInfo.speciesCode) {
     log('Audio not available, fetching on-demand for photo mode');
-    
+
     // Show loading indicator for audio fetch
     showAudioLoadingIndicator();
-    
+
     try {
       const response = await new Promise((resolve) => {
         chrome.runtime.sendMessage({
@@ -2640,7 +2690,7 @@ async function switchToPhotoMode() {
         birdInfo.recordist = response.recordist;
         birdInfo.recordistUrl = response.recordistUrl;
         log('Successfully fetched audio for photo mode');
-        
+
         // Update credits to show audio credit
         updateCreditsForPhotoMode();
       } else {
@@ -2763,7 +2813,7 @@ function showPosterImage() {
   if (posterEl) {
     posterEl.classList.remove('hidden');
     posterEl.classList.remove('video-fallback');
-    
+
     // Check if image failed to load (naturalWidth is 0 for failed/unloaded images)
     // and retry loading if we have the URL available
     if (posterEl.naturalWidth === 0 && birdInfo && birdInfo.imageUrl) {
@@ -3261,7 +3311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     // First check if user has completed ANY version of the tour
     const completedAnyTour = await hasCompletedAnyTour();
-    
+
     if (!completedAnyTour) {
       // New user - show full tour
       // Set callback to show Chrome footer notification when tour ends
@@ -3269,7 +3319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         log('Tour ended, showing Chrome footer notification');
         initChromeFooterNotification(2000);
       });
-      
+
       // Delay tour start to let UI fully render and user orient themselves
       log('Feature tour not completed, scheduling tour start');
       setTimeout(() => {

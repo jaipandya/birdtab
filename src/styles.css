@@ -488,6 +488,8 @@ body.loaded {
   bottom: 40px;
   right: 2rem;
   display: flex;
+  align-items: flex-end;
+  /* Ensure buttons stay at bottom when volume expands up */
   gap: 10px;
   z-index: 1000;
 }
@@ -516,6 +518,12 @@ body.loaded {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+.icon-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
 .icon-button svg {
   width: 24px;
   height: 24px;
@@ -529,72 +537,102 @@ body.loaded {
 }
 
 /* Volume Control Styles */
+/* Volume Control Styles */
 .volume-control {
   position: relative;
-  display: inline-flex;
+  display: flex;
+  flex-direction: column-reverse;
+  /* Button at bottom, slider expands upwards */
   align-items: center;
+  border-radius: 24px;
+  background-color: transparent;
+  transition: background-color 0.2s ease, padding 0.2s ease;
+  width: 40px;
+  /* Match icon button width */
+}
+
+/* Unified pill shape on hover */
+.volume-control:hover,
+.volume-control:focus-within {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  padding-top: 12px;
 }
 
 #volume-button {
-  transition: all 0.3s ease;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+  /* Reset hover transform to maintain pill integrity or apply to icon only */
+  transform: none !important;
+  /* Ensure it fits nicely in the pill */
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 #volume-button:hover {
-  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .volume-slider-container {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 15px 8px;
+  width: 32px;
+  height: 0;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  z-index: 1001;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease;
+  margin-bottom: 0;
+  /* Use padding for internal spacing if needed, but keep container snug */
 }
 
-.volume-slider-container.visible {
+/* Expand on hover */
+.volume-control:hover .volume-slider-container,
+.volume-control:focus-within .volume-slider-container {
+  height: 100px;
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(-5px);
+  margin-bottom: 4px;
+  /* Slight separation from button icon visual */
 }
 
+/* The actual slider input */
 .volume-slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 100px;
+  width: 80px;
+  /* Length of the slider track */
   height: 4px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.3);
   outline: none;
   transform: rotate(-90deg);
-  transform-origin: center;
   cursor: pointer;
-  margin: 40px 0;
+  /* Fix touch target */
+  margin: 0;
 }
 
+/* Slider Track & Thumb */
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s ease;
 }
 
 .volume-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .volume-slider::-moz-range-thumb {
