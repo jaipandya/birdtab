@@ -3148,21 +3148,24 @@ function checkOnboardingStatus() {
 }
 
 /**
- * Check if quick access is enabled in settings but permissions are missing
+ * Check if top sites are visible in settings but permissions are missing
  * This handles the case where settings are synced from another device but permissions aren't
+ * If hideTopSites is false (meaning top sites should show) but we don't have permission,
+ * we set hideTopSites to true to match the permission state.
  */
 async function checkSyncedQuickAccessPermissions() {
   try {
-    // Get the quick access setting from storage
+    // Get the settings from storage
     const result = await new Promise((resolve) => {
-      chrome.storage.sync.get(['quickAccessEnabled'], resolve);
+      chrome.storage.sync.get(['quickAccessEnabled', 'hideTopSites'], resolve);
     });
 
-    // If quick access is not enabled, nothing to do
-    if (!result.quickAccessEnabled) {
+    // If quick access is not enabled or top sites are already hidden, nothing to do
+    if (!result.quickAccessEnabled || result.hideTopSites !== false) {
       return;
     }
 
+    // hideTopSites is false (meaning top sites should be visible)
     // Check if we have the required permissions
     const hasPermissions = await chrome.permissions.contains({
       permissions: ['topSites', 'favicon']
@@ -3173,46 +3176,15 @@ async function checkSyncedQuickAccessPermissions() {
       return;
     }
 
-    // Settings say enabled, but permissions are missing
+    // Settings say show top sites, but permissions are missing
     // This likely means settings synced from another device
-    log('Quick access enabled but permissions missing - showing permission dialog');
-    addBreadcrumb('Synced quick access detected without permissions', 'info', 'info');
+    // Hide top sites to match permission state (user can enable via options menu)
+    log('Top sites enabled but permissions missing - hiding top sites');
+    addBreadcrumb('Synced top sites detected without permissions - hiding', 'info', 'info');
 
-    // Show permission dialog
-    const userConfirmed = await showPermissionDialog({
-      title: 'permissionDialogTitle',
-      subtitle: 'permissionDialogSubtitle',
-      privacyText: 'permissionDialogPrivacy',
-      privacyLinkText: 'privacyPolicy',
-      privacyLinkUrl: 'https://birdtab.app/privacy',
-      cancelText: 'goBack',
-      confirmText: 'continue'
+    await new Promise((resolve) => {
+      chrome.storage.sync.set({ hideTopSites: true }, resolve);
     });
-
-    if (!userConfirmed) {
-      // User declined, disable quick access to match permission state
-      log('User declined permissions - disabling quick access');
-      await new Promise((resolve) => {
-        chrome.storage.sync.set({ quickAccessEnabled: false }, resolve);
-      });
-      return;
-    }
-
-    // User confirmed, request permissions
-    const granted = await chrome.permissions.request({
-      permissions: ['topSites', 'favicon']
-    });
-
-    if (!granted) {
-      // Permission denied, disable quick access
-      log('Permission denied - disabling quick access');
-      await new Promise((resolve) => {
-        chrome.storage.sync.set({ quickAccessEnabled: false }, resolve);
-      });
-    } else {
-      log('Permissions granted for synced quick access');
-      addBreadcrumb('Permissions granted for synced quick access', 'info', 'info');
-    }
   } catch (error) {
     log('Error checking synced quick access permissions: ' + error.message);
     captureException(error, {

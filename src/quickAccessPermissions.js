@@ -111,8 +111,9 @@ export async function requestQuickAccessPermissions(callbacks = {}, component = 
 
 /**
  * Handle the productivity/quick access toggle
- * Encapsulates the full flow: check permissions, request if needed, save setting
- * 
+ * Saves the setting without requesting permissions.
+ * Permission is now requested when user toggles "Show top sites" ON in the options menu.
+ *
  * @param {boolean} isEnabled - Whether the toggle is being enabled
  * @param {Object} options - Configuration options
  * @param {Function} options.onSuccess - Called after settings are saved successfully
@@ -123,42 +124,13 @@ export async function requestQuickAccessPermissions(callbacks = {}, component = 
 export async function handleQuickAccessToggle(isEnabled, options = {}) {
   const { onSuccess, onRevert, component = 'unknown' } = options;
 
-  if (!isEnabled) {
-    // Disabling - just save the setting
-    // Note: We intentionally keep the permissions so the user doesn't have to re-grant them
-    // if they re-enable the feature later. Users can revoke via Chrome's extension settings.
-    try {
-      await chrome.storage.sync.set({ quickAccessEnabled: false });
-      if (onSuccess) onSuccess();
-      return true;
-    } catch (error) {
-      log('Error saving quick access setting: ' + error.message);
-      if (onRevert) onRevert();
-      return false;
-    }
+  try {
+    await chrome.storage.sync.set({ quickAccessEnabled: isEnabled });
+    if (onSuccess) onSuccess();
+    return true;
+  } catch (error) {
+    log('Error saving quick access setting: ' + error.message);
+    if (onRevert) onRevert();
+    return false;
   }
-
-  // Enabling - need to check/request permissions
-  const granted = await requestQuickAccessPermissions({
-    onGranted: async () => {
-      try {
-        await chrome.storage.sync.set({ quickAccessEnabled: true });
-        if (onSuccess) onSuccess();
-      } catch (error) {
-        log('Error saving quick access setting: ' + error.message);
-        if (onRevert) onRevert();
-      }
-    },
-    onDenied: () => {
-      if (onRevert) onRevert();
-    },
-    onCancelled: () => {
-      if (onRevert) onRevert();
-    },
-    onError: () => {
-      if (onRevert) onRevert();
-    }
-  }, component);
-
-  return granted;
 }

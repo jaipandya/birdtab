@@ -899,6 +899,13 @@ chrome.runtime.onInstalled.addListener(function (details) {
       installTime: Date.now(),
       newTabCount: 0
     });
+    // Set new defaults for fresh installs:
+    // - Clock ON, Quick Access ON, but Top Sites hidden (requires permission to show)
+    chrome.storage.sync.set({
+      clockDisplayMode: 'clock',
+      quickAccessEnabled: true,
+      hideTopSites: true
+    });
   }
 });
 

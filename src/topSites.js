@@ -468,6 +468,52 @@ class TopSites {
   }
 
   /**
+   * Check if we have the required permissions for top sites
+   * @returns {Promise<boolean>}
+   */
+  async checkTopSitesPermission() {
+    try {
+      return await chrome.permissions.contains({
+        permissions: ['topSites', 'favicon']
+      });
+    } catch (error) {
+      warn('Error checking topSites permission:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Request top sites permissions with user confirmation dialog
+   * @returns {Promise<boolean>} - True if permissions were granted
+   */
+  async requestTopSitesPermission() {
+    const { showPermissionDialog } = await import('./permissionDialog.js');
+
+    const userConfirmed = await showPermissionDialog({
+      title: 'permissionDialogTitle',
+      subtitle: 'permissionDialogSubtitle',
+      privacyText: 'permissionDialogPrivacy',
+      privacyLinkText: 'privacyPolicy',
+      privacyLinkUrl: 'https://birdtab.app/privacy',
+      cancelText: 'goBack',
+      confirmText: 'continue'
+    });
+
+    if (!userConfirmed) {
+      return false;
+    }
+
+    try {
+      return await chrome.permissions.request({
+        permissions: ['topSites', 'favicon']
+      });
+    } catch (error) {
+      warn('Error requesting topSites permission:', error);
+      return false;
+    }
+  }
+
+  /**
    * Get custom shortcuts from storage
    */
   async getCustomShortcuts() {
@@ -597,6 +643,22 @@ class TopSites {
         label: chrome.i18n.getMessage('showTopSites') || 'Show top sites',
         checked: !this.hideTopSites,
         onChange: async (checked) => {
+          if (checked) {
+            // User wants to SHOW top sites - check permission first
+            const hasPermission = await this.checkTopSitesPermission();
+
+            if (!hasPermission) {
+              const granted = await this.requestTopSitesPermission();
+              if (!granted) {
+                // Permission denied - revert toggle
+                if (this.optionsMenu) {
+                  this.optionsMenu.updateOption(0, false);
+                }
+                return;
+              }
+            }
+          }
+
           this.hideTopSites = !checked;
           // Save to storage
           await chrome.storage.sync.set({ hideTopSites: !checked });
