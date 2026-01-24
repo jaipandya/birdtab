@@ -1099,9 +1099,9 @@
     "message": "闹钟声",
     "description": "Toggle to enable/disable alarm sound when timer ends"
   },
-  "hideTopSites": {
-    "message": "隐藏常用网站",
-    "description": "Option to hide the most visited sites grid"
+  "showTopSites": {
+    "message": "显示常用网站",
+    "description": "Option to show the most visited sites grid"
   },
   "quickAccessOptionsAriaLabel": {
     "message": "快速访问选项",

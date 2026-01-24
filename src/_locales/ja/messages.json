@@ -1099,9 +1099,9 @@
     "message": "アラーム音",
     "description": "Toggle to enable/disable alarm sound when timer ends"
   },
-  "hideTopSites": {
-    "message": "よく使うサイトを非表示",
-    "description": "Option to hide the most visited sites grid"
+  "showTopSites": {
+    "message": "よく使うサイトを表示",
+    "description": "Option to show the most visited sites grid"
   },
   "quickAccessOptionsAriaLabel": {
     "message": "クイックアクセスオプション",

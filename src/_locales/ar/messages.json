@@ -1099,9 +1099,9 @@
     "message": "صوت المنبه",
     "description": "Toggle to enable/disable alarm sound when timer ends"
   },
-  "hideTopSites": {
-    "message": "إخفاء المواقع الأكثر زيارة",
-    "description": "Option to hide the most visited sites grid"
+  "showTopSites": {
+    "message": "إظهار المواقع الأكثر زيارة",
+    "description": "Option to show the most visited sites grid"
   },
   "quickAccessOptionsAriaLabel": {
     "message": "خيارات الوصول السريع",

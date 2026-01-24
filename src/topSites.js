@@ -594,13 +594,13 @@ class TopSites {
     const getOptions = () => [
       {
         type: 'toggle',
-        label: chrome.i18n.getMessage('hideTopSites') || 'Hide top sites',
-        checked: this.hideTopSites,
+        label: chrome.i18n.getMessage('showTopSites') || 'Show top sites',
+        checked: !this.hideTopSites,
         onChange: async (checked) => {
-          this.hideTopSites = checked;
+          this.hideTopSites = !checked;
           // Save to storage
-          await chrome.storage.sync.set({ hideTopSites: checked });
-          log(`Hide top sites toggled: ${checked}`);
+          await chrome.storage.sync.set({ hideTopSites: !checked });
+          log(`Show top sites toggled: ${checked}`);
         }
       }
     ];

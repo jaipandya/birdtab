@@ -1099,9 +1099,9 @@
     "message": "Son d'alarme",
     "description": "Toggle to enable/disable alarm sound when timer ends"
   },
-  "hideTopSites": {
-    "message": "Masquer les sites principaux",
-    "description": "Option to hide the most visited sites grid"
+  "showTopSites": {
+    "message": "Afficher les sites principaux",
+    "description": "Option to show the most visited sites grid"
   },
   "quickAccessOptionsAriaLabel": {
     "message": "Options d'accès rapide",

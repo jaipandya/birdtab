@@ -1099,9 +1099,9 @@
     "message": "Звук будильника",
     "description": "Toggle to enable/disable alarm sound when timer ends"
   },
-  "hideTopSites": {
-    "message": "Скрыть популярные сайты",
-    "description": "Option to hide the most visited sites grid"
+  "showTopSites": {
+    "message": "Показать популярные сайты",
+    "description": "Option to show the most visited sites grid"
   },
   "quickAccessOptionsAriaLabel": {
     "message": "Параметры быстрого доступа",
