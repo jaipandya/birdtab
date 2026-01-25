@@ -2205,54 +2205,53 @@ p {
   --modal-spacing: 20px;
 }
 
-/* Settings Modal Styles */
-.settings-modal {
+/* Settings Sidebar Styles */
+.settings-sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
-  z-index: 2000;
-  animation: modalFadeIn 0.3s ease;
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  z-index: 10001; /* Above chrome-tab-link (10000) */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-.settings-modal.hidden {
-  display: none !important;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    background-color: rgba(0, 0, 0, 0);
-  }
-
-  to {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+.settings-sidebar.open {
+  opacity: 1;
+  visibility: visible;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
 }
 
 .settings-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 33.33vw;
+  min-width: 320px;
+  height: 100%;
   background-color: var(--modal-content-bg);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
+  border-radius: 20px 0 0 20px;
   padding: 0;
-  max-width: 500px;
-  width: 92%;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--modal-border);
+  overflow: hidden;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--modal-border);
   color: var(--modal-text-primary);
-  animation: modalContentSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Flexbox layout for sticky footer */
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Custom scrollbar - subtle and unobtrusive */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+.settings-sidebar.open .settings-content {
+  transform: translateX(0);
 }
 
 /* Webkit scrollbar styling */
@@ -2274,15 +2273,12 @@ p {
   background-color: rgba(255, 255, 255, 0.25);
 }
 
-@keyframes modalContentSlideIn {
-  from {
-    transform: translateY(-20px) scale(0.95);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
+/* Responsive: wider sidebar on smaller screens */
+@media (max-width: 768px) {
+  .settings-content {
+    max-width: 85vw;
+    min-width: unset;
+    width: 85vw;
   }
 }
 
@@ -2292,6 +2288,7 @@ p {
   align-items: center;
   padding: var(--modal-spacing) var(--modal-spacing) 0 var(--modal-spacing);
   margin-bottom: 16px;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .settings-header h2 {
@@ -2333,12 +2330,39 @@ p {
 .settings-body {
   padding: 0 var(--modal-spacing) var(--modal-spacing) var(--modal-spacing);
   text-align: left;
+  flex: 1;
+  overflow-y: auto;
+  
+  /* Custom scrollbar - subtle and unobtrusive */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Webkit scrollbar styling for settings body */
+.settings-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-body::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+
+.settings-body::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.settings-body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .settings-footer {
   padding: 12px var(--modal-spacing);
   border-top: 1px solid var(--modal-border);
   text-align: center;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  background-color: var(--modal-content-bg); /* Match content background */
 }
 
 .feedback-link {
@@ -2359,7 +2383,7 @@ p {
   display: flex;
   justify-content: center;
   padding: 16px var(--modal-spacing);
-  border-radius: 0;
+  border-radius: 0 0 0 20px; /* Match sidebar bottom-left corner */
   font-size: 14px;
 }
 
@@ -2383,7 +2407,7 @@ p {
   opacity: 1;
 }
 
-.settings-modal .setting {
+.settings-sidebar .setting {
   margin-bottom: 2px;
   padding: 10px;
   border-radius: 10px;
@@ -2391,16 +2415,16 @@ p {
   border: 1px solid transparent;
 }
 
-.settings-modal .setting:hover {
+.settings-sidebar .setting:hover {
   background-color: var(--modal-hover-bg);
   border-color: var(--modal-border);
 }
 
-.settings-modal .setting:last-child {
+.settings-sidebar .setting:last-child {
   margin-bottom: 0;
 }
 
-.settings-modal label {
+.settings-sidebar label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
@@ -2410,19 +2434,19 @@ p {
   letter-spacing: -0.01em;
 }
 
-.settings-modal .setting-label-with-icon {
+.settings-sidebar .setting-label-with-icon {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.settings-modal .setting-icon {
+.settings-sidebar .setting-icon {
   flex-shrink: 0;
   opacity: 0.85;
   filter: brightness(0) invert(1);
 }
 
-.settings-modal select {
+.settings-sidebar select {
   width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
@@ -2440,19 +2464,19 @@ p {
   font-weight: 400;
 }
 
-.settings-modal select:focus {
+.settings-sidebar select:focus {
   outline: 2px solid var(--modal-focus-outline);
   outline-offset: 2px;
   border-color: var(--modal-focus-outline);
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.settings-modal select option {
+.settings-sidebar select option {
   background-color: #2a2a2a;
   color: #ffffff;
 }
 
-.settings-modal .help-text {
+.settings-sidebar .help-text {
   font-size: 13px;
   color: var(--modal-text-secondary);
   margin-top: 8px;
@@ -2460,21 +2484,21 @@ p {
   font-weight: 400;
 }
 
-.settings-modal .toggle-container {
+.settings-sidebar .toggle-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
 }
 
-.settings-modal .toggle-text {
+.settings-sidebar .toggle-text {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.settings-modal .toggle-text span {
+.settings-sidebar .toggle-text span {
   font-size: 15px;
   font-weight: 500;
   color: var(--modal-text-primary);
@@ -2482,12 +2506,12 @@ p {
   letter-spacing: -0.01em;
 }
 
-.settings-modal .toggle-text .help-text {
+.settings-sidebar .toggle-text .help-text {
   margin: 0;
   padding: 0;
 }
 
-.settings-modal .switch {
+.settings-sidebar .switch {
   position: relative;
   display: inline-block;
   width: 51px;
@@ -2495,13 +2519,13 @@ p {
   flex-shrink: 0;
 }
 
-.settings-modal .switch input {
+.settings-sidebar .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.settings-modal .slider {
+.settings-sidebar .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -2514,11 +2538,11 @@ p {
   box-shadow: inset 0 0 0 2px transparent;
 }
 
-.settings-modal .slider:hover {
+.settings-sidebar .slider:hover {
   background-color: rgba(255, 255, 255, 0.25);
 }
 
-.settings-modal .slider:before {
+.settings-sidebar .slider:before {
   position: absolute;
   content: "";
   height: 27px;
@@ -2531,29 +2555,26 @@ p {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.settings-modal input:checked+.slider {
+.settings-sidebar input:checked+.slider {
   background-color: var(--modal-accent);
   box-shadow: inset 0 0 0 2px var(--modal-accent);
 }
 
-.settings-modal input:checked+.slider:before {
+.settings-sidebar input:checked+.slider:before {
   transform: translateX(20px);
   box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.settings-modal input:focus+.slider {
+.settings-sidebar input:focus+.slider {
   box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.3);
 }
 
-/* History Modal Styles */
-.history-content {
-  max-height: 80vh;
-  animation: fadeIn 0.2s ease;
-}
-
-/* Override settings-body padding for history modal to reduce gap above footer */
+/* History Sidebar Styles */
+/* Override settings-body for history sidebar */
 .history-content .settings-body {
   padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes fadeIn {
@@ -2569,7 +2590,7 @@ p {
 }
 
 .history-list {
-  max-height: 50vh;
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
@@ -2698,6 +2719,9 @@ p {
   padding: 16px 24px 24px 24px;
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  background-color: var(--modal-content-bg); /* Match content background */
+  border-radius: 0 0 0 20px; /* Match sidebar bottom-left corner */
 }
 
 /* Clear history button with subtle danger styling */
@@ -4023,10 +4047,6 @@ html[dir="rtl"] .chrome-footer-notification-text {
   display: flex;
   align-items: baseline;
   justify-content: center;
-}
-
-.timer-time-main {
-  /* Inherits font from .timer-time */
 }
 
 .timer-time-seconds {

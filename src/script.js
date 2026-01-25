@@ -2,7 +2,7 @@ import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
-import SettingsModal from './settingsModal.js';
+import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
 import QuizMode from './quiz.js';
@@ -675,7 +675,7 @@ function getRelativeTimeString(timestamp) {
 
 // ===== History Modal UI Functions =====
 
-let historyModal = null;
+let historySidebar = null;
 
 // Escape HTML to prevent XSS
 function escapeHtml(unsafe) {
@@ -690,14 +690,14 @@ function escapeHtml(unsafe) {
 
 // Create history modal DOM element
 function createHistoryModal() {
-  const existingModal = document.getElementById('history-modal');
-  if (existingModal) existingModal.remove();
+  const existingSidebar = document.getElementById('history-sidebar');
+  if (existingSidebar) existingSidebar.remove();
 
   const modalHTML = `
-    <div id="history-modal" class="settings-modal hidden" role="dialog" aria-modal="true">
+    <div id="history-sidebar" class="settings-sidebar" role="dialog" aria-modal="true">
       <div class="settings-content history-content">
         <div class="settings-header">
-          <h2 id="history-modal-title" data-i18n="historyTitle">Viewing History</h2>
+          <h2 id="history-sidebar-title" data-i18n="historyTitle">Viewing History</h2>
           <button id="close-history" class="close-button" aria-label="Close history">
             <img src="images/svg/close.svg" alt="Close" width="20" height="20">
           </button>
@@ -725,7 +725,7 @@ function createHistoryModal() {
 
   document.body.insertAdjacentHTML('beforeend', modalHTML);
   localizeHtml();
-  return document.getElementById('history-modal');
+  return document.getElementById('history-sidebar');
 }
 
 // Populate history list with entries
@@ -801,18 +801,20 @@ async function handleHistoryItemClick(item) {
 
 // Open history modal
 function openHistoryModal() {
-  if (!historyModal) {
-    historyModal = createHistoryModal();
+  if (!historySidebar) {
+    historySidebar = createHistoryModal();
     bindHistoryModalEvents();
   }
   populateHistoryList();
-  historyModal.classList.remove('hidden');
+  historySidebar.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 // Close history modal
 function closeHistoryModal() {
-  if (historyModal) {
-    historyModal.classList.add('hidden');
+  if (historySidebar) {
+    historySidebar.classList.remove('open');
+    document.body.style.overflow = '';
   }
 }
 
@@ -826,15 +828,15 @@ function bindHistoryModalEvents() {
   closeBtn.addEventListener('click', closeHistoryModal);
 
   // Click outside to close
-  historyModal.addEventListener('click', (e) => {
-    if (e.target === historyModal) {
+  historySidebar.addEventListener('click', (e) => {
+    if (e.target === historySidebar) {
       closeHistoryModal();
     }
   });
 
   // ESC key to close
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !historyModal.classList.contains('hidden')) {
+    if (e.key === 'Escape' && historySidebar.classList.contains('open')) {
       closeHistoryModal();
     }
   });
@@ -2051,11 +2053,11 @@ async function initializePage() {
     // Initialize settings modal immediately after DOM elements are created
     // (before initializeAudio which may take time for video to load)
     try {
-      new SettingsModal();
+      new SettingsSidebar();
     } catch (error) {
       console.error('Failed to initialize settings modal:', error);
       captureException(error, {
-        tags: { operation: 'initializeSettingsModal' }
+        tags: { operation: 'initializeSettingsSidebar' }
       });
     }
 
@@ -2382,7 +2384,7 @@ function setupClickToPause() {
       'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
       '.video-play-overlay', '.video-play-btn', '.share-container',
-      '.external-links', '.settings-modal', '.quiz-mode',
+      '.external-links', '.settings-sidebar', '.quiz-mode',
       '.media-toggle', '.media-toggle-container'
     ];
 

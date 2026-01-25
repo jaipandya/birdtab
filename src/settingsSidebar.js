@@ -10,10 +10,11 @@ let instance = null;
 
 
 /**
- * Settings modal component for managing user preferences
+ * Settings sidebar component for managing user preferences
+ * Slides in from the right edge of the screen
  * Provides a consistent UI for settings across the extension
  */
-class SettingsModal {
+class SettingsSidebar {
   constructor() {
     // Singleton guard - prevent duplicate instances
     if (instance) {
@@ -28,7 +29,7 @@ class SettingsModal {
   
   static getInstance() {
     if (!instance) {
-      instance = new SettingsModal();
+      instance = new SettingsSidebar();
     }
     return instance;
   }
@@ -45,32 +46,32 @@ class SettingsModal {
     this.escapeHandler = null;
     this.abortController = new AbortController();
     
-    this.createModal();
+    this.createSidebar();
     this.initializeElements();
     this.bindEvents();
     this.loadSettings();
   }
 
 
-  createModal() {
-    // Check if modal already exists
-    const existingModal = document.getElementById('settings-modal');
-    if (existingModal) {
-      existingModal.remove();
+  createSidebar() {
+    // Check if sidebar already exists
+    const existingSidebar = document.getElementById('settings-sidebar');
+    if (existingSidebar) {
+      existingSidebar.remove();
     }
     
-    // Create modal HTML dynamically with i18n data attributes
-    const modalHTML = `
+    // Create sidebar HTML dynamically with i18n data attributes
+    const sidebarHTML = `
       <div 
-        id="settings-modal" 
-        class="settings-modal hidden"
+        id="settings-sidebar" 
+        class="settings-sidebar"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="settings-modal-title"
+        aria-labelledby="settings-sidebar-title"
       >
         <div class="settings-content">
           <div class="settings-header">
-            <h2 id="settings-modal-title" data-i18n="settingsTitle">BirdTab Settings</h2>
+            <h2 id="settings-sidebar-title" data-i18n="settingsTitle">BirdTab Settings</h2>
             <button id="close-settings" class="close-button" data-i18n-aria-label="closeSettings" aria-label="Close settings">
               <img src="images/svg/close.svg" alt="Close" width="20" height="20">
             </button>
@@ -195,19 +196,19 @@ class SettingsModal {
       </div>
     `;
 
-    // Add modal to body
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    // Add sidebar to body
+    document.body.insertAdjacentHTML('beforeend', sidebarHTML);
     
     // Get references to the created elements
-    this.modal = document.getElementById('settings-modal');
+    this.sidebar = document.getElementById('settings-sidebar');
     this.closeButton = document.getElementById('close-settings');
     
-    // Localize the newly created modal
+    // Localize the newly created sidebar
     localizeHtml();
   }
 
   initializeElements() {
-    // Get all the modal form elements
+    // Get all the sidebar form elements
     this.regionSelect = document.getElementById('modal-region');
     this.autoPlayCheckbox = document.getElementById('modal-auto-play');
     this.quietHoursCheckbox = document.getElementById('modal-quiet-hours');
@@ -249,20 +250,20 @@ class SettingsModal {
       });
     }
 
-    // Click outside modal to close
-    if (this.modal) {
-      this.modal.addEventListener('click', (e) => {
-        if (e.target === this.modal) {
+    // Click outside sidebar to close
+    if (this.sidebar) {
+      this.sidebar.addEventListener('click', (e) => {
+        if (e.target === this.sidebar) {
           this.close();
         }
       });
     }
 
-    // Prevent modal content clicks from closing modal
+    // Prevent sidebar content clicks from closing sidebar
     // BUT allow links (like mailto:) to work normally
-    const modalContent = this.modal ? this.modal.querySelector('.settings-content') : null;
-    if (modalContent) {
-      modalContent.addEventListener('click', (e) => {
+    const sidebarContent = this.sidebar ? this.sidebar.querySelector('.settings-content') : null;
+    if (sidebarContent) {
+      sidebarContent.addEventListener('click', (e) => {
         // Don't stop propagation for links - let them navigate normally
         if (e.target.closest('a[href]')) {
           return;
@@ -321,7 +322,7 @@ class SettingsModal {
    * Make toggle container rows clickable to toggle the checkbox
    */
   bindToggleContainerClicks() {
-    const toggleContainers = this.modal.querySelectorAll('.toggle-container');
+    const toggleContainers = this.sidebar.querySelectorAll('.toggle-container');
 
     toggleContainers.forEach(container => {
       container.style.cursor = 'pointer';
@@ -348,21 +349,24 @@ class SettingsModal {
   }
 
   open() {
-    if (!this.modal) return;
+    if (!this.sidebar) return;
     
     this.loadSettings(); // Refresh settings when opening
-    this.modal.classList.remove('hidden');
+    this.sidebar.classList.add('open');
     this.isOpen = true;
     
-    // Don't auto-focus any element to avoid visual highlight
-    // Focus will be managed naturally when user interacts with keyboard
+    // Prevent body scroll when sidebar is open
+    document.body.style.overflow = 'hidden';
   }
 
   close() {
-    if (!this.modal) return;
+    if (!this.sidebar) return;
     
-    this.modal.classList.add('hidden');
+    this.sidebar.classList.remove('open');
     this.isOpen = false;
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
     
     // Return focus to settings button (query fresh in case DOM was replaced)
     const settingsBtn = document.getElementById('settings-button');
@@ -375,13 +379,16 @@ class SettingsModal {
     // Clean up all event listeners via abort controller
     this.abortController.abort();
     
-    // Remove modal from DOM
-    if (this.modal && this.modal.parentNode) {
-      this.modal.remove();
+    // Restore body scroll if sidebar was open
+    document.body.style.overflow = '';
+    
+    // Remove sidebar from DOM
+    if (this.sidebar && this.sidebar.parentNode) {
+      this.sidebar.remove();
     }
     
     // Clear references
-    this.modal = null;
+    this.sidebar = null;
     this.escapeHandler = null;
     
     // Clear module-level instance
@@ -474,7 +481,7 @@ class SettingsModal {
     await handleQuickAccessToggle(isEnabled, {
       onSuccess: () => this.showSaveNotification(),
       onRevert: () => { this.enableProductivityCheckbox.checked = !isEnabled; },
-      component: 'settingsModal'
+      component: 'settingsSidebar'
     });
   }
 
@@ -510,12 +517,12 @@ class SettingsModal {
   }
 
   /**
-   * Keep focus inside the modal (basic focus trap)
+   * Keep focus inside the sidebar (basic focus trap)
    */
   trapFocus(e) {
     if (!this.isOpen || e.key !== 'Tab') return;
     
-    const focusable = this.modal.querySelectorAll(
+    const focusable = this.sidebar.querySelectorAll(
       'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     const first = focusable[0];
@@ -531,4 +538,4 @@ class SettingsModal {
   }
 }
 
-export default SettingsModal;
+export default SettingsSidebar;
