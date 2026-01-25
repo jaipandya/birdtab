@@ -2597,7 +2597,7 @@ function updateCreditsForVideoMode() {
   );
 
   const videoCredit = document.createElement('span');
-  videoCredit.className = 'credit-item credit-item-video';
+  videoCredit.className = 'credit-item credit-item-video credit-item-slide-in';
   videoCredit.innerHTML = `
     <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
     <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
@@ -2606,6 +2606,11 @@ function updateCreditsForVideoMode() {
   if (macaulayCredit) {
     credits.insertBefore(videoCredit, macaulayCredit);
   }
+
+  // Remove animation class after animation completes
+  setTimeout(() => {
+    videoCredit.classList.remove('credit-item-slide-in');
+  }, 300);
 }
 
 // Update credits display for photo mode (add audio credit if available)
@@ -2613,15 +2618,20 @@ function updateCreditsForPhotoMode() {
   const credits = document.querySelector('.credits');
   if (!credits || !birdInfo.recordist) return;
 
-  // Check if audio credit already exists
+  // Check if audio credit already exists (with specific class)
   if (credits.querySelector('.credit-item-audio')) return;
+
+  // Also check if recordist credit already exists (without specific class, from initial render)
+  const existingCredits = Array.from(credits.querySelectorAll('.credit-item a'));
+  const recordistExists = existingCredits.some(link => link.textContent === birdInfo.recordist);
+  if (recordistExists) return;
 
   // Find the camera credit (photo credit) and insert after it
   const cameraCredit = credits.querySelector('.credit-item');
   if (!cameraCredit) return;
 
   const audioCredit = document.createElement('span');
-  audioCredit.className = 'credit-item credit-item-audio';
+  audioCredit.className = 'credit-item credit-item-audio credit-item-slide-in';
   audioCredit.innerHTML = `
     <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
     <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
@@ -2633,6 +2643,11 @@ function updateCreditsForPhotoMode() {
   } else {
     credits.appendChild(audioCredit);
   }
+
+  // Remove animation class after animation completes
+  setTimeout(() => {
+    audioCredit.classList.remove('credit-item-slide-in');
+  }, 300);
 }
 
 async function switchToPhotoMode() {

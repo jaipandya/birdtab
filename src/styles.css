@@ -1098,6 +1098,22 @@ p {
   opacity: 1;
 }
 
+/* Credit item slide-in animation */
+.credit-item-slide-in {
+  animation: creditSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes creditSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Media Toggle Switch (Video/Photo) */
 .credits .media-toggle-container {
   margin-left: 0.5rem;
