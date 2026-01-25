@@ -186,11 +186,17 @@ class VideoVisibilityManager {
     log(`Tab hidden, scheduled unload in ${this.UNLOAD_DELAY}ms`);
   }
 
-  onTabVisible() {
+  async onTabVisible() {
     // Clear unload timeout if returning before 30s
     if (this.unloadTimeout) {
       clearTimeout(this.unloadTimeout);
       this.unloadTimeout = null;
+    }
+
+    // Check for quiet hours - ensure video stays muted but allow playback
+    const isQuietHour = await isQuietHoursActive();
+    if (isQuietHour && this.video) {
+      this.video.muted = true;
     }
 
     if (this.isUnloaded) {
@@ -199,7 +205,7 @@ class VideoVisibilityManager {
       this.showPlayOverlay();
       // Credits already show both photographer and videographer - no need to switch
     } else if (this.wasPlaying && this.video) {
-      // Video still in memory - resume playback
+      // Video still in memory - resume playback (muted if quiet hours)
       log('Tab visible < 30s - resuming video');
       this.video.play().catch(err => {
         log(`Error resuming video: ${err.message}`);
@@ -294,6 +300,12 @@ class VideoVisibilityManager {
     `;
 
     overlay.addEventListener('click', async () => {
+      // During quiet hours, ensure video is muted before playing
+      const isQuietHour = await isQuietHoursActive();
+      if (isQuietHour && this.video) {
+        this.video.muted = true;
+      }
+
       if (this.isUnloaded) {
         // Video was unloaded - need to reload
         await this.reloadAndPlay();
@@ -332,6 +344,9 @@ class VideoVisibilityManager {
       log('Cannot reload - no video URL available');
       return;
     }
+
+    // Check for quiet hours - allow reload but mute video
+    const isQuietHour = await isQuietHoursActive();
 
     log('Reloading video after unload');
 
@@ -400,9 +415,10 @@ class VideoVisibilityManager {
     videoEl.addEventListener('error', handleReloadError, { once: true });
     source.addEventListener('error', handleReloadError, { once: true });
 
-    // Apply volume settings
-    videoEl.volume = volumeLevel;
-    videoEl.muted = isMuted;
+    // Apply volume settings (mute during quiet hours)
+    const shouldMute = isMuted || isQuietHour;
+    videoEl.volume = shouldMute ? 0 : volumeLevel;
+    videoEl.muted = shouldMute;
 
     // Play video
     try {
@@ -881,8 +897,20 @@ async function initializeAudio() {
   const shouldAutoPlay = await getAutoPlayState();
 
   if (isQuietHour) {
-    hideAudioControls();
-    showQuietHoursIcon();
+    // Video mode during quiet hours: allow play/pause, just muted, no volume control
+    if (birdInfo && birdInfo.videoMode && video) {
+      video.muted = true;
+      hideVolumeControl();
+      showQuietHoursIcon();
+      // Show play overlay so user can start muted playback
+      if (videoVisibilityManager) {
+        videoVisibilityManager.showPlayOverlay();
+      }
+    } else {
+      // Photo/audio mode during quiet hours: hide all audio controls
+      hideAudioControls();
+      showQuietHoursIcon();
+    }
   } else {
     // Video mode: auto-play video if enabled
     if (birdInfo && birdInfo.videoMode && video) {
@@ -911,6 +939,12 @@ async function initializeAudio() {
 // Play video
 async function playVideo() {
   if (!video) return;
+
+  // Ensure video is muted during quiet hours
+  const isQuietHour = await isQuietHoursActive();
+  if (isQuietHour) {
+    video.muted = true;
+  }
 
   try {
     await video.play();
@@ -947,6 +981,12 @@ function hideAudioControls() {
   const playButton = document.getElementById('play-button');
   const volumeControl = document.getElementById('volume-control');
   if (playButton) playButton.style.display = 'none';
+  if (volumeControl) volumeControl.style.display = 'none';
+}
+
+// Hide only volume control (for video mode during quiet hours - play/pause still allowed)
+function hideVolumeControl() {
+  const volumeControl = document.getElementById('volume-control');
   if (volumeControl) volumeControl.style.display = 'none';
 }
 
@@ -1052,6 +1092,13 @@ async function togglePlay() {
 async function playAudio() {
   if (!birdInfo || !birdInfo.mediaUrl) {
     log('No media URL available, cannot play audio');
+    return;
+  }
+
+  // Check for quiet hours - don't play during quiet hours
+  const isQuietHour = await isQuietHoursActive();
+  if (isQuietHour) {
+    log('Audio playback blocked during quiet hours');
     return;
   }
 
@@ -2424,7 +2471,7 @@ function setupMediaToggle(isImageMode = false) {
         // Need to fetch video first
         await fetchAndSwitchToVideo();
       } else {
-        switchToVideoMode();
+        await switchToVideoMode();
       }
     } else {
       // Switch to photo mode (may need to fetch audio on-demand)
@@ -2494,7 +2541,7 @@ async function fetchAndSwitchToVideo() {
       updateCreditsForVideoMode();
 
       // Switch to video mode
-      switchToVideoMode();
+      await switchToVideoMode();
 
       log('Successfully fetched and switched to video mode');
     } else {
@@ -2529,6 +2576,10 @@ async function createVideoElement(videoUrl) {
     existingVideo.remove();
   }
 
+  // Check quiet hours - mute video during quiet hours (not a persisted setting)
+  const isQuietHour = await isQuietHoursActive();
+  const shouldMute = isMuted || isQuietHour;
+
   // Create video element
   const videoEl = document.createElement('video');
   videoEl.className = 'background-video hidden';
@@ -2536,8 +2587,8 @@ async function createVideoElement(videoUrl) {
   videoEl.playsInline = true;
   videoEl.preload = 'metadata';
   videoEl.poster = birdInfo.imageUrl;
-  videoEl.muted = isMuted;
-  videoEl.volume = isMuted ? 0 : volumeLevel;
+  videoEl.muted = shouldMute;
+  videoEl.volume = shouldMute ? 0 : volumeLevel;
 
   const source = document.createElement('source');
   source.src = videoUrl;
@@ -2725,6 +2776,9 @@ async function switchToPhotoMode() {
     updateCreditsForPhotoMode();
   }
 
+  // Check for quiet hours before showing controls
+  const isQuietHour = await isQuietHoursActive();
+  
   // Initialize audio if available
   if (birdInfo && birdInfo.mediaUrl) {
     // Create audio object if it doesn't exist
@@ -2757,6 +2811,18 @@ async function switchToPhotoMode() {
       log('Created play button for photo mode');
     }
 
+    // Handle quiet hours - hide controls, don't auto-play
+    if (isQuietHour) {
+      hideAudioControls();
+      // Show quiet hours icon if not already present
+      if (!document.getElementById('quiet-hours-button')) {
+        showQuietHoursIcon();
+      }
+      updatePlayPauseButton();
+      log('Switched to photo mode (quiet hours active - no controls)');
+      return;
+    }
+
     // Show audio controls
     playBtn.style.display = '';
     showAudioControls();
@@ -2768,6 +2834,15 @@ async function switchToPhotoMode() {
         playAudio();
       }
     });
+  } else if (isQuietHour) {
+    // No audio available but quiet hours active - still show quiet hours icon
+    hideAudioControls();
+    if (!document.getElementById('quiet-hours-button')) {
+      showQuietHoursIcon();
+    }
+    updatePlayPauseButton();
+    log('Switched to photo mode (quiet hours active - no audio)');
+    return;
   }
 
   updatePlayPauseButton();
@@ -2775,7 +2850,7 @@ async function switchToPhotoMode() {
   log('Switched to photo mode');
 }
 
-function switchToVideoMode() {
+async function switchToVideoMode() {
   isShowingVideo = true;
 
   // Stop audio if playing (video has its own audio)
@@ -2804,6 +2879,27 @@ function switchToVideoMode() {
 
   // Setup click-to-pause functionality (enables clicking empty areas to pause video)
   setupClickToPause();
+
+  // Check for quiet hours - mute video, hide volume control, but allow play/pause
+  const isQuietHour = await isQuietHoursActive();
+  if (isQuietHour) {
+    // Mute video during quiet hours (not a persisted setting)
+    if (video) {
+      video.muted = true;
+    }
+    // Hide only volume control during quiet hours (play/pause still allowed)
+    hideVolumeControl();
+    // Show quiet hours icon if not already present
+    if (!document.getElementById('quiet-hours-button')) {
+      showQuietHoursIcon();
+    }
+    // Show play overlay so user can start muted playback
+    if (videoVisibilityManager) {
+      videoVisibilityManager.showPlayOverlay();
+    }
+    log('Switched to video mode (quiet hours active - muted, play/pause allowed)');
+    return;
+  }
 
   // Check autoplay setting and play video if enabled
   chrome.storage.sync.get(['autoPlay'], (result) => {
