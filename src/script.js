@@ -151,6 +151,7 @@ class VideoVisibilityManager {
     this.isUnloaded = false;
     this.unloadTimeout = null;
     this.pauseIndicatorTimeout = null; // Track pause indicator timeout
+    this.playIndicatorTimeout = null; // Track play indicator timeout
     this.UNLOAD_DELAY = 30000; // 30 seconds
 
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
@@ -255,6 +256,10 @@ class VideoVisibilityManager {
     const existingIndicator = document.querySelector('.video-pause-indicator');
     if (existingIndicator) existingIndicator.remove();
 
+    // Also remove any play indicator
+    const playIndicator = document.querySelector('.video-play-indicator');
+    if (playIndicator) playIndicator.remove();
+
     const indicator = document.createElement('div');
     indicator.className = 'video-pause-indicator';
     indicator.innerHTML = `
@@ -268,18 +273,49 @@ class VideoVisibilityManager {
       contentContainer.appendChild(indicator);
     }
 
-    // Show the play overlay after a brief delay (before pause indicator finishes)
-    // This creates a seamless transition with no visible gap
+    // Remove the pause indicator after animation completes (400ms)
+    // No persistent play overlay - user can click anywhere or use play button to resume
     this.pauseIndicatorTimeout = setTimeout(() => {
       this.pauseIndicatorTimeout = null;
-
-      // Remove the pause indicator
       const pauseIndicator = document.querySelector('.video-pause-indicator');
       if (pauseIndicator) pauseIndicator.remove();
+    }, 400);
+  }
 
-      // Show the play overlay
-      this.showPlayOverlay();
-    }, 280); // Show play slightly before pause indicator finishes fading (at 70% of animation)
+  showPlayIndicator() {
+    // Clear any existing play indicator timeout
+    if (this.playIndicatorTimeout) {
+      clearTimeout(this.playIndicatorTimeout);
+      this.playIndicatorTimeout = null;
+    }
+
+    // Remove any existing play indicator
+    const existingIndicator = document.querySelector('.video-play-indicator');
+    if (existingIndicator) existingIndicator.remove();
+
+    // Also remove any pause indicator
+    const pauseIndicator = document.querySelector('.video-pause-indicator');
+    if (pauseIndicator) pauseIndicator.remove();
+
+    const indicator = document.createElement('div');
+    indicator.className = 'video-play-indicator';
+    indicator.innerHTML = `
+      <div class="play-icon-container">
+        <img src="images/svg/play.svg" alt="Play" width="56" height="56">
+      </div>
+    `;
+
+    const contentContainer = document.getElementById('content-container');
+    if (contentContainer) {
+      contentContainer.appendChild(indicator);
+    }
+
+    // Remove the play indicator after animation completes (400ms)
+    this.playIndicatorTimeout = setTimeout(() => {
+      this.playIndicatorTimeout = null;
+      const playIndicator = document.querySelector('.video-play-indicator');
+      if (playIndicator) playIndicator.remove();
+    }, 400);
   }
 
   showPlayOverlay() {
@@ -313,7 +349,7 @@ class VideoVisibilityManager {
         // Video is just paused - play it
         this.hidePlayOverlay();
         if (this.video) {
-          await playVideo();
+          await playVideo(true); // Show play indicator for user-initiated play
         }
       }
     });
@@ -325,18 +361,23 @@ class VideoVisibilityManager {
   }
 
   hidePlayOverlay() {
-    // Cancel any pending pause indicator timeout
+    // Cancel any pending pause indicator timeout (if video starts playing, cancel the pause indicator)
     if (this.pauseIndicatorTimeout) {
       clearTimeout(this.pauseIndicatorTimeout);
       this.pauseIndicatorTimeout = null;
     }
+    // Note: Don't cancel playIndicatorTimeout - let the play indicator animation complete
 
+    // Remove the persistent play overlay (used for reload scenarios)
     const overlay = document.querySelector('.video-play-overlay');
     if (overlay) overlay.remove();
 
-    // Also remove pause indicator if present
+    // Remove pause indicator if present (video is playing, so no pause indicator needed)
     const pauseIndicator = document.querySelector('.video-pause-indicator');
     if (pauseIndicator) pauseIndicator.remove();
+    
+    // Note: Don't remove play indicator - let it complete its fade animation
+    // The play indicator will self-remove after 400ms via its timeout
   }
 
   async reloadAndPlay() {
@@ -420,8 +461,9 @@ class VideoVisibilityManager {
     videoEl.volume = shouldMute ? 0 : volumeLevel;
     videoEl.muted = shouldMute;
 
-    // Play video
+    // Play video with play indicator (user-initiated from overlay click)
     try {
+      this.showPlayIndicator();
       await videoEl.play();
       isPlaying = true;
       updatePlayPauseButton();
@@ -431,14 +473,98 @@ class VideoVisibilityManager {
   }
 
   destroy() {
-    // Clean up
+    // Clean up timeouts
     if (this.unloadTimeout) {
       clearTimeout(this.unloadTimeout);
+    }
+    if (this.pauseIndicatorTimeout) {
+      clearTimeout(this.pauseIndicatorTimeout);
+    }
+    if (this.playIndicatorTimeout) {
+      clearTimeout(this.playIndicatorTimeout);
     }
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     this.hidePlayOverlay();
     log('VideoVisibilityManager destroyed');
   }
+}
+
+// ===== Standalone Media Indicator Functions (for audio mode) =====
+// These are used when not in video mode to show play/pause indicators
+
+let mediaPlayIndicatorTimeout = null;
+let mediaPauseIndicatorTimeout = null;
+
+// Show brief audio play indicator (shows waveform icon for audio mode)
+function showMediaPlayIndicator() {
+  // Clear any existing timeout
+  if (mediaPlayIndicatorTimeout) {
+    clearTimeout(mediaPlayIndicatorTimeout);
+    mediaPlayIndicatorTimeout = null;
+  }
+
+  // Remove any existing indicators
+  const existingPlayIndicator = document.querySelector('.video-play-indicator');
+  if (existingPlayIndicator) existingPlayIndicator.remove();
+  const existingPauseIndicator = document.querySelector('.video-pause-indicator');
+  if (existingPauseIndicator) existingPauseIndicator.remove();
+
+  // Use waveform icon to represent audio playing
+  const indicator = document.createElement('div');
+  indicator.className = 'video-play-indicator';
+  indicator.innerHTML = `
+    <div class="play-icon-container">
+      <img src="images/svg/waveform.svg" alt="Audio Playing" width="56" height="56">
+    </div>
+  `;
+
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.appendChild(indicator);
+  }
+
+  // Remove after animation completes (400ms)
+  mediaPlayIndicatorTimeout = setTimeout(() => {
+    mediaPlayIndicatorTimeout = null;
+    const playIndicator = document.querySelector('.video-play-indicator');
+    if (playIndicator) playIndicator.remove();
+  }, 400);
+}
+
+// Show brief audio pause indicator (shows pause icon for audio mode)
+function showMediaPauseIndicator() {
+  // Clear any existing timeout
+  if (mediaPauseIndicatorTimeout) {
+    clearTimeout(mediaPauseIndicatorTimeout);
+    mediaPauseIndicatorTimeout = null;
+  }
+
+  // Remove any existing indicators
+  const existingPlayIndicator = document.querySelector('.video-play-indicator');
+  if (existingPlayIndicator) existingPlayIndicator.remove();
+  const existingPauseIndicator = document.querySelector('.video-pause-indicator');
+  if (existingPauseIndicator) existingPauseIndicator.remove();
+
+  // Use pause icon for audio paused
+  const indicator = document.createElement('div');
+  indicator.className = 'video-pause-indicator';
+  indicator.innerHTML = `
+    <div class="pause-icon-container">
+      <img src="images/svg/pause.svg" alt="Audio Paused" width="56" height="56">
+    </div>
+  `;
+
+  const contentContainer = document.getElementById('content-container');
+  if (contentContainer) {
+    contentContainer.appendChild(indicator);
+  }
+
+  // Remove after animation completes (400ms)
+  mediaPauseIndicatorTimeout = setTimeout(() => {
+    mediaPauseIndicatorTimeout = null;
+    const pauseIndicator = document.querySelector('.video-pause-indicator');
+    if (pauseIndicator) pauseIndicator.remove();
+  }, 400);
 }
 
 // Array of loading message keys for i18n
@@ -902,10 +1028,17 @@ async function initializeAudio() {
       video.muted = true;
       hideVolumeControl();
       showQuietHoursIcon();
-      // Show play overlay so user can start muted playback
-      if (videoVisibilityManager) {
-        videoVisibilityManager.showPlayOverlay();
+      
+      // Re-append play button so it appears after moon icon (rightmost position)
+      const playBtn = document.getElementById('play-button');
+      if (playBtn) {
+        const controlButtons = document.querySelector('.control-buttons');
+        if (playBtn.parentNode) {
+          playBtn.parentNode.removeChild(playBtn);
+        }
+        controlButtons.appendChild(playBtn);
       }
+      // No persistent overlay - user can click anywhere or use play button to start muted playback
     } else {
       // Photo/audio mode during quiet hours: hide all audio controls
       hideAudioControls();
@@ -917,12 +1050,8 @@ async function initializeAudio() {
       showAudioControls();
       if (shouldAutoPlay) {
         await playVideo();
-      } else {
-        // Show play overlay if not auto-playing
-        if (videoVisibilityManager) {
-          videoVisibilityManager.showPlayOverlay();
-        }
       }
+      // If not auto-playing, no persistent overlay - user can click anywhere or use play button
     }
     // Audio mode: auto-play audio if enabled
     else if (birdInfo && birdInfo.mediaUrl) {
@@ -937,7 +1066,8 @@ async function initializeAudio() {
 }
 
 // Play video
-async function playVideo() {
+// showIndicator: if true, shows a brief play indicator animation (for user-initiated plays)
+async function playVideo(showIndicator = false) {
   if (!video) return;
 
   // Ensure video is muted during quiet hours
@@ -947,6 +1077,11 @@ async function playVideo() {
   }
 
   try {
+    // Show brief play indicator for user-initiated plays
+    if (showIndicator && videoVisibilityManager) {
+      videoVisibilityManager.showPlayIndicator();
+    }
+    
     await video.play();
     isPlaying = true;
     updatePlayPauseButton();
@@ -1063,9 +1198,22 @@ function createAudioPlayer(mediaUrl) {
 function createVideoPlayer() {
   log('Creating video player controls');
 
-  // In video mode, we don't show the bottom-right play/pause button
-  // Instead, we use the centered play overlay
-  return null;
+  // Create play/pause button for video (same location as audio mode)
+  const playButton = document.createElement('button');
+  playButton.id = 'play-button';
+  playButton.classList.add('icon-button', 'play-button');
+  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+  playButton.title = chrome.i18n.getMessage('playTooltip');
+  playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
+  playButton.tabIndex = 0;
+  
+  playButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleVideoPlay();
+  });
+
+  return playButton;
 }
 
 // Toggle video play/pause
@@ -1075,7 +1223,7 @@ async function toggleVideoPlay() {
   if (isPlaying) {
     pauseVideo();
   } else {
-    await playVideo();
+    await playVideo(true); // Show play indicator for user-initiated play
   }
 }
 
@@ -1346,7 +1494,7 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     });
   }
 
-  // Handle video ended - show poster and replay overlay
+  // Handle video ended - show poster, reset for replay
   videoEl.addEventListener('ended', function () {
     isPlaying = false;
     updatePlayPauseButton();
@@ -1354,11 +1502,8 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
 
     // Reset video to beginning for replay
     videoEl.currentTime = 0;
-
-    // Show play overlay for replay (keep credits unchanged - both photo & video credits stay visible)
-    if (videoVisibilityManager) {
-      videoVisibilityManager.showPlayOverlay();
-    }
+    
+    // No persistent overlay - user can click anywhere or use play button to restart
   });
 
   // Handle video play/pause state changes
@@ -1378,7 +1523,7 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     updatePlayPauseButton();
     showPosterImage();
 
-    // Show pause indicator followed by play overlay when paused (keep credits unchanged - both photo & video credits stay visible)
+    // Show brief pause indicator when paused (no persistent overlay - user can click anywhere or use button to resume)
     if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
       videoVisibilityManager.showPauseIndicator();
     }
@@ -1389,11 +1534,14 @@ function setupVideoEventListeners(videoEl, fallbackToImage) {
     e.preventDefault();
     e.stopPropagation();
 
+    // If video is unloaded, let the play overlay handle it
+    if (videoVisibilityManager && videoVisibilityManager.isUnloaded) return;
+
     if (videoEl.paused) {
-      // Video is paused - clicking overlay will play it
-      // The overlay click handler will handle this
+      // Video is paused - play it with indicator
+      await playVideo(true);
     } else {
-      // Video is playing - pause it and show overlay
+      // Video is playing - pause it
       pauseVideo();
     }
   });
@@ -2002,7 +2150,7 @@ async function initializePage() {
       updateVolumeControl();
 
       // Add click-to-pause on empty areas of the page
-      setupClickToPause();
+      setupMediaClickHandler();
 
       // Set up media toggle button (video/photo switch)
       setupMediaToggle(false); // false = video mode
@@ -2030,6 +2178,9 @@ async function initializePage() {
 
         setupVolumeControl();
         updateVolumeControl();
+        
+        // Add click-to-play/pause on empty areas of the page for audio
+        setupMediaClickHandler();
       } else {
         log('No audio URL found in bird info');
         hideAudioControls();
@@ -2408,31 +2559,26 @@ function pauseVideo() {
   }
 }
 
-// Track if click-to-pause is already set up to avoid duplicate listeners
-let clickToPauseSetup = false;
+// Track if media click handler is already set up to avoid duplicate listeners
+let mediaClickHandlerSetup = false;
 
-// Set up click-to-pause functionality for video mode
-// Clicking anywhere on the page (except interactive elements) will pause the video
-function setupClickToPause() {
+// Set up click-to-play/pause functionality for both video and audio modes
+// Clicking anywhere on the page (except interactive elements) will toggle media play/pause
+function setupMediaClickHandler() {
   // Prevent duplicate event listeners
-  if (clickToPauseSetup) return;
+  if (mediaClickHandlerSetup) return;
 
-  const contentContainer = document.getElementById('content-container');
-  if (!contentContainer) return;
+  mediaClickHandlerSetup = true;
 
-  clickToPauseSetup = true;
-
-  contentContainer.addEventListener('click', function (e) {
-    // Only handle clicks when video is playing
-    if (!video || video.paused) return;
-
+  document.body.addEventListener('click', async function (e) {
     // List of interactive elements to ignore
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
       '.video-play-overlay', '.video-play-btn', '.share-container',
-      '.external-links', '.settings-sidebar', '.quiz-mode',
-      '.media-toggle', '.media-toggle-container'
+      '.settings-sidebar', '.quiz-mode',
+      '.media-toggle', '.media-toggle-container',
+      '.search-container'
     ];
 
     // Check if click target or its parents match any interactive selector
@@ -2440,9 +2586,29 @@ function setupClickToPause() {
       return e.target.closest(selector) !== null;
     });
 
-    if (!isInteractive) {
-      e.preventDefault();
-      pauseVideo();
+    if (isInteractive) return;
+    
+    e.preventDefault();
+
+    if (isShowingVideo && video) {
+      // Video mode: toggle video play/pause
+      // If video is unloaded, the play overlay handles reload - don't interfere
+      if (videoVisibilityManager && videoVisibilityManager.isUnloaded) return;
+      
+      if (video.paused) {
+        await playVideo(true); // Show play indicator for user-initiated play
+      } else {
+        pauseVideo();
+      }
+    } else if (!isShowingVideo && audio) {
+      // Photo/audio mode: toggle audio play/pause with indicators
+      if (isPlaying) {
+        showMediaPauseIndicator();
+        pauseAudio();
+      } else {
+        showMediaPlayIndicator();
+        await playAudio();
+      }
     }
   });
 }
@@ -2794,22 +2960,25 @@ async function switchToPhotoMode() {
       log('Created audio player for photo mode');
     }
 
-    // Create play button if it doesn't exist
+    // Remove existing button (to remove old video event listeners) and create new one for audio
     let playBtn = document.getElementById('play-button');
-    if (!playBtn) {
-      playBtn = document.createElement('button');
-      playBtn.id = 'play-button';
-      playBtn.classList.add('icon-button', 'play-button');
-      playBtn.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-      playBtn.title = chrome.i18n.getMessage('playTooltip');
-      playBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        await togglePlay();
-      });
-      document.querySelector('.control-buttons').appendChild(playBtn);
-      log('Created play button for photo mode');
+    if (playBtn) {
+      playBtn.remove();
     }
+    
+    // Create fresh button for audio mode
+    playBtn = document.createElement('button');
+    playBtn.id = 'play-button';
+    playBtn.classList.add('icon-button', 'play-button');
+    playBtn.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+    playBtn.title = chrome.i18n.getMessage('playTooltip');
+    playBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      await togglePlay();
+    });
+    document.querySelector('.control-buttons').appendChild(playBtn);
+    log('Created play button for photo mode');
 
     // Handle quiet hours - hide controls, don't auto-play
     if (isQuietHour) {
@@ -2858,12 +3027,6 @@ async function switchToVideoMode() {
     pauseAudio();
   }
 
-  // Hide audio play button from control strip (video controls are on screen)
-  const playBtn = document.getElementById('play-button');
-  if (playBtn) {
-    playBtn.style.display = 'none';
-  }
-
   // Show video element
   showVideoElement();
 
@@ -2877,8 +3040,8 @@ async function switchToVideoMode() {
     videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
   }
 
-  // Setup click-to-pause functionality (enables clicking empty areas to pause video)
-  setupClickToPause();
+  // Setup click-to-play/pause functionality
+  setupMediaClickHandler();
 
   // Check for quiet hours - mute video, hide volume control, but allow play/pause
   const isQuietHour = await isQuietHoursActive();
@@ -2889,14 +3052,32 @@ async function switchToVideoMode() {
     }
     // Hide only volume control during quiet hours (play/pause still allowed)
     hideVolumeControl();
-    // Show quiet hours icon if not already present
+    // Show quiet hours icon if not already present (moon icon takes place of volume control)
     if (!document.getElementById('quiet-hours-button')) {
       showQuietHoursIcon();
     }
-    // Show play overlay so user can start muted playback
-    if (videoVisibilityManager) {
-      videoVisibilityManager.showPlayOverlay();
-    }
+  } else {
+    // Show audio controls (volume) for normal mode
+    showAudioControls();
+  }
+
+  // Show play button for video mode
+  // Remove existing button (to remove old audio event listeners) and create new one
+  let playBtn = document.getElementById('play-button');
+  if (playBtn) {
+    playBtn.remove();
+  }
+  
+  // Create fresh button for video mode
+  playBtn = createVideoPlayer();
+  if (playBtn) {
+    const controlButtons = document.querySelector('.control-buttons');
+    // Append at the end (after moon icon if present in quiet hours)
+    controlButtons.appendChild(playBtn);
+  }
+
+  if (isQuietHour) {
+    // No persistent overlay - user can click anywhere or use play button to start muted playback
     log('Switched to video mode (quiet hours active - muted, play/pause allowed)');
     return;
   }
@@ -2906,10 +3087,8 @@ async function switchToVideoMode() {
     const shouldAutoPlay = result.autoPlay !== false; // Default to true
     if (shouldAutoPlay && video) {
       playVideo();
-    } else if (videoVisibilityManager) {
-      // Show play overlay if not auto-playing
-      videoVisibilityManager.showPlayOverlay();
     }
+    // If not auto-playing, no persistent overlay - user can click anywhere or use play button
   });
 
   log('Switched to video mode');

@@ -382,6 +382,84 @@ body.loaded {
   opacity: 0.7;
 }
 
+/* Video play indicator - brief play symbol shown on resume */
+/* z-index 1000: Same as video-pause-indicator, above panels but below interactive overlays */
+.video-play-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  animation: playIndicatorFade 0.4s ease forwards;
+}
+
+/* Shift play indicator down when top sites are visible (without clock) - matches pause indicator */
+.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 20vh;
+}
+
+/* Shift play indicator down further when clock AND top sites are visible - matches pause indicator */
+.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+/* Shift play indicator down when clock AND search bar are visible but top sites are hidden - matches pause indicator */
+.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 30vh;
+}
+
+/* Shift play indicator down when timer is active - matches pause indicator */
+.timer-active .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+@keyframes playIndicatorFade {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.6;
+  }
+
+  70% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Play icon container - matches pause icon container style */
+.play-icon-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-icon-container img {
+  width: 56px;
+  height: 56px;
+  margin-left: 8px; /* Optical centering for play triangle */
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+
 /* Video loading/buffering indicator - minimal floating pill */
 .video-loading-indicator {
   position: fixed;
