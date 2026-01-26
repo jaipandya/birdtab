@@ -14,6 +14,62 @@ import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock, showClock, hideClock } from './clock.js';
 import { initTimer, showTimer, hideTimer } from './timer.js';
+import {
+  VideoVisibilityManager,
+  initVideoManager,
+  setVideoElement,
+  getVideoElement,
+  getVideoVisibilityManager,
+  setVideoVisibilityManager,
+  createVideoVisibilityManager,
+  destroyVideoVisibilityManager,
+  showVideoLoadingIndicator,
+  hideVideoLoadingIndicator,
+  setupVideoEventListeners,
+  setVideoSource,
+  setupVideoControls,
+  cleanupVideoControls,
+  showPosterImage,
+  showVideoElement
+} from './videoManager.js';
+import {
+  addToHistory,
+  getHistory,
+  clearHistory,
+  getRelativeTimeString,
+  openHistoryModal,
+  closeHistoryModal,
+  populateHistoryList
+} from './historyModal.js';
+import {
+  showLoadingIndicator,
+  hideLoadingIndicator,
+  updateLoadingMessage,
+  showAudioLoadingIndicator,
+  hideAudioLoadingIndicator,
+  showMediaPlayIndicator,
+  showMediaPauseIndicator,
+  showToast
+} from './loadingIndicators.js';
+import {
+  initShareMenu,
+  openShareMenu,
+  closeShareMenu,
+  handleShare,
+  setupShareButton,
+  getShowShareMenu,
+  setShowShareMenu
+} from './shareMenu.js';
+import {
+  incrementNewTabCount,
+  checkAndPrepareReviewPrompt,
+  getReviewPromptHTML,
+  addReviewPromptListeners,
+  dismissPrompt,
+  getShouldShowReviewPrompt,
+  getReviewPromptData,
+  showReviewPromptIfNeeded
+} from './reviewPrompt.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -32,13 +88,23 @@ let audio;
 let fadeAudioInterval = null; // Interval for fading audio in/out
 let video; // Video element for video mode
 let isPlaying = false;
-let shouldShowReviewPrompt = false;
-let reviewPromptData = null; // Data for review prompt analytics
+// shouldShowReviewPrompt and reviewPromptData are now managed by reviewPrompt.js
 let birdInfo;
 let quizMode;
 let saveVolumeTimeout = null;
-let showShareMenu = false;
-let videoVisibilityManager = null; // Manages video visibility and memory
+// showShareMenu state is now managed by shareMenu.js module
+
+// Initialize video manager callbacks
+initVideoManager({
+  onPlayVideo: (showIndicator) => playVideo(showIndicator),
+  onPauseVideo: () => pauseVideo(),
+  onUpdatePlayPauseButton: () => updatePlayPauseButton(),
+  getIsPlaying: () => isPlaying,
+  setIsPlaying: (val) => { isPlaying = val; },
+  getIsMuted: () => isMuted,
+  getVolumeLevel: () => volumeLevel,
+  getBirdInfo: () => birdInfo
+});
 
 /**
  * Migrate from legacy clockEnabled to new clockDisplayMode enum
@@ -140,484 +206,7 @@ async function initClockDisplay() {
   log(`Clock display initialized with mode: ${mode}`);
 }
 
-// Video Visibility Manager - handles tab visibility, memory management, and state
-class VideoVisibilityManager {
-  constructor(videoElement, birdData) {
-    this.video = videoElement;
-    this.birdData = birdData; // Store bird info for credits switching
-    this.hiddenTimestamp = null;
-    this.wasPlaying = false;
-    this.lastPlaybackPosition = 0;
-    this.isUnloaded = false;
-    this.unloadTimeout = null;
-    this.pauseIndicatorTimeout = null; // Track pause indicator timeout
-    this.playIndicatorTimeout = null; // Track play indicator timeout
-    this.UNLOAD_DELAY = 30000; // 30 seconds
-
-    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
-
-    log('VideoVisibilityManager initialized');
-  }
-
-  handleVisibilityChange() {
-    if (document.hidden) {
-      this.onTabHidden();
-    } else {
-      this.onTabVisible();
-    }
-  }
-
-  onTabHidden() {
-    this.hiddenTimestamp = Date.now();
-    this.wasPlaying = this.video && !this.video.paused;
-    this.lastPlaybackPosition = this.video ? this.video.currentTime : 0;
-
-    // Pause video immediately
-    if (this.video && !this.video.paused) {
-      this.video.pause();
-      log('Video paused on tab hide');
-    }
-
-    // Schedule unload after 30 seconds
-    this.unloadTimeout = setTimeout(() => {
-      this.unloadVideo();
-    }, this.UNLOAD_DELAY);
-
-    log(`Tab hidden, scheduled unload in ${this.UNLOAD_DELAY}ms`);
-  }
-
-  async onTabVisible() {
-    // Clear unload timeout if returning before 30s
-    if (this.unloadTimeout) {
-      clearTimeout(this.unloadTimeout);
-      this.unloadTimeout = null;
-    }
-
-    // Check for quiet hours - ensure video stays muted but allow playback
-    const isQuietHour = await isQuietHoursActive();
-    if (isQuietHour && this.video) {
-      this.video.muted = true;
-    }
-
-    if (this.isUnloaded) {
-      // Video was unloaded - show play overlay, let user click to reload
-      log('Tab visible after unload - showing play overlay');
-      this.showPlayOverlay();
-      // Credits already show both photographer and videographer - no need to switch
-    } else if (this.wasPlaying && this.video) {
-      // Video still in memory - resume playback (muted if quiet hours)
-      log('Tab visible < 30s - resuming video');
-      this.video.play().catch(err => {
-        log(`Error resuming video: ${err.message}`);
-      });
-    }
-  }
-
-  unloadVideo() {
-    if (!this.video || this.isUnloaded) return;
-
-    log('Unloading video to release memory');
-    this.isUnloaded = true;
-
-    // Pause the video first
-    this.video.pause();
-
-    // Remove the video element entirely to release memory without triggering error events
-    // (Setting src='' and calling load() triggers an error event which we want to avoid)
-    if (this.video.parentNode) {
-      this.video.remove();
-    }
-
-    // Clear references
-    this.video = null;
-    video = null; // Clear global reference too
-
-    // Show the poster image
-    showPosterImage();
-
-    // Show play overlay
-    this.showPlayOverlay();
-
-    // Hide video controls (they don't make sense when video is unloaded)
-    cleanupVideoControls();
-
-    // Credits already show both photographer and videographer - no need to switch
-  }
-
-  showPauseIndicator() {
-    // Clear any existing pause indicator timeout
-    if (this.pauseIndicatorTimeout) {
-      clearTimeout(this.pauseIndicatorTimeout);
-      this.pauseIndicatorTimeout = null;
-    }
-
-    // Remove any existing pause indicator
-    const existingIndicator = document.querySelector('.video-pause-indicator');
-    if (existingIndicator) existingIndicator.remove();
-
-    // Also remove any play indicator
-    const playIndicator = document.querySelector('.video-play-indicator');
-    if (playIndicator) playIndicator.remove();
-
-    const indicator = document.createElement('div');
-    indicator.className = 'video-pause-indicator';
-    indicator.innerHTML = `
-      <div class="pause-icon-container">
-        <img src="images/svg/pause.svg" alt="Paused" width="56" height="56">
-      </div>
-    `;
-
-    const contentContainer = document.getElementById('content-container');
-    if (contentContainer) {
-      contentContainer.appendChild(indicator);
-    }
-
-    // Remove the pause indicator after animation completes (400ms)
-    // No persistent play overlay - user can click anywhere or use play button to resume
-    this.pauseIndicatorTimeout = setTimeout(() => {
-      this.pauseIndicatorTimeout = null;
-      const pauseIndicator = document.querySelector('.video-pause-indicator');
-      if (pauseIndicator) pauseIndicator.remove();
-    }, 400);
-  }
-
-  showPlayIndicator() {
-    // Clear any existing play indicator timeout
-    if (this.playIndicatorTimeout) {
-      clearTimeout(this.playIndicatorTimeout);
-      this.playIndicatorTimeout = null;
-    }
-
-    // Remove any existing play indicator
-    const existingIndicator = document.querySelector('.video-play-indicator');
-    if (existingIndicator) existingIndicator.remove();
-
-    // Also remove any pause indicator
-    const pauseIndicator = document.querySelector('.video-pause-indicator');
-    if (pauseIndicator) pauseIndicator.remove();
-
-    const indicator = document.createElement('div');
-    indicator.className = 'video-play-indicator';
-    indicator.innerHTML = `
-      <div class="play-icon-container">
-        <img src="images/svg/play.svg" alt="Play" width="56" height="56">
-      </div>
-    `;
-
-    const contentContainer = document.getElementById('content-container');
-    if (contentContainer) {
-      contentContainer.appendChild(indicator);
-    }
-
-    // Remove the play indicator after animation completes (400ms)
-    this.playIndicatorTimeout = setTimeout(() => {
-      this.playIndicatorTimeout = null;
-      const playIndicator = document.querySelector('.video-play-indicator');
-      if (playIndicator) playIndicator.remove();
-    }, 400);
-  }
-
-  showPlayOverlay() {
-    // Remove existing overlay if present
-    const existing = document.querySelector('.video-play-overlay');
-    if (existing) existing.remove();
-
-    // Remove any existing pause indicator (in case we're called directly)
-    const pauseIndicator = document.querySelector('.video-pause-indicator');
-    if (pauseIndicator) pauseIndicator.remove();
-
-    const overlay = document.createElement('div');
-    overlay.className = 'video-play-overlay';
-    overlay.innerHTML = `
-      <button class="video-play-btn" aria-label="${chrome.i18n.getMessage('playTooltip') || 'Play video'}">
-        <img src="images/svg/play.svg" alt="Play" width="32" height="32">
-      </button>
-    `;
-
-    overlay.addEventListener('click', async () => {
-      // During quiet hours, ensure video is muted before playing
-      const isQuietHour = await isQuietHoursActive();
-      if (isQuietHour && this.video) {
-        this.video.muted = true;
-      }
-
-      if (this.isUnloaded) {
-        // Video was unloaded - need to reload
-        await this.reloadAndPlay();
-      } else {
-        // Video is just paused - play it
-        this.hidePlayOverlay();
-        if (this.video) {
-          await playVideo(true); // Show play indicator for user-initiated play
-        }
-      }
-    });
-
-    const contentContainer = document.getElementById('content-container');
-    if (contentContainer) {
-      contentContainer.appendChild(overlay);
-    }
-  }
-
-  hidePlayOverlay() {
-    // Cancel any pending pause indicator timeout (if video starts playing, cancel the pause indicator)
-    if (this.pauseIndicatorTimeout) {
-      clearTimeout(this.pauseIndicatorTimeout);
-      this.pauseIndicatorTimeout = null;
-    }
-    // Note: Don't cancel playIndicatorTimeout - let the play indicator animation complete
-
-    // Remove the persistent play overlay (used for reload scenarios)
-    const overlay = document.querySelector('.video-play-overlay');
-    if (overlay) overlay.remove();
-
-    // Remove pause indicator if present (video is playing, so no pause indicator needed)
-    const pauseIndicator = document.querySelector('.video-pause-indicator');
-    if (pauseIndicator) pauseIndicator.remove();
-    
-    // Note: Don't remove play indicator - let it complete its fade animation
-    // The play indicator will self-remove after 400ms via its timeout
-  }
-
-  async reloadAndPlay() {
-    if (!this.birdData || !this.birdData.videoUrl) {
-      log('Cannot reload - no video URL available');
-      return;
-    }
-
-    // Check for quiet hours - allow reload but mute video
-    const isQuietHour = await isQuietHoursActive();
-
-    log('Reloading video after unload');
-
-    // Reset unloaded state BEFORE reloading to prevent error handler from ignoring real errors
-    this.isUnloaded = false;
-    this.wasPlaying = false;
-
-    // Show loading indicator
-    showVideoLoadingIndicator();
-
-    // Hide the play overlay immediately to show we're responding
-    this.hidePlayOverlay();
-
-    // Always create a fresh video element to avoid stale state issues
-    const existingVideo = document.querySelector('.background-video');
-    if (existingVideo) {
-      existingVideo.remove();
-    }
-
-    // Create new video element
-    const videoEl = document.createElement('video');
-    videoEl.className = 'background-video hidden';
-    videoEl.loop = true;
-    videoEl.playsInline = true;
-    videoEl.preload = 'auto'; // Use 'auto' for faster loading on reload
-    videoEl.poster = this.birdData.imageUrl;
-
-    const source = document.createElement('source');
-    source.src = this.birdData.videoUrl;
-    source.type = 'video/mp4';
-    videoEl.appendChild(source);
-
-    const contentContainer = document.getElementById('content-container');
-    if (contentContainer) {
-      contentContainer.insertBefore(videoEl, contentContainer.firstChild);
-    }
-
-    // Update references
-    this.video = videoEl;
-    video = videoEl; // Update global reference
-
-    // Handle errors during reload
-    const handleReloadError = () => {
-      log('Error reloading video, falling back to image mode');
-      hideVideoLoadingIndicator();
-      showPosterImage();
-      // Credits already show both photographer and videographer - no need to switch
-      // Mark as unloaded so we don't try to play
-      this.isUnloaded = true;
-    };
-
-    // Set up all event listeners for the reloaded video (play, pause, ended, buffering, etc.)
-    const markAsLoaded = setupVideoEventListeners(videoEl, handleReloadError);
-
-    // Handle successful load
-    const handleCanPlay = () => {
-      hideVideoLoadingIndicator();
-      markAsLoaded(); // Mark as successfully loaded
-      // Credits already show both photographer and videographer
-      // Re-setup video controls for the reloaded video
-      setupVideoControls();
-      // Video will be shown when play event fires
-    };
-
-    videoEl.addEventListener('canplay', handleCanPlay, { once: true });
-    videoEl.addEventListener('error', handleReloadError, { once: true });
-    source.addEventListener('error', handleReloadError, { once: true });
-
-    // Apply volume settings (mute during quiet hours)
-    const shouldMute = isMuted || isQuietHour;
-    videoEl.volume = shouldMute ? 0 : volumeLevel;
-    videoEl.muted = shouldMute;
-
-    // Play video with play indicator (user-initiated from overlay click)
-    try {
-      this.showPlayIndicator();
-      await videoEl.play();
-      isPlaying = true;
-      updatePlayPauseButton();
-    } catch (err) {
-      log(`Error playing video after reload: ${err.message}`);
-    }
-  }
-
-  destroy() {
-    // Clean up timeouts
-    if (this.unloadTimeout) {
-      clearTimeout(this.unloadTimeout);
-    }
-    if (this.pauseIndicatorTimeout) {
-      clearTimeout(this.pauseIndicatorTimeout);
-    }
-    if (this.playIndicatorTimeout) {
-      clearTimeout(this.playIndicatorTimeout);
-    }
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    this.hidePlayOverlay();
-    log('VideoVisibilityManager destroyed');
-  }
-}
-
-// ===== Standalone Media Indicator Functions (for audio mode) =====
-// These are used when not in video mode to show play/pause indicators
-
-let mediaPlayIndicatorTimeout = null;
-let mediaPauseIndicatorTimeout = null;
-
-// Show brief audio play indicator (shows waveform icon for audio mode)
-function showMediaPlayIndicator() {
-  // Clear any existing timeout
-  if (mediaPlayIndicatorTimeout) {
-    clearTimeout(mediaPlayIndicatorTimeout);
-    mediaPlayIndicatorTimeout = null;
-  }
-
-  // Remove any existing indicators
-  const existingPlayIndicator = document.querySelector('.video-play-indicator');
-  if (existingPlayIndicator) existingPlayIndicator.remove();
-  const existingPauseIndicator = document.querySelector('.video-pause-indicator');
-  if (existingPauseIndicator) existingPauseIndicator.remove();
-
-  // Use waveform icon to represent audio playing
-  const indicator = document.createElement('div');
-  indicator.className = 'video-play-indicator';
-  indicator.innerHTML = `
-    <div class="play-icon-container">
-      <img src="images/svg/waveform.svg" alt="Audio Playing" width="56" height="56">
-    </div>
-  `;
-
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.appendChild(indicator);
-  }
-
-  // Remove after animation completes (400ms)
-  mediaPlayIndicatorTimeout = setTimeout(() => {
-    mediaPlayIndicatorTimeout = null;
-    const playIndicator = document.querySelector('.video-play-indicator');
-    if (playIndicator) playIndicator.remove();
-  }, 400);
-}
-
-// Show brief audio pause indicator (shows pause icon for audio mode)
-function showMediaPauseIndicator() {
-  // Clear any existing timeout
-  if (mediaPauseIndicatorTimeout) {
-    clearTimeout(mediaPauseIndicatorTimeout);
-    mediaPauseIndicatorTimeout = null;
-  }
-
-  // Remove any existing indicators
-  const existingPlayIndicator = document.querySelector('.video-play-indicator');
-  if (existingPlayIndicator) existingPlayIndicator.remove();
-  const existingPauseIndicator = document.querySelector('.video-pause-indicator');
-  if (existingPauseIndicator) existingPauseIndicator.remove();
-
-  // Use pause icon for audio paused
-  const indicator = document.createElement('div');
-  indicator.className = 'video-pause-indicator';
-  indicator.innerHTML = `
-    <div class="pause-icon-container">
-      <img src="images/svg/pause.svg" alt="Audio Paused" width="56" height="56">
-    </div>
-  `;
-
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.appendChild(indicator);
-  }
-
-  // Remove after animation completes (400ms)
-  mediaPauseIndicatorTimeout = setTimeout(() => {
-    mediaPauseIndicatorTimeout = null;
-    const pauseIndicator = document.querySelector('.video-pause-indicator');
-    if (pauseIndicator) pauseIndicator.remove();
-  }, 400);
-}
-
-// Array of loading message keys for i18n
-const loadingMessageKeys = [
-  'loadingMessage1',
-  'loadingMessage2',
-  'loadingMessage3',
-  'loadingMessage4',
-  'loadingMessage5',
-  'loadingMessage6',
-  'loadingMessage7',
-  'loadingMessage8',
-  'loadingMessage9',
-  'loadingMessage10',
-  'loadingMessage11',
-  'loadingMessage12',
-  'loadingMessage13',
-  'loadingMessage14',
-  'loadingMessage15',
-  'loadingMessage16'
-];
-
-// Get a random loading message
-const getRandomLoadingMessage = () => {
-  const randomKey = loadingMessageKeys[Math.floor(Math.random() * loadingMessageKeys.length)];
-  return chrome.i18n.getMessage(randomKey);
-};
-
-// Show loading indicator with a random message
-function showLoadingIndicator() {
-  const loadingDiv = document.createElement('div');
-  loadingDiv.id = 'loading';
-  loadingDiv.innerHTML = `
-    <div class="spinner"></div>
-    <p id="loading-message">${getRandomLoadingMessage()}</p>
-  `;
-  document.body.appendChild(loadingDiv);
-}
-
-// Hide loading indicator
-function hideLoadingIndicator() {
-  const loadingDiv = document.getElementById('loading');
-  if (loadingDiv) loadingDiv.remove();
-}
-
-// Update loading message
-function updateLoadingMessage() {
-  const loadingMessage = document.getElementById('loading-message');
-  if (loadingMessage) {
-    loadingMessage.textContent = getRandomLoadingMessage();
-    log(`Updated loading message: ${loadingMessage.textContent}`);
-  }
-}
+// VideoVisibilityManager is now imported from videoManager.js
 
 // Fetch bird information from background script
 // Note: No separate transaction here - this is captured as part of the page-load transaction
@@ -733,277 +322,6 @@ async function getBirdInfo(retryCount = 0) {
   });
 }
 
-// ===== History Management Functions =====
-
-// Add bird to viewing history
-async function addToHistory(birdInfo) {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['viewHistory'], (result) => {
-      const history = result.viewHistory?.value || [];
-
-      // Store complete birdInfo with timestamp to avoid API calls when loading from history
-      const entry = {
-        ...birdInfo,
-        timestamp: Date.now()
-      };
-
-      history.push(entry); // Newest at end
-
-      // Enforce 200 item limit - remove oldest
-      if (history.length > 200) {
-        history.shift();
-      }
-
-      chrome.storage.local.set({
-        viewHistory: { value: history, timestamp: Date.now() }
-      }, () => {
-        if (chrome.runtime.lastError) {
-          log(`Error saving history: ${chrome.runtime.lastError.message}`);
-        }
-        resolve();
-      });
-    });
-  });
-}
-
-// Get viewing history
-async function getHistory() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['viewHistory'], (result) => {
-      resolve(result.viewHistory?.value || []);
-    });
-  });
-}
-
-// Clear all viewing history
-async function clearHistory() {
-  return new Promise((resolve) => {
-    chrome.storage.local.remove(['viewHistory'], resolve);
-  });
-}
-
-// Get relative time string for timestamp display
-function getRelativeTimeString(timestamp) {
-  const now = Date.now();
-  const diff = now - timestamp;
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (seconds < 60) {
-    return chrome.i18n.getMessage('justNow') || 'Just now';
-  } else if (minutes < 60) {
-    const key = minutes === 1 ? 'minuteAgo' : 'minutesAgo';
-    return chrome.i18n.getMessage(key, [minutes.toString()]) || `${minutes} min ago`;
-  } else if (hours < 24) {
-    const key = hours === 1 ? 'hourAgo' : 'hoursAgo';
-    return chrome.i18n.getMessage(key, [hours.toString()]) || `${hours}h ago`;
-  } else if (days === 1) {
-    return chrome.i18n.getMessage('yesterday') || 'Yesterday';
-  } else if (days < 7) {
-    return chrome.i18n.getMessage('daysAgo', [days.toString()]) || `${days} days ago`;
-  } else {
-    // Format as "Jan 15" or localized equivalent
-    const date = new Date(timestamp);
-    return new Intl.DateTimeFormat(chrome.i18n.getUILanguage(), {
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  }
-}
-
-// ===== End History Management Functions =====
-
-// ===== History Modal UI Functions =====
-
-let historySidebar = null;
-
-// Escape HTML to prevent XSS
-function escapeHtml(unsafe) {
-  if (!unsafe) return '';
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-// Create history modal DOM element
-function createHistoryModal() {
-  const existingSidebar = document.getElementById('history-sidebar');
-  if (existingSidebar) existingSidebar.remove();
-
-  const modalHTML = `
-    <div id="history-sidebar" class="settings-sidebar" role="dialog" aria-modal="true">
-      <div class="settings-content history-content">
-        <div class="settings-header">
-          <h2 id="history-sidebar-title" data-i18n="historyTitle">Viewing History</h2>
-          <button id="close-history" class="close-button" aria-label="Close history">
-            <img src="images/svg/close.svg" alt="Close" width="20" height="20">
-          </button>
-        </div>
-        <div class="settings-body">
-          <div id="history-list" class="history-list"></div>
-          <div id="empty-history" class="empty-history hidden">
-            <img src="icons/icon128.png" alt="BirdTab" class="empty-history-icon" width="64" height="64">
-            <p class="empty-history-title" data-i18n="emptyHistoryTitle">Your birding journey begins here!</p>
-            <p class="empty-history-subtitle" data-i18n="emptyHistorySubtitle">Discover new birds and they'll appear in your viewing history.</p>
-          </div>
-        </div>
-        <div class="history-footer">
-          <button id="clear-history-btn" class="shortcut-btn secondary" data-i18n="clearHistory">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: -2px;">
-              <polyline points="3,6 5,6 21,6"></polyline>
-              <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"></path>
-            </svg>
-            Clear History
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
-  localizeHtml();
-  return document.getElementById('history-sidebar');
-}
-
-// Populate history list with entries
-async function populateHistoryList() {
-  const history = await getHistory();
-  const historyList = document.getElementById('history-list');
-  const emptyState = document.getElementById('empty-history');
-  const clearBtn = document.getElementById('clear-history-btn');
-
-  if (history.length === 0) {
-    historyList.classList.add('hidden');
-    emptyState.classList.remove('hidden');
-    if (clearBtn) {
-      clearBtn.disabled = true;
-      clearBtn.setAttribute('aria-disabled', 'true');
-    }
-    return;
-  }
-
-  historyList.classList.remove('hidden');
-  emptyState.classList.add('hidden');
-  if (clearBtn) {
-    clearBtn.disabled = false;
-    clearBtn.setAttribute('aria-disabled', 'false');
-  }
-
-  // Reverse to show newest first
-  const reversedHistory = [...history].reverse();
-
-  // Use escaped HTML to prevent XSS
-  // Store index to retrieve full birdInfo when clicked
-  historyList.innerHTML = reversedHistory.map((entry, index) => `
-    <button class="history-item" data-history-index="${index}">
-      <img src="${escapeHtml(entry.imageUrl)}" alt="${escapeHtml(entry.name)}" class="history-item-image" loading="lazy">
-      <div class="history-item-info">
-        <div class="history-item-name">${escapeHtml(entry.name)}</div>
-        <div class="history-item-scientific">${escapeHtml(entry.scientificName)}</div>
-        <div class="history-item-time">${escapeHtml(getRelativeTimeString(entry.timestamp))}</div>
-      </div>
-    </button>
-  `).join('');
-
-  // Store history reference for click handler
-  historyList.dataset.historyData = JSON.stringify(reversedHistory);
-}
-
-// Handle clicking on a history item
-async function handleHistoryItemClick(item) {
-  const historyIndex = parseInt(item.dataset.historyIndex);
-  const historyList = document.getElementById('history-list');
-  const historyData = JSON.parse(historyList.dataset.historyData);
-  const birdInfo = historyData[historyIndex];
-
-  if (!birdInfo) {
-    log('Error: Could not find bird info in history');
-    return;
-  }
-
-  closeHistoryModal();
-
-  // Smooth fade-out transition before reload
-  document.body.style.transition = 'opacity 0.2s ease';
-  document.body.style.opacity = '0';
-
-  // Store the cached bird info and reload page to display it
-  // This reuses all existing initialization logic without API calls
-  setTimeout(() => {
-    chrome.storage.local.set({ pendingBirdInfo: birdInfo }, () => {
-      window.location.reload();
-    });
-  }, 200);
-}
-
-// Open history modal
-function openHistoryModal() {
-  if (!historySidebar) {
-    historySidebar = createHistoryModal();
-    bindHistoryModalEvents();
-  }
-  populateHistoryList();
-  historySidebar.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-// Close history modal
-function closeHistoryModal() {
-  if (historySidebar) {
-    historySidebar.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-}
-
-// Bind event listeners to history modal
-function bindHistoryModalEvents() {
-  const closeBtn = document.getElementById('close-history');
-  const clearBtn = document.getElementById('clear-history-btn');
-  const historyList = document.getElementById('history-list');
-
-  // Close button
-  closeBtn.addEventListener('click', closeHistoryModal);
-
-  // Click outside to close
-  historySidebar.addEventListener('click', (e) => {
-    if (e.target === historySidebar) {
-      closeHistoryModal();
-    }
-  });
-
-  // ESC key to close
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && historySidebar.classList.contains('open')) {
-      closeHistoryModal();
-    }
-  });
-
-  // Event delegation for history items
-  historyList.addEventListener('click', (e) => {
-    const historyItem = e.target.closest('.history-item');
-    if (historyItem) {
-      handleHistoryItemClick(historyItem);
-    }
-  });
-
-  // Clear history button
-  clearBtn.addEventListener('click', async () => {
-    const confirmed = confirm(chrome.i18n.getMessage('confirmClearHistory') ||
-      'Are you sure you want to clear your viewing history?');
-    if (confirmed) {
-      await clearHistory();
-      await populateHistoryList();
-    }
-  });
-}
-
-// ===== End History Modal UI Functions =====
-
 // Update play/pause button UI
 const updatePlayPauseButton = () => {
   const playButton = document.getElementById('play-button');
@@ -1078,8 +396,9 @@ async function playVideo(showIndicator = false) {
 
   try {
     // Show brief play indicator for user-initiated plays
-    if (showIndicator && videoVisibilityManager) {
-      videoVisibilityManager.showPlayIndicator();
+    const vvm = getVideoVisibilityManager();
+    if (showIndicator && vvm) {
+      vvm.showPlayIndicator();
     }
     
     await video.play();
@@ -1157,6 +476,23 @@ function loadAudioWithoutPlaying() {
   updatePlayPauseButton();
 }
 
+// Create a play button for media controls (shared between audio and video mode)
+function createPlayButton(onClickHandler) {
+  const playButton = document.createElement('button');
+  playButton.id = 'play-button';
+  playButton.classList.add('icon-button', 'play-button');
+  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+  playButton.title = chrome.i18n.getMessage('playTooltip');
+  playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
+  playButton.tabIndex = 0;
+  playButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await onClickHandler();
+  });
+  return playButton;
+}
+
 // Create audio player for bird calls (image mode)
 function createAudioPlayer(mediaUrl) {
   if (!mediaUrl) {
@@ -1166,54 +502,23 @@ function createAudioPlayer(mediaUrl) {
 
   log(`Creating audio player with URL: ${mediaUrl}`);
   audio = new Audio(mediaUrl);
-  // Skip the first 4 seconds of the audio
-  // because it's usually recordist commentary
+  // Skip the first 4 seconds of the audio (usually recordist commentary)
   audio.currentTime = 4;
   audio.muted = isMuted;
   audio.volume = volumeLevel;
-
-  const playButton = document.createElement('button');
-  playButton.id = 'play-button';
-  playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-  playButton.title = chrome.i18n.getMessage('playTooltip');
-  playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
-  // Ensure keyboard accessibility
-  playButton.tabIndex = 0;
-  playButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await togglePlay();
-  });
 
   audio.onended = () => {
     isPlaying = false;
     updatePlayPauseButton();
   };
 
-  return playButton;
+  return createPlayButton(togglePlay);
 }
 
 // Create video player controls (video mode)
 function createVideoPlayer() {
   log('Creating video player controls');
-
-  // Create play/pause button for video (same location as audio mode)
-  const playButton = document.createElement('button');
-  playButton.id = 'play-button';
-  playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-  playButton.title = chrome.i18n.getMessage('playTooltip');
-  playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
-  playButton.tabIndex = 0;
-  
-  playButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await toggleVideoPlay();
-  });
-
-  return playButton;
+  return createPlayButton(toggleVideoPlay);
 }
 
 // Toggle video play/pause
@@ -1330,78 +635,7 @@ function pauseAllMedia() {
   pauseVideo();
 }
 
-// Review section
-
-function incrementNewTabCount() {
-  chrome.storage.local.get(['newTabCount', 'installTime'], function (result) {
-    const now = Date.now();
-    const installTime = result.installTime || now;
-
-    if (now - installTime <= 28 * 24 * 60 * 60 * 1000) {
-      chrome.storage.local.set({
-        newTabCount: (result.newTabCount || 0) + 1
-      });
-    }
-  });
-}
-
-function checkAndPrepareReviewPrompt() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft'], function (result) {
-      const now = Date.now();
-      const installTime = result.installTime || now;
-      const newTabCount = result.newTabCount || 0;
-      const lastReviewPrompt = result.lastReviewPrompt || 0;
-      const reviewDismissed = result.reviewDismissed || false;
-      const reviewLeft = result.reviewLeft || false;
-
-      if (reviewLeft || reviewDismissed) {
-        resolve(false);
-        return;
-      }
-
-      const isDev = process.env.NODE_ENV !== 'production';
-      const timeDelay = isDev ? CONFIG.DEV_TIME_DELAY : CONFIG.PROD_TIME_DELAY;
-      const tabCountThreshold = isDev ? CONFIG.DEV_TAB_COUNT : CONFIG.PROD_TAB_COUNT;
-      const oneWeek = 7 * 24 * 60 * 60 * 1000;
-
-      const timeCondition = now - installTime > timeDelay;
-      const activityCondition = newTabCount >= tabCountThreshold;
-      const frequencyCondition = now - lastReviewPrompt > timeDelay;
-
-      shouldShowReviewPrompt = timeCondition && activityCondition && frequencyCondition;
-
-      // Store data for analytics tracking
-      if (shouldShowReviewPrompt) {
-        const daysSinceInstall = Math.floor((now - installTime) / (1000 * 60 * 60 * 24));
-        reviewPromptData = {
-          daysSinceInstall,
-          newTabCount
-        };
-      }
-
-      resolve(shouldShowReviewPrompt);
-    });
-  });
-}
-
-function getReviewPromptHTML() {
-  return `
-    <div id="review-prompt" class="review-prompt">
-      <div class="review-content">
-        <h2>${chrome.i18n.getMessage('reviewPromptTitle')}</h2>
-        <p>${chrome.i18n.getMessage('reviewPromptMessage')}</p>
-        <div class="review-buttons">
-          <button id="leave-review" class="review-btn primary">${chrome.i18n.getMessage('leaveReview')}</button>
-          <button id="maybe-later" class="review-btn secondary">${chrome.i18n.getMessage('maybeLater')}</button>
-          <button id="no-thanks" class="review-btn tertiary">${chrome.i18n.getMessage('noThanks')}</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// New function to set image source and show it when loaded
+// Set image source and show it when loaded
 // Includes retry logic for transient network failures
 function setImageSource(imageUrl, retryCount = 0) {
   const img = document.querySelector('.background-image');
@@ -1424,438 +658,6 @@ function setImageSource(imageUrl, retryCount = 0) {
   };
 
   img.src = imageUrl;
-}
-
-// Set up all video event listeners (play, pause, ended, buffering, errors, etc.)
-// This is extracted into a separate function so it can be reused when reloading video
-function setupVideoEventListeners(videoEl, fallbackToImage) {
-  // Track if video has started playing (for distinguishing loading vs buffering)
-  let hasStartedPlaying = false;
-
-  // Handle buffering - show loading indicator when video is waiting for data
-  videoEl.addEventListener('waiting', function () {
-    log('Video buffering...');
-    // Only show "Buffering" if video has played before, otherwise it's initial load
-    showVideoLoadingIndicator(hasStartedPlaying);
-  });
-
-  // Handle buffering resolved - hide loading indicator when video can play
-  videoEl.addEventListener('canplaythrough', function () {
-    hideVideoLoadingIndicator();
-  });
-
-  // Also hide loading indicator on playing event (in case canplaythrough doesn't fire)
-  videoEl.addEventListener('playing', function () {
-    hasStartedPlaying = true;
-    hideVideoLoadingIndicator();
-  });
-
-  // Track if initial load has completed successfully
-  let hasLoadedSuccessfully = false;
-
-  // Handle video element errors
-  // Note: We need to ignore errors that occur after intentional unload or during playback
-  videoEl.addEventListener('error', function (e) {
-    // If video was intentionally unloaded by VideoVisibilityManager, ignore errors
-    if (videoVisibilityManager && videoVisibilityManager.isUnloaded) {
-      log('Ignoring video error after intentional unload');
-      return;
-    }
-
-    // If video already loaded successfully before, don't fall back on transient errors
-    // (network hiccups during playback shouldn't cause full fallback)
-    if (hasLoadedSuccessfully) {
-      log(`Video playback error (non-fatal): ${e.message || 'Unknown error'}`);
-      return;
-    }
-
-    log(`Video load error: ${e.message || 'Unknown error'}, falling back to image`);
-    if (fallbackToImage) fallbackToImage();
-  });
-
-  // Handle source element errors (this is where most load failures occur)
-  const source = videoEl.querySelector('source');
-  if (source) {
-    source.addEventListener('error', function (e) {
-      // If video was intentionally unloaded, ignore errors
-      if (videoVisibilityManager && videoVisibilityManager.isUnloaded) {
-        log('Ignoring source error after intentional unload');
-        return;
-      }
-
-      // If already loaded successfully, don't fall back
-      if (hasLoadedSuccessfully) {
-        log('Video source error (non-fatal during playback)');
-        return;
-      }
-
-      log('Video source failed to load, falling back to image');
-      if (fallbackToImage) fallbackToImage();
-    });
-  }
-
-  // Handle video ended - show poster, reset for replay
-  videoEl.addEventListener('ended', function () {
-    isPlaying = false;
-    updatePlayPauseButton();
-    showPosterImage();
-
-    // Reset video to beginning for replay
-    videoEl.currentTime = 0;
-    
-    // No persistent overlay - user can click anywhere or use play button to restart
-  });
-
-  // Handle video play/pause state changes
-  videoEl.addEventListener('play', function () {
-    isPlaying = true;
-    updatePlayPauseButton();
-    showVideoElement();
-
-    // Hide play overlay when video starts playing
-    if (videoVisibilityManager) {
-      videoVisibilityManager.hidePlayOverlay();
-    }
-  });
-
-  videoEl.addEventListener('pause', function () {
-    isPlaying = false;
-    updatePlayPauseButton();
-    showPosterImage();
-
-    // Show brief pause indicator when paused (no persistent overlay - user can click anywhere or use button to resume)
-    if (videoVisibilityManager && !videoVisibilityManager.isUnloaded) {
-      videoVisibilityManager.showPauseIndicator();
-    }
-  });
-
-  // Add click handler on video to toggle play/pause
-  videoEl.addEventListener('click', async function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // If video is unloaded, let the play overlay handle it
-    if (videoVisibilityManager && videoVisibilityManager.isUnloaded) return;
-
-    if (videoEl.paused) {
-      // Video is paused - play it with indicator
-      await playVideo(true);
-    } else {
-      // Video is playing - pause it
-      pauseVideo();
-    }
-  });
-
-  // Return a function to mark the video as successfully loaded
-  return () => {
-    hasLoadedSuccessfully = true;
-  };
-}
-
-// Set up video to show when ready
-function setVideoSource() {
-  const videoEl = document.querySelector('.background-video');
-  if (!videoEl) return;
-
-  // Show loading indicator immediately
-  showVideoLoadingIndicator();
-
-  const fallbackToImage = () => {
-    log('Falling back to image mode (visual only)');
-    showPosterImage();
-
-    // Remove loading indicator
-    hideVideoLoadingIndicator();
-    cleanupVideoControls();
-
-    // Show play overlay so user can click to retry loading the video
-    if (videoVisibilityManager) {
-      videoVisibilityManager.isUnloaded = true; // Mark as needing reload
-      videoVisibilityManager.showPlayOverlay();
-      // Credits already show both photographer and videographer - no need to switch
-    }
-
-    // Keep video reference for retry attempts - don't destroy the manager
-    // The play overlay click will trigger reloadAndPlay
-  };
-
-  // Set up all event listeners for video playback, buffering, errors, etc.
-  const markAsLoaded = setupVideoEventListeners(videoEl, fallbackToImage);
-
-  // Show video when it can start playing
-  videoEl.addEventListener('canplay', function () {
-    log('Video ready to play');
-
-    // Mark as successfully loaded - future errors won't trigger fallback
-    markAsLoaded();
-
-    // Hide loading indicator
-    hideVideoLoadingIndicator();
-
-    // Setup video controls (progress bar + duration)
-    setupVideoControls();
-
-    // Credits already show both photographer and videographer in video mode
-
-    // Note: We don't show video here - it will be shown when play event fires
-    // If autoplay is disabled, poster remains visible until user clicks play
-  }, { once: true });
-
-  // Start loading the video
-  videoEl.load();
-}
-
-// Show video loading indicator as a subtle pill badge
-// isBuffering: true for mid-playback buffering, false for initial load
-function showVideoLoadingIndicator(isBuffering = false) {
-  // Don't show if already exists
-  const existing = document.querySelector('.video-loading-indicator');
-  const bufferingText = chrome.i18n.getMessage('buffering') || 'Buffering';
-  const loadingVideoText = chrome.i18n.getMessage('loadingVideo') || 'Loading video';
-
-  if (existing) {
-    // Update text if state changed
-    const textEl = existing.querySelector('.loading-text');
-    if (textEl) {
-      textEl.textContent = isBuffering ? bufferingText : loadingVideoText;
-    }
-    return;
-  }
-
-  const indicator = document.createElement('div');
-  indicator.className = 'video-loading-indicator';
-  indicator.innerHTML = `
-    <div class="loading-spinner"></div>
-    <span class="loading-text">${isBuffering ? bufferingText : loadingVideoText}</span>
-  `;
-
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.appendChild(indicator);
-  }
-}
-
-// Hide video loading indicator
-function hideVideoLoadingIndicator() {
-  const indicator = document.querySelector('.video-loading-indicator');
-  if (indicator) {
-    indicator.remove();
-  }
-}
-
-// Show audio loading indicator (similar to video but for audio fetch)
-function showAudioLoadingIndicator() {
-  // Don't show if already exists
-  const existing = document.querySelector('.audio-loading-indicator');
-  if (existing) return;
-
-  const indicator = document.createElement('div');
-  indicator.className = 'video-loading-indicator audio-loading-indicator'; // Reuse video loading styles
-  indicator.innerHTML = `
-    <div class="loading-spinner"></div>
-    <span class="loading-text">${chrome.i18n.getMessage('loadingAudio') || 'Loading audio'}</span>
-  `;
-
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.appendChild(indicator);
-  }
-}
-
-// Hide audio loading indicator
-function hideAudioLoadingIndicator() {
-  const indicator = document.querySelector('.audio-loading-indicator');
-  if (indicator) {
-    indicator.remove();
-  }
-}
-
-// Show a toast notification message
-// type: 'info' (default), 'success', 'error'
-function showToast(message, type = 'info') {
-  // Remove existing toast if present
-  const existingToast = document.querySelector('.toast-notification');
-  if (existingToast) {
-    existingToast.remove();
-  }
-
-  // Create new toast
-  const toast = document.createElement('div');
-  toast.className = `toast-notification toast-${type}`;
-  toast.textContent = message;
-
-  // Add to document
-  document.body.appendChild(toast);
-
-  // Show toast with animation after a brief delay
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 50);
-
-  // Hide and remove toast after 3 seconds
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.remove();
-      }
-    }, 300);
-  }, 3000);
-}
-
-// Video progress bar controller
-let progressHideTimeout = null;
-
-// Create video progress bar
-function createVideoProgressBar() {
-  // Don't create if already exists
-  if (document.querySelector('.video-progress')) return;
-
-  const progressBar = document.createElement('div');
-  progressBar.className = 'video-progress';
-  progressBar.innerHTML = `
-    <div class="video-progress-buffered"></div>
-    <div class="video-progress-played"></div>
-  `;
-
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.appendChild(progressBar);
-  }
-
-  // Click to seek
-  progressBar.addEventListener('click', handleProgressBarClick);
-
-  return progressBar;
-}
-
-// Handle click on progress bar to seek
-function handleProgressBarClick(e) {
-  if (!video || !video.duration) return;
-
-  const progressBar = e.currentTarget;
-  const rect = progressBar.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-  const percentage = clickX / rect.width;
-  const newTime = percentage * video.duration;
-
-  video.currentTime = newTime;
-  updateProgressBar();
-}
-
-// Update progress bar visuals
-function updateProgressBar() {
-  if (!video) return;
-
-  const playedBar = document.querySelector('.video-progress-played');
-  const bufferedBar = document.querySelector('.video-progress-buffered');
-
-  if (playedBar && video.duration) {
-    const playedPercent = (video.currentTime / video.duration) * 100;
-    playedBar.style.width = `${playedPercent}%`;
-  }
-
-  if (bufferedBar && video.buffered.length > 0 && video.duration) {
-    // Get the buffered end time for the current position
-    let bufferedEnd = 0;
-    for (let i = 0; i < video.buffered.length; i++) {
-      if (video.buffered.start(i) <= video.currentTime && video.currentTime <= video.buffered.end(i)) {
-        bufferedEnd = video.buffered.end(i);
-        break;
-      }
-    }
-    const bufferedPercent = (bufferedEnd / video.duration) * 100;
-    bufferedBar.style.width = `${bufferedPercent}%`;
-  }
-}
-
-// Show progress bar
-function showProgressBar() {
-  const progressBar = document.querySelector('.video-progress');
-  if (progressBar) {
-    progressBar.classList.add('visible');
-  }
-
-  // Clear existing timeout
-  if (progressHideTimeout) {
-    clearTimeout(progressHideTimeout);
-  }
-
-  // Hide after 3 seconds (unless paused)
-  if (video && !video.paused) {
-    progressHideTimeout = setTimeout(() => {
-      hideProgressBar();
-    }, 3000);
-  }
-}
-
-// Hide progress bar
-function hideProgressBar() {
-  const progressBar = document.querySelector('.video-progress');
-  if (progressBar && video && !video.paused) {
-    progressBar.classList.remove('visible');
-  }
-}
-
-// Setup video controls (progress bar)
-function setupVideoControls() {
-  if (!video) return;
-
-  // Create progress bar
-  createVideoProgressBar();
-
-  // Volume control is always shown for video mode (even if video has no audio)
-  // This provides a consistent UI experience
-
-  // Listen for timeupdate to update progress
-  video.addEventListener('timeupdate', () => {
-    updateProgressBar();
-  });
-
-  // Show progress bar on mouse move over video/content
-  const contentContainer = document.getElementById('content-container');
-  if (contentContainer) {
-    contentContainer.addEventListener('mousemove', () => {
-      if (video) {
-        showProgressBar();
-      }
-    });
-
-    contentContainer.addEventListener('mouseleave', () => {
-      if (video && !video.paused) {
-        hideProgressBar();
-      }
-    });
-  }
-
-  // Always show progress bar when paused
-  video.addEventListener('pause', () => {
-    showProgressBar();
-    if (progressHideTimeout) {
-      clearTimeout(progressHideTimeout);
-    }
-  });
-
-  // Start hiding timer when playing
-  video.addEventListener('play', () => {
-    // Don't immediately hide, let the 3s timer handle it
-    showProgressBar();
-  });
-}
-
-// Cleanup video controls (when falling back to image mode or unloading)
-function cleanupVideoControls() {
-  // Remove progress bar
-  const progressBar = document.querySelector('.video-progress');
-  if (progressBar) {
-    progressBar.remove();
-  }
-
-  // Clear any pending hide timeout
-  if (progressHideTimeout) {
-    clearTimeout(progressHideTimeout);
-    progressHideTimeout = null;
-  }
 }
 
 // Switch to full image mode credits (photo + audio) on video fallback
@@ -1944,6 +746,9 @@ async function initializePage() {
     if (!usedCachedFallback) {
       await addToHistory(birdInfo);
     }
+
+    // Initialize share menu with birdInfo getter
+    initShareMenu(() => birdInfo);
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
@@ -2121,12 +926,11 @@ async function initializePage() {
 
       // Get reference to video element
       video = document.querySelector('.background-video');
+      setVideoElement(video);
 
       // Initialize VideoVisibilityManager for tab visibility handling
-      if (videoVisibilityManager) {
-        videoVisibilityManager.destroy();
-      }
-      videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
+      destroyVideoVisibilityManager();
+      createVideoVisibilityManager(video, birdInfo);
 
       // Load volume settings for video
       chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
@@ -2236,15 +1040,7 @@ async function initializePage() {
     setupShareButton();
 
     // After updating the page content, add the review prompt if needed
-    if (shouldShowReviewPrompt) {
-      document.body.insertAdjacentHTML('beforeend', getReviewPromptHTML());
-      addReviewPromptListeners();
-
-      // Track review prompt shown
-      if (reviewPromptData) {
-        trackReviewPromptShown(reviewPromptData.daysSinceInstall, reviewPromptData.newTabCount);
-      }
-    }
+    showReviewPromptIfNeeded(document.body);
 
     setupExternalLinks();
 
@@ -2335,41 +1131,6 @@ function retryHandler() {
   const errorModal = document.getElementById('error-modal');
   errorModal.classList.add('hidden');
   initializePage();
-}
-
-function addReviewPromptListeners() {
-  const daysSinceInstall = reviewPromptData?.daysSinceInstall || -1;
-
-  document.getElementById('leave-review').addEventListener('click', () => {
-    if (process.env.BROWSER === 'edge') {
-      chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
-    } else {
-      chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn' });
-    }
-    chrome.storage.local.set({ reviewLeft: true });
-    trackReviewPromptAction('left_review', daysSinceInstall);
-    dismissPrompt();
-  });
-
-  document.getElementById('maybe-later').addEventListener('click', () => {
-    chrome.storage.local.set({ lastReviewPrompt: Date.now() });
-    trackReviewPromptAction('maybe_later', daysSinceInstall);
-    dismissPrompt();
-  });
-
-  document.getElementById('no-thanks').addEventListener('click', () => {
-    chrome.storage.local.set({ reviewDismissed: true });
-    trackReviewPromptAction('dismissed', daysSinceInstall);
-    dismissPrompt();
-  });
-}
-
-function dismissPrompt() {
-  const prompt = document.getElementById('review-prompt');
-  if (prompt) {
-    prompt.style.opacity = '0';
-    setTimeout(() => prompt.remove(), 300);
-  }
 }
 
 // Update volume control UI
@@ -2571,6 +1332,13 @@ function setupMediaClickHandler() {
   mediaClickHandlerSetup = true;
 
   document.body.addEventListener('click', async function (e) {
+    // Check if any options menu is currently open
+    // If so, this click is likely meant to close it, not toggle media
+    const openOptionsMenu = document.querySelector('.options-menu-visible');
+    if (openOptionsMenu) {
+      return; // Let the options menu handler handle this click
+    }
+
     // List of interactive elements to ignore
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
@@ -2580,7 +1348,8 @@ function setupMediaClickHandler() {
       '.media-toggle', '.media-toggle-container',
       '.search-container',
       '.options-menu', '.options-menu-item',
-      '#clock-container', '#timer-display',
+      '#clock-options-trigger',
+      '.timer-controls', '.timer-digit-group', '.timer-preset-btn', '.timer-start-btn', '.timer-time',
       '.confirmation-dialog', '.confirmation-dialog-backdrop'
     ];
 
@@ -2596,7 +1365,8 @@ function setupMediaClickHandler() {
     if (isShowingVideo && video) {
       // Video mode: toggle video play/pause
       // If video is unloaded, the play overlay handles reload - don't interfere
-      if (videoVisibilityManager && videoVisibilityManager.isUnloaded) return;
+      const vvm = getVideoVisibilityManager();
+      if (vvm && vvm.isUnloaded) return;
       
       if (video.paused) {
         await playVideo(true); // Show play indicator for user-initiated play
@@ -2789,10 +1559,8 @@ async function createVideoElement(videoUrl) {
   });
 
   // Initialize VideoVisibilityManager
-  if (videoVisibilityManager) {
-    videoVisibilityManager.destroy();
-  }
-  videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
+  destroyVideoVisibilityManager();
+  createVideoVisibilityManager(video, birdInfo);
 
   // Wait for video to be ready
   return new Promise((resolve) => {
@@ -2894,10 +1662,7 @@ async function switchToPhotoMode() {
   }
 
   // Disable VideoVisibilityManager so it doesn't show overlay
-  if (videoVisibilityManager) {
-    videoVisibilityManager.destroy();
-    videoVisibilityManager = null;
-  }
+  destroyVideoVisibilityManager();
 
   // Initialize audio - fetch on-demand if not available (e.g., when coming from video mode)
   if (birdInfo && !birdInfo.mediaUrl && birdInfo.speciesCode) {
@@ -3039,8 +1804,8 @@ async function switchToVideoMode() {
   }
 
   // Reinitialize VideoVisibilityManager if needed
-  if (!videoVisibilityManager && video) {
-    videoVisibilityManager = new VideoVisibilityManager(video, birdInfo);
+  if (!getVideoVisibilityManager() && video) {
+    createVideoVisibilityManager(video, birdInfo);
   }
 
   // Setup click-to-play/pause functionality
@@ -3095,42 +1860,6 @@ async function switchToVideoMode() {
   });
 
   log('Switched to video mode');
-}
-
-// Show poster image, hide video (for paused/ended/unloaded states)
-function showPosterImage() {
-  const videoEl = document.querySelector('.background-video');
-  const posterEl = document.querySelector('.background-image');
-
-  if (videoEl) {
-    videoEl.classList.add('hidden');
-  }
-  if (posterEl) {
-    posterEl.classList.remove('hidden');
-    posterEl.classList.remove('video-fallback');
-
-    // Check if image failed to load (naturalWidth is 0 for failed/unloaded images)
-    // and retry loading if we have the URL available
-    if (posterEl.naturalWidth === 0 && birdInfo && birdInfo.imageUrl) {
-      log('Image not loaded, attempting to reload');
-      setImageSource(birdInfo.imageUrl);
-    }
-  }
-  log('Showing poster image');
-}
-
-// Show video, hide poster (for playing state)
-function showVideoElement() {
-  const videoEl = document.querySelector('.background-video');
-  const posterEl = document.querySelector('.background-image');
-
-  if (videoEl) {
-    videoEl.classList.remove('hidden');
-  }
-  if (posterEl) {
-    posterEl.classList.add('video-fallback'); // Keep it loaded but behind video
-  }
-  log('Showing video element');
 }
 
 // Combined message listener to handle all background messages
@@ -3192,173 +1921,7 @@ function setupExternalLinks() {
   }
 }
 
-// Share functionality
-function getShareUrl() {
-  return `https://birdtab.app/species/${birdInfo.speciesCode}`;
-}
-
-function getShareText() {
-  const template = chrome.i18n.getMessage('shareText') || 'Check out this beautiful {birdName}!';
-  return template.replace('{birdName}', birdInfo.name);
-}
-
-function copyToClipboard() {
-  const shareUrl = getShareUrl();
-  navigator.clipboard.writeText(shareUrl).then(() => {
-    trackFeature('share', { method: 'copy_link' });
-    const copyBtn = document.querySelector('.share-menu-copy-btn');
-    if (copyBtn) {
-      copyBtn.textContent = chrome.i18n.getMessage('linkCopied') || 'Copied!';
-      copyBtn.classList.add('copied');
-      setTimeout(() => {
-        copyBtn.textContent = chrome.i18n.getMessage('copyLink') || 'Copy';
-        copyBtn.classList.remove('copied');
-      }, 2000);
-    }
-  }).catch(err => {
-    console.error('Failed to copy:', err);
-  });
-}
-
-function shareToTwitter() {
-  trackFeature('share', { method: 'twitter' });
-  const shareUrl = getShareUrl();
-  const shareText = getShareText();
-  window.open(
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-    '_blank',
-    'width=550,height=420'
-  );
-  closeShareMenu();
-}
-
-function shareToFacebook() {
-  trackFeature('share', { method: 'facebook' });
-  const shareUrl = getShareUrl();
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-    '_blank',
-    'width=550,height=420'
-  );
-  closeShareMenu();
-}
-
-function shareToWhatsApp() {
-  trackFeature('share', { method: 'whatsapp' });
-  const shareUrl = getShareUrl();
-  const shareText = getShareText();
-  window.open(
-    `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
-    '_blank'
-  );
-  closeShareMenu();
-}
-
-function createShareMenuHTML() {
-  const shareUrl = getShareUrl();
-  return `
-    <div class="share-menu">
-      <div class="share-menu-section">
-        <p class="share-menu-label">${chrome.i18n.getMessage('shareLink') || 'Share link'}</p>
-        <div class="share-menu-url-row">
-          <div class="share-menu-url">
-            <span class="share-menu-url-text">${shareUrl}</span>
-          </div>
-          <button class="share-menu-copy-btn">${chrome.i18n.getMessage('copyLink') || 'Copy'}</button>
-        </div>
-      </div>
-      <div class="share-menu-section">
-        <p class="share-menu-label">${chrome.i18n.getMessage('shareOn') || 'Share on'}</p>
-        <div class="share-menu-social">
-          <button class="share-social-btn share-twitter" title="${chrome.i18n.getMessage('shareToX') || 'Share on X'}">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </button>
-          <button class="share-social-btn share-facebook" title="${chrome.i18n.getMessage('shareToFacebook') || 'Share on Facebook'}">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </button>
-          <button class="share-social-btn share-whatsapp" title="${chrome.i18n.getMessage('shareToWhatsApp') || 'Share on WhatsApp'}">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function openShareMenu() {
-  const shareContainer = document.getElementById('share-container');
-  if (!shareContainer || showShareMenu) return;
-
-  showShareMenu = true;
-  shareContainer.insertAdjacentHTML('beforeend', createShareMenuHTML());
-
-  // Add event listeners to share menu buttons
-  const copyBtn = shareContainer.querySelector('.share-menu-copy-btn');
-  const twitterBtn = shareContainer.querySelector('.share-twitter');
-  const facebookBtn = shareContainer.querySelector('.share-facebook');
-  const whatsappBtn = shareContainer.querySelector('.share-whatsapp');
-
-  if (copyBtn) copyBtn.addEventListener('click', copyToClipboard);
-  if (twitterBtn) twitterBtn.addEventListener('click', shareToTwitter);
-  if (facebookBtn) facebookBtn.addEventListener('click', shareToFacebook);
-  if (whatsappBtn) whatsappBtn.addEventListener('click', shareToWhatsApp);
-
-  // Close on click outside
-  setTimeout(() => {
-    document.addEventListener('mousedown', handleClickOutsideShareMenu);
-    document.addEventListener('keydown', handleEscapeShareMenu);
-  }, 10);
-}
-
-function closeShareMenu() {
-  const shareMenu = document.querySelector('.share-menu');
-  if (shareMenu) {
-    shareMenu.remove();
-  }
-  showShareMenu = false;
-  document.removeEventListener('mousedown', handleClickOutsideShareMenu);
-  document.removeEventListener('keydown', handleEscapeShareMenu);
-}
-
-function handleClickOutsideShareMenu(event) {
-  const shareContainer = document.getElementById('share-container');
-  if (shareContainer && !shareContainer.contains(event.target)) {
-    closeShareMenu();
-  }
-}
-
-function handleEscapeShareMenu(event) {
-  if (event.key === 'Escape') {
-    closeShareMenu();
-  }
-}
-
-function handleShare() {
-  // Always show the custom share menu popup in the extension
-  // (Native share API is not used since this is a Chrome extension that always runs in a browser)
-  if (showShareMenu) {
-    closeShareMenu();
-  } else {
-    openShareMenu();
-  }
-}
-
-function setupShareButton() {
-  const shareButton = document.getElementById('share-button');
-  if (shareButton) {
-    shareButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleShare();
-    });
-  }
-}
+// Share functionality is now imported from shareMenu.js
 
 function initializeSearch() {
   const searchContainer = document.getElementById('search-container');
@@ -3628,10 +2191,7 @@ window.addEventListener('beforeunload', () => {
   log('Page unloading, cleaning up resources');
 
   // Clean up VideoVisibilityManager
-  if (videoVisibilityManager) {
-    videoVisibilityManager.destroy();
-    videoVisibilityManager = null;
-  }
+  destroyVideoVisibilityManager();
 
   // Release video memory
   if (video) {

@@ -368,6 +368,20 @@ function attachRunningListeners() {
   if (resetBtn) {
     resetBtn.addEventListener('click', resetTimer);
   }
+
+  // Allow clicking on the timer time display to toggle pause/resume
+  const timeDisplay = display.querySelector('.timer-time');
+  if (timeDisplay && timerState !== TIMER_STATE.FINISHED) {
+    timeDisplay.style.cursor = 'pointer';
+    timeDisplay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (timerState === TIMER_STATE.RUNNING) {
+        pauseTimer();
+      } else if (timerState === TIMER_STATE.PAUSED) {
+        resumeTimer();
+      }
+    });
+  }
 }
 
 /**
