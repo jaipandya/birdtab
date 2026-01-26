@@ -2575,12 +2575,13 @@ function setupMediaClickHandler() {
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
-      '.video-play-overlay', '.video-play-btn', '.share-container',
+      '.video-play-overlay', '.video-play-btn', '.share-container', '.share-menu',
       '.settings-sidebar', '.quiz-mode',
       '.media-toggle', '.media-toggle-container',
       '.search-container',
       '.options-menu', '.options-menu-item',
-      '#clock-container', '#timer-display'
+      '#clock-container', '#timer-display',
+      '.confirmation-dialog', '.confirmation-dialog-backdrop'
     ];
 
     // Check if click target or its parents match any interactive selector

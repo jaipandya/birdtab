@@ -254,6 +254,8 @@ class SettingsSidebar {
     if (this.sidebar) {
       this.sidebar.addEventListener('click', (e) => {
         if (e.target === this.sidebar) {
+          // Stop event propagation to prevent media click handler from triggering
+          e.stopPropagation();
           this.close();
         }
       });

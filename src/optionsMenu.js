@@ -273,6 +273,8 @@ export function createOptionsMenu(config) {
     if (triggerElement && triggerElement.contains(e.target)) {
       return;
     }
+    // Stop event propagation to prevent media click handler from triggering
+    e.stopPropagation();
     close();
   }
   

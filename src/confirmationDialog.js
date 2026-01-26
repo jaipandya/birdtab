@@ -114,7 +114,9 @@ export function showConfirmationDialog(options = {}) {
     };
 
     // Handle backdrop click
-    const handleBackdropClick = () => {
+    const handleBackdropClick = (e) => {
+      // Stop event propagation to prevent media click handler from triggering
+      e.stopPropagation();
       handleCancel();
     };
 
