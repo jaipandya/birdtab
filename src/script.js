@@ -2578,7 +2578,9 @@ function setupMediaClickHandler() {
       '.video-play-overlay', '.video-play-btn', '.share-container',
       '.settings-sidebar', '.quiz-mode',
       '.media-toggle', '.media-toggle-container',
-      '.search-container'
+      '.search-container',
+      '.options-menu', '.options-menu-item',
+      '#clock-container', '#timer-display'
     ];
 
     // Check if click target or its parents match any interactive selector

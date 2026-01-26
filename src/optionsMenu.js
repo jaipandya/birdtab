@@ -129,7 +129,10 @@ export function createOptionsMenu(config) {
 
         item.appendChild(contentWrapper);
 
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
           if (option.onClick) {
             option.onClick();
           }
