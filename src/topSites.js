@@ -708,14 +708,35 @@ class TopSites {
     const qaCloseBtn = document.getElementById('quick-access-close-trigger');
 
     clockCloseBtn?.addEventListener('click', async () => {
-      const confirmed = await showConfirmationDialog({
-        title: 'hideClockTitle',
-        subtitle: 'hideClockSubtitle',
-        cancelText: 'cancel',
-        confirmText: 'hide'
-      });
-      if (confirmed) {
-        chrome.storage.sync.set({ clockDisplayMode: 'off' });
+      // Check current mode
+      const result = await chrome.storage.sync.get(['clockDisplayMode']);
+      const currentMode = result.clockDisplayMode || 'off';
+
+      if (currentMode === 'timer') {
+        // If viewing timer, switch to clock (same as "Switch to Clock" button)
+        const { hideTimer, stopAlarm } = await import('./timer.js');
+        const { showClock } = await import('./clock.js');
+
+        // Stop alarm if playing
+        stopAlarm();
+
+        // Hide timer, show clock
+        hideTimer();
+        showClock();
+
+        // Update storage
+        await chrome.storage.sync.set({ clockDisplayMode: 'clock' });
+      } else {
+        // If viewing clock, show confirmation to turn off
+        const confirmed = await showConfirmationDialog({
+          title: 'hideClockTitle',
+          subtitle: 'hideClockSubtitle',
+          cancelText: 'cancel',
+          confirmText: 'hide'
+        });
+        if (confirmed) {
+          chrome.storage.sync.set({ clockDisplayMode: 'off' });
+        }
       }
     });
 

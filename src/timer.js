@@ -960,7 +960,7 @@ async function playAlarm() {
 /**
  * Stop the alarm sound
  */
-async function stopAlarm() {
+export async function stopAlarm() {
   if (alarmTimeout) {
     clearTimeout(alarmTimeout);
     alarmTimeout = null;
