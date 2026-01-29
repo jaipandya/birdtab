@@ -123,6 +123,14 @@
     "message": "Heures Silencieuses",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "Heures silencieuses désactivées",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "La lecture audio est en pause pendant les heures silencieuses.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "Fonctionnalités d'Accès Rapide",
     "description": "Label for productivity features toggle"
@@ -220,7 +228,7 @@
     "description": "Alt text for play button"
   },
   "pauseAlt": {
-    "message": "Pause", 
+    "message": "Pause",
     "description": "Alt text for pause button"
   },
   "reviewPromptTitle": {

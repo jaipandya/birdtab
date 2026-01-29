@@ -123,6 +123,14 @@
     "message": "Ruhezeiten",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "Ruhezeiten deaktiviert",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "Die Audiowiedergabe ist während der Ruhezeiten pausiert.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "Schnellzugriff-Funktionen",
     "description": "Label for productivity features toggle"
@@ -220,7 +228,7 @@
     "description": "Alt text for play button"
   },
   "pauseAlt": {
-    "message": "Pausieren", 
+    "message": "Pausieren",
     "description": "Alt text for pause button"
   },
   "reviewPromptTitle": {

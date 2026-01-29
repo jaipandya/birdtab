@@ -1,4 +1,4 @@
-const QUIET_HOURS_START = 13; // 8 PM
+const QUIET_HOURS_START = 20; // 8 PM
 const QUIET_HOURS_END = 8; // 8 AM
 
 export async function isQuietHoursActive() {

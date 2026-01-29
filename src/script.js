@@ -1,6 +1,6 @@
 import './styles.css';
 import CONFIG from './config.js';
-import { getAutoPlayState, getVideoAutoPlayState } from './quietHours.js';
+import { getAutoPlayState, getVideoAutoPlayState, getQuietHoursText } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
@@ -344,7 +344,7 @@ async function initializeAudio() {
     if (birdInfo && birdInfo.videoMode && video) {
       video.muted = true;
       hideVolumeControl();
-      showQuietHoursIcon();
+      showQuietHoursPill();
 
       // Re-append play button so it appears after moon icon (rightmost position)
       const playBtn = document.getElementById('play-button');
@@ -364,7 +364,7 @@ async function initializeAudio() {
     } else {
       // Photo/audio mode during quiet hours: show disabled play button with quiet hours tooltip
       // Add moon icon first, then reposition play button after it
-      showQuietHoursIcon();
+      showQuietHoursPill();
       showDisabledPlayButton();
     }
   } else {
@@ -466,13 +466,13 @@ function showAudioControls() {
 function showDisabledPlayButton() {
   const playButton = document.getElementById('play-button');
   const volumeControl = document.getElementById('volume-control');
-  
+
   if (playButton) {
     playButton.style.display = 'inline-flex';
     playButton.disabled = true;
     playButton.classList.add('disabled');
     playButton.title = chrome.i18n.getMessage('quietHoursActive') || 'Quiet hours active';
-    
+
     // Re-append play button so it appears after moon icon (rightmost position)
     const controlButtons = document.querySelector('.control-buttons');
     if (controlButtons && playButton.parentNode) {
@@ -484,14 +484,73 @@ function showDisabledPlayButton() {
   if (volumeControl) volumeControl.style.display = 'none';
 }
 
-function showQuietHoursIcon() {
-  const button = document.createElement('button');
-  button.id = 'quiet-hours-button';
-  button.className = 'icon-button';
-  button.innerHTML = `<img src="images/svg/moon.svg" class="invert" alt="${chrome.i18n.getMessage('quietHoursAlt')}" width="24" height="24">`;
-  button.title = chrome.i18n.getMessage('quietHoursActive');
+/**
+ * Show quiet hours status pill indicator
+ * Creates a pill-shaped indicator above control buttons that:
+ * - Shows moon icon + "Quiet Hours" text
+ * - Displays tooltip with time range on hover
+ * - Shows close button on hover to disable quiet hours
+ */
+function showQuietHoursPill() {
+  // Don't create if already exists
+  if (document.getElementById('quiet-hours-pill')) return;
 
-  document.querySelector('.control-buttons').appendChild(button);
+  const pill = document.createElement('div');
+  pill.id = 'quiet-hours-pill';
+  pill.className = 'quiet-hours-pill';
+
+  // Get localized strings
+  const quietHoursLabel = chrome.i18n.getMessage('quietHours') || 'Quiet Hours';
+  const quietHoursTime = getQuietHoursText();
+  const tooltipExplanation = chrome.i18n.getMessage('quietHoursTooltipExplanation') || 'Audio playback is paused during quiet hours.';
+  const closeAlt = chrome.i18n.getMessage('closeAlt') || 'Close';
+
+  pill.innerHTML = `
+    <img src="images/svg/moon.svg" class="quiet-hours-pill-icon" alt="${chrome.i18n.getMessage('quietHoursAlt') || 'Quiet Hours'}" width="16" height="16">
+    <span class="quiet-hours-pill-text">${quietHoursLabel}</span>
+    <button class="quiet-hours-pill-close" aria-label="${closeAlt}" title="${chrome.i18n.getMessage('quietHoursDisabled') || 'Disable quiet hours'}">
+      <img src="images/svg/close.svg" class="quiet-hours-pill-close-icon" alt="${closeAlt}" width="10" height="10">
+    </button>
+    <div class="quiet-hours-pill-tooltip">
+      <div class="quiet-hours-pill-tooltip-title">${quietHoursLabel}</div>
+      <div class="quiet-hours-pill-tooltip-time">${quietHoursTime}</div>
+      <div class="quiet-hours-pill-tooltip-desc">${tooltipExplanation}</div>
+    </div>
+  `;
+
+  // Setup close button click handler
+  const closeBtn = pill.querySelector('.quiet-hours-pill-close');
+  closeBtn.addEventListener('click', handleQuietHoursDisable);
+
+  document.body.appendChild(pill);
+}
+
+/**
+ * Handle disabling quiet hours from the pill close button
+ */
+async function handleQuietHoursDisable(event) {
+  event.stopPropagation();
+
+  // Disable quiet hours in storage
+  await chrome.storage.sync.set({ quietHours: false });
+
+  // Remove the pill with animation
+  const pill = document.getElementById('quiet-hours-pill');
+  if (pill) {
+    pill.classList.add('fade-out');
+    setTimeout(() => {
+      pill.remove();
+    }, 200);
+  }
+
+  // Show toast notification
+  const toastMessage = chrome.i18n.getMessage('quietHoursDisabled') || 'Quiet hours disabled';
+  showToast(toastMessage, 'success');
+
+  // Re-enable audio controls
+  showAudioControls();
+
+  log('Quiet hours disabled via pill');
 }
 
 // Load audio without playing it
@@ -1410,6 +1469,10 @@ function setupMediaClickHandler() {
       }
     } else if (!isShowingVideo && audio) {
       // Photo/audio mode: toggle audio play/pause with indicators
+      // Skip if quiet hours are active (audio is blocked)
+      const isQuietHour = await isQuietHoursActive();
+      if (isQuietHour) return;
+
       if (isPlaying) {
         showMediaPauseIndicator();
         pauseAudio();
@@ -1788,8 +1851,8 @@ async function switchToPhotoMode() {
     // Handle quiet hours - show disabled play button, don't auto-play
     if (isQuietHour) {
       // Show quiet hours icon first (if not already present), then reposition play button after it
-      if (!document.getElementById('quiet-hours-button')) {
-        showQuietHoursIcon();
+      if (!document.getElementById('quiet-hours-pill')) {
+        showQuietHoursPill();
       }
       showDisabledPlayButton();
       updatePlayPauseButton();
@@ -1811,8 +1874,8 @@ async function switchToPhotoMode() {
   } else if (isQuietHour) {
     // No audio available but quiet hours active - show disabled play button and quiet hours icon
     // Show quiet hours icon first (if not already present), then reposition play button after it
-    if (!document.getElementById('quiet-hours-button')) {
-      showQuietHoursIcon();
+    if (!document.getElementById('quiet-hours-pill')) {
+      showQuietHoursPill();
     }
     showDisabledPlayButton();
     updatePlayPauseButton();
@@ -1858,9 +1921,9 @@ async function switchToVideoMode() {
     }
     // Hide only volume control during quiet hours (play/pause still allowed)
     hideVolumeControl();
-    // Show quiet hours icon if not already present (moon icon takes place of volume control)
-    if (!document.getElementById('quiet-hours-button')) {
-      showQuietHoursIcon();
+    // Show quiet hours pill if not already present
+    if (!document.getElementById('quiet-hours-pill')) {
+      showQuietHoursPill();
     }
   } else {
     // Show audio controls (volume) for normal mode
@@ -2276,6 +2339,40 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
           });
         }
       }
+    }
+
+    // Handle quiet hours toggle - show/hide pill in real-time
+    if (changes.quietHours) {
+      const isQuietHoursEnabled = changes.quietHours.newValue;
+
+      // Check if we're currently in quiet hours time window
+      isQuietHoursActive().then(isActive => {
+        const existingPill = document.getElementById('quiet-hours-pill');
+
+        if (isActive && !existingPill) {
+          // Quiet hours just became active - show the pill
+          showQuietHoursPill();
+
+          // Update audio controls based on media type
+          if (birdInfo && birdInfo.videoMode && video) {
+            // Video mode: mute video, hide volume control
+            video.muted = true;
+            hideVolumeControl();
+          } else {
+            // Photo/audio mode: show disabled play button
+            showDisabledPlayButton();
+          }
+        } else if (!isActive && existingPill) {
+          // Quiet hours just became inactive - remove the pill
+          existingPill.classList.add('fade-out');
+          setTimeout(() => {
+            existingPill.remove();
+          }, 200);
+
+          // Re-enable audio controls
+          showAudioControls();
+        }
+      });
     }
   }
 });

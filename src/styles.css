@@ -455,7 +455,8 @@ body.loaded {
 .play-icon-container img {
   width: 56px;
   height: 56px;
-  margin-left: 8px; /* Optical centering for play triangle */
+  margin-left: 8px;
+  /* Optical centering for play triangle */
   filter: brightness(0) invert(1);
   opacity: 0.7;
 }
@@ -1186,6 +1187,7 @@ p {
     opacity: 0;
     transform: translateX(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -1337,7 +1339,8 @@ p {
 .play-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: auto; /* Allow hover for tooltip */
+  pointer-events: auto;
+  /* Allow hover for tooltip */
 }
 
 
@@ -2299,7 +2302,8 @@ p {
   height: 100%;
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(0px);
-  z-index: 10001; /* Above chrome-tab-link (10000) */
+  z-index: 10001;
+  /* Above chrome-tab-link (10000) */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease;
@@ -2329,7 +2333,7 @@ p {
   color: var(--modal-text-primary);
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Flexbox layout for sticky footer */
   display: flex;
   flex-direction: column;
@@ -2373,7 +2377,8 @@ p {
   align-items: center;
   padding: var(--modal-spacing) var(--modal-spacing) 0 var(--modal-spacing);
   margin-bottom: 16px;
-  flex-shrink: 0; /* Prevent header from shrinking */
+  flex-shrink: 0;
+  /* Prevent header from shrinking */
 }
 
 .settings-header h2 {
@@ -2417,7 +2422,7 @@ p {
   text-align: left;
   flex: 1;
   overflow-y: auto;
-  
+
   /* Custom scrollbar - subtle and unobtrusive */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
@@ -2446,8 +2451,10 @@ p {
   padding: 12px var(--modal-spacing);
   border-top: 1px solid var(--modal-border);
   text-align: center;
-  flex-shrink: 0; /* Prevent footer from shrinking */
-  background-color: var(--modal-content-bg); /* Match content background */
+  flex-shrink: 0;
+  /* Prevent footer from shrinking */
+  background-color: var(--modal-content-bg);
+  /* Match content background */
 }
 
 .feedback-link {
@@ -2468,7 +2475,8 @@ p {
   display: flex;
   justify-content: center;
   padding: 16px var(--modal-spacing);
-  border-radius: 0 0 0 20px; /* Match sidebar bottom-left corner */
+  border-radius: 0 0 0 20px;
+  /* Match sidebar bottom-left corner */
   font-size: 14px;
 }
 
@@ -2804,9 +2812,12 @@ p {
   padding: 16px 24px 24px 24px;
   display: flex;
   justify-content: flex-end;
-  flex-shrink: 0; /* Prevent footer from shrinking */
-  background-color: var(--modal-content-bg); /* Match content background */
-  border-radius: 0 0 0 20px; /* Match sidebar bottom-left corner */
+  flex-shrink: 0;
+  /* Prevent footer from shrinking */
+  background-color: var(--modal-content-bg);
+  /* Match content background */
+  border-radius: 0 0 0 20px;
+  /* Match sidebar bottom-left corner */
 }
 
 /* Clear history button with subtle danger styling */
@@ -4443,6 +4454,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -4452,6 +4464,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -4484,6 +4497,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -4495,6 +4509,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.9);
@@ -4588,6 +4603,7 @@ html[dir="rtl"] .chrome-footer-notification-text {
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
+
   .confirmation-dialog-backdrop,
   .confirmation-dialog {
     animation: none;
@@ -4597,5 +4613,222 @@ html[dir="rtl"] .chrome-footer-notification-text {
   .confirmation-dialog.closing {
     animation: none;
     opacity: 0;
+  }
+}
+
+/* ===== Quiet Hours Pill Indicator ===== */
+/* Status pill that appears above control buttons during quiet hours */
+
+.quiet-hours-pill {
+  position: fixed;
+  bottom: 100px;
+  /* Above control-buttons (40px bottom + 40px button + 20px gap) */
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  cursor: default;
+  animation: quietHoursPillFadeIn 0.3s ease-out;
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+  overflow: hidden;
+}
+
+.quiet-hours-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  padding-left: 34px;
+  /* Expand to accommodate close button (12px base + 22px button) */
+}
+
+/* Fade in animation */
+@keyframes quietHoursPillFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade out animation for removal */
+.quiet-hours-pill.fade-out {
+  animation: quietHoursPillFadeOut 0.2s ease-out forwards;
+}
+
+@keyframes quietHoursPillFadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Moon icon */
+.quiet-hours-pill-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.quiet-hours-pill:hover .quiet-hours-pill-icon {
+  opacity: 0.8;
+}
+
+/* Text label */
+.quiet-hours-pill-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.quiet-hours-pill:hover .quiet-hours-pill-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Close button - slides out from left */
+.quiet-hours-pill-close {
+  position: absolute;
+  left: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  transform: translateX(-30px);
+  /* Start off-screen to the left */
+  transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.quiet-hours-pill:hover .quiet-hours-pill-close {
+  opacity: 1;
+  transform: translateX(0);
+  /* Slide in from left */
+}
+
+.quiet-hours-pill-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.quiet-hours-pill-close:active {
+  transform: translateX(0) scale(0.9);
+}
+
+.quiet-hours-pill-close-icon {
+  width: 10px;
+  height: 10px;
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+/* Tooltip - appears above the pill on hover */
+.quiet-hours-pill-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-width: 200px;
+  max-width: 260px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+  z-index: 1000;
+  text-align: left;
+}
+
+.quiet-hours-pill:hover .quiet-hours-pill-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Tooltip arrow */
+.quiet-hours-pill-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.85);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+}
+
+.quiet-hours-pill-tooltip-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 6px;
+}
+
+.quiet-hours-pill-tooltip-time {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.quiet-hours-pill-tooltip-desc {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Hide on mobile (same as control-buttons) */
+@media (max-width: 767px) {
+  .quiet-hours-pill {
+    display: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .quiet-hours-pill {
+    animation: none;
+  }
+
+  .quiet-hours-pill.fade-out {
+    animation: none;
+    opacity: 0;
+  }
+
+  .quiet-hours-pill-close {
+    transform: translateX(0);
+  }
+
+  .quiet-hours-pill:hover .quiet-hours-pill-close {
+    transform: translateX(0);
   }
 }

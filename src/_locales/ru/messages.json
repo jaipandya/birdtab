@@ -123,6 +123,14 @@
     "message": "Тихие часы",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "Тихие часы отключены",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "Воспроизведение аудио приостановлено в тихие часы.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "Функции быстрого доступа",
     "description": "Label for productivity features toggle"
@@ -220,7 +228,7 @@
     "description": "Alt text for play button"
   },
   "pauseAlt": {
-    "message": "Пауза", 
+    "message": "Пауза",
     "description": "Alt text for pause button"
   },
   "reviewPromptTitle": {

@@ -123,6 +123,14 @@
     "message": "安静时间",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "安静时间已禁用",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "安静时间期间音频播放已暂停。",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "快速访问功能",
     "description": "Label for productivity features toggle"

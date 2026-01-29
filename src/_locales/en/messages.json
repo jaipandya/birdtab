@@ -123,6 +123,14 @@
     "message": "Quiet Hours",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "Quiet hours disabled",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "Audio playback is paused during quiet hours.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "Quick Access Features",
     "description": "Label for productivity features toggle"
@@ -220,7 +228,7 @@
     "description": "Alt text for play button"
   },
   "pauseAlt": {
-    "message": "Pause", 
+    "message": "Pause",
     "description": "Alt text for pause button"
   },
   "reviewPromptTitle": {
@@ -652,7 +660,7 @@
     "description": "Alt text for Bing search icon"
   },
   "eBirdPageAlt": {
-    "message": "eBird Page", 
+    "message": "eBird Page",
     "description": "Alt text for eBird page icon"
   },
   "quizAlt": {

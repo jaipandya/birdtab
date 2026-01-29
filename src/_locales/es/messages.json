@@ -123,6 +123,14 @@
     "message": "Horas Silenciosas",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "Horas silenciosas desactivadas",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "La reproducción de audio está en pausa durante las horas silenciosas.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "Funciones de Acceso Rápido",
     "description": "Label for productivity features toggle"

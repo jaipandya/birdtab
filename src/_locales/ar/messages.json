@@ -123,6 +123,14 @@
     "message": "الساعات الهادئة",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "تم تعطيل الساعات الهادئة",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "تشغيل الصوت متوقف مؤقتًا خلال الساعات الهادئة.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "ميزات الوصول السريع",
     "description": "Label for productivity features toggle"

@@ -123,6 +123,14 @@
     "message": "静寂時間",
     "description": "Alt text for quiet hours moon icon"
   },
+  "quietHoursDisabled": {
+    "message": "静寂時間が無効になりました",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "静寂時間中は音声再生が一時停止されます。",
+    "description": "Explanation text for quiet hours tooltip"
+  },
   "quickAccessFeatures": {
     "message": "クイックアクセス機能",
     "description": "Label for productivity features toggle"
@@ -220,7 +228,7 @@
     "description": "Alt text for play button"
   },
   "pauseAlt": {
-    "message": "一時停止", 
+    "message": "一時停止",
     "description": "Alt text for pause button"
   },
   "reviewPromptTitle": {
