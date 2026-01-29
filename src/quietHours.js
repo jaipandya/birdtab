@@ -1,4 +1,4 @@
-const QUIET_HOURS_START = 20; // 8 PM
+const QUIET_HOURS_START = 13; // 8 PM
 const QUIET_HOURS_END = 8; // 8 AM
 
 export async function isQuietHoursActive() {
@@ -13,6 +13,18 @@ export async function getAutoPlayState() {
   const isQuietHoursEnabled = await isQuietHoursActive();
   const result = await chrome.storage.sync.get(['autoPlay']);
   return isQuietHoursEnabled ? false : result.autoPlay;
+}
+
+/**
+ * Get auto-play state for video mode.
+ * Unlike audio, videos can play muted during quiet hours, so we return
+ * the user's auto-play preference regardless of quiet hours status.
+ * The video will be muted during quiet hours (handled by playVideo()).
+ * @returns {Promise<boolean>} The user's auto-play setting
+ */
+export async function getVideoAutoPlayState() {
+  const result = await chrome.storage.sync.get(['autoPlay']);
+  return result.autoPlay ?? false;
 }
 
 export function getQuietHoursText() {

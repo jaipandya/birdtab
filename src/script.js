@@ -1,6 +1,6 @@
 import './styles.css';
 import CONFIG from './config.js';
-import { getAutoPlayState } from './quietHours.js';
+import { getAutoPlayState, getVideoAutoPlayState } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
@@ -338,7 +338,6 @@ const updatePlayPauseButton = () => {
 // Initialize audio/video based on auto-play settings
 async function initializeAudio() {
   const isQuietHour = await isQuietHoursActive();
-  const shouldAutoPlay = await getAutoPlayState();
 
   if (isQuietHour) {
     // Video mode during quiet hours: allow play/pause, just muted, no volume control
@@ -346,7 +345,7 @@ async function initializeAudio() {
       video.muted = true;
       hideVolumeControl();
       showQuietHoursIcon();
-      
+
       // Re-append play button so it appears after moon icon (rightmost position)
       const playBtn = document.getElementById('play-button');
       if (playBtn) {
@@ -356,20 +355,26 @@ async function initializeAudio() {
         }
         controlButtons.appendChild(playBtn);
       }
-      // No persistent overlay - user can click anywhere or use play button to start muted playback
+
+      // Auto-play muted video if auto-play is enabled
+      const shouldAutoPlayVideo = await getVideoAutoPlayState();
+      if (shouldAutoPlayVideo) {
+        await playVideo();
+      }
     } else {
-      // Photo/audio mode during quiet hours: hide all audio controls
-      hideAudioControls();
+      // Photo/audio mode during quiet hours: show disabled play button with quiet hours tooltip
+      // Add moon icon first, then reposition play button after it
       showQuietHoursIcon();
+      showDisabledPlayButton();
     }
   } else {
+    const shouldAutoPlay = await getAutoPlayState();
     // Video mode: auto-play video if enabled
     if (birdInfo && birdInfo.videoMode && video) {
       showAudioControls();
       if (shouldAutoPlay) {
         await playVideo();
       }
-      // If not auto-playing, no persistent overlay - user can click anywhere or use play button
     }
     // Audio mode: auto-play audio if enabled
     else if (birdInfo && birdInfo.mediaUrl) {
@@ -400,7 +405,7 @@ async function playVideo(showIndicator = false) {
     if (showIndicator && vvm) {
       vvm.showPlayIndicator();
     }
-    
+
     await video.play();
     isPlaying = true;
     updatePlayPauseButton();
@@ -447,8 +452,36 @@ function hideVolumeControl() {
 function showAudioControls() {
   const playButton = document.getElementById('play-button');
   const volumeControl = document.getElementById('volume-control');
-  if (playButton) playButton.style.display = 'inline-flex';
+  if (playButton) {
+    playButton.style.display = 'inline-flex';
+    playButton.disabled = false;
+    playButton.classList.remove('disabled');
+    playButton.title = chrome.i18n.getMessage('playTooltip');
+  }
   if (volumeControl) volumeControl.style.display = 'inline-flex';
+}
+
+// Show play button but disabled during quiet hours (photo mode only)
+// Repositions play button after the moon icon for consistent ordering
+function showDisabledPlayButton() {
+  const playButton = document.getElementById('play-button');
+  const volumeControl = document.getElementById('volume-control');
+  
+  if (playButton) {
+    playButton.style.display = 'inline-flex';
+    playButton.disabled = true;
+    playButton.classList.add('disabled');
+    playButton.title = chrome.i18n.getMessage('quietHoursActive') || 'Quiet hours active';
+    
+    // Re-append play button so it appears after moon icon (rightmost position)
+    const controlButtons = document.querySelector('.control-buttons');
+    if (controlButtons && playButton.parentNode) {
+      playButton.parentNode.removeChild(playButton);
+      controlButtons.appendChild(playButton);
+    }
+  }
+  // Hide volume control during quiet hours
+  if (volumeControl) volumeControl.style.display = 'none';
 }
 
 function showQuietHoursIcon() {
@@ -488,6 +521,8 @@ function createPlayButton(onClickHandler) {
   playButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    // Don't trigger handler if button is disabled (quiet hours in photo mode)
+    if (playButton.disabled) return;
     await onClickHandler();
   });
   return playButton;
@@ -982,7 +1017,7 @@ async function initializePage() {
 
         setupVolumeControl();
         updateVolumeControl();
-        
+
         // Add click-to-play/pause on empty areas of the page for audio
         setupMediaClickHandler();
       } else {
@@ -1359,7 +1394,7 @@ function setupMediaClickHandler() {
     });
 
     if (isInteractive) return;
-    
+
     e.preventDefault();
 
     if (isShowingVideo && video) {
@@ -1367,7 +1402,7 @@ function setupMediaClickHandler() {
       // If video is unloaded, the play overlay handles reload - don't interfere
       const vvm = getVideoVisibilityManager();
       if (vvm && vvm.isUnloaded) return;
-      
+
       if (video.paused) {
         await playVideo(true); // Show play indicator for user-initiated play
       } else {
@@ -1712,7 +1747,7 @@ async function switchToPhotoMode() {
 
   // Check for quiet hours before showing controls
   const isQuietHour = await isQuietHoursActive();
-  
+
   // Initialize audio if available
   if (birdInfo && birdInfo.mediaUrl) {
     // Create audio object if it doesn't exist
@@ -1733,7 +1768,7 @@ async function switchToPhotoMode() {
     if (playBtn) {
       playBtn.remove();
     }
-    
+
     // Create fresh button for audio mode
     playBtn = document.createElement('button');
     playBtn.id = 'play-button';
@@ -1743,20 +1778,22 @@ async function switchToPhotoMode() {
     playBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       e.stopPropagation();
+      // Don't trigger handler if button is disabled (quiet hours)
+      if (playBtn.disabled) return;
       await togglePlay();
     });
     document.querySelector('.control-buttons').appendChild(playBtn);
     log('Created play button for photo mode');
 
-    // Handle quiet hours - hide controls, don't auto-play
+    // Handle quiet hours - show disabled play button, don't auto-play
     if (isQuietHour) {
-      hideAudioControls();
-      // Show quiet hours icon if not already present
+      // Show quiet hours icon first (if not already present), then reposition play button after it
       if (!document.getElementById('quiet-hours-button')) {
         showQuietHoursIcon();
       }
+      showDisabledPlayButton();
       updatePlayPauseButton();
-      log('Switched to photo mode (quiet hours active - no controls)');
+      log('Switched to photo mode (quiet hours active - play disabled)');
       return;
     }
 
@@ -1772,13 +1809,14 @@ async function switchToPhotoMode() {
       }
     });
   } else if (isQuietHour) {
-    // No audio available but quiet hours active - still show quiet hours icon
-    hideAudioControls();
+    // No audio available but quiet hours active - show disabled play button and quiet hours icon
+    // Show quiet hours icon first (if not already present), then reposition play button after it
     if (!document.getElementById('quiet-hours-button')) {
       showQuietHoursIcon();
     }
+    showDisabledPlayButton();
     updatePlayPauseButton();
-    log('Switched to photo mode (quiet hours active - no audio)');
+    log('Switched to photo mode (quiet hours active - no audio, play disabled)');
     return;
   }
 
@@ -1835,7 +1873,7 @@ async function switchToVideoMode() {
   if (playBtn) {
     playBtn.remove();
   }
-  
+
   // Create fresh button for video mode
   playBtn = createVideoPlayer();
   if (playBtn) {
@@ -1844,22 +1882,17 @@ async function switchToVideoMode() {
     controlButtons.appendChild(playBtn);
   }
 
-  if (isQuietHour) {
-    // No persistent overlay - user can click anywhere or use play button to start muted playback
-    log('Switched to video mode (quiet hours active - muted, play/pause allowed)');
-    return;
+  // Check autoplay setting and play video if enabled (video can auto-play muted during quiet hours)
+  const shouldAutoPlayVideo = await getVideoAutoPlayState();
+  if (shouldAutoPlayVideo && video) {
+    await playVideo();
   }
 
-  // Check autoplay setting and play video if enabled
-  chrome.storage.sync.get(['autoPlay'], (result) => {
-    const shouldAutoPlay = result.autoPlay !== false; // Default to true
-    if (shouldAutoPlay && video) {
-      playVideo();
-    }
-    // If not auto-playing, no persistent overlay - user can click anywhere or use play button
-  });
-
-  log('Switched to video mode');
+  if (isQuietHour) {
+    log('Switched to video mode (quiet hours active - muted, play/pause allowed)');
+  } else {
+    log('Switched to video mode');
+  }
 }
 
 // Combined message listener to handle all background messages

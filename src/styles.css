@@ -1333,6 +1333,13 @@ p {
   display: inline-flex;
 }
 
+.play-button.disabled,
+.play-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: auto; /* Allow hover for tooltip */
+}
+
 
 
 .hidden {
