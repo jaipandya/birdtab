@@ -1218,5 +1218,13 @@
   "searchEnginePerplexity": {
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
+  },
+  "tourOptionsMenuTitle": {
+    "message": "القائمة السريعة",
+    "description": "Feature tour: options menu title"
+  },
+  "tourOptionsMenuDescription": {
+    "message": "الوصول إلى الإعدادات وسجل المشاهدة واختبار الطيور من هذه القائمة. انقر لاستكشاف خياراتك!",
+    "description": "Feature tour: options menu description"
   }
 }

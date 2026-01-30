@@ -1218,5 +1218,13 @@
   "searchEnginePerplexity": {
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
+  },
+  "tourOptionsMenuTitle": {
+    "message": "Schnellmenü",
+    "description": "Feature tour: options menu title"
+  },
+  "tourOptionsMenuDescription": {
+    "message": "Zugriff auf Einstellungen, Verlauf und Vogel-Quiz über dieses Menü. Klicke, um deine Optionen zu erkunden!",
+    "description": "Feature tour: options menu description"
   }
 }

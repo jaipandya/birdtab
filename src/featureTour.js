@@ -31,7 +31,8 @@ import { trackTourCompleted } from './analytics.js';
 // Version history:
 // 1 - Initial tour with Video Mode, Settings, History, Quiz, Refresh, Audio
 // 2 - Added Chrome Tab shortcut feature spotlight
-const TOUR_VERSION = 2;
+// 3 - Consolidated Settings, History, Quiz into options menu
+const TOUR_VERSION = 3;
 
 // Feature spotlights for existing users
 // When adding new features, add them here with minVersion set to current TOUR_VERSION
@@ -42,7 +43,7 @@ const FEATURE_SPOTLIGHTS = {
 };
 
 // Tour step configuration - ordered left to right as they appear in the UI
-// Button order in UI: Settings, History, Quiz, Refresh, Volume, Play/Pause
+// Button order in UI: Options Menu (settings button), Refresh, Volume, Play/Pause
 const TOUR_STEPS = [
   {
     id: 'welcome',
@@ -66,33 +67,13 @@ const TOUR_STEPS = [
     position: 'top'
   },
   {
-    id: 'settings',
+    id: 'optionsMenu',
     targetSelector: '#settings-button',
     icon: 'images/svg/settings.svg',
-    titleKey: 'tourSettingsTitle',
-    descriptionKey: 'tourSettingsDescription',
-    fallbackTitle: 'Settings',
-    fallbackDescription: 'Customize your BirdTab experience. Choose your region, enable auto-play for bird calls, and more.',
-    position: 'top'
-  },
-  {
-    id: 'history',
-    targetSelector: '#history-button',
-    icon: 'images/svg/history.svg',
-    titleKey: 'tourHistoryTitle',
-    descriptionKey: 'tourHistoryDescription',
-    fallbackTitle: 'Viewing History',
-    fallbackDescription: 'See all the birds you\'ve discovered! Click here to revisit your favorites and explore your birding journey.',
-    position: 'top'
-  },
-  {
-    id: 'quiz',
-    targetSelector: '#quiz-button',
-    icon: 'images/svg/quiz.svg',
-    titleKey: 'tourQuizTitle',
-    descriptionKey: 'tourQuizDescription',
-    fallbackTitle: 'Bird Quiz',
-    fallbackDescription: 'Test your bird identification skills! Take a fun quiz to see how well you know your feathered friends.',
+    titleKey: 'tourOptionsMenuTitle',
+    descriptionKey: 'tourOptionsMenuDescription',
+    fallbackTitle: 'Quick Menu',
+    fallbackDescription: 'Access settings, viewing history, and bird quiz from this menu. Click to explore your options!',
     position: 'top'
   },
   {

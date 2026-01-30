@@ -12,7 +12,7 @@ import { log } from './logger.js';
  * @param {HTMLElement} config.anchorElement - Element to anchor the menu position to
  * @param {Array} config.options - Array of option configurations
  * @param {string} config.menuId - Unique ID for the menu
- * @param {string} [config.position='right'] - Menu position relative to anchor ('right', 'left', 'bottom')
+ * @param {string} [config.position='right'] - Menu position relative to anchor ('right', 'left', 'bottom', 'top')
  * @returns {Object} Menu controller object
  */
 export function createOptionsMenu(config) {
@@ -281,6 +281,9 @@ export function createOptionsMenu(config) {
       left = anchorRect.left - menuRect.width - 10;
     } else if (position === 'bottom') {
       top = anchorRect.bottom + 10;
+      left = anchorRect.left + (anchorRect.width / 2) - (menuRect.width / 2);
+    } else if (position === 'top') {
+      top = anchorRect.top - menuRect.height - 10;
       left = anchorRect.left + (anchorRect.width / 2) - (menuRect.width / 2);
     }
     

@@ -44,6 +44,7 @@ import {
 } from './historyModal.js';
 import { initializeGoogleApps } from './googleApps.js';
 import { initializeChromeTab, updateChromeTabVisibility } from './chromeTab.js';
+import { createOptionsMenu } from './optionsMenu.js';
 import {
   showLoadingIndicator,
   hideLoadingIndicator,
@@ -1009,12 +1010,6 @@ async function initializePage() {
         <button id="settings-button" class="icon-button" aria-label="${chrome.i18n.getMessage('openSettings')}" title="${chrome.i18n.getMessage('settingsTooltip')}">
           <img src="images/svg/settings.svg" alt="${chrome.i18n.getMessage('settingsAlt')}" width="24" height="24">
         </button>
-        <button id="history-button" class="icon-button" aria-label="${chrome.i18n.getMessage('openHistory') || 'Open history'}" title="${chrome.i18n.getMessage('historyTooltip') || 'View your bird watching history'}">
-          <img src="images/svg/history.svg" alt="${chrome.i18n.getMessage('historyAlt') || 'History'}" width="24" height="24">
-        </button>
-        <button id="quiz-button" class="icon-button" aria-label="${chrome.i18n.getMessage('startQuiz')}" title="${chrome.i18n.getMessage('quizTooltip')}">
-          <img src="images/svg/quiz.svg" alt="${chrome.i18n.getMessage('quizAlt')}" width="24" height="24">
-        </button>
         <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
           <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
@@ -1127,20 +1122,6 @@ async function initializePage() {
       window.location.reload();
     });
 
-    document.getElementById('history-button').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      openHistoryModal();
-    });
-
-    document.getElementById('quiz-button').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (quizMode && !quizMode.isActive) {
-        quizMode.startQuiz();
-      }
-    });
-
     // Initialize Chrome tab link
     initializeChromeTab();
 
@@ -1160,6 +1141,54 @@ async function initializePage() {
       console.error('Failed to initialize settings modal:', error);
       captureException(error, {
         tags: { operation: 'initializeSettingsSidebar' }
+      });
+    }
+
+    // Initialize control options menu (settings, history, quiz)
+    try {
+      const settingsButton = document.getElementById('settings-button');
+      if (settingsButton) {
+        createOptionsMenu({
+          triggerElement: settingsButton,
+          anchorElement: settingsButton,
+          menuId: 'control-options-menu',
+          position: 'top',
+          getOptions: () => [
+            {
+              type: 'button',
+              label: chrome.i18n.getMessage('settingsAlt') || 'Settings',
+              icon: 'images/svg/settings.svg',
+              onClick: () => {
+                trackFeature('settings');
+                SettingsSidebar.getInstance().open();
+              }
+            },
+            {
+              type: 'button',
+              label: chrome.i18n.getMessage('historyAlt') || 'History',
+              icon: 'images/svg/history.svg',
+              onClick: () => {
+                trackFeature('history');
+                openHistoryModal();
+              }
+            },
+            {
+              type: 'button',
+              label: chrome.i18n.getMessage('quizAlt') || 'Quiz',
+              icon: 'images/svg/quiz.svg',
+              onClick: () => {
+                if (quizMode && !quizMode.isActive) {
+                  quizMode.startQuiz();
+                }
+              }
+            }
+          ]
+        });
+      }
+    } catch (error) {
+      console.error('Failed to initialize control options menu:', error);
+      captureException(error, {
+        tags: { operation: 'initializeControlOptionsMenu' }
       });
     }
 
@@ -2192,18 +2221,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     quizMode = new QuizMode({ onQuizStart: pauseAllMedia });
     log('Quiz mode initialized');
-
-    // Add quiz button event listener for static HTML
-    const quizButton = document.getElementById('quiz-button');
-    if (quizButton) {
-      quizButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (quizMode && !quizMode.isActive) {
-          quizMode.startQuiz();
-        }
-      });
-    }
   } catch (error) {
     captureException(error, {
       tags: { operation: 'initializeQuizMode' }

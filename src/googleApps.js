@@ -5,6 +5,7 @@
 
 import { localizeHtml } from './i18n.js';
 import { log } from './logger.js';
+import { trackFeature } from './analytics.js';
 
 // Google Apps data organized in two sections
 const GOOGLE_APPS = {
@@ -283,6 +284,7 @@ function createTriggerButton() {
   triggerButton.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
+    trackFeature('google_apps');
     toggleGoogleApps();
   });
 

@@ -1,4 +1,5 @@
 import { populateRegionSelect } from './shared.js';
+import { getTourVersion } from './featureTour.js';
 import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
@@ -274,7 +275,12 @@ class SettingsSidebar {
           <div class="settings-debug-section">
             <h3 class="debug-section-title" data-i18n="debugOptions">Debug Options</h3>
             <div class="debug-buttons">
-              <button id="sidebar-reset-tour" class="debug-button" data-i18n="resetTour">Reset Feature Tour</button>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="sidebar-tour-version" style="width: 60px; height: 36px; padding: 0 8px; border-radius: 8px; background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3); font-size: 14px; text-align: center; cursor: pointer;">
+                  <!-- Populated by JS -->
+                </select>
+                <button id="sidebar-reset-tour" class="debug-button" style="flex: 1;" data-i18n="resetTour">Reset Feature Tour</button>
+              </div>
               <button id="sidebar-reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
               <button id="sidebar-delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
             </div>
@@ -320,16 +326,8 @@ class SettingsSidebar {
   }
 
   bindEvents() {
-    // Settings button click - use event delegation to handle button replacement
-    // This ensures clicks work even if the button is replaced in the DOM
-    document.addEventListener('click', (e) => {
-      const settingsBtn = e.target.closest('#settings-button');
-      if (settingsBtn) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.open();
-      }
-    }, { signal: this.abortController.signal });
+    // NOTE: Settings button click is now handled by the control options menu in script.js
+    // The options menu calls SettingsSidebar.getInstance().open() when "Settings" is selected
 
     // Close button click
     if (this.closeButton) {
@@ -458,11 +456,26 @@ class SettingsSidebar {
     const deleteCacheButton = document.getElementById('sidebar-delete-cache');
 
     if (resetTourButton) {
+      // Populate version dropdown
+      const versionSelect = document.getElementById('sidebar-tour-version');
+      if (versionSelect) {
+        const currentMaxVersion = getTourVersion();
+        for (let i = 0; i <= currentMaxVersion; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `v${i}`;
+          versionSelect.appendChild(option);
+        }
+        versionSelect.value = 0;
+      }
+
       resetTourButton.addEventListener('click', async () => {
         try {
+          const targetVersion = versionSelect ? parseInt(versionSelect.value, 10) : 0;
+
           // Reset the feature tour version
           await new Promise((resolve, reject) => {
-            chrome.storage.sync.set({ featureTourVersion: 0 }, function () {
+            chrome.storage.sync.set({ featureTourVersion: targetVersion }, function () {
               if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError);
               } else {
@@ -474,7 +487,7 @@ class SettingsSidebar {
           // Also reset the Chrome footer notification
           await resetChromeFooterNotification();
 
-          const successMsg = getMessage('tourReset') || 'Feature tour has been reset. It will show again on the next page load.';
+          const successMsg = `Tour version set to ${targetVersion}. Reload to see effect.`;
           alert(successMsg);
         } catch (error) {
           log('Error resetting tour: ' + error.message);
