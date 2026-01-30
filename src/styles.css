@@ -1145,7 +1145,8 @@ p {
 
 /* Add consistent gap for icon group (feedback + share icons) */
 .credits .credit-icon-group {
-  margin-left: 0.5rem;
+  margin-left: 0;
+  margin-right: 0.5rem;
 }
 
 .credits a {
@@ -1196,7 +1197,8 @@ p {
 
 /* Media Toggle Switch (Video/Photo) */
 .credits .media-toggle-container {
-  margin-left: 0.5rem;
+  margin-left: 0;
+  margin-right: 0.5rem;
 }
 
 .media-toggle {
@@ -5014,6 +5016,7 @@ html[dir="rtl"] body.google-apps-enabled .chrome-tab-link {
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
+
   .google-apps-trigger,
   .google-app-item,
   .google-app-icon-wrapper {

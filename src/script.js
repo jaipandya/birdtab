@@ -762,6 +762,32 @@ function switchToImageModeCredits() {
   if (!creditsContainer || !birdInfo) return;
 
   const imageCreditsHtml = `
+    <span class="credit-item media-toggle-container">
+      <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
+        <input type="checkbox" id="media-toggle-switch" checked
+               aria-label="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}"
+               role="switch"
+               aria-checked="true">
+        <span class="media-toggle-slider" aria-hidden="true">
+          <span class="media-toggle-icon media-toggle-photo">
+            <img src="images/svg/camera.svg" alt="" width="12" height="12">
+          </span>
+          <span class="media-toggle-icon media-toggle-video">
+            <img src="images/svg/video.svg" alt="" width="12" height="12">
+          </span>
+        </span>
+      </label>
+    </span>
+    <span class="credit-item credit-icon-group">
+      <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
+        <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
+      </a>
+    </span>
+    <span id="share-container" class="credit-item share-container credit-icon-group">
+      <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
+        <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
+      </button>
+    </span>
     <span class="credit-item">
       <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
       <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
@@ -774,16 +800,6 @@ function switchToImageModeCredits() {
     ` : ''}
     <span class="credit-item">
       ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
-    </span>
-    <span class="credit-item credit-icon-group">
-      <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
-        <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
-      </a>
-    </span>
-    <span id="share-container" class="credit-item share-container credit-icon-group">
-      <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
-        <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
-      </button>
     </span>
   `;
 
@@ -956,10 +972,6 @@ async function initializePage() {
           </div>
         </div>
         <p class="credits">
-          ${creditsHtml}
-          <span class="credit-item">
-            ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
-          </span>
           <span class="credit-item media-toggle-container">
             <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
               <input type="checkbox" id="media-toggle-switch" ${isVideoMode ? 'checked' : ''} 
@@ -985,6 +997,10 @@ async function initializePage() {
             <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip')}">
               <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt')}" width="16" height="16">
             </button>
+          </span>
+          ${creditsHtml}
+          <span class="credit-item">
+            ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
           </span>
         </p>
       </div>
@@ -1712,7 +1728,10 @@ function updateCreditsForPhotoMode() {
   if (recordistExists) return;
 
   // Find the camera credit (photo credit) and insert after it
-  const cameraCredit = credits.querySelector('.credit-item');
+  const cameraCredit = Array.from(credits.querySelectorAll('.credit-item')).find(item => {
+    const link = item.querySelector('a');
+    return link && link.getAttribute('href') === birdInfo.photographerUrl;
+  });
   if (!cameraCredit) return;
 
   const audioCredit = document.createElement('span');
