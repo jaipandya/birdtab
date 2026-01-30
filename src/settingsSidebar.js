@@ -502,13 +502,15 @@ class SettingsSidebar {
             });
           });
 
-          // Set default values including onboardingComplete: false
+          // Set default values matching fresh install state
           await new Promise((resolve, reject) => {
             chrome.storage.sync.set({
               region: 'US',
               autoPlay: false,
               quietHours: false,
-              quickAccessEnabled: false,
+              clockDisplayMode: 'clock',
+              quickAccessEnabled: true,
+              hideTopSites: true,
               onboardingComplete: false,
               featureTourVersion: 0
             }, function () {
