@@ -578,6 +578,9 @@ export function createVideoProgressBar() {
  * Handle click on progress bar to seek
  */
 function handleProgressBarClick(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
   if (!video || !video.duration) return;
 
   const progressBar = e.currentTarget;
