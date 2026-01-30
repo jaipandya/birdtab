@@ -168,7 +168,7 @@ export function initializeSearch() {
 /**
  * Set up event listeners for the search form
  */
-function setupSearchListeners() {
+export function setupSearchListeners() {
   const searchForm = document.getElementById('search-form');
   const searchInput = document.getElementById('search-input');
 

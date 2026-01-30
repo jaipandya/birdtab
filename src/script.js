@@ -5,7 +5,7 @@ import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
-import { initializeSearch, setupSearchKeyboardShortcut } from './search.js';
+import { initializeSearch, setupSearchKeyboardShortcut, setupSearchListeners } from './search.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
