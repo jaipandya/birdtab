@@ -21,32 +21,32 @@ class SettingsSidebar {
     if (instance) {
       return instance;
     }
-    
+
     this.initialize();
-    
+
     instance = this;
     return instance;
   }
-  
+
   static getInstance() {
     if (!instance) {
       instance = new SettingsSidebar();
     }
     return instance;
   }
-  
+
   static destroyInstance() {
     if (instance) {
       instance.destroy();
       instance = null;
     }
   }
-  
+
   initialize() {
     this.isOpen = false;
     this.escapeHandler = null;
     this.abortController = new AbortController();
-    
+
     this.createSidebar();
     this.initializeElements();
     this.bindEvents();
@@ -60,7 +60,7 @@ class SettingsSidebar {
     if (existingSidebar) {
       existingSidebar.remove();
     }
-    
+
     // Create sidebar HTML dynamically with i18n data attributes
     const sidebarHTML = `
       <div 
@@ -90,17 +90,54 @@ class SettingsSidebar {
               <p class="help-text" data-i18n="regionHelpText">Choose your preferred region for bird discoveries.</p>
             </div>
 
+            <!-- Media & Playback Category -->
+            <div class="settings-category-title" data-i18n="settingsCategoryMedia">Media & Playback</div>
+            
             <div class="setting">
               <div class="toggle-container">
                 <div class="toggle-text">
                   <span class="setting-label-with-icon">
                     <img src="images/svg/microphone.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                    <span data-i18n="autoPlayBirdCalls">Auto-play media</span>
                   </span>
-                  <p class="help-text" data-i18n="autoPlayHelpText">Play bird songs automatically with each new tab. Quiet hours will override this when active.</p>
+                  <p class="help-text" data-i18n="autoPlayHelpText">Automatically play bird calls in photo mode or videos in video mode with each new tab. Quiet hours will override this when active.</p>
                 </div>
-                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
+                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls or videos when you open a new tab">
                   <input type="checkbox" id="modal-auto-play">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/video.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="videoMode">Video Mode</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                  </span>
+                  <p class="help-text" id="modal-video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available.</p>
+                </div>
+                <label class="switch" data-i18n-title="videoModeTooltip" title="Enable to show bird videos instead of photos when available">
+                  <input type="checkbox" id="modal-video-mode" aria-describedby="modal-video-mode-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/camera.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="highResImages">High-Resolution Images</span>
+                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
+                  </span>
+                  <p class="help-text" id="modal-high-res-help" data-i18n="highResHelpText">Display ultra high-resolution 2400px bird photos for crystal-clear detail.</p>
+                </div>
+                <label class="switch" data-i18n-title="highResTooltip" title="Enable to show high-resolution images">
+                  <input type="checkbox" id="modal-high-res" aria-describedby="modal-high-res-help">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -121,6 +158,9 @@ class SettingsSidebar {
                 </label>
               </div>
             </div>
+
+            <!-- Productivity & Interface Category -->
+            <div class="settings-category-title" data-i18n="settingsCategoryProductivity">Productivity & Interface</div>
 
             <div class="setting">
               <div class="toggle-container">
@@ -150,40 +190,6 @@ class SettingsSidebar {
                 </div>
                 <label class="switch" data-i18n-title="productivityTooltip" title="Show search box, most visited sites, and allow custom shortcuts">
                   <input type="checkbox" id="modal-enable-productivity" aria-describedby="modal-productivity-help">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/video.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="videoMode">Video Mode</span>
-                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
-                  </span>
-                  <p class="help-text" id="modal-video-mode-help" data-i18n="videoModeHelpText">Show bird videos instead of photos when available. Videos include sound.</p>
-                </div>
-                <label class="switch" data-i18n-title="videoModeTooltip" title="Enable to show bird videos instead of photos">
-                  <input type="checkbox" id="modal-video-mode" aria-describedby="modal-video-mode-help">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/camera.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="highResImages">High-Resolution Images</span>
-                    <span class="pro-badge" data-i18n="proBadge">Pro</span>
-                  </span>
-                  <p class="help-text" id="modal-high-res-help" data-i18n="highResHelpText">Display ultra high-resolution 2400px bird photos for crystal-clear detail.</p>
-                </div>
-                <label class="switch" data-i18n-title="highResTooltip" title="Enable to show high-resolution images">
-                  <input type="checkbox" id="modal-high-res" aria-describedby="modal-high-res-help">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -280,11 +286,11 @@ class SettingsSidebar {
 
     // Add sidebar to body
     document.body.insertAdjacentHTML('beforeend', sidebarHTML);
-    
+
     // Get references to the created elements
     this.sidebar = document.getElementById('settings-sidebar');
     this.closeButton = document.getElementById('close-settings');
-    
+
     // Localize the newly created sidebar
     localizeHtml();
   }
@@ -365,10 +371,10 @@ class SettingsSidebar {
         this.close();
       }
     };
-    document.addEventListener('keydown', this.escapeHandler, { 
-      signal: this.abortController.signal 
+    document.addEventListener('keydown', this.escapeHandler, {
+      signal: this.abortController.signal
     });
-    
+
     // Focus trap
     document.addEventListener('keydown', this.trapFocus.bind(this), {
       signal: this.abortController.signal,
@@ -405,10 +411,10 @@ class SettingsSidebar {
     if (this.chromeTabCheckbox) {
       this.chromeTabCheckbox.addEventListener('change', () => this.saveSettings());
     }
-    
+
     // Make entire toggle container rows clickable
     this.bindToggleContainerClicks();
-    
+
     // Bind debug buttons (only exist in development)
     this.bindDebugButtons();
   }
@@ -464,10 +470,10 @@ class SettingsSidebar {
               }
             });
           });
-          
+
           // Also reset the Chrome footer notification
           await resetChromeFooterNotification();
-          
+
           const successMsg = getMessage('tourReset') || 'Feature tour has been reset. It will show again on the next page load.';
           alert(successMsg);
         } catch (error) {
@@ -483,11 +489,11 @@ class SettingsSidebar {
         if (!confirm(getMessage('confirmResetSettings'))) {
           return;
         }
-        
+
         try {
           // Reset all settings to their default values
           await new Promise((resolve, reject) => {
-            chrome.storage.sync.clear(function() {
+            chrome.storage.sync.clear(function () {
               if (chrome.runtime.lastError) {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
@@ -495,7 +501,7 @@ class SettingsSidebar {
               }
             });
           });
-          
+
           // Set default values including onboardingComplete: false
           await new Promise((resolve, reject) => {
             chrome.storage.sync.set({
@@ -513,7 +519,7 @@ class SettingsSidebar {
               }
             });
           });
-          
+
           // Show success message and close sidebar
           alert(getMessage('settingsResetComplete'));
           this.close();
@@ -537,7 +543,7 @@ class SettingsSidebar {
               }
             });
           });
-          
+
           // Also clear some sync storage cached items if needed
           await new Promise((resolve, reject) => {
             chrome.storage.sync.remove(['customShortcuts'], function () {
@@ -548,10 +554,10 @@ class SettingsSidebar {
               }
             });
           });
-          
+
           // Notify background script to clear preloaded bird info (don't wait for response)
           chrome.runtime.sendMessage({ action: 'deleteCache' });
-          
+
           // Show success message
           alert(getMessage('cacheCleared'));
         } catch (error) {
@@ -564,24 +570,24 @@ class SettingsSidebar {
 
   open() {
     if (!this.sidebar) return;
-    
+
     this.loadSettings(); // Refresh settings when opening
     this.sidebar.classList.add('open');
     this.isOpen = true;
-    
+
     // Prevent body scroll when sidebar is open
     document.body.style.overflow = 'hidden';
   }
 
   close() {
     if (!this.sidebar) return;
-    
+
     this.sidebar.classList.remove('open');
     this.isOpen = false;
-    
+
     // Restore body scroll
     document.body.style.overflow = '';
-    
+
     // Return focus to settings button (query fresh in case DOM was replaced)
     const settingsBtn = document.getElementById('settings-button');
     if (settingsBtn) {
@@ -592,19 +598,19 @@ class SettingsSidebar {
   destroy() {
     // Clean up all event listeners via abort controller
     this.abortController.abort();
-    
+
     // Restore body scroll if sidebar was open
     document.body.style.overflow = '';
-    
+
     // Remove sidebar from DOM
     if (this.sidebar && this.sidebar.parentNode) {
       this.sidebar.remove();
     }
-    
+
     // Clear references
     this.sidebar = null;
     this.escapeHandler = null;
-    
+
     // Clear module-level instance
     instance = null;
   }
@@ -723,15 +729,15 @@ class SettingsSidebar {
     const notification = document.createElement('div');
     notification.className = 'settings-save-notification';
     notification.textContent = getMessage('settingsSaved');
-    
+
     // Add to document
     document.body.appendChild(notification);
-    
+
     // Show notification with animation after processing delay
     setTimeout(() => {
       notification.classList.add('show');
     }, 200);
-    
+
     // Hide and remove notification after 2 seconds
     setTimeout(() => {
       notification.classList.remove('show');
@@ -748,7 +754,7 @@ class SettingsSidebar {
    */
   trapFocus(e) {
     if (!this.isOpen || e.key !== 'Tab') return;
-    
+
     const focusable = this.sidebar.querySelectorAll(
       'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );

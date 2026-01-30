@@ -79,6 +79,14 @@
     "message": "Paramètres BirdTab",
     "description": "Title for settings page"
   },
+  "settingsCategoryMedia": {
+    "message": "Media & Playback",
+    "description": "Section header for media settings"
+  },
+  "settingsCategoryProductivity": {
+    "message": "Productivity & Interface",
+    "description": "Section header for productivity settings"
+  },
   "birdingRegion": {
     "message": "Région d'Observation des Oiseaux",
     "description": "Label for region selection"

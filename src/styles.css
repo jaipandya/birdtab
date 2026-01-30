@@ -2523,6 +2523,16 @@ p {
   margin-bottom: 0;
 }
 
+.settings-category-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--modal-accent);
+  margin: 24px 0 12px 10px;
+  opacity: 0.9;
+}
+
 .settings-sidebar label {
   display: block;
   margin-bottom: 8px;
@@ -5029,4 +5039,12 @@ html[dir="rtl"] body.google-apps-enabled .chrome-tab-link {
   .google-app-item:hover .google-app-icon-wrapper {
     transform: none;
   }
+}
+
+/* Fix for Google Apps trigger z-index issue */
+.google-apps-trigger {
+  z-index: 10;
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
