@@ -61,50 +61,163 @@ export function createOptionsMenu(config) {
         const label = document.createElement('span');
         label.className = 'options-menu-label';
         label.textContent = option.label;
-        
+
         const toggleWrapper = document.createElement('div');
         toggleWrapper.className = 'options-menu-toggle';
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = option.checked || false;
         checkbox.id = `${menuId}-option-${index}`;
-        
+
         const slider = document.createElement('span');
         slider.className = 'options-menu-slider';
-        
+
         toggleWrapper.appendChild(checkbox);
         toggleWrapper.appendChild(slider);
-        
+
         item.appendChild(label);
         item.appendChild(toggleWrapper);
-        
+
         // Single unified click handler for the entire item row
         const handleToggle = (e) => {
           e.preventDefault();
           e.stopPropagation();
-          
+
           // Toggle the checkbox
           checkbox.checked = !checkbox.checked;
           log(`Option toggled: ${option.label} = ${checkbox.checked}`);
-          
+
           if (option.onChange) {
             option.onChange(checkbox.checked);
           }
         };
-        
+
         // Bind to item row
         item.addEventListener('click', handleToggle);
-        
+
         // Prevent the default checkbox behavior since we handle it manually
         checkbox.addEventListener('click', (e) => {
           e.stopPropagation();
           // Let the item handler do the work - we revert this click
           e.preventDefault();
         });
-        
+
         // Store reference for updating
         option._checkbox = checkbox;
+      } else if (option.type === 'select') {
+        // Select option with label and expandable radio choices
+        item.className = 'options-menu-item options-menu-select';
+
+        const header = document.createElement('div');
+        header.className = 'options-menu-select-header';
+
+        const label = document.createElement('span');
+        label.className = 'options-menu-label';
+        label.textContent = option.label;
+
+        // Icon only in collapsed state (no text - cleaner look)
+        const selectedIcon = document.createElement('span');
+        selectedIcon.className = 'options-menu-selected-icon';
+
+        const currentChoice = option.choices.find(c => c.value === option.value);
+        if (currentChoice && currentChoice.icon) {
+          selectedIcon.innerHTML = currentChoice.icon;
+        }
+
+        const chevron = document.createElement('span');
+        chevron.className = 'options-menu-chevron';
+        chevron.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M4 5l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+
+        header.appendChild(label);
+        header.appendChild(selectedIcon);
+        header.appendChild(chevron);
+        item.appendChild(header);
+
+        // Create choices container (initially hidden)
+        const choicesContainer = document.createElement('div');
+        choicesContainer.className = 'options-menu-choices';
+
+        option.choices.forEach((choice, choiceIndex) => {
+          const choiceItem = document.createElement('div');
+          choiceItem.className = 'options-menu-choice';
+          if (choice.value === option.value) {
+            choiceItem.classList.add('selected');
+          }
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `${menuId}-select-${index}`;
+          radio.id = `${menuId}-choice-${index}-${choiceIndex}`;
+          radio.value = choice.value;
+          radio.checked = choice.value === option.value;
+
+          // Add icon if provided
+          if (choice.icon) {
+            const choiceIcon = document.createElement('span');
+            choiceIcon.className = 'options-menu-choice-icon';
+            choiceIcon.innerHTML = choice.icon;
+            choiceItem.appendChild(choiceIcon);
+          }
+
+          const choiceLabel = document.createElement('label');
+          choiceLabel.className = 'options-menu-choice-label';
+          choiceLabel.setAttribute('for', radio.id);
+          choiceLabel.textContent = choice.label;
+
+          const checkmark = document.createElement('span');
+          checkmark.className = 'options-menu-checkmark';
+          checkmark.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+          choiceItem.appendChild(radio);
+          choiceItem.appendChild(choiceLabel);
+          choiceItem.appendChild(checkmark);
+          choicesContainer.appendChild(choiceItem);
+
+          // Handle choice selection
+          choiceItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Update radio buttons
+            choicesContainer.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            radio.checked = true;
+
+            // Update selected states
+            choicesContainer.querySelectorAll('.options-menu-choice').forEach(c => c.classList.remove('selected'));
+            choiceItem.classList.add('selected');
+
+            // Update displayed icon
+            if (choice.icon) {
+              selectedIcon.innerHTML = choice.icon;
+            } else {
+              selectedIcon.innerHTML = '';
+            }
+
+            log(`Option selected: ${option.label} = ${choice.value}`);
+
+            if (option.onChange) {
+              option.onChange(choice.value);
+            }
+
+            // Collapse after selection
+            item.classList.remove('expanded');
+          });
+        });
+
+        item.appendChild(choicesContainer);
+
+        // Toggle expansion on header click
+        header.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          item.classList.toggle('expanded');
+        });
+
+        // Store reference for updating
+        option._selectedIcon = selectedIcon;
+        option._choicesContainer = choicesContainer;
+        option._item = item;
       } else if (option.type === 'button') {
         // Simple button option
         // Wrap icon and label together to prevent space-between from spreading them

@@ -5,6 +5,7 @@ import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
+import { initializeSearch, setupSearchKeyboardShortcut } from './search.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
@@ -2035,50 +2036,9 @@ function setupExternalLinks() {
 
 // Share functionality is now imported from shareMenu.js
 
-function initializeSearch() {
-  const searchContainer = document.getElementById('search-container');
-
-  // Check settings synchronously first to show/hide immediately
-  chrome.storage.sync.get(['quickAccessEnabled'], (result) => {
-    chrome.permissions.contains({
-      permissions: ['search']
-    }, (hasPermission) => {
-      if (hasPermission && result.quickAccessEnabled) {
-        searchContainer.style.display = 'block';
-        document.body.classList.add('quick-access-enabled');
-        setupSearchListeners();
-      } else {
-        searchContainer.style.display = 'none';
-        document.body.classList.remove('quick-access-enabled');
-      }
-    });
-  });
-}
-
-function setupSearchListeners() {
-  const searchForm = document.getElementById('search-form');
-  const searchInput = document.getElementById('search-input');
-
-  searchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const query = searchInput.value.trim();
-    if (query) {
-      // Use Chrome's search API
-      chrome.search.query({
-        text: query,
-        disposition: 'CURRENT_TAB'
-      });
-    }
-  });
-  // Add keyboard shortcuts
+// Volume keyboard shortcuts (Up/Down arrows)
+function setupVolumeKeyboardShortcuts() {
   document.addEventListener('keydown', (e) => {
-    // Focus search (Ctrl/Cmd + K)
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-      e.preventDefault();
-      searchInput.focus();
-      return;
-    }
-
     // Volume controls (Up/Down arrows) - only when not in an input field
     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
       if (e.key === 'ArrowUp') {
@@ -2090,14 +2050,6 @@ function setupSearchListeners() {
         const newVolume = Math.max(0, Math.round((volumeLevel - CONFIG.VOLUME_STEP) * 10) / 10);
         setVolume(newVolume);
       }
-    }
-  });
-
-  // Clear search on Escape key
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      searchInput.value = '';
-      searchInput.blur();
     }
   });
 }
@@ -2202,6 +2154,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize search box and top sites immediately for better UX
   initializeSearch();
+
+  // Setup keyboard shortcuts (search focus and volume)
+  setupSearchKeyboardShortcut();
+  setupVolumeKeyboardShortcuts();
 
   // Initialize top sites
   try {

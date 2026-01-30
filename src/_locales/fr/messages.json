@@ -1194,5 +1194,29 @@
   "showChromeTabTooltip": {
     "message": "Activer pour afficher le raccourci onglet Chrome",
     "description": "Tooltip for Chrome Tab shortcut toggle"
+  },
+  "searchEngineLabel": {
+    "message": "Moteur de recherche",
+    "description": "Label for search engine selection in quick access options"
+  },
+  "searchEngineBrowserDefault": {
+    "message": "Par défaut du navigateur",
+    "description": "Option for using browser's default search engine"
+  },
+  "searchEngineGoogle": {
+    "message": "Google",
+    "description": "Option for Google search engine"
+  },
+  "searchEngineDuckDuckGo": {
+    "message": "DuckDuckGo",
+    "description": "Option for DuckDuckGo search engine"
+  },
+  "searchEngineChatGPT": {
+    "message": "ChatGPT",
+    "description": "Option for ChatGPT search"
+  },
+  "searchEnginePerplexity": {
+    "message": "Perplexity",
+    "description": "Option for Perplexity AI search"
   }
 }

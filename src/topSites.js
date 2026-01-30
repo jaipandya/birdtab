@@ -4,6 +4,7 @@ import { createOptionsMenu } from './optionsMenu.js';
 import { getOptionsTriggerSvg } from './optionsTrigger.js';
 import { getCloseTriggerSvg } from './closeTrigger.js';
 import { showConfirmationDialog } from './confirmationDialog.js';
+import { SEARCH_ENGINES, getSearchEngine, setSearchEngine } from './search.js';
 
 /**
  * Top Sites module for displaying most visited websites
@@ -660,7 +661,30 @@ class TopSites {
       const hideTopSites = settings.hideTopSites || false;
       const isEnabled = hasPermission && !hideTopSites;
 
+      // Get current search engine
+      const currentSearchEngine = await getSearchEngine();
+
+      // Build search engine choices from SEARCH_ENGINES (including icons)
+      const searchEngineChoices = Object.values(SEARCH_ENGINES).map(engine => ({
+        label: chrome.i18n.getMessage(engine.name) || engine.id,
+        value: engine.id,
+        icon: engine.icon
+      }));
+
       return [
+        {
+          type: 'select',
+          label: chrome.i18n.getMessage('searchEngineLabel') || 'Search engine',
+          value: currentSearchEngine,
+          choices: searchEngineChoices,
+          onChange: async (value) => {
+            await setSearchEngine(value);
+            log(`Search engine changed to: ${value}`);
+          }
+        },
+        {
+          type: 'divider'
+        },
         {
           type: 'toggle',
           label: chrome.i18n.getMessage('showTopSites') || 'Show top sites',
@@ -675,7 +699,7 @@ class TopSites {
                 if (!granted) {
                   // Permission denied - revert toggle
                   if (this.optionsMenu) {
-                    this.optionsMenu.updateOption(0, false);
+                    this.optionsMenu.updateOption(1, false);
                   }
                   return;
                 }
