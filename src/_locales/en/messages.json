@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "Cancel",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Google Apps",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Show a quick access button to open Google apps like Gmail, Drive, YouTube, and more.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Enable to show Google Apps button",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Google Apps",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Google Apps",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Open Google Apps",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Close Google Apps",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "Chrome Tab Shortcut",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "Show a shortcut to quickly access the default Chrome new tab page.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Enable to show Chrome Tab shortcut",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

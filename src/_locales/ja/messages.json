@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "キャンセル",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Google アプリ",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Gmail、ドライブ、YouTube などの Google アプリにすばやくアクセスするボタンを表示します。",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Google アプリボタンを表示する",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Google アプリ",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Google アプリ",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Google アプリを開く",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Google アプリを閉じる",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "Chrome タブショートカット",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "デフォルトの Chrome 新しいタブページにすばやくアクセスするショートカットを表示します。",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Chrome タブショートカットを表示する",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

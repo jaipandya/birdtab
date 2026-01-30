@@ -1293,6 +1293,14 @@ export function showTimer() {
   timerDisplay.classList.remove('hidden');
   container.classList.remove('hidden');
   
+  // Update options trigger aria-label for timer mode
+  const optionsTrigger = getClockOptionsTrigger();
+  if (optionsTrigger) {
+    optionsTrigger.setAttribute('aria-label', 
+      chrome.i18n.getMessage('timerOptionsAriaLabel') || 'Timer options'
+    );
+  }
+  
   isVisible = true;
   
   // Add class to body for positioning (clock area visible)
@@ -1339,6 +1347,14 @@ export function hideTimer() {
   
   // Don't hide container - clock might use it
   isVisible = false;
+  
+  // Restore options trigger aria-label for clock mode
+  const optionsTrigger = getClockOptionsTrigger();
+  if (optionsTrigger) {
+    optionsTrigger.setAttribute('aria-label', 
+      chrome.i18n.getMessage('clockOptionsAriaLabel') || 'Clock options'
+    );
+  }
   
   // Stop countdown if running
   stopCountdown();

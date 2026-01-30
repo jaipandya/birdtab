@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "إلغاء",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "تطبيقات Google",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "إظهار زر للوصول السريع لتطبيقات Google مثل Gmail وDrive وYouTube والمزيد.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "تمكين لإظهار زر تطبيقات Google",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "تطبيقات Google",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "تطبيقات Google",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "فتح تطبيقات Google",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "إغلاق تطبيقات Google",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "اختصار علامة تبويب Chrome",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "إظهار اختصار للوصول السريع إلى صفحة علامة تبويب Chrome الجديدة الافتراضية.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "تمكين لإظهار اختصار علامة تبويب Chrome",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

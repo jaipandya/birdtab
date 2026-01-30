@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "Отмена",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Приложения Google",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Показать кнопку быстрого доступа к приложениям Google, таким как Gmail, Диск, YouTube и другие.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Включить для отображения кнопки приложений Google",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Приложения Google",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Приложения Google",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Открыть приложения Google",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Закрыть приложения Google",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "Ярлык вкладки Chrome",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "Показать ярлык для быстрого доступа к стандартной странице новой вкладки Chrome.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Включить для отображения ярлыка вкладки Chrome",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

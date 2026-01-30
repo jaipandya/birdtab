@@ -41,6 +41,8 @@ import {
   closeHistoryModal,
   populateHistoryList
 } from './historyModal.js';
+import { initializeGoogleApps } from './googleApps.js';
+import { initializeChromeTab, updateChromeTabVisibility } from './chromeTab.js';
 import {
   showLoadingIndicator,
   hideLoadingIndicator,
@@ -1122,13 +1124,8 @@ async function initializePage() {
       }
     });
 
-    // Setup Chrome tab link
-    document.getElementById('chrome-tab-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      trackFeature('chrome_tab_click');
-      chrome.tabs.create({ url: 'chrome://new-tab-page' });
-    });
+    // Initialize Chrome tab link
+    initializeChromeTab();
 
     // Setup share functionality
     setupShareButton();
@@ -2203,6 +2200,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     captureException(error, {
       tags: { operation: 'initializeClockDisplay' }
+    });
+  }
+
+  // Initialize Google Apps
+  try {
+    await initializeGoogleApps();
+    log('Google Apps initialized');
+  } catch (error) {
+    captureException(error, {
+      tags: { operation: 'initializeGoogleApps' }
     });
   }
 

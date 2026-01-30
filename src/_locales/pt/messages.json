@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "Cancelar",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Apps do Google",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Mostrar um botão de acesso rápido aos apps do Google como Gmail, Drive, YouTube e mais.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Ativar para mostrar o botão de apps do Google",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Apps do Google",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Apps do Google",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Abrir apps do Google",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Fechar apps do Google",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "Atalho da guia Chrome",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "Mostrar um atalho para acessar rapidamente a página de nova guia padrão do Chrome.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Ativar para mostrar atalho da guia Chrome",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

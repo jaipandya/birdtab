@@ -1146,5 +1146,45 @@
   "cancel": {
     "message": "取消",
     "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Google 应用",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "显示快速访问按钮以打开 Gmail、云端硬盘、YouTube 等 Google 应用。",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "启用以显示 Google 应用按钮",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Google 应用",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Google 应用",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "打开 Google 应用",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "关闭 Google 应用",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "showChromeTab": {
+    "message": "Chrome 标签页快捷方式",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "显示快速访问默认 Chrome 新标签页的快捷方式。",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "启用以显示 Chrome 标签页快捷方式",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
   }
 }

@@ -3,6 +3,7 @@ import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
+import { resetChromeFooterNotification } from './chromeFooterNotification.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -187,11 +188,92 @@ class SettingsSidebar {
                 </label>
               </div>
             </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/settings.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="googleApps">Google Apps</span>
+                  </span>
+                  <p class="help-text" id="modal-google-apps-help" data-i18n="googleAppsHelpText">Show a quick access button to open Google apps like Gmail, Drive, YouTube, and more.</p>
+                </div>
+                <label class="switch" data-i18n-title="googleAppsTooltip" title="Enable to show Google Apps button">
+                  <input type="checkbox" id="modal-google-apps" aria-describedby="modal-google-apps-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting">
+              <div class="toggle-container">
+                <div class="toggle-text">
+                  <span class="setting-label-with-icon">
+                    <img src="images/svg/external-link.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="showChromeTab">Chrome Tab Shortcut</span>
+                  </span>
+                  <p class="help-text" id="modal-chrome-tab-help" data-i18n="showChromeTabHelpText">Show a shortcut to quickly access the default Chrome new tab page.</p>
+                </div>
+                <label class="switch" data-i18n-title="showChromeTabTooltip" title="Enable to show Chrome Tab shortcut">
+                  <input type="checkbox" id="modal-chrome-tab" aria-describedby="modal-chrome-tab-help">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
           </div>
           <a href="mailto:support@birdtab.app" class="settings-footer feedback-link">
             <img src="images/svg/message.svg" alt="" width="16" height="16" class="feedback-icon">
             <span data-i18n="sendFeedback">Send Feedback</span>
           </a>
+          ${process.env.NODE_ENV === 'development' ? `
+          <style>
+            .settings-debug-section {
+              margin-top: 16px;
+              padding: 16px var(--modal-spacing, 16px);
+              border-top: 1px solid var(--modal-border, rgba(255, 255, 255, 0.1));
+            }
+            .settings-debug-section .debug-section-title {
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--modal-text-secondary, rgba(255, 255, 255, 0.7));
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              margin: 0 0 12px 0;
+            }
+            .settings-debug-section .debug-buttons {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            }
+            .settings-debug-section .debug-button {
+              width: 100%;
+              padding: 10px 14px;
+              border-radius: 8px;
+              border: 1px solid rgba(244, 67, 54, 0.3);
+              font-size: 13px;
+              font-weight: 500;
+              background-color: rgba(244, 67, 54, 0.1);
+              color: #f44336;
+              cursor: pointer;
+              transition: all 0.2s ease;
+            }
+            .settings-debug-section .debug-button:hover {
+              background-color: rgba(244, 67, 54, 0.2);
+              border-color: rgba(244, 67, 54, 0.5);
+            }
+            .settings-debug-section .debug-button:active {
+              background-color: rgba(244, 67, 54, 0.3);
+            }
+          </style>
+          <div class="settings-debug-section">
+            <h3 class="debug-section-title" data-i18n="debugOptions">Debug Options</h3>
+            <div class="debug-buttons">
+              <button id="sidebar-reset-tour" class="debug-button" data-i18n="resetTour">Reset Feature Tour</button>
+              <button id="sidebar-reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
+              <button id="sidebar-delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
+            </div>
+          </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -216,6 +298,8 @@ class SettingsSidebar {
     this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
     this.videoModeCheckbox = document.getElementById('modal-video-mode');
     this.highResCheckbox = document.getElementById('modal-high-res');
+    this.googleAppsCheckbox = document.getElementById('modal-google-apps');
+    this.chromeTabCheckbox = document.getElementById('modal-chrome-tab');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
     // Populate the region select
@@ -315,9 +399,18 @@ class SettingsSidebar {
     if (this.highResCheckbox) {
       this.highResCheckbox.addEventListener('change', () => this.saveSettings());
     }
+    if (this.googleAppsCheckbox) {
+      this.googleAppsCheckbox.addEventListener('change', () => this.saveSettings());
+    }
+    if (this.chromeTabCheckbox) {
+      this.chromeTabCheckbox.addEventListener('change', () => this.saveSettings());
+    }
     
     // Make entire toggle container rows clickable
     this.bindToggleContainerClicks();
+    
+    // Bind debug buttons (only exist in development)
+    this.bindDebugButtons();
   }
 
   /**
@@ -348,6 +441,125 @@ class SettingsSidebar {
         }
       });
     });
+  }
+
+  /**
+   * Bind debug button event handlers (only exist in development builds)
+   */
+  bindDebugButtons() {
+    const resetTourButton = document.getElementById('sidebar-reset-tour');
+    const resetOnboardingButton = document.getElementById('sidebar-reset-onboarding');
+    const deleteCacheButton = document.getElementById('sidebar-delete-cache');
+
+    if (resetTourButton) {
+      resetTourButton.addEventListener('click', async () => {
+        try {
+          // Reset the feature tour version
+          await new Promise((resolve, reject) => {
+            chrome.storage.sync.set({ featureTourVersion: 0 }, function () {
+              if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+              } else {
+                resolve();
+              }
+            });
+          });
+          
+          // Also reset the Chrome footer notification
+          await resetChromeFooterNotification();
+          
+          const successMsg = getMessage('tourReset') || 'Feature tour has been reset. It will show again on the next page load.';
+          alert(successMsg);
+        } catch (error) {
+          log('Error resetting tour: ' + error.message);
+          const errorMsg = getMessage('errorResettingTour') || 'Error resetting the feature tour';
+          alert(errorMsg);
+        }
+      });
+    }
+
+    if (resetOnboardingButton) {
+      resetOnboardingButton.addEventListener('click', async () => {
+        if (!confirm(getMessage('confirmResetSettings'))) {
+          return;
+        }
+        
+        try {
+          // Reset all settings to their default values
+          await new Promise((resolve, reject) => {
+            chrome.storage.sync.clear(function() {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve();
+              }
+            });
+          });
+          
+          // Set default values including onboardingComplete: false
+          await new Promise((resolve, reject) => {
+            chrome.storage.sync.set({
+              region: 'US',
+              autoPlay: false,
+              quietHours: false,
+              quickAccessEnabled: false,
+              onboardingComplete: false,
+              featureTourVersion: 0
+            }, function () {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve();
+              }
+            });
+          });
+          
+          // Show success message and close sidebar
+          alert(getMessage('settingsResetComplete'));
+          this.close();
+        } catch (error) {
+          log('Error resetting settings: ' + error.message);
+          alert(getMessage('errorResettingSettings'));
+        }
+      });
+    }
+
+    if (deleteCacheButton) {
+      deleteCacheButton.addEventListener('click', async () => {
+        try {
+          // Clear all cached data including bird info, custom shortcuts, and other cached items
+          await new Promise((resolve, reject) => {
+            chrome.storage.local.clear(function () {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve();
+              }
+            });
+          });
+          
+          // Also clear some sync storage cached items if needed
+          await new Promise((resolve, reject) => {
+            chrome.storage.sync.remove(['customShortcuts'], function () {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve();
+              }
+            });
+          });
+          
+          // Notify background script to clear preloaded bird info (don't wait for response)
+          chrome.runtime.sendMessage({ action: 'deleteCache' });
+          
+          // Show success message
+          alert(getMessage('cacheCleared'));
+        } catch (error) {
+          log('Error clearing cache: ' + error.message);
+          alert(getMessage('errorClearingCache'));
+        }
+      });
+    }
   }
 
   open() {
@@ -404,7 +616,7 @@ class SettingsSidebar {
       return;
     }
 
-    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'videoMode', 'highResImages'], (result) => {
+    chrome.storage.sync.get(['region', 'autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'videoMode', 'highResImages', 'googleAppsEnabled', 'chromeTabEnabled'], (result) => {
 
       if (this.regionSelect) {
         this.regionSelect.value = result.region || 'US';
@@ -427,6 +639,13 @@ class SettingsSidebar {
       }
       if (this.highResCheckbox) {
         this.highResCheckbox.checked = result.highResImages || false;
+      }
+      if (this.googleAppsCheckbox) {
+        this.googleAppsCheckbox.checked = result.googleAppsEnabled || false;
+      }
+      if (this.chromeTabCheckbox) {
+        // Default is true (enabled) - only disable if explicitly set to false
+        this.chromeTabCheckbox.checked = result.chromeTabEnabled !== false;
       }
     });
   }
@@ -470,6 +689,12 @@ class SettingsSidebar {
       }
       if (this.highResCheckbox) {
         settings.highResImages = this.highResCheckbox.checked;
+      }
+      if (this.googleAppsCheckbox) {
+        settings.googleAppsEnabled = this.googleAppsCheckbox.checked;
+      }
+      if (this.chromeTabCheckbox) {
+        settings.chromeTabEnabled = this.chromeTabCheckbox.checked;
       }
 
       chrome.storage.sync.set(settings, () => {
