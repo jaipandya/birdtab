@@ -361,7 +361,7 @@ async function getRandomCachedBirdInfo() {
       for (const birdsKey of birdsKeys) {
         const birdsData = items[birdsKey];
         if (birdsData?.value) {
-          bird = birdsData.value.find(b => b.speciesCode === speciesCode);
+          bird = birdsData.value.find(b => b && b.speciesCode === speciesCode);
           if (bird) break;
         }
       }
