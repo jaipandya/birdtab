@@ -301,7 +301,7 @@ function createAppItemHTML(app, section, index, total) {
     `${app.name}. Position ${index + 1} of ${total}. Use Ctrl+Arrow to move.`;
 
   return `
-    <a href="${app.url}" target="_blank" rel="noopener noreferrer"
+    <a href="${app.url}"
        class="google-app-item"
        title="${app.name}"
        data-app-id="${app.id}"
@@ -791,7 +791,7 @@ function handleMouseUp(e) {
     // Was a click, not a drag - navigate to link
     const url = dragState.draggedElement.href;
     if (url) {
-      window.open(url, '_blank');
+      window.location.href = url;
     }
   }
 

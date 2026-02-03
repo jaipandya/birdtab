@@ -175,14 +175,14 @@ describe('Google Apps Feature - Unit Tests', () => {
             </div>
             <div class="settings-body">
               <div class="google-apps-grid">
-                <a href="https://mail.google.com" class="google-app-item" target="_blank" rel="noopener noreferrer">
+                <a href="https://mail.google.com" class="google-app-item">
                   <div class="google-app-icon-wrapper"><img class="google-app-icon" src="icon.svg"></div>
                   <span class="google-app-name">Gmail</span>
                 </a>
               </div>
               <div class="google-apps-divider"></div>
               <div class="google-apps-grid">
-                <a href="https://play.google.com" class="google-app-item" target="_blank" rel="noopener noreferrer">
+                <a href="https://play.google.com" class="google-app-item">
                   <div class="google-app-icon-wrapper"><img class="google-app-icon" src="icon.svg"></div>
                   <span class="google-app-name">Play</span>
                 </a>
@@ -370,17 +370,17 @@ describe('Google Apps Feature - Unit Tests', () => {
       expect(panel.querySelector('.google-apps-divider')).toBeTruthy();
     });
 
-    test('app links should open in new tab', () => {
+    test('app links should open in current tab', () => {
       document.body.innerHTML = `
-        <a href="https://mail.google.com" class="google-app-item" target="_blank" rel="noopener noreferrer">
+        <a href="https://mail.google.com" class="google-app-item">
           Gmail
         </a>
       `;
 
       const link = document.querySelector('.google-app-item');
       
-      expect(link.getAttribute('target')).toBe('_blank');
-      expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+      expect(link.getAttribute('target')).toBe(null);
+      expect(link.getAttribute('rel')).toBe(null);
     });
   });
 
