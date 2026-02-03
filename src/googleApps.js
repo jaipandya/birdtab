@@ -63,6 +63,29 @@ let panel = null;
 let isOpen = false;
 let triggerButton = null;
 
+// Custom order state
+let customOrder = { primary: null, secondary: null };
+
+// Drag state
+let dragState = {
+  isDragging: false,
+  draggedElement: null,
+  draggedAppId: null,
+  sourceSection: null,
+  sourceIndex: -1,  // Track original index for comparison
+  targetSection: null,
+  ghost: null,
+  startX: 0,
+  startY: 0,
+  hasMoved: false
+};
+
+const DRAG_THRESHOLD = 5; // pixels before drag activates
+const TOUCH_HOLD_DELAY = 150; // ms before touch drag starts
+let touchHoldTimer = null;
+let lastDropTargetUpdate = 0;
+const DROP_TARGET_THROTTLE = 16; // ~60fps throttle for drop target updates
+
 // Apps that have local SVG icons - all 43 apps covered
 const LOCAL_ICONS = {
   // Primary apps
@@ -127,40 +150,217 @@ function getIconUrl(appId, domain) {
 }
 
 /**
- * Create the Google Apps panel HTML
- * @returns {string} HTML string for the panel
+ * Load custom order from storage
  */
-function createPanelHTML() {
-  const createAppItem = (app) => `
-    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="google-app-item" title="${app.name}">
+async function loadCustomOrder() {
+  try {
+    const result = await chrome.storage.local.get(['googleAppsCustomOrder']);
+    if (result.googleAppsCustomOrder) {
+      customOrder = result.googleAppsCustomOrder;
+    } else {
+      customOrder = { primary: null, secondary: null };
+    }
+  } catch (e) {
+    log('Error loading custom order:', e);
+    customOrder = { primary: null, secondary: null };
+  }
+}
+
+/**
+ * Save custom order to storage
+ */
+async function saveCustomOrder() {
+  try {
+    await chrome.storage.local.set({
+      googleAppsCustomOrder: {
+        primary: customOrder.primary,
+        secondary: customOrder.secondary,
+        version: 1
+      }
+    });
+    log('Custom order saved');
+  } catch (e) {
+    log('Error saving custom order:', e);
+  }
+}
+
+/**
+ * Reset to default order
+ */
+async function resetToDefaultOrder() {
+  customOrder = { primary: null, secondary: null };
+  try {
+    await chrome.storage.local.remove(['googleAppsCustomOrder']);
+    log('Order reset to default');
+    announceToScreenReader(chrome.i18n.getMessage('orderResetToDefault') || 'Order reset to default');
+  } catch (e) {
+    log('Error resetting order:', e);
+  }
+}
+
+/**
+ * Check if a custom order exists
+ * @returns {boolean} True if custom order exists
+ */
+function hasCustomOrder() {
+  return customOrder.primary !== null || customOrder.secondary !== null;
+}
+
+/**
+ * Get apps in order (custom or default)
+ * @param {string} section - 'primary' or 'secondary'
+ * @returns {Array} Ordered apps array
+ */
+function getOrderedApps(section) {
+  const defaultApps = GOOGLE_APPS[section];
+  const orderArray = customOrder[section];
+
+  if (!orderArray) {
+    return defaultApps;
+  }
+
+  // Build ordered list from IDs
+  const appMap = {};
+  defaultApps.forEach(app => {
+    appMap[app.id] = app;
+  });
+
+  // Also include apps from the other section (for cross-section moves)
+  const otherSection = section === 'primary' ? 'secondary' : 'primary';
+  GOOGLE_APPS[otherSection].forEach(app => {
+    appMap[app.id] = app;
+  });
+
+  const orderedApps = [];
+  orderArray.forEach(appId => {
+    if (appMap[appId]) {
+      orderedApps.push(appMap[appId]);
+    }
+  });
+
+  return orderedApps;
+}
+
+/**
+ * Move an app to a new section and position
+ * @param {string} appId - App ID to move
+ * @param {string} sourceSection - Source section ('primary' or 'secondary')
+ * @param {string} targetSection - Target section ('primary' or 'secondary')
+ * @param {number} targetIndex - Target index in the target section
+ */
+function moveAppToSection(appId, sourceSection, targetSection, targetIndex) {
+  // Initialize custom order arrays if needed
+  if (!customOrder.primary) {
+    customOrder.primary = GOOGLE_APPS.primary.map(a => a.id);
+  }
+  if (!customOrder.secondary) {
+    customOrder.secondary = GOOGLE_APPS.secondary.map(a => a.id);
+  }
+
+  // Remove from source section
+  const sourceArray = customOrder[sourceSection];
+  const sourceIndex = sourceArray.indexOf(appId);
+  if (sourceIndex > -1) {
+    sourceArray.splice(sourceIndex, 1);
+  }
+
+  // Add to target section at the specified index
+  const targetArray = customOrder[targetSection];
+  // Adjust target index if moving within same section and removing from before target
+  let adjustedIndex = targetIndex;
+  if (sourceSection === targetSection && sourceIndex < targetIndex) {
+    adjustedIndex = Math.max(0, targetIndex - 1);
+  }
+  targetArray.splice(adjustedIndex, 0, appId);
+}
+
+/**
+ * Announce to screen readers
+ * @param {string} message - Message to announce
+ */
+function announceToScreenReader(message) {
+  const announcer = document.getElementById('google-apps-announcer');
+  if (announcer) {
+    announcer.textContent = message;
+    setTimeout(() => {
+      announcer.textContent = '';
+    }, 1000);
+  }
+}
+
+/**
+ * Create an app item HTML
+ * @param {Object} app - App object
+ * @param {string} section - Section name ('primary' or 'secondary')
+ * @param {number} index - Index in the section
+ * @param {number} total - Total items in section
+ * @returns {string} HTML string for the app item
+ */
+function createAppItemHTML(app, section, index, total) {
+  const ariaLabel = chrome.i18n.getMessage('googleAppPosition', [app.name, String(index + 1), String(total)]) ||
+    `${app.name}. Position ${index + 1} of ${total}. Use Ctrl+Arrow to move.`;
+
+  return `
+    <a href="${app.url}" target="_blank" rel="noopener noreferrer"
+       class="google-app-item"
+       title="${app.name}"
+       data-app-id="${app.id}"
+       data-section="${section}"
+       role="option"
+       tabindex="0"
+       aria-label="${ariaLabel}">
       <div class="google-app-icon-wrapper">
-        <img src="${getIconUrl(app.id, app.domain)}" alt="" class="google-app-icon" loading="lazy">
+        <img src="${getIconUrl(app.id, app.domain)}" alt="" class="google-app-icon" loading="lazy" draggable="false">
       </div>
       <span class="google-app-name">${app.name}</span>
     </a>
   `;
+}
 
-  const primaryApps = GOOGLE_APPS.primary.map(createAppItem).join('');
-  const secondaryApps = GOOGLE_APPS.secondary.map(createAppItem).join('');
+/**
+ * Create the Google Apps panel HTML
+ * @returns {string} HTML string for the panel
+ */
+function createPanelHTML() {
+  const primaryApps = getOrderedApps('primary');
+  const secondaryApps = getOrderedApps('secondary');
+
+  const primaryAppsHtml = primaryApps.map((app, idx) =>
+    createAppItemHTML(app, 'primary', idx, primaryApps.length)
+  ).join('');
+
+  const secondaryAppsHtml = secondaryApps.map((app, idx) =>
+    createAppItemHTML(app, 'secondary', idx, secondaryApps.length)
+  ).join('');
+
+  const resetButtonHidden = hasCustomOrder() ? '' : 'hidden';
+  const resetButtonText = chrome.i18n.getMessage('resetGoogleAppsOrder') || 'Reset order';
 
   return `
     <div id="google-apps-panel" class="settings-sidebar" role="dialog" aria-modal="true" aria-labelledby="google-apps-title">
       <div class="settings-content google-apps-content">
         <div class="settings-header">
           <h2 id="google-apps-title" data-i18n="googleAppsTitle">Google Apps</h2>
-          <button id="close-google-apps" class="close-button" data-i18n-aria-label="closeGoogleApps" aria-label="Close Google Apps">
-            <img src="images/svg/close.svg" alt="Close" width="20" height="20">
-          </button>
+          <div class="google-apps-header-actions">
+            <button id="reset-google-apps-order" class="reset-order-button ${resetButtonHidden}" data-i18n="resetGoogleAppsOrder">
+              ${resetButtonText}
+            </button>
+            <button id="close-google-apps" class="close-button" data-i18n-aria-label="closeGoogleApps" aria-label="Close Google Apps">
+              <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+            </button>
+          </div>
         </div>
         <div class="settings-body">
-          <div class="google-apps-grid">
-            ${primaryApps}
+          <div class="google-apps-grid" data-section="primary">
+            ${primaryAppsHtml}
           </div>
           <div class="google-apps-divider"></div>
-          <div class="google-apps-grid">
-            ${secondaryApps}
+          <div class="google-apps-grid" data-section="secondary">
+            ${secondaryAppsHtml}
           </div>
         </div>
+        <!-- Live region for screen reader announcements -->
+        <div id="google-apps-announcer" role="status" aria-live="polite" class="visually-hidden"></div>
       </div>
     </div>
   `;
@@ -189,8 +389,11 @@ function getTriggerIconSvg() {
 /**
  * Open the Google Apps panel
  */
-export function openGoogleApps() {
+export async function openGoogleApps() {
   if (isOpen) return;
+
+  // Load custom order before creating panel
+  await loadCustomOrder();
 
   if (!panel) {
     document.body.insertAdjacentHTML('beforeend', createPanelHTML());
@@ -199,6 +402,15 @@ export function openGoogleApps() {
     bindPanelEvents();
     // Force reflow to ensure initial state is rendered before animation
     panel.offsetHeight;
+  } else {
+    // Re-render with current order if panel already exists
+    rerenderGrids();
+    // Update reset button visibility
+    if (hasCustomOrder()) {
+      showResetButton();
+    } else {
+      hideResetButton();
+    }
   }
 
   isOpen = true;
@@ -212,6 +424,16 @@ export function openGoogleApps() {
  */
 export function closeGoogleApps() {
   if (!isOpen || !panel) return;
+
+  // Clean up any in-progress drag
+  if (dragState.isDragging) {
+    cleanupDragElements();
+    resetDragState();
+  }
+
+  // Remove global event listeners that might have been added during drag
+  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mouseup', handleMouseUp);
 
   isOpen = false;
   panel.classList.remove('open');
@@ -230,15 +452,543 @@ export function toggleGoogleApps() {
   }
 }
 
+// ==================== DRAG AND DROP ====================
+
+/**
+ * Reset drag state to initial values
+ */
+function resetDragState() {
+  dragState = {
+    isDragging: false,
+    draggedElement: null,
+    draggedAppId: null,
+    sourceSection: null,
+    sourceIndex: -1,
+    targetSection: null,
+    ghost: null,
+    startX: 0,
+    startY: 0,
+    hasMoved: false
+  };
+}
+
+/**
+ * Cleanup drag elements (ghost and classes)
+ */
+function cleanupDragElements() {
+  if (dragState.ghost) {
+    dragState.ghost.remove();
+  }
+  if (dragState.draggedElement) {
+    dragState.draggedElement.classList.remove('drag-source');
+  }
+  document.body.classList.remove('dragging-app');
+}
+
+/**
+ * Show the reset button
+ */
+function showResetButton() {
+  const resetBtn = document.getElementById('reset-google-apps-order');
+  if (resetBtn) {
+    resetBtn.classList.remove('hidden');
+  }
+}
+
+/**
+ * Hide the reset button
+ */
+function hideResetButton() {
+  const resetBtn = document.getElementById('reset-google-apps-order');
+  if (resetBtn) {
+    resetBtn.classList.add('hidden');
+  }
+}
+
+/**
+ * Re-render the grids with current order
+ */
+function rerenderGrids() {
+  const primaryGrid = panel.querySelector('.google-apps-grid[data-section="primary"]');
+  const secondaryGrid = panel.querySelector('.google-apps-grid[data-section="secondary"]');
+
+  if (primaryGrid && secondaryGrid) {
+    const primaryApps = getOrderedApps('primary');
+    const secondaryApps = getOrderedApps('secondary');
+
+    primaryGrid.innerHTML = primaryApps.map((app, idx) =>
+      createAppItemHTML(app, 'primary', idx, primaryApps.length)
+    ).join('');
+
+    secondaryGrid.innerHTML = secondaryApps.map((app, idx) =>
+      createAppItemHTML(app, 'secondary', idx, secondaryApps.length)
+    ).join('');
+  }
+}
+
+/**
+ * Initiate the drag operation
+ * @param {HTMLElement} element - Element being dragged
+ * @param {number} x - Current X position
+ * @param {number} y - Current Y position
+ */
+function initiateDrag(element, x, y) {
+  document.body.classList.add('dragging-app');
+
+  // Create ghost element (visual representation during drag)
+  const ghost = element.cloneNode(true);
+  ghost.classList.add('dragging');
+  ghost.style.width = `${element.offsetWidth}px`;
+  ghost.style.height = `${element.offsetHeight}px`;
+  ghost.style.left = `${x - element.offsetWidth / 2}px`;
+  ghost.style.top = `${y - element.offsetHeight / 2}px`;
+  document.body.appendChild(ghost);
+  dragState.ghost = ghost;
+
+  // The dragged element stays in place as a placeholder (visually hidden via CSS)
+  // No separate placeholder element needed - this avoids n+1 grid positions
+  element.classList.add('drag-source');
+}
+
+/**
+ * Update ghost position during drag
+ * @param {number} x - Current X position
+ * @param {number} y - Current Y position
+ */
+function updateDragPosition(x, y) {
+  if (dragState.ghost) {
+    dragState.ghost.style.left = `${x - dragState.ghost.offsetWidth / 2}px`;
+    dragState.ghost.style.top = `${y - dragState.ghost.offsetHeight / 2}px`;
+  }
+}
+
+/**
+ * Find the drop target and update dragged element position
+ * @param {number} x - Current X position
+ * @param {number} y - Current Y position
+ */
+function updateDropTarget(x, y) {
+  // Throttle updates to ~60fps for performance
+  const now = Date.now();
+  if (now - lastDropTargetUpdate < DROP_TARGET_THROTTLE) {
+    return;
+  }
+  lastDropTargetUpdate = now;
+
+  const grids = panel.querySelectorAll('.google-apps-grid');
+  let targetGrid = null;
+  let targetSection = null;
+
+  // Find which grid we're over
+  grids.forEach((grid) => {
+    const rect = grid.getBoundingClientRect();
+    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      targetGrid = grid;
+      targetSection = grid.dataset.section;
+    }
+  });
+
+  if (!targetGrid) {
+    // If not over any grid, check if we're between them or near them
+    const settingsBody = panel.querySelector('.settings-body');
+    if (settingsBody) {
+      const bodyRect = settingsBody.getBoundingClientRect();
+      if (x >= bodyRect.left && x <= bodyRect.right) {
+        // Determine closest grid
+        let closestGrid = null;
+        let closestDistance = Infinity;
+        grids.forEach((grid) => {
+          const rect = grid.getBoundingClientRect();
+          const centerY = rect.top + rect.height / 2;
+          const distance = Math.abs(y - centerY);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestGrid = grid;
+          }
+        });
+        if (closestGrid) {
+          targetGrid = closestGrid;
+          targetSection = closestGrid.dataset.section;
+        }
+      }
+    }
+  }
+
+  if (!targetGrid) return;
+
+  dragState.targetSection = targetSection;
+
+  const draggedElement = dragState.draggedElement;
+  if (!draggedElement) return;
+
+  // Find drop position within grid (excluding the dragged element)
+  const items = Array.from(targetGrid.querySelectorAll('.google-app-item:not(.drag-source)'));
+  let insertBefore = null;
+
+  for (const item of items) {
+    const rect = item.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Insert before this item if cursor is above or to the left
+    if (y < centerY - rect.height / 4 || (y < centerY + rect.height / 4 && x < centerX)) {
+      insertBefore = item;
+      break;
+    }
+  }
+
+  // Move the dragged element (acting as placeholder) to new position
+  if (draggedElement.parentNode !== targetGrid) {
+    // Moving to a different grid
+    if (insertBefore) {
+      targetGrid.insertBefore(draggedElement, insertBefore);
+    } else {
+      targetGrid.appendChild(draggedElement);
+    }
+    // Update the element's data-section attribute
+    draggedElement.dataset.section = targetSection;
+  } else {
+    // Same grid - reposition if needed
+    if (insertBefore) {
+      if (draggedElement.nextSibling !== insertBefore && draggedElement !== insertBefore) {
+        targetGrid.insertBefore(draggedElement, insertBefore);
+      }
+    } else {
+      // Append to end if not already there
+      if (draggedElement.nextSibling !== null) {
+        targetGrid.appendChild(draggedElement);
+      }
+    }
+  }
+}
+
+/**
+ * Finalize the drop operation
+ */
+function finalizeDrop() {
+  const { draggedAppId, sourceSection, sourceIndex, draggedElement } = dragState;
+  let { targetSection } = dragState;
+
+  if (!draggedElement || !draggedElement.parentNode) {
+    cleanupDragElements();
+    return;
+  }
+
+  // Determine target section from the dragged element's current parent grid
+  const targetGrid = draggedElement.parentNode;
+  targetSection = targetGrid.dataset.section || targetSection;
+
+  if (!targetSection) {
+    cleanupDragElements();
+    return;
+  }
+
+  // Calculate target index from the dragged element's current position
+  const allItems = Array.from(targetGrid.querySelectorAll('.google-app-item'));
+  const targetIndex = allItems.indexOf(draggedElement);
+
+  // Check if position actually changed
+  const positionChanged = sourceSection !== targetSection || sourceIndex !== targetIndex;
+
+  if (!positionChanged) {
+    // No change - just clean up without saving
+    cleanupDragElements();
+    return;
+  }
+
+  // Move app in data structure
+  moveAppToSection(draggedAppId, sourceSection, targetSection, targetIndex);
+
+  // Clean up drag elements before re-rendering
+  cleanupDragElements();
+
+  // Re-render grids
+  rerenderGrids();
+
+  // Add drop animation to the dropped item
+  const droppedItem = panel.querySelector(`[data-app-id="${draggedAppId}"]`);
+  if (droppedItem) {
+    droppedItem.classList.add('just-dropped');
+    setTimeout(() => droppedItem.classList.remove('just-dropped'), 300);
+  }
+
+  // Save to storage
+  saveCustomOrder();
+
+  // Show reset button (only if custom order now exists)
+  if (hasCustomOrder()) {
+    showResetButton();
+  }
+
+  // Announce for screen readers
+  const newIndex = targetIndex + 1;
+  announceToScreenReader(
+    chrome.i18n.getMessage('appMovedToPosition', [String(newIndex)]) ||
+    `Moved to position ${newIndex}`
+  );
+}
+
+/**
+ * Handle mouse down on app items
+ * @param {MouseEvent} e - Mouse event
+ */
+function handleMouseDown(e) {
+  const appItem = e.target.closest('.google-app-item');
+  if (!appItem) return;
+
+  // Ignore if clicking on link itself (not dragging)
+  e.preventDefault();
+
+  // Calculate original index
+  const grid = appItem.closest('.google-apps-grid');
+  const items = Array.from(grid.querySelectorAll('.google-app-item'));
+  const originalIndex = items.indexOf(appItem);
+
+  dragState.startX = e.clientX;
+  dragState.startY = e.clientY;
+  dragState.hasMoved = false;
+  dragState.draggedElement = appItem;
+  dragState.draggedAppId = appItem.dataset.appId;
+  dragState.sourceSection = appItem.dataset.section;
+  dragState.sourceIndex = originalIndex;
+
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+}
+
+/**
+ * Handle mouse move during potential drag
+ * @param {MouseEvent} e - Mouse event
+ */
+function handleMouseMove(e) {
+  const dx = e.clientX - dragState.startX;
+  const dy = e.clientY - dragState.startY;
+
+  // Check if moved beyond threshold to start drag
+  if (!dragState.hasMoved && (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD)) {
+    dragState.hasMoved = true;
+    dragState.isDragging = true;
+    initiateDrag(dragState.draggedElement, e.clientX, e.clientY);
+  }
+
+  if (dragState.isDragging) {
+    updateDragPosition(e.clientX, e.clientY);
+    updateDropTarget(e.clientX, e.clientY);
+  }
+}
+
+/**
+ * Handle mouse up after potential drag
+ * @param {MouseEvent} e - Mouse event
+ */
+function handleMouseUp(e) {
+  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mouseup', handleMouseUp);
+
+  if (dragState.isDragging) {
+    finalizeDrop();
+  } else if (dragState.draggedElement) {
+    // Was a click, not a drag - navigate to link
+    const url = dragState.draggedElement.href;
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
+  resetDragState();
+}
+
+// ==================== TOUCH SUPPORT ====================
+
+/**
+ * Handle touch start on app items
+ * @param {TouchEvent} e - Touch event
+ */
+function handleTouchStart(e) {
+  const touch = e.touches[0];
+  const appItem = touch.target.closest('.google-app-item');
+  if (!appItem) return;
+
+  // Calculate original index
+  const grid = appItem.closest('.google-apps-grid');
+  const items = Array.from(grid.querySelectorAll('.google-app-item'));
+  const originalIndex = items.indexOf(appItem);
+
+  dragState.startX = touch.clientX;
+  dragState.startY = touch.clientY;
+  dragState.draggedElement = appItem;
+  dragState.draggedAppId = appItem.dataset.appId;
+  dragState.sourceSection = appItem.dataset.section;
+  dragState.sourceIndex = originalIndex;
+  dragState.hasMoved = false;
+
+  // Start hold timer for drag
+  touchHoldTimer = setTimeout(() => {
+    if (!dragState.hasMoved) {
+      dragState.isDragging = true;
+      initiateDrag(appItem, touch.clientX, touch.clientY);
+      // Haptic feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }
+  }, TOUCH_HOLD_DELAY);
+}
+
+/**
+ * Handle touch move during potential drag
+ * @param {TouchEvent} e - Touch event
+ */
+function handleTouchMove(e) {
+  const touch = e.touches[0];
+  const dx = touch.clientX - dragState.startX;
+  const dy = touch.clientY - dragState.startY;
+
+  // Cancel hold timer if moved before delay (allow scroll)
+  if (touchHoldTimer && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
+    clearTimeout(touchHoldTimer);
+    touchHoldTimer = null;
+    if (!dragState.isDragging) {
+      return; // Allow scroll
+    }
+  }
+
+  if (dragState.isDragging) {
+    e.preventDefault();
+    updateDragPosition(touch.clientX, touch.clientY);
+    updateDropTarget(touch.clientX, touch.clientY);
+    handleAutoScroll(touch.clientY);
+  }
+}
+
+/**
+ * Handle touch end after potential drag
+ * @param {TouchEvent} e - Touch event
+ */
+function handleTouchEnd(e) {
+  clearTimeout(touchHoldTimer);
+  touchHoldTimer = null;
+
+  if (dragState.isDragging) {
+    e.preventDefault();
+    finalizeDrop();
+  }
+
+  resetDragState();
+}
+
+/**
+ * Handle auto-scroll when dragging near edges
+ * @param {number} y - Current Y position
+ */
+function handleAutoScroll(y) {
+  const settingsBody = panel.querySelector('.settings-body');
+  if (!settingsBody) return;
+
+  const rect = settingsBody.getBoundingClientRect();
+  const scrollThreshold = 50;
+  const scrollSpeed = 10;
+
+  if (y < rect.top + scrollThreshold) {
+    settingsBody.scrollTop -= scrollSpeed;
+  } else if (y > rect.bottom - scrollThreshold) {
+    settingsBody.scrollTop += scrollSpeed;
+  }
+}
+
+// ==================== KEYBOARD SUPPORT ====================
+
+/**
+ * Handle keyboard navigation for reordering
+ * @param {KeyboardEvent} e - Keyboard event
+ */
+function handleKeyboardReorder(e) {
+  const focusedItem = document.activeElement;
+  if (!focusedItem?.classList.contains('google-app-item')) return;
+  if (!e.ctrlKey && !e.metaKey) return;
+
+  const arrowKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+  if (!arrowKeys.includes(e.key)) return;
+
+  const appId = focusedItem.dataset.appId;
+  const section = focusedItem.dataset.section;
+  const grid = focusedItem.closest('.google-apps-grid');
+  const items = Array.from(grid.querySelectorAll('.google-app-item'));
+  const currentIndex = items.indexOf(focusedItem);
+
+  // Calculate number of columns from grid
+  const gridStyle = getComputedStyle(grid);
+  const columns = gridStyle.gridTemplateColumns.split(' ').length;
+
+  let targetIndex = currentIndex;
+  let targetSection = section;
+
+  switch (e.key) {
+    case 'ArrowLeft':
+      targetIndex = Math.max(0, currentIndex - 1);
+      break;
+    case 'ArrowRight':
+      targetIndex = Math.min(items.length - 1, currentIndex + 1);
+      break;
+    case 'ArrowUp':
+      targetIndex = Math.max(0, currentIndex - columns);
+      break;
+    case 'ArrowDown':
+      targetIndex = Math.min(items.length - 1, currentIndex + columns);
+      break;
+    default:
+      return;
+  }
+
+  if (targetIndex !== currentIndex) {
+    e.preventDefault();
+
+    // Move in data structure
+    moveAppToSection(appId, section, targetSection, targetIndex);
+
+    // Re-render and save
+    rerenderGrids();
+    saveCustomOrder();
+    showResetButton();
+
+    // Refocus moved item
+    const movedItem = panel.querySelector(`[data-app-id="${appId}"]`);
+    if (movedItem) {
+      movedItem.focus();
+    }
+
+    // Announce for screen readers
+    announceToScreenReader(
+      chrome.i18n.getMessage('appMovedToPosition', [String(targetIndex + 1)]) ||
+      `Moved to position ${targetIndex + 1}`
+    );
+  }
+}
+
+/**
+ * Handle reset button click
+ */
+async function handleResetOrder() {
+  await resetToDefaultOrder();
+  rerenderGrids();
+  hideResetButton();
+}
+
 /**
  * Bind event listeners to the panel
  */
 function bindPanelEvents() {
   const closeBtn = document.getElementById('close-google-apps');
+  const resetBtn = document.getElementById('reset-google-apps-order');
 
   // Close button
   if (closeBtn) {
     closeBtn.addEventListener('click', closeGoogleApps);
+  }
+
+  // Reset order button
+  if (resetBtn) {
+    resetBtn.addEventListener('click', handleResetOrder);
   }
 
   // Click outside to close
@@ -250,6 +1000,21 @@ function bindPanelEvents() {
 
   // ESC key to close
   document.addEventListener('keydown', handleEscapeKey);
+
+  // Drag and drop events (mouse)
+  const settingsBody = panel.querySelector('.settings-body');
+  if (settingsBody) {
+    settingsBody.addEventListener('mousedown', handleMouseDown);
+
+    // Touch events
+    settingsBody.addEventListener('touchstart', handleTouchStart, { passive: true });
+    settingsBody.addEventListener('touchmove', handleTouchMove, { passive: false });
+    settingsBody.addEventListener('touchend', handleTouchEnd);
+    settingsBody.addEventListener('touchcancel', handleTouchEnd);
+  }
+
+  // Keyboard reordering
+  panel.addEventListener('keydown', handleKeyboardReorder);
 }
 
 /**

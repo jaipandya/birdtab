@@ -5174,3 +5174,115 @@ html[dir="rtl"] body.google-apps-enabled .chrome-tab-link {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+
+/* ==================== DRAG AND DROP ==================== */
+
+/* Header actions container */
+.google-apps-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Reset order button */
+.reset-order-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--modal-border);
+  color: var(--modal-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reset-order-button:hover {
+  background: var(--modal-hover-bg);
+  color: var(--modal-text-primary);
+}
+
+.reset-order-button:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.reset-order-button.hidden {
+  display: none;
+}
+
+/* Ghost element (dragged visual) */
+.google-app-item.dragging {
+  position: fixed;
+  z-index: 10002;
+  pointer-events: none;
+  transform: scale(1.08);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  background: var(--modal-bg);
+  border-radius: 12px;
+  opacity: 0.95;
+}
+
+/* Original item showing drop position during drag */
+.google-app-item.drag-source {
+  opacity: 0.4;
+  pointer-events: none;
+  background: rgba(66, 133, 244, 0.15);
+  border-radius: 12px;
+}
+
+/* Drop animation */
+.google-app-item.just-dropped {
+  animation: dropBounce 0.3s ease;
+}
+
+@keyframes dropBounce {
+  0% { transform: scale(1.08); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Disable pointer events on items while dragging */
+body.dragging-app .google-app-item:not(.dragging) {
+  pointer-events: none;
+}
+
+/* Disable hover effects while dragging */
+body.dragging-app .google-app-item:hover {
+  background-color: transparent;
+}
+
+body.dragging-app .google-app-item:hover .google-app-icon-wrapper {
+  transform: none;
+}
+
+body.dragging-app .google-app-item:hover .google-app-name {
+  color: var(--modal-text-secondary);
+}
+
+/* Visually hidden (for screen reader announcer) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .google-app-item.dragging,
+  .google-app-item.just-dropped {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+
+  .reset-order-button {
+    transition: none;
+  }
+}

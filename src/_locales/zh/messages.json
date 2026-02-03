@@ -1183,6 +1183,30 @@
     "message": "关闭 Google 应用",
     "description": "Aria label for close button in Google Apps panel"
   },
+  "resetGoogleAppsOrder": {
+    "message": "重置顺序",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1。位置 $2（共 $3）。Ctrl+方向键移动。",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": { "content": "$1", "example": "Gmail" },
+      "2": { "content": "$2", "example": "1" },
+      "3": { "content": "$3", "example": "18" }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "已移动到位置 $1",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": { "content": "$1", "example": "3" }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "顺序已重置为默认",
+    "description": "Screen reader announcement when order is reset"
+  },
   "showChromeTab": {
     "message": "Chrome 标签页快捷方式",
     "description": "Label for Chrome Tab shortcut toggle in settings"

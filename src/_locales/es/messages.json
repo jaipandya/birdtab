@@ -1183,6 +1183,30 @@
     "message": "Cerrar aplicaciones de Google",
     "description": "Aria label for close button in Google Apps panel"
   },
+  "resetGoogleAppsOrder": {
+    "message": "Restablecer orden",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1. Posición $2 de $3. Ctrl+Flechas para mover.",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": { "content": "$1", "example": "Gmail" },
+      "2": { "content": "$2", "example": "1" },
+      "3": { "content": "$3", "example": "18" }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "Movido a la posición $1",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": { "content": "$1", "example": "3" }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "Orden restablecido a predeterminado",
+    "description": "Screen reader announcement when order is reset"
+  },
   "showChromeTab": {
     "message": "Acceso directo a pestaña Chrome",
     "description": "Label for Chrome Tab shortcut toggle in settings"

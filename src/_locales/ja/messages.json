@@ -1183,6 +1183,30 @@
     "message": "Google アプリを閉じる",
     "description": "Aria label for close button in Google Apps panel"
   },
+  "resetGoogleAppsOrder": {
+    "message": "順序をリセット",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1。$3 個中 $2 番目。Ctrl+矢印キーで移動。",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": { "content": "$1", "example": "Gmail" },
+      "2": { "content": "$2", "example": "1" },
+      "3": { "content": "$3", "example": "18" }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "$1 番目に移動しました",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": { "content": "$1", "example": "3" }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "順序をデフォルトにリセットしました",
+    "description": "Screen reader announcement when order is reset"
+  },
   "showChromeTab": {
     "message": "Chrome タブショートカット",
     "description": "Label for Chrome Tab shortcut toggle in settings"
