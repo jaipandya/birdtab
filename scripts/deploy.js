@@ -33,8 +33,26 @@ function exec(command, options = {}) {
   return execSync(command, { stdio: 'inherit', ...options });
 }
 
+function getBrowserTarget(args) {
+  const browserArg = args.find((arg) => arg.startsWith('--browser='));
+  if (!browserArg) {
+    return 'chrome';
+  }
+
+  const value = browserArg.split('=')[1];
+  if (value === 'edge' || value === 'chrome') {
+    return value;
+  }
+
+  log(`\n⚠️  Unknown browser "${value}", defaulting to Chrome.`, colors.yellow);
+  return 'chrome';
+}
+
 async function main() {
   log('\n🚀 BirdTab Deployment Script\n', colors.blue);
+
+  const browserTarget = getBrowserTarget(process.argv.slice(2));
+  const isEdge = browserTarget === 'edge';
 
   // Read version from manifest.json
   const manifestPath = path.join(__dirname, '../src/manifest.json');
@@ -117,9 +135,10 @@ async function main() {
 
   log('\n🔨 Building production...\n', colors.blue);
 
-  // Build for Chrome using pnpm with UPLOAD_SOURCEMAPS enabled
+  // Build using pnpm with UPLOAD_SOURCEMAPS enabled
   try {
-    exec('pnpm run build:chrome', {
+    const buildCommand = isEdge ? 'pnpm run build:edge' : 'pnpm run build:chrome';
+    exec(buildCommand, {
       env: { ...process.env, UPLOAD_SOURCEMAPS: 'true' }
     });
   } catch (error) {
@@ -134,7 +153,9 @@ async function main() {
   }
 
   // Create zip filename
-  const filename = `birdtab-v${version}-${commit}.zip`;
+  const filename = isEdge
+    ? `birdtab-edge-v${version}-${commit}.zip`
+    : `birdtab-v${version}-${commit}.zip`;
   const filepath = path.join(releasesDir, filename);
 
   log(`\n📦 Creating zip file: ${filename}\n`, colors.blue);
@@ -145,7 +166,7 @@ async function main() {
   }
 
   // Create zip using built-in zip command or 7z on Windows
-  const distDir = path.join(__dirname, '../dist-chrome');
+  const distDir = path.join(__dirname, isEdge ? '../dist-edge' : '../dist-chrome');
 
   try {
     if (process.platform === 'win32') {
@@ -169,10 +190,10 @@ async function main() {
   log(`📁 Package: releases/${filename}`, colors.green);
   log(`📊 Size: ${sizeMB} MB`, colors.green);
   log(`\n📋 Next steps:`, colors.yellow);
-  log(`   1. Test the extension locally from dist-chrome/`);
-  log(`   2. Upload ${filename} to Chrome Web Store`);
+  log(`   1. Test the extension locally from ${isEdge ? 'dist-edge' : 'dist-chrome'}/`);
+  log(`   2. Upload ${filename} to ${isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store'}`);
   log(`   3. After deployment, tag this commit:`, colors.yellow);
-  log(`      git tag -a deployed-v${version} -m "Deployed v${version} to Chrome Web Store"`, colors.blue);
+  log(`      git tag -a deployed-v${version} -m "Deployed v${version} to ${isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store'}"`, colors.blue);
   log(`      git push origin deployed-v${version}`, colors.blue);
   log('');
 }

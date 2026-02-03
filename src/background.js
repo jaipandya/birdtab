@@ -2,6 +2,7 @@ import { CONFIG } from './config.js';
 import { initSentry, captureException, addBreadcrumb, reportApiError } from './sentry.js';
 import { log } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
+import { isBrowserNewTabUrl } from './browserInfo.js';
 
 // Initialize Sentry for background script
 initSentry('background');
@@ -677,7 +678,7 @@ chrome.tabs.onCreated.addListener(handleNewTab);
 
 // We'll keep this listener to handle cases where the URL might change after creation
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url === 'chrome://newtab/') {
+  if (changeInfo.status === 'complete' && isBrowserNewTabUrl(tab.url)) {
     handleNewTab(tab);
   }
 });

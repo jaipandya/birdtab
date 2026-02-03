@@ -10,6 +10,7 @@
     "clean": "node -e \"require('rimraf').sync('dist-chrome'); require('rimraf').sync('dist-edge'); require('rimraf').sync('dev-chrome'); require('rimraf').sync('dev-edge');\"",
     "check:i18n": "node scripts/check_i18n_completeness.js",
     "check:unused": "node scripts/check_unused_strings.js",
+    "check:chrome-build": "node scripts/verify_chrome_build.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "deploy": "node scripts/deploy.js",

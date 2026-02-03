@@ -9,6 +9,7 @@ import { initializeSearch, setupSearchKeyboardShortcut, setupSearchListeners } f
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
+import { IS_EDGE } from './browserInfo.js';
 import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
@@ -2119,7 +2120,7 @@ async function checkSyncedQuickAccessPermissions() {
     // hideTopSites is false (meaning top sites should be visible)
     // Check if we have the required permissions
     const hasPermissions = await chrome.permissions.contains({
-      permissions: ['topSites', 'favicon']
+      permissions: ['topSites']
     });
 
     // If we have permissions, nothing to do
@@ -2208,13 +2209,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Initialize Google Apps
-  try {
-    await initializeGoogleApps();
-    log('Google Apps initialized');
-  } catch (error) {
-    captureException(error, {
-      tags: { operation: 'initializeGoogleApps' }
-    });
+  if (!IS_EDGE) {
+    try {
+      await initializeGoogleApps();
+      log('Google Apps initialized');
+    } catch (error) {
+      captureException(error, {
+        tags: { operation: 'initializeGoogleApps' }
+      });
+    }
   }
 
   // Initialize quiz mode

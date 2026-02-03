@@ -9,8 +9,7 @@
     "search"
   ],
   "optional_permissions": [
-    "topSites",
-    "favicon"
+    "topSites"
   ],
   "host_permissions": [
     "https://api.birdtab.app/*",

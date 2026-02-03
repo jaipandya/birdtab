@@ -44,6 +44,67 @@ module.exports = (env, argv) => {
     },
   };
 
+  const copyPatterns = [
+    {
+      from: 'src/manifest.json',
+      to: 'manifest.json',
+      transform(content, path) {
+        const isEdge = outputDir.includes('edge');
+        const manifest = JSON.parse(content.toString());
+
+        if (Array.isArray(manifest.optional_permissions)) {
+          manifest.optional_permissions = manifest.optional_permissions.filter(
+            (permission) => permission !== 'favicon'
+          );
+        }
+
+        return JSON.stringify(manifest, null, 2) + '\n';
+      },
+    },
+    { from: 'src/images', to: 'images' },
+    { from: 'src/icons', to: 'icons' },
+    { from: 'src/fonts', to: 'fonts' },
+    {
+      from: 'src/_locales',
+      to: '_locales',
+      transform(content, path) {
+        const isEdge = outputDir.includes('edge');
+        if (!isEdge) {
+          return content;
+        }
+        try {
+          const localeData = JSON.parse(content.toString());
+          const replaceForEdge = (value) => {
+            let updated = value.replace(/Chrome/g, 'Microsoft Edge');
+            updated = updated
+              .replace(/Microsoft Edge New Tab/g, 'Edge New Tab')
+              .replace(/Microsoft Edge new tab/g, 'Edge new tab')
+              .replace(/Microsoft Edge new tab page/g, 'Edge new tab page')
+              .replace(/Microsoft Edge Tab Shortcut/g, 'Edge New Tab Shortcut')
+              .replace(/Microsoft Edge Tab/g, 'Edge New Tab');
+            return updated;
+          };
+
+          Object.values(localeData).forEach((entry) => {
+            if (entry && typeof entry.message === 'string') {
+              entry.message = replaceForEdge(entry.message);
+            }
+            if (entry && typeof entry.description === 'string') {
+              entry.description = replaceForEdge(entry.description);
+            }
+          });
+          return JSON.stringify(localeData, null, 2) + '\n';
+        } catch (error) {
+          return content;
+        }
+      },
+    },
+  ];
+
+  if (isEdge) {
+    copyPatterns.push({ from: 'src/edge-assets', to: 'images/edge' });
+  }
+
   return {
     mode: isProduction ? 'production' : 'development',
     entry: {
@@ -94,20 +155,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new CopyPlugin({
-        patterns: [
-          {
-            from: 'src/manifest.json',
-            to: 'manifest.json',
-            transform(content, path) {
-              const isEdge = outputDir.includes('edge');
-              return content.toString().replace(/Chrome/g, isEdge ? 'Microsoft Edge' : 'Chrome');
-            },
-          },
-          { from: 'src/images', to: 'images' },
-          { from: 'src/icons', to: 'icons' },
-          { from: 'src/fonts', to: 'fonts' },
-          { from: 'src/_locales', to: '_locales' },
-        ],
+        patterns: copyPatterns,
       }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
@@ -140,6 +188,7 @@ module.exports = (env, argv) => {
         template: './src/index.html',
         filename: 'index.html',
         chunks: ['vendor', 'script'],
+        isEdge,
       }),
       new HtmlWebpackPlugin({
         template: './src/onboarding.html',

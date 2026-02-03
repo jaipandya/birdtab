@@ -12,7 +12,7 @@ import { showPermissionDialog } from './permissionDialog.js';
 /**
  * Required permissions for quick access features
  */
-const QUICK_ACCESS_PERMISSIONS = ['topSites', 'favicon'];
+const QUICK_ACCESS_PERMISSIONS = ['topSites'];
 
 /**
  * Check if quick access permissions are already granted

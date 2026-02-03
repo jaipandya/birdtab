@@ -375,22 +375,9 @@ class TopSites {
    */
   async getFaviconUrl(url) {
     try {
-      // Check if we have favicon permission
-      const hasFaviconPermission = await chrome.permissions.contains({
-        permissions: ['favicon']
-      });
-
-      if (hasFaviconPermission) {
-        // Use Chrome's official favicon API for better reliability
-        const faviconUrl = new URL(chrome.runtime.getURL("/_favicon/"));
-        faviconUrl.searchParams.set("pageUrl", url);
-        faviconUrl.searchParams.set("size", "32");
-        return faviconUrl.toString();
-      } else {
-        // Fallback to basic favicon URL if permission not granted
-        const domain = new URL(url).origin;
-        return `${domain}/favicon.ico`;
-      }
+      const domain = new URL(url).origin;
+      // Use Google's favicon service (no special permission required)
+      return `https://www.google.com/s2/favicons?sz=32&domain=${encodeURIComponent(domain)}`;
     } catch (error) {
       captureException(error, {
         tags: { operation: 'getFaviconUrl', component: 'TopSites' },
@@ -489,7 +476,7 @@ class TopSites {
   async checkTopSitesPermission() {
     try {
       return await chrome.permissions.contains({
-        permissions: ['topSites', 'favicon']
+        permissions: ['topSites']
       });
     } catch (error) {
       warn('Error checking topSites permission:', error);
@@ -520,7 +507,7 @@ class TopSites {
 
     try {
       return await chrome.permissions.request({
-        permissions: ['topSites', 'favicon']
+        permissions: ['topSites']
       });
     } catch (error) {
       warn('Error requesting topSites permission:', error);

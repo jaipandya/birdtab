@@ -5,6 +5,7 @@ import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
 import { resetChromeFooterNotification } from './chromeFooterNotification.js';
+import { IS_EDGE } from './browserInfo.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -296,6 +297,14 @@ class SettingsSidebar {
     // Get references to the created elements
     this.sidebar = document.getElementById('settings-sidebar');
     this.closeButton = document.getElementById('close-settings');
+
+    if (IS_EDGE && this.sidebar) {
+      const googleAppsToggle = this.sidebar.querySelector('#modal-google-apps');
+      const googleAppsSetting = googleAppsToggle?.closest('.setting');
+      if (googleAppsSetting) {
+        googleAppsSetting.remove();
+      }
+    }
 
     // Localize the newly created sidebar
     localizeHtml();

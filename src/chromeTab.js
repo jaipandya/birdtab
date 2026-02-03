@@ -5,6 +5,7 @@
 
 import { log } from './logger.js';
 import { trackFeature } from './analytics.js';
+import { getNewTabUrl } from './browserInfo.js';
 
 // Module state
 let chromeTabLink = null;
@@ -42,7 +43,7 @@ function handleChromeTabClick(e) {
   e.preventDefault();
   e.stopPropagation();
   trackFeature('chrome_tab_click');
-  chrome.tabs.create({ url: 'chrome://new-tab-page' });
+  chrome.tabs.create({ url: getNewTabUrl() });
 }
 
 /**
