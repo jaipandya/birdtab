@@ -400,6 +400,10 @@ async function playVideo(showIndicator = false) {
 
   // Ensure video is muted during quiet hours
   const isQuietHour = await isQuietHoursActive();
+
+  // Re-check video after async call - it may have been cleaned up during beforeunload
+  if (!video) return;
+
   if (isQuietHour) {
     video.muted = true;
   }
