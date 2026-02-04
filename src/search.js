@@ -130,7 +130,9 @@ export async function performSearch(query) {
     }
   } else {
     // Use custom search engine URL
-    window.location.href = `${engine.url}${encodeURIComponent(trimmedQuery)}`;
+    // Replace %20 with + for proper query parameter encoding
+    const encodedQuery = encodeURIComponent(trimmedQuery).replace(/%20/g, '+');
+    window.location.href = `${engine.url}${encodedQuery}`;
   }
 }
 
