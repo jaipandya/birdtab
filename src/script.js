@@ -562,6 +562,20 @@ async function handleQuietHoursDisable(event) {
   log('Quiet hours disabled via pill');
 }
 
+// Skip duration to bypass recordist commentary at the start of bird call recordings
+const AUDIO_SKIP_SECONDS = 4;
+
+// Create a new Audio element for a bird call, with the initial commentary skipped
+function createBirdAudio(url) {
+  const el = new Audio(url);
+  el.addEventListener('loadedmetadata', () => {
+    if (el.currentTime < AUDIO_SKIP_SECONDS) {
+      el.currentTime = AUDIO_SKIP_SECONDS;
+    }
+  }, { once: true });
+  return el;
+}
+
 // Load audio without playing it
 function loadAudioWithoutPlaying() {
   if (fadeAudioInterval) {
@@ -570,9 +584,10 @@ function loadAudioWithoutPlaying() {
   }
   if (audio) {
     audio.pause();
+    audio.src = '';
     audio = null;
   }
-  audio = new Audio(birdInfo.mediaUrl);
+  audio = createBirdAudio(birdInfo.mediaUrl);
   audio.preload = 'metadata'; // Only load metadata to save bandwidth
   updatePlayPauseButton();
 }
@@ -604,9 +619,7 @@ function createAudioPlayer(mediaUrl) {
   }
 
   log(`Creating audio player with URL: ${mediaUrl}`);
-  audio = new Audio(mediaUrl);
-  // Skip the first 4 seconds of the audio (usually recordist commentary)
-  audio.currentTime = 4;
+  audio = createBirdAudio(mediaUrl);
   audio.muted = isMuted;
   audio.volume = volumeLevel;
 
@@ -659,7 +672,7 @@ async function playAudio() {
   }
 
   if (!audio) {
-    audio = new Audio(birdInfo.mediaUrl);
+    audio = createBirdAudio(birdInfo.mediaUrl);
     audio.volume = volumeLevel;
     audio.muted = isMuted;
   }
@@ -1866,8 +1879,7 @@ async function switchToPhotoMode() {
   if (birdInfo && birdInfo.mediaUrl) {
     // Create audio object if it doesn't exist
     if (!audio) {
-      audio = new Audio(birdInfo.mediaUrl);
-      audio.currentTime = 4; // Skip recordist commentary
+      audio = createBirdAudio(birdInfo.mediaUrl);
       audio.muted = isMuted;
       audio.volume = isMuted ? 0 : volumeLevel;
       audio.onended = () => {
