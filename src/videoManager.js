@@ -15,6 +15,7 @@ let progressHideTimeout = null;
 let onPlayVideo = null;
 let onPauseVideo = null;
 let onUpdatePlayPauseButton = null;
+let onVideoReloaded = null;
 let getIsPlaying = () => false;
 let setIsPlaying = () => {};
 let getIsMuted = () => false;
@@ -28,6 +29,7 @@ export function initVideoManager(callbacks) {
   onPlayVideo = callbacks.onPlayVideo;
   onPauseVideo = callbacks.onPauseVideo;
   onUpdatePlayPauseButton = callbacks.onUpdatePlayPauseButton;
+  onVideoReloaded = callbacks.onVideoReloaded || null;
   getIsPlaying = callbacks.getIsPlaying || getIsPlaying;
   setIsPlaying = callbacks.setIsPlaying || setIsPlaying;
   getIsMuted = callbacks.getIsMuted || getIsMuted;
@@ -359,6 +361,7 @@ export class VideoVisibilityManager {
       await videoEl.play();
       setIsPlaying(true);
       if (onUpdatePlayPauseButton) onUpdatePlayPauseButton();
+      if (onVideoReloaded) onVideoReloaded(videoEl);
     } catch (err) {
       log(`Error playing video after reload: ${err.message}`);
     }

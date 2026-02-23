@@ -111,6 +111,7 @@ initVideoManager({
   onPlayVideo: (showIndicator) => playVideo(showIndicator),
   onPauseVideo: () => pauseVideo(),
   onUpdatePlayPauseButton: () => updatePlayPauseButton(),
+  onVideoReloaded: (videoEl) => { video = videoEl; },
   getIsPlaying: () => isPlaying,
   setIsPlaying: (val) => { isPlaying = val; },
   getIsMuted: () => isMuted,
@@ -1537,15 +1538,21 @@ function setupMediaClickHandler() {
 
     e.preventDefault();
 
-    if (isShowingVideo && video) {
+    if (isShowingVideo) {
       // Video mode: toggle video play/pause
-      // If video is unloaded, the play overlay handles reload - don't interfere
       const vvm = getVideoVisibilityManager();
-      if (vvm && vvm.isUnloaded) return;
 
-      if (video.paused) {
+      if (vvm && vvm.isUnloaded) {
+        // Video was unloaded due to tab inactivity — reload and play,
+        // same as clicking the play overlay button
+        await vvm.reloadAndPlay();
+        video = getVideoElement();
+        return;
+      }
+
+      if (video && video.paused) {
         await playVideo(true); // Show play indicator for user-initiated play
-      } else {
+      } else if (video) {
         pauseVideo();
       }
     } else if (!isShowingVideo && audio) {
