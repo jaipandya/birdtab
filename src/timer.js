@@ -1112,7 +1112,7 @@ function handleStorageStateChange(changes) {
  */
 async function saveTimerSettings() {
   try {
-    await chrome.storage.sync.set({
+    await chrome.storage.local.set({
       timerSetupHours: setupHours,
       timerSetupMinutes: setupMinutes,
       timerSetupSeconds: setupSeconds
@@ -1148,32 +1148,27 @@ async function saveTimerState() {
  */
 async function loadTimerState() {
   try {
-    const [syncResult, localResult] = await Promise.all([
-      new Promise(resolve => {
-        chrome.storage.sync.get([
-          'timerSetupHours',
-          'timerSetupMinutes',
-          'timerSetupSeconds',
-          'timerAlarmEnabled'
-        ], resolve);
-      }),
-      new Promise(resolve => {
-        chrome.storage.local.get([
-          'timerState',
-          'timerRemainingTime',
-          'timerTotalDuration',
-          'timerLastUpdate'
-        ], resolve);
-      })
-    ]);
+    // All timer settings are now in local storage
+    const localResult = await new Promise(resolve => {
+      chrome.storage.local.get([
+        'timerSetupHours',
+        'timerSetupMinutes',
+        'timerSetupSeconds',
+        'timerAlarmEnabled',
+        'timerState',
+        'timerRemainingTime',
+        'timerTotalDuration',
+        'timerLastUpdate'
+      ], resolve);
+    });
 
     // Load setup values
-    if (syncResult.timerSetupHours !== undefined) setupHours = syncResult.timerSetupHours;
-    if (syncResult.timerSetupMinutes !== undefined) setupMinutes = syncResult.timerSetupMinutes;
-    if (syncResult.timerSetupSeconds !== undefined) setupSeconds = syncResult.timerSetupSeconds;
+    if (localResult.timerSetupHours !== undefined) setupHours = localResult.timerSetupHours;
+    if (localResult.timerSetupMinutes !== undefined) setupMinutes = localResult.timerSetupMinutes;
+    if (localResult.timerSetupSeconds !== undefined) setupSeconds = localResult.timerSetupSeconds;
 
     // Load alarm setting (defaults to false)
-    alarmEnabled = syncResult.timerAlarmEnabled || false;
+    alarmEnabled = localResult.timerAlarmEnabled || false;
 
     // Load running state if any
     if (localResult.timerState && localResult.timerState !== TIMER_STATE.SETUP) {
@@ -1232,7 +1227,7 @@ function initOptionsMenu() {
       checked: alarmEnabled,
       onChange: async (checked) => {
         alarmEnabled = checked;
-        await chrome.storage.sync.set({ timerAlarmEnabled: checked });
+        await chrome.storage.local.set({ timerAlarmEnabled: checked });
       }
     },
     {
@@ -1259,7 +1254,7 @@ function initOptionsMenu() {
         showClock();
 
         // Update storage - use new clockDisplayMode enum
-        await chrome.storage.sync.set({
+        await chrome.storage.local.set({
           clockDisplayMode: 'clock'
         });
       }
@@ -1400,17 +1395,17 @@ export async function initTimer() {
 
     // Create and store storage change listener
     storageChangeListener = (changes, areaName) => {
-      // Handle sync storage changes
-      if (areaName === 'sync') {
+      // Handle local storage changes (all timer settings are now in local)
+      if (areaName === 'local') {
         // Handle alarm setting changes
         if (changes.timerAlarmEnabled !== undefined) {
           alarmEnabled = changes.timerAlarmEnabled.newValue;
         }
-      }
 
-      // Handle local storage changes (timer state sync across tabs)
-      if (areaName === 'local' && isVisible && !isReactingToStorageChange) {
-        handleStorageStateChange(changes);
+        // Handle timer state sync across tabs
+        if (isVisible && !isReactingToStorageChange) {
+          handleStorageStateChange(changes);
+        }
       }
     };
     chrome.storage.onChanged.addListener(storageChangeListener);

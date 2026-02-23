@@ -125,7 +125,7 @@ export async function handleQuickAccessToggle(isEnabled, options = {}) {
   const { onSuccess, onRevert, component = 'unknown' } = options;
 
   try {
-    await chrome.storage.sync.set({ quickAccessEnabled: isEnabled });
+    await chrome.storage.local.set({ quickAccessEnabled: isEnabled });
     if (onSuccess) onSuccess();
     return true;
   } catch (error) {

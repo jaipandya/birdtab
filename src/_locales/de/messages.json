@@ -1250,5 +1250,292 @@
   "tourOptionsMenuDescription": {
     "message": "Zugriff auf Einstellungen, Verlauf und Vogel-Quiz über dieses Menü. Klicke, um deine Optionen zu erkunden!",
     "description": "Feature tour: options menu description"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "Auf BirdTab Pro upgraden",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "Alle Premium-Funktionen freischalten",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "Verwandeln Sie jeden neuen Tab in ein Vogelbeobachtungs-Abenteuer",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "Schließen Sie sich Tausenden von Naturliebhabern an, die ihren Tag mit atemberaubenden Vogelbegegnungen beginnen",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "Vögel zum Leben erwecken",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "Sehen Sie fesselnde Vogelvideos, die jeden neuen Tab wie eine Naturdokumentation wirken lassen",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "Jede Feder sehen",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "Kristallklare 2400px-Fotografie enthüllt atemberaubende Details, die Sie noch nie bemerkt haben",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "Die Welt erkunden",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "Entdecken Sie exotische Vögel von jedem Kontinent — von afrikanischen Nashornvögeln bis zu australischen Kakadus",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "Fokussiert und geerdet bleiben",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "Behalten Sie die Zeit mit einer eleganten Uhr im Blick oder steigern Sie die Produktivität mit einem Fokus-Timer",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "Preisoptionen ansehen",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "Flexible Pläne ab nur 20 $/Jahr",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "Haben Sie bereits eine Lizenz?",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "Videomodus",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "Sehen Sie beeindruckende Vogelvideos statt Fotos",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "Hochauflösende Bilder",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "Kristallklare 2400px-Vogelfotografie",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "Internationale Regionen",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "Entdecken Sie Vögel aus jedem Land der Welt",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "Uhr und Timer",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "Zeigen Sie die Uhrzeit oder einen Fokus-Timer auf Ihrem neuen Tab an",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "Bester Wert",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "oder bestehende Lizenz aktivieren",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "Geben Sie Ihren Lizenzschlüssel ein",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "Aktivieren",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "Wird aktiviert...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "Bitte geben Sie einen gültigen Lizenzschlüssel ein",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "Lizenz erfolgreich aktiviert!",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "Aktivierung fehlgeschlagen. Bitte überprüfen Sie Ihren Lizenzschlüssel.",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "Fragen? Kontaktieren Sie support@birdtab.app",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "Aktiv",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "Bald erneuern",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "Abgelaufen",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "Lebenslang",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "Jährlich",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "Testversion",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "Tage verbleibend",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "Abgelaufen",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "Plan",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "E-Mail",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "Lizenz",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "Läuft ab",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "Deaktivieren",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "Sind Sie sicher, dass Sie Ihre Lizenz deaktivieren möchten?",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "Wird deaktiviert…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "Lizenz deaktiviert. Wird neu geladen…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "Kostenlos",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "Schalten Sie Videomodus, Hochauflösende Bilder, Internationale Regionen und Uhr/Timer frei.",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "Auf Pro upgraden",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "Lizenzstatus konnte nicht geladen werden",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "Jetzt upgraden",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "Später erinnern",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "Schließen",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "Pro-Funktionen freischalten",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "Verwalten",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "Abonnement",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "Abrechnung",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "Erneuern",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "Status aktualisieren",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "1 Tag verbleibend",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "$1 Tage verbleibend",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "Pro behalten",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "Ihre Testversion endet bald",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "Ihre Testversion ist abgelaufen",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "Offline",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "Verbinden Sie sich mit dem Internet, um Ihre Lizenz zu überprüfen und die Pro-Funktionen wiederherzustellen.",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

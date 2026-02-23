@@ -3,6 +3,9 @@ import { initSentry, captureException, addBreadcrumb, reportApiError } from './s
 import { log } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
 import { isBrowserNewTabUrl } from './browserInfo.js';
+import { verifyLicense, needsVerification, activateLicense, isPro } from './licenseManager.js';
+// Static import to avoid dynamic import chunk loading which uses document (not available in service workers)
+import { needsMigration, runMigration, initializeFreshInstall } from './storageMigration.js';
 
 // Initialize Sentry for background script
 initSentry('background');
@@ -85,13 +88,19 @@ async function getMacaulayImage(speciesCode) {
   if (cachedData) {
     log(`[CACHE HIT]: ${speciesCode}`);
 
-    // Apply high-res transformation to cached data
+    // Apply high-res transformation to cached data (requires Pro)
     try {
-      const settings = await chrome.storage.sync.get(['highResImages']);
+      const settings = await chrome.storage.local.get(['highResImages']);
       if (settings.highResImages && cachedData.imageUrl) {
-        // Replace 1200 only at the end of the URL (before query params or end of string)
-        cachedData.imageUrl = cachedData.imageUrl.replace(/1200(\?|$)/, '2400$1');
-        log(`[HIGH-RES CACHE]: Using 2400px cached image for ${speciesCode}`);
+        // Check if user has Pro access for high-res images
+        const hasPro = await isPro();
+        if (hasPro) {
+          // Replace 1200 only at the end of the URL (before query params or end of string)
+          cachedData.imageUrl = cachedData.imageUrl.replace(/1200(\?|$)/, '2400$1');
+          log(`[HIGH-RES CACHE]: Using 2400px cached image for ${speciesCode}`);
+        } else {
+          log(`[HIGH-RES CACHE]: Pro required for high-res images`);
+        }
       }
     } catch (error) {
       log(`[HIGH-RES ERROR]: Failed to check high-res setting for cached data: ${error.message}`);
@@ -128,14 +137,20 @@ async function getMacaulayImage(speciesCode) {
       log(`[PORTRAIT FALLBACK]: No landscape image found for ${speciesCode}, using first available`);
     }
 
-    // Check if high-resolution images are enabled
+    // Check if high-resolution images are enabled (requires Pro)
     let imageUrl = image.mediaUrl;
     try {
-      const settings = await chrome.storage.sync.get(['highResImages']);
+      const settings = await chrome.storage.local.get(['highResImages']);
       if (settings.highResImages) {
-        // Replace 1200 with 2400 only at the end of the URL (before query params or end of string)
-        imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
-        log(`[HIGH-RES]: Using 2400px image for ${speciesCode}`);
+        // Check if user has Pro access for high-res images
+        const hasPro = await isPro();
+        if (hasPro) {
+          // Replace 1200 with 2400 only at the end of the URL (before query params or end of string)
+          imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
+          log(`[HIGH-RES]: Using 2400px image for ${speciesCode}`);
+        } else {
+          log(`[HIGH-RES]: Pro required for high-res images`);
+        }
       }
     } catch (error) {
       log(`[HIGH-RES ERROR]: Failed to check high-res setting: ${error.message}`);
@@ -381,14 +396,18 @@ async function getRandomCachedBirdInfo() {
       const videoData = items[`video_${speciesCode}`];
       const videoInfo = videoData?.value || null;
 
-      // Apply high-res transformation to cached image URL
+      // Apply high-res transformation to cached image URL (requires Pro)
       let imageUrl = imageData.value.imageUrl;
       try {
-        const settings = await chrome.storage.sync.get(['highResImages']);
+        const settings = await chrome.storage.local.get(['highResImages']);
         if (settings.highResImages && imageUrl) {
-          // Replace 1200 with 2400 only at the end of the URL (before query params or end of string)
-          imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
-          log(`[HIGH-RES RANDOM CACHE]: Using 2400px image for ${speciesCode}`);
+          const hasPro = await isPro();
+          if (hasPro) {
+            imageUrl = imageUrl.replace(/1200(\?|$)/, '2400$1');
+            log(`[HIGH-RES RANDOM CACHE]: Using 2400px image for ${speciesCode}`);
+          } else {
+            log(`[HIGH-RES RANDOM CACHE]: Pro required for high-res images`);
+          }
         }
       } catch (error) {
         log(`[HIGH-RES ERROR]: Failed to check high-res setting for random cached bird: ${error.message}`);
@@ -691,11 +710,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Use IIFE pattern to handle async operations properly
     (async () => {
       try {
-        // Get settings from storage
-        const result = await chrome.storage.sync.get(['region', 'autoPlay', 'videoMode']);
-        const region = result.region || 'US';
+        // Get settings from local storage
+        const result = await chrome.storage.local.get(['region', 'autoPlay', 'videoMode']);
+        let region = result.region || 'US';
         const autoPlay = result.autoPlay || false;
         let videoMode = result.videoMode || false;
+
+        // Pro feature: non-US region requires Pro access
+        if (region !== 'US') {
+          const hasPro = await isPro();
+          if (!hasPro) {
+            log('Non-US region requires Pro, resetting to US');
+            region = 'US';
+            // Persist the reset so settings UI reflects the change
+            chrome.storage.local.set({ region: 'US' });
+          }
+        }
+
+        // Pro feature: video mode requires Pro access
+        let videoDisabledDueToNoPro = false;
+        if (videoMode) {
+          const hasPro = await isPro();
+          if (!hasPro) {
+            log('Video mode requires Pro, falling back to image mode');
+            videoMode = false;
+            videoDisabledDueToNoPro = true;
+          }
+        }
 
         // Silent fallback: skip video on slow connections
         const slowConnection = isSlowConnection();
@@ -729,6 +770,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // Add slow connection flag to response
         if (videoDisabledDueToSlowConnection) {
           birdInfo.videoDisabledDueToSlowConnection = true;
+        }
+
+        // Add Pro required flag to response
+        if (videoDisabledDueToNoPro) {
+          birdInfo.videoDisabledDueToNoPro = true;
         }
 
         log(`Sending bird info response: ${birdInfo.name}`);
@@ -833,22 +879,89 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     })();
     return true;
+  } else if (request.action === 'activateLicense') {
+    // Handle license activation request
+    (async () => {
+      try {
+        log(`Activating license key`);
+        const result = await activateLicense(request.licenseKey);
+        sendResponse(result);
+      } catch (error) {
+        log(`Error activating license: ${error.message}`);
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true;
+  } else if (request.action === 'verifyLicense') {
+    // Handle license verification request
+    (async () => {
+      try {
+        const result = await verifyLicense();
+        sendResponse(result);
+      } catch (error) {
+        log(`Error verifying license: ${error.message}`);
+        sendResponse({ valid: false, error: error.message });
+      }
+    })();
+    return true;
+  } else if (request.action === 'checkProStatus') {
+    // Check if user has Pro access
+    (async () => {
+      try {
+        const hasPro = await isPro();
+        sendResponse({ isPro: hasPro });
+      } catch (error) {
+        log(`Error checking Pro status: ${error.message}`);
+        sendResponse({ isPro: false, error: error.message });
+      }
+    })();
+    return true;
   }
 });
 
-// Storage change listener
+// Listen for messages from allowed external websites (for auto-activation)
+chrome.runtime.onMessageExternal.addListener(
+  (message, sender, sendResponse) => {
+    // Validate sender origin
+    const allowedOrigins = [
+      'https://birdtab.app',
+      ...(process.env.NODE_ENV !== 'production' ? ['https://birdtab.jaipandya.com'] : []),
+    ];
+    if (!allowedOrigins.some(origin => sender.url?.startsWith(origin))) {
+      log(`Rejected external message from unauthorized origin: ${sender.url}`);
+      sendResponse({ success: false, error: 'Unauthorized origin' });
+      return;
+    }
+
+    log(`Received external message from: ${sender.url}`);
+
+    if (message.type === 'ACTIVATE_LICENSE' && message.licenseKey) {
+      activateLicense(message.licenseKey)
+        .then(result => sendResponse(result))
+        .catch(error => {
+          log(`Error activating license from external: ${error.message}`);
+          sendResponse({ success: false, error: error.message });
+        });
+      return true; // Keep message channel open for async response
+    } else {
+      sendResponse({ success: false, error: 'Invalid message type' });
+    }
+  }
+);
+
+// Storage change listener (settings are now in local storage)
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === 'sync' && changes.region) {
+  if (namespace === 'local' && changes.region) {
     log(`Region changed, clearing cache`);
     clearCache();
     preloadedBirdInfo = null;
-  } else if (namespace === 'sync' && changes.videoMode) {
+  } else if (namespace === 'local' && changes.videoMode) {
     // Video mode changed - clear preload so next tab fetches with correct mode
     log(`Video mode changed to ${changes.videoMode.newValue}, clearing preload`);
     preloadedBirdInfo = null;
   }
 
-  if (namespace === 'sync' && changes.quietHours) {
+  if (namespace === 'local' && changes.quietHours) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs[0]) {
         chrome.tabs.sendMessage(tabs[0].id, {
@@ -865,11 +978,28 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 });
 
-// Initial preload
-chrome.storage.sync.get(['region', 'videoMode'], result => {
+// Initial preload and license verification on service worker startup.
+// This runs on every new tab open, which is frequent enough to catch license
+// changes within the verification cadence (7 days for active/lifetime, 24h for grace).
+// Note: Region Pro check happens in the getBirdInfo message handler.
+// For preload, we use the stored region as-is since it's just a cache optimization.
+// If the user is non-Pro with a non-US region, the actual getBirdInfo request
+// will reset the region to US and persist the change.
+chrome.storage.local.get(['region', 'videoMode'], async result => {
   const region = result.region || 'US';
   const videoMode = result.videoMode || false;
   preloadNextBird(region, videoMode);
+
+  try {
+    if (await needsVerification()) {
+      const verifyResult = await verifyLicense();
+      log(`License verification result: ${JSON.stringify(verifyResult)}`);
+    } else {
+      log('License verification not needed yet');
+    }
+  } catch (error) {
+    log(`License verification error: ${error.message}`);
+  }
 });
 
 // Add this function to check if onboarding is necessary
@@ -882,32 +1012,53 @@ function checkOnboarding() {
 }
 
 // Listen for installation or update events
-chrome.runtime.onInstalled.addListener(function (details) {
-  if (details.reason === 'install' || details.reason === 'update') {
-    checkOnboarding();
-    
-    // Set/refresh the uninstall URL with visitor ID for PostHog tracking
-    // This needs to be called on both install AND update to ensure:
-    // 1. New installs get the correct uninstall URL
-    // 2. Updates refresh the URL with the latest secret (in case it changed)
-    setPersonalizedUninstallURL();
+chrome.runtime.onInstalled.addListener(async function (details) {
+  if (details.reason === 'update') {
+    // Run migration from sync to local storage (if needed)
+    if (await needsMigration()) {
+      await runMigration();
+    }
+
+    // Start free trial for existing users who don't have one yet
+    // All existing users (whether they had Pro features or not) get the same 14-day trial
+    const { trialStartDate, licenseStatus, licenseType } = await new Promise((resolve) => {
+      chrome.storage.local.get(['trialStartDate', 'licenseStatus', 'licenseType'], resolve);
+    });
+
+    // Only set trial if:
+    // 1. User doesn't already have a trial start date
+    // 2. User isn't already a paid Pro user (active yearly/lifetime license)
+    const isAlreadyPaidPro = licenseStatus === 'active' && (licenseType === 'yearly' || licenseType === 'lifetime');
+
+    if (!trialStartDate && !isAlreadyPaidPro) {
+      chrome.storage.local.set({
+        trialStartDate: new Date().toISOString()
+      });
+      log('Free trial started for existing user on update');
+    }
   }
 
-  // This helps in tracking the number of new tabs opened by the user
-  // which is used in the review prompt
-  if (details.reason === "install") {
+  if (details.reason === 'install') {
+    // Fresh install - initialize local storage with defaults
+    await initializeFreshInstall();
+
+    // Track install time, new tab count, and start the free trial
     chrome.storage.local.set({
       installTime: Date.now(),
-      newTabCount: 0
+      newTabCount: 0,
+      trialStartDate: new Date().toISOString()
     });
-    // Set new defaults for fresh installs:
-    // - Clock ON, Quick Access ON, but Top Sites hidden (requires permission to show)
-    chrome.storage.sync.set({
-      clockDisplayMode: 'clock',
-      quickAccessEnabled: true,
-      hideTopSites: true
-    });
+    log('Free trial started for new user on install');
   }
+
+  // Check onboarding status (reads from sync storage)
+  checkOnboarding();
+
+  // Set/refresh the uninstall URL with visitor ID for PostHog tracking
+  // This needs to be called on both install AND update to ensure:
+  // 1. New installs get the correct uninstall URL
+  // 2. Updates refresh the URL with the latest secret (in case it changed)
+  setPersonalizedUninstallURL();
 });
 
 /**

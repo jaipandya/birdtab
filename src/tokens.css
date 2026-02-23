@@ -1,0 +1,131 @@
+/* CSS Custom Properties - Design Token System
+ * Shared across all entry points (new tab, onboarding, etc.)
+ */
+:root {
+  /* ── Primitive: White alpha scale ── */
+  --white-3: rgba(255, 255, 255, 0.03);
+  --white-4: rgba(255, 255, 255, 0.04);
+  --white-5: rgba(255, 255, 255, 0.05);
+  --white-6: rgba(255, 255, 255, 0.06);
+  --white-8: rgba(255, 255, 255, 0.08);
+  --white-10: rgba(255, 255, 255, 0.10);
+  --white-12: rgba(255, 255, 255, 0.12);
+  --white-15: rgba(255, 255, 255, 0.15);
+  --white-20: rgba(255, 255, 255, 0.20);
+  --white-25: rgba(255, 255, 255, 0.25);
+  --white-30: rgba(255, 255, 255, 0.30);
+  --white-40: rgba(255, 255, 255, 0.40);
+  --white-50: rgba(255, 255, 255, 0.50);
+  --white-55: rgba(255, 255, 255, 0.55);
+  --white-60: rgba(255, 255, 255, 0.60);
+  --white-65: rgba(255, 255, 255, 0.65);
+  --white-70: rgba(255, 255, 255, 0.70);
+  --white-80: rgba(255, 255, 255, 0.80);
+  --white-85: rgba(255, 255, 255, 0.85);
+  --white-90: rgba(255, 255, 255, 0.90);
+  --white-95: rgba(255, 255, 255, 0.95);
+  --white-100: #ffffff;
+
+  /* ── Primitive: Black alpha scale ── */
+  --black-5: rgba(0, 0, 0, 0.05);
+  --black-8: rgba(0, 0, 0, 0.08);
+  --black-10: rgba(0, 0, 0, 0.10);
+  --black-15: rgba(0, 0, 0, 0.15);
+  --black-20: rgba(0, 0, 0, 0.20);
+  --black-25: rgba(0, 0, 0, 0.25);
+  --black-30: rgba(0, 0, 0, 0.30);
+  --black-35: rgba(0, 0, 0, 0.35);
+  --black-40: rgba(0, 0, 0, 0.40);
+  --black-45: rgba(0, 0, 0, 0.45);
+  --black-50: rgba(0, 0, 0, 0.50);
+  --black-60: rgba(0, 0, 0, 0.60);
+  --black-70: rgba(0, 0, 0, 0.70);
+  --black-75: rgba(0, 0, 0, 0.75);
+  --black-80: rgba(0, 0, 0, 0.80);
+  --black-85: rgba(0, 0, 0, 0.85);
+  --black-90: rgba(0, 0, 0, 0.90);
+  --black-95: rgba(0, 0, 0, 0.95);
+
+  --black-100: #000000;
+
+  /* ── Surfaces ── */
+  --surface-dark: #1a1a1a;
+  --surface-card: rgba(30, 30, 30, 0.95);
+  --surface-elevated: rgba(42, 42, 42, 0.98);
+  --surface-modal: #18181b;
+  --surface-select: #2a2a2a;
+
+  /* ── Dark gradient (quiz share preview) ── */
+  --gradient-dark-start: #1a1a2e;
+
+  /* ── Accent: Orange (tour badge) ── */
+  --orange: #FF9500;
+  --orange-dark: #FF6B00;
+
+  /* ── Accent: iOS green (toggles, custom shortcuts) ── */
+  --green-accent: rgb(52, 199, 89);
+
+  /* ── Conservation status brown ── */
+  --conservation-brown: rgba(124, 107, 89, 0.4);
+
+  /* ── Tour-specific (unique values) ── */
+  --tour-backdrop-color: var(--black-80);
+  --tour-spotlight-color: rgba(212, 162, 76, 0.4);
+
+  /* ── Semantic: Text ── */
+  --text-primary: var(--white-100);
+  --text-on-accent: var(--white-100);
+
+  /* ── Semantic: Icons ── */
+  --icon-default: var(--white-100);
+
+  /* ── Semantic: Controls (sliders, toggles, progress) ── */
+  --control-thumb: var(--white-100);
+  --control-track-fill: var(--white-100);
+
+  /* ── Semantic: Focus ring (keyboard accessibility) ── */
+  --focus-ring: var(--white-100);
+
+  /* ── Modal / Settings semantic tokens ── */
+  --modal-content-bg: var(--surface-elevated);
+  --modal-text-primary: var(--text-primary);
+  --modal-text-secondary: var(--white-65);
+  --modal-border: var(--white-12);
+  --modal-hover-bg: var(--white-4);
+  --modal-spacing: 20px;
+
+  /* Primary brand colors - golden amber matching website */
+  --primary: #D4A24C;
+  --primary-hover: #C49340;
+  --primary-foreground: #000000;
+
+  /* Legacy accent variables (mapped to primary for consistency) */
+  --modal-accent: var(--primary);
+  --modal-focus-outline: var(--primary);
+
+  /* Status colors */
+  --status-success: #22c55e;
+  --status-warning: #f59e0b;
+  --status-warning-dark: #d97706;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+
+  /* ── Neutral gray (free badge, muted text) ── */
+  --gray-muted: #9ca3af;
+
+  /* ── Initial background (shown before image loads) ── */
+  --bg-initial: #979797;
+
+  /* ── Review prompt (light popover on dark background) ── */
+  --review-text: #333333;
+  --review-text-muted: #666666;
+  --review-btn-bg: #f1f3f4;
+  --review-btn-hover-bg: #e8eaed;
+
+  /* ── Image error state (light fallback surface) ── */
+  --error-surface-start: #f8f9fa;
+  --error-surface-end: #e9ecef;
+  --error-icon-muted: #adb5bd;
+  --error-text-dark: #495057;
+  --error-text-hint: #868e96;
+}

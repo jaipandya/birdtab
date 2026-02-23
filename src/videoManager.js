@@ -488,6 +488,9 @@ export function setupVideoEventListeners(videoEl, fallbackToImage) {
     if (videoVisibilityManager) {
       videoVisibilityManager.hidePlayOverlay();
     }
+
+    // Hide "Video unavailable (slow connection)" icon if video starts playing
+    hideVideoUnavailableIcon();
   });
 
   videoEl.addEventListener('pause', function () {
@@ -701,6 +704,17 @@ export function cleanupVideoControls() {
   if (progressHideTimeout) {
     clearTimeout(progressHideTimeout);
     progressHideTimeout = null;
+  }
+}
+
+/**
+ * Hide the "Video unavailable (slow connection)" icon when video successfully plays
+ */
+function hideVideoUnavailableIcon() {
+  const videoOffIcon = document.querySelector('.info-icon img[src*="video-off.svg"]');
+  if (videoOffIcon && videoOffIcon.parentElement) {
+    videoOffIcon.parentElement.style.display = 'none';
+    log('Hidden video unavailable icon after successful video playback');
   }
 }
 

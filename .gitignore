@@ -21,6 +21,8 @@ dev/*
 prod
 prod/*
 .env
+.env.local
+.env.production
 
 # Releases (deployment packages)
 releases/

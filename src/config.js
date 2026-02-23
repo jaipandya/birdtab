@@ -8,8 +8,8 @@ export const CONFIG = {
   PROD_TAB_COUNT: 50,  // Number of new tabs to open before showing the prompt in production
   DEV_TIME_DELAY: 1 * 60 * 1000,  // 1 minute in milliseconds
   PROD_TIME_DELAY: 4 * 24 * 60 * 60 * 1000,  // 4 days in milliseconds
-  API_SERVER_URL: 'https://api.birdtab.app/api',
-  DEFAULT_VOLUME: 0.3, // Default volume level (0.0 to 1.0)
+  WEBSITE_URL: process.env.WEBSITE_URL || 'http://localhost:3000',
+  API_SERVER_URL: process.env.API_SERVER_URL || 'http://localhost:3000/api',
   VOLUME_STEP: 0.1, // Volume change step for keyboard shortcuts
 
   // Sentry Configuration - follows same pattern as other config
@@ -34,10 +34,7 @@ export const CONFIG = {
   // PostHog Analytics Configuration
   // No host permissions required - PostHog's capture API supports CORS natively
   POSTHOG: {
-    // Project API Key - injected from environment variables via webpack
-    // Development: POSTHOG_API_KEY_DEV (from .env)
-    // Production: POSTHOG_API_KEY (from .env)
-    // Falls back to placeholder if not set
+    // Injected from .env.local (dev) or .env.production (prod) via dotenv-webpack
     API_KEY: process.env.POSTHOG_API_KEY || 'phc_YOUR_PROJECT_API_KEY_HERE',
 
     // API Host - EU region for GDPR compliance (Frankfurt, Germany)
@@ -47,7 +44,62 @@ export const CONFIG = {
   // Uninstall URL Signing - HMAC secret for validating visitor IDs
   // This prevents URL tampering on the uninstall feedback page
   // The same secret must be configured on the website (api.birdtab.app)
-  UNINSTALL_SECRET: process.env.UNINSTALL_SECRET || 'birdtab-uninstall-secret-change-in-prod'
+  UNINSTALL_SECRET: process.env.UNINSTALL_SECRET || 'birdtab-uninstall-secret-change-in-prod',
+
+  // License Configuration for BirdTab Pro
+  LICENSE: {
+    // Verification intervals based on license type
+    VERIFY_INTERVAL_SUBSCRIPTION: 7 * 24 * 60 * 60 * 1000, // 7 days for yearly subscriptions
+    VERIFY_INTERVAL_LIFETIME: 7 * 24 * 60 * 60 * 1000, // 7 days for lifetime licenses
+    VERIFY_INTERVAL_GRACE: 24 * 60 * 60 * 1000, // 24 hours for grace period
+
+    // Offline grace period - how long to trust cached license when offline
+    OFFLINE_GRACE_HOURS: 72, // 72 hours (3 days)
+
+    // Subscription grace period - days after expiry before feature lockout
+    SUBSCRIPTION_GRACE_DAYS: 7,
+
+    // Free trial duration for new installs and updates
+    TRIAL_DURATION_DAYS: 14
+  },
+
+  // Default values for local storage settings
+  // These are used for fresh installs and as fallbacks during migration
+  STORAGE_DEFAULTS: {
+    region: 'US',
+    autoPlay: false,
+    videoMode: false,
+    quietHours: false,
+    highResImages: false,
+    clockDisplayMode: 'clock',
+    clockShowSeconds: false,
+    clockFormat24Hour: false,
+    quickAccessEnabled: true,
+    hideTopSites: true,
+    customShortcuts: [],
+    googleAppsEnabled: false,
+    chromeTabEnabled: true,
+    searchEngine: 'default',
+    isMuted: false,
+    volumeLevel: 0.3,
+    chromeFooterNotificationDismissed: false,
+    timerSetupHours: 0,
+    timerSetupMinutes: 5,
+    timerSetupSeconds: 0,
+    timerAlarmEnabled: false,
+    // License defaults
+    licenseKey: null,
+    licenseStatus: 'free',
+    licenseType: null,
+    licenseExpiresAt: null,
+    licenseEmail: null,
+    // Trial defaults (set dynamically on install/update)
+    trialStartDate: null,
+    trialExpired: false
+  },
+
+  // Keys that should remain in sync storage (cross-device)
+  SYNC_STORAGE_KEYS: ['onboardingComplete', 'featureTourVersion', 'seenFeatures']
 };
 
 export default CONFIG;

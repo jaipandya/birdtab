@@ -38,6 +38,15 @@ describe('Chrome Tab Feature - Unit Tests', () => {
           }),
           set: jest.fn()
         },
+        local: {
+          get: jest.fn((keys, callback) => {
+            if (callback) {
+              callback({});
+            }
+            return Promise.resolve({});
+          }),
+          set: jest.fn()
+        },
         onChanged: {
           addListener: jest.fn((callback) => {
             storageListeners.push(callback);
@@ -65,7 +74,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
      */
     async function updateChromeTabVisibility() {
       return new Promise((resolve) => {
-        chrome.storage.sync.get(['chromeTabEnabled'], (result) => {
+        chrome.storage.local.get(['chromeTabEnabled'], (result) => {
           // Default is true (visible) - only hide if explicitly set to false
           const isEnabled = result.chromeTabEnabled !== false;
 
@@ -80,7 +89,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     }
 
     test('should show Chrome tab link by default (no setting stored)', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({}); // Empty - no setting
       });
 
@@ -90,7 +99,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     });
 
     test('should show Chrome tab link when chromeTabEnabled is undefined', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ chromeTabEnabled: undefined });
       });
 
@@ -100,7 +109,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     });
 
     test('should show Chrome tab link when explicitly enabled (true)', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ chromeTabEnabled: true });
       });
 
@@ -110,7 +119,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     });
 
     test('should hide Chrome tab link when explicitly disabled (false)', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ chromeTabEnabled: false });
       });
 
@@ -120,7 +129,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     });
 
     test('should treat null value as enabled (show)', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ chromeTabEnabled: null });
       });
 
@@ -171,7 +180,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
     test('should respond to chromeTabEnabled storage changes', async () => {
       // Simulate the storage listener logic
       const storageChangeHandler = (changes, namespace) => {
-        if (namespace === 'sync' && changes.chromeTabEnabled) {
+        if (namespace === 'local' && changes.chromeTabEnabled) {
           const isEnabled = changes.chromeTabEnabled.newValue !== false;
           if (isEnabled) {
             chromeTabLink.classList.remove('hidden');
@@ -185,17 +194,17 @@ describe('Chrome Tab Feature - Unit Tests', () => {
       expect(chromeTabLink.classList.contains('hidden')).toBe(false);
 
       // Simulate change to disabled
-      storageChangeHandler({ chromeTabEnabled: { newValue: false } }, 'sync');
+      storageChangeHandler({ chromeTabEnabled: { newValue: false } }, 'local');
       expect(chromeTabLink.classList.contains('hidden')).toBe(true);
 
       // Simulate change back to enabled
-      storageChangeHandler({ chromeTabEnabled: { newValue: true } }, 'sync');
+      storageChangeHandler({ chromeTabEnabled: { newValue: true } }, 'local');
       expect(chromeTabLink.classList.contains('hidden')).toBe(false);
     });
 
-    test('should ignore changes from non-sync namespace', () => {
+    test('should ignore changes from non-local namespace', () => {
       const storageChangeHandler = (changes, namespace) => {
-        if (namespace === 'sync' && changes.chromeTabEnabled) {
+        if (namespace === 'local' && changes.chromeTabEnabled) {
           const isEnabled = changes.chromeTabEnabled.newValue !== false;
           if (isEnabled) {
             chromeTabLink.classList.remove('hidden');
@@ -205,8 +214,8 @@ describe('Chrome Tab Feature - Unit Tests', () => {
         }
       };
 
-      // Simulate change from 'local' namespace
-      storageChangeHandler({ chromeTabEnabled: { newValue: false } }, 'local');
+      // Simulate change from 'sync' namespace
+      storageChangeHandler({ chromeTabEnabled: { newValue: false } }, 'sync');
       
       // Should not be affected
       expect(chromeTabLink.classList.contains('hidden')).toBe(false);
@@ -214,7 +223,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
 
     test('should ignore unrelated storage changes', () => {
       const storageChangeHandler = (changes, namespace) => {
-        if (namespace === 'sync' && changes.chromeTabEnabled) {
+        if (namespace === 'local' && changes.chromeTabEnabled) {
           const isEnabled = changes.chromeTabEnabled.newValue !== false;
           if (isEnabled) {
             chromeTabLink.classList.remove('hidden');
@@ -225,7 +234,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
       };
 
       // Simulate unrelated change
-      storageChangeHandler({ someOtherSetting: { newValue: 'test' } }, 'sync');
+      storageChangeHandler({ someOtherSetting: { newValue: 'test' } }, 'local');
       
       // Should not be affected
       expect(chromeTabLink.classList.contains('hidden')).toBe(false);
@@ -241,7 +250,7 @@ describe('Chrome Tab Feature - Unit Tests', () => {
         if (!element) return;
         
         return new Promise((resolve) => {
-          chrome.storage.sync.get(['chromeTabEnabled'], (result) => {
+          chrome.storage.local.get(['chromeTabEnabled'], (result) => {
             const isEnabled = result.chromeTabEnabled !== false;
             if (isEnabled) {
               element.classList.remove('hidden');

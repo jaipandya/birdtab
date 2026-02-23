@@ -1250,5 +1250,292 @@
   "tourOptionsMenuDescription": {
     "message": "从此菜单访问设置、浏览历史和鸟类问答。点击探索您的选项！",
     "description": "Feature tour: options menu description"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "升级到 BirdTab Pro",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "解锁所有高级功能",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "将每个新标签页变成观鸟冒险",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "加入数千名自然爱好者，每天以令人惊叹的鸟类邂逅开始新的一天",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "让鸟儿活起来",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "观看引人入胜的鸟类视频，让每个新标签页都像自然纪录片",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "看清每根羽毛",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "晶莹剔透的 2400px 摄影作品揭示了您从未注意到的惊人细节",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "探索世界",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "发现来自各大洲的异域鸟类——从非洲犀鸟到澳大利亚凤头鹦鹉",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "保持专注",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "用优雅的时钟追踪时间，或用专注计时器提高生产力",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "查看定价方案",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "灵活方案，低至 $20/年",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "已有许可证？",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "视频模式",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "观看精彩的鸟类视频而非照片",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "高分辨率图像",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "晶莹剔透的 2400px 鸟类摄影",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "国际区域",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "发现世界上任何国家的鸟类",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "时钟与计时器",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "在新标签页上显示时间或专注计时器",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "最超值",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "或激活现有许可证",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "输入您的许可证密钥",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "激活",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "正在激活...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "请输入有效的许可证密钥",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "许可证激活成功！",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "激活失败。请检查您的许可证密钥。",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "发生错误。请重试。",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "有疑问？联系 support@birdtab.app",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "有效",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "即将续订",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "已过期",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "终身",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "年度",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "试用",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "天剩余",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "已过期",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "方案",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "电子邮件",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "许可证",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "到期时间",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "停用",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "您确定要停用许可证吗？",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "正在停用…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "许可证已停用。正在重新加载…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "免费",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "解锁视频模式、高分辨率图像、国际区域和时钟/计时器。",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "升级到 Pro",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "无法加载许可证状态",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "立即升级",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "稍后提醒",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "关闭",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "解锁 Pro 功能",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "管理",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "订阅",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "账单",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "续订",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "刷新状态",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "剩余 1 天",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "剩余 $1 天",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "保留 Pro",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "您的试用即将结束",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "您的试用已结束",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "离线",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "请连接互联网以验证您的许可证并恢复 Pro 功能。",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

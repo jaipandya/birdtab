@@ -59,7 +59,7 @@ const STORAGE_KEY = 'searchEngine';
 export async function getSearchEngine() {
   return new Promise((resolve) => {
     try {
-      chrome.storage.sync.get([STORAGE_KEY], (result) => {
+      chrome.storage.local.get([STORAGE_KEY], (result) => {
         if (chrome.runtime.lastError) {
           captureException(new Error(chrome.runtime.lastError.message), {
             tags: { operation: 'getSearchEngine', component: 'Search' }
@@ -86,7 +86,7 @@ export async function getSearchEngine() {
 export async function setSearchEngine(engineId) {
   return new Promise((resolve, reject) => {
     try {
-      chrome.storage.sync.set({ [STORAGE_KEY]: engineId }, () => {
+      chrome.storage.local.set({ [STORAGE_KEY]: engineId }, () => {
         if (chrome.runtime.lastError) {
           reject(new Error(chrome.runtime.lastError.message));
         } else {
@@ -156,11 +156,13 @@ export function initializeSearch() {
   const searchContainer = document.getElementById('search-container');
 
   // Check settings synchronously first to show/hide immediately
-  chrome.storage.sync.get(['quickAccessEnabled'], (result) => {
+  // Default quickAccessEnabled to true for fresh installs where storage isn't set yet
+  chrome.storage.local.get(['quickAccessEnabled'], (result) => {
+    const quickAccessEnabled = result.quickAccessEnabled !== undefined ? result.quickAccessEnabled : true;
     chrome.permissions.contains({
       permissions: ['search']
     }, (hasPermission) => {
-      if (hasPermission && result.quickAccessEnabled) {
+      if (hasPermission && quickAccessEnabled) {
         searchContainer.style.display = 'block';
         document.body.classList.add('quick-access-enabled');
         setupSearchListeners();

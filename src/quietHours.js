@@ -2,7 +2,7 @@ const QUIET_HOURS_START = 20; // 8 PM
 const QUIET_HOURS_END = 8; // 8 AM
 
 export async function isQuietHoursActive() {
-  const result = await chrome.storage.sync.get(['quietHours']);
+  const result = await chrome.storage.local.get(['quietHours']);
   const isQuietHoursEnabled = result.quietHours ?? false;
   const currentHour = new Date().getHours();
   const isBetweenQuietHours = currentHour >= QUIET_HOURS_START || currentHour < QUIET_HOURS_END;
@@ -11,7 +11,7 @@ export async function isQuietHoursActive() {
 
 export async function getAutoPlayState() {
   const isQuietHoursEnabled = await isQuietHoursActive();
-  const result = await chrome.storage.sync.get(['autoPlay']);
+  const result = await chrome.storage.local.get(['autoPlay']);
   return isQuietHoursEnabled ? false : result.autoPlay;
 }
 
@@ -23,7 +23,7 @@ export async function getAutoPlayState() {
  * @returns {Promise<boolean>} The user's auto-play setting
  */
 export async function getVideoAutoPlayState() {
-  const result = await chrome.storage.sync.get(['autoPlay']);
+  const result = await chrome.storage.local.get(['autoPlay']);
   return result.autoPlay ?? false;
 }
 

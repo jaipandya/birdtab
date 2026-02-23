@@ -22,7 +22,7 @@ export async function updateChromeTabVisibility() {
   
   if (!chromeTabLink) return;
 
-  const result = await chrome.storage.sync.get(['chromeTabEnabled']);
+  const result = await chrome.storage.local.get(['chromeTabEnabled']);
   // Default is true (visible) - only hide if explicitly set to false
   const isEnabled = result.chromeTabEnabled !== false;
 
@@ -51,7 +51,7 @@ function handleChromeTabClick(e) {
  */
 function setupStorageListener() {
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'sync' && changes.chromeTabEnabled) {
+    if (namespace === 'local' && changes.chromeTabEnabled) {
       updateChromeTabVisibility();
     }
   });

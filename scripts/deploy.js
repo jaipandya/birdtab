@@ -40,7 +40,7 @@ function getBrowserTarget(args) {
   }
 
   const value = browserArg.split('=')[1];
-  if (value === 'edge' || value === 'chrome') {
+  if (value === 'chrome' || value === 'edge') {
     return value;
   }
 
@@ -53,6 +53,8 @@ async function main() {
 
   const browserTarget = getBrowserTarget(process.argv.slice(2));
   const isEdge = browserTarget === 'edge';
+  const browserSlug = isEdge ? 'edge' : 'chrome';
+  const browserLabel = isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store';
 
   // Read version from manifest.json
   const manifestPath = path.join(__dirname, '../src/manifest.json');
@@ -154,7 +156,7 @@ async function main() {
 
   // Create zip filename
   const filename = isEdge
-    ? `birdtab-edge-v${version}-${commit}.zip`
+    ? `birdtab-${browserSlug}-v${version}-${commit}.zip`
     : `birdtab-v${version}-${commit}.zip`;
   const filepath = path.join(releasesDir, filename);
 
@@ -191,9 +193,9 @@ async function main() {
   log(`📊 Size: ${sizeMB} MB`, colors.green);
   log(`\n📋 Next steps:`, colors.yellow);
   log(`   1. Test the extension locally from ${isEdge ? 'dist-edge' : 'dist-chrome'}/`);
-  log(`   2. Upload ${filename} to ${isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store'}`);
+  log(`   2. Upload ${filename} to ${browserLabel}`);
   log(`   3. After deployment, tag this commit:`, colors.yellow);
-  log(`      git tag -a deployed-v${version} -m "Deployed v${version} to ${isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store'}"`, colors.blue);
+  log(`      git tag -a deployed-v${version} -m "Deployed v${version} to ${browserLabel}"`, colors.blue);
   log(`      git push origin deployed-v${version}`, colors.blue);
   log('');
 }

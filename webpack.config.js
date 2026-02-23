@@ -10,14 +10,18 @@ const { rimraf } = require('rimraf');
 const fs = require('fs');
 const Dotenv = require('dotenv-webpack');
 
-// Load .env file for webpack config (dotenv-webpack only injects into bundled code)
-require('dotenv').config();
-
-
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   const isEdge = env.BROWSER === 'edge';
   const outputDir = isProduction ? (isEdge ? 'dist-edge' : 'dist-chrome') : (isEdge ? 'dev-edge' : 'dev-chrome');
+
+  // Load environment-specific .env file
+  // Production: .env.production, Development: .env.local, Fallback: .env
+  const envFile = isProduction ? '.env.production' : '.env.local';
+  const envPath = path.resolve(__dirname, envFile);
+  const fallbackEnvPath = path.resolve(__dirname, '.env');
+  const resolvedEnvPath = fs.existsSync(envPath) ? envPath : fallbackEnvPath;
+  require('dotenv').config({ path: resolvedEnvPath });
 
   // Custom plugin to delete source maps after they've been used
   const DeleteSourceMapsPlugin = {
@@ -56,6 +60,10 @@ module.exports = (env, argv) => {
           manifest.optional_permissions = manifest.optional_permissions.filter(
             (permission) => permission !== 'favicon'
           );
+        }
+
+        if (!isProduction && manifest.externally_connectable?.matches) {
+          manifest.externally_connectable.matches.push('https://birdtab.jaipandya.com/*');
         }
 
         return JSON.stringify(manifest, null, 2) + '\n';
@@ -160,24 +168,17 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: '[name].css',
       }),
-      // DefinePlugin for build-time constants
-      // PostHog key selection: use POSTHOG_API_KEY_PROD for production, POSTHOG_API_KEY_DEV for development
       new DefinePlugin({
         'process.env.BROWSER': JSON.stringify(isEdge ? 'edge' : 'chrome'),
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
         'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
-        // PostHog: Use POSTHOG_API_KEY_PROD for production builds, POSTHOG_API_KEY_DEV for development
-        'process.env.POSTHOG_API_KEY': JSON.stringify(
-          isProduction 
-            ? (process.env.POSTHOG_API_KEY_PROD || 'phc_YOUR_PROJECT_API_KEY_HERE')
-            : (process.env.POSTHOG_API_KEY_DEV || 'phc_YOUR_PROJECT_API_KEY_HERE')
-        ),
       }),
-      // Dotenv loads other .env variables (Sentry, etc.)
-      // Note: Don't use POSTHOG_API_KEY in .env - use POSTHOG_API_KEY_DEV and POSTHOG_API_KEY_PROD instead
+      // Dotenv loads environment variables into bundled code
+      // Uses .env.production for production builds, .env.local for development, .env as fallback
       new Dotenv({
-        systemvars: true, // Load system environment variables as well
-        silent: true, // Hide errors if .env is missing (e.g. in CI)
+        path: resolvedEnvPath,
+        systemvars: true,
+        silent: true,
       }),
       new HtmlWebpackPlugin({
         template: './src/popup.html',

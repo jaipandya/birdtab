@@ -5,6 +5,7 @@ import { getOptionsTriggerSvg } from './optionsTrigger.js';
 import { getCloseTriggerSvg } from './closeTrigger.js';
 import { showConfirmationDialog } from './confirmationDialog.js';
 import { SEARCH_ENGINES, getSearchEngine, setSearchEngine } from './search.js';
+import { escapeHtml } from './utils/escapeHtml.js';
 
 /**
  * Top Sites module for displaying most visited websites
@@ -36,8 +37,10 @@ class TopSites {
     this.initOptionsMenu();
 
     // Check settings immediately to show container if enabled
+    // Default quickAccessEnabled to true for fresh installs
     const settings = await this.getSettings();
-    if (settings.quickAccessEnabled) {
+    const isQuickAccessEnabled = settings.quickAccessEnabled !== undefined ? settings.quickAccessEnabled : true;
+    if (isQuickAccessEnabled) {
       // Show container immediately if enabled, then load content
       this.show();
       // Load content in background
@@ -149,8 +152,9 @@ class TopSites {
     this.updateTimeout = setTimeout(async () => {
       try {
         // Check if user has enabled quick access features in settings
+        // Default quickAccessEnabled to true for fresh installs
         const settings = await this.getSettings();
-        const isEnabled = settings.quickAccessEnabled || false;
+        const isEnabled = settings.quickAccessEnabled !== undefined ? settings.quickAccessEnabled : true;
 
         if (!isEnabled) {
           this.hide();
@@ -447,7 +451,7 @@ class TopSites {
   getSettings() {
     return new Promise((resolve) => {
       try {
-        chrome.storage.sync.get([
+        chrome.storage.local.get([
           'quickAccessEnabled',
           'hideTopSites'
         ], (result) => {
@@ -521,7 +525,7 @@ class TopSites {
   async getCustomShortcuts() {
     return new Promise((resolve) => {
       try {
-        chrome.storage.sync.get(['customShortcuts'], (result) => {
+        chrome.storage.local.get(['customShortcuts'], (result) => {
           if (chrome.runtime.lastError) {
             captureException(new Error(chrome.runtime.lastError.message), {
               tags: { operation: 'getCustomShortcuts', component: 'TopSites' }
@@ -558,7 +562,7 @@ class TopSites {
           url: shortcut.url
         }));
 
-        chrome.storage.sync.set({ customShortcuts: storageFormat }, () => {
+        chrome.storage.local.set({ customShortcuts: storageFormat }, () => {
           if (chrome.runtime.lastError) {
             reject(new Error(chrome.runtime.lastError.message));
           } else {
@@ -597,7 +601,7 @@ class TopSites {
   setupStorageListener() {
     // Listen for storage changes and update accordingly
     const handleStorageChange = (changes, namespace) => {
-      if (namespace === 'sync') {
+      if (namespace === 'local') {
         const relevantChanges = [
           'quickAccessEnabled',
           'customShortcuts',
@@ -695,7 +699,7 @@ class TopSites {
 
             this.hideTopSites = !checked;
             // Save to storage
-            await chrome.storage.sync.set({ hideTopSites: !checked });
+            await chrome.storage.local.set({ hideTopSites: !checked });
             log(`Show top sites toggled: ${checked}`);
           }
         }
@@ -720,7 +724,7 @@ class TopSites {
 
     clockCloseBtn?.addEventListener('click', async () => {
       // Check current mode
-      const result = await chrome.storage.sync.get(['clockDisplayMode']);
+      const result = await chrome.storage.local.get(['clockDisplayMode']);
       const currentMode = result.clockDisplayMode || 'off';
 
       if (currentMode === 'timer') {
@@ -736,7 +740,7 @@ class TopSites {
         showClock();
 
         // Update storage
-        await chrome.storage.sync.set({ clockDisplayMode: 'clock' });
+        await chrome.storage.local.set({ clockDisplayMode: 'clock' });
       } else {
         // If viewing clock, show confirmation to turn off
         const confirmed = await showConfirmationDialog({
@@ -746,7 +750,7 @@ class TopSites {
           confirmText: 'hide'
         });
         if (confirmed) {
-          chrome.storage.sync.set({ clockDisplayMode: 'off' });
+          chrome.storage.local.set({ clockDisplayMode: 'off' });
         }
       }
     });
@@ -759,7 +763,7 @@ class TopSites {
         confirmText: 'hide'
       });
       if (confirmed) {
-        chrome.storage.sync.set({ quickAccessEnabled: false });
+        chrome.storage.local.set({ quickAccessEnabled: false });
       }
     });
   }
@@ -877,12 +881,12 @@ class TopSites {
         <div class="shortcut-modal-body">
           <div class="input-group">
             <label for="shortcut-name">${chrome.i18n.getMessage('shortcutNameLabel')}</label>
-            <input type="text" id="shortcut-name" value="${initialName}" placeholder="${chrome.i18n.getMessage('shortcutNamePlaceholder')}" maxlength="20">
+            <input type="text" id="shortcut-name" value="${escapeHtml(initialName)}" placeholder="${chrome.i18n.getMessage('shortcutNamePlaceholder')}" maxlength="20">
             <div class="error-message" id="name-error"></div>
           </div>
           <div class="input-group">
             <label for="shortcut-url">${chrome.i18n.getMessage('shortcutUrlLabel')}</label>
-            <input type="text" id="shortcut-url" value="${initialUrl}" placeholder="${chrome.i18n.getMessage('shortcutUrlPlaceholder')}">
+            <input type="text" id="shortcut-url" value="${escapeHtml(initialUrl)}" placeholder="${chrome.i18n.getMessage('shortcutUrlPlaceholder')}">
             <div class="error-message" id="url-error"></div>
           </div>
         </div>

@@ -25,6 +25,11 @@
  * - quiz_completed: Quiz finished
  * - onboarding_completed: Onboarding flow done
  * - tour_completed: Feature tour done
+ * - pro_trial_started: 14-day trial begins
+ * - pro_upgrade_clicked: User clicks upgrade/pricing CTA
+ * - license_activated: Successful license activation
+ * - license_deactivated: User deactivates license
+ * - trial_expired_modal_shown: Trial expiration modal displayed
  */
 
 import PostHog from 'posthog-js-lite';
@@ -402,6 +407,53 @@ export function trackReviewPromptAction(action, daysSinceInstall) {
 }
 
 /**
+ * Track Pro trial started
+ * Called on the first new tab load after a trial begins (deferred from background.js
+ * since service workers can't use posthog-js-lite)
+ */
+export function trackProTrialStarted() {
+  track('pro_trial_started', {});
+}
+
+/**
+ * Track upgrade/pricing CTA click
+ * 
+ * @param {string} source - Where the click originated (e.g., 'upgrade_modal', 'settings_trial', 'settings_expired', 'settings_free', 'trial_expired_modal')
+ * @param {string|null} triggerFeature - The Pro feature that triggered the modal, if any
+ */
+export function trackProUpgradeClicked(source, triggerFeature = null) {
+  track('pro_upgrade_clicked', {
+    source,
+    ...(triggerFeature && { trigger_feature: triggerFeature }),
+  });
+}
+
+/**
+ * Track successful license activation
+ * 
+ * @param {Object} properties - License details
+ * @param {string} [properties.type] - License type (yearly/lifetime)
+ * @param {string} [properties.status] - License status
+ */
+export function trackLicenseActivated(properties = {}) {
+  track('license_activated', properties);
+}
+
+/**
+ * Track license deactivation
+ */
+export function trackLicenseDeactivated() {
+  track('license_deactivated', {});
+}
+
+/**
+ * Track trial expired modal shown
+ */
+export function trackTrialExpiredModalShown() {
+  track('trial_expired_modal_shown', {});
+}
+
+/**
  * Force flush all pending events
  * Useful before page unload or when immediate delivery is needed
  */
@@ -428,6 +480,11 @@ export default {
   trackQuizCompleted,
   trackOnboardingCompleted,
   trackTourCompleted,
+  trackProTrialStarted,
+  trackProUpgradeClicked,
+  trackLicenseActivated,
+  trackLicenseDeactivated,
+  trackTrialExpiredModalShown,
   flush,
   getPostHogInstance,
 };

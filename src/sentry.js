@@ -30,8 +30,6 @@ const IGNORED_ERROR_PATTERNS = [
 
 const SENSITIVE_KEYS = ['token', 'key', 'password', 'secret', 'auth', 'credential', 'cookie', 'session'];
 
-const USER_SETTINGS_KEYS = ['region', 'onboardingComplete', 'autoPlay', 'quietHours', 'quickAccessEnabled'];
-
 const BROWSER_ONLY_INTEGRATIONS = ['BrowserTracing', 'TryCatch', 'Breadcrumbs', 'LinkedErrors', 'HttpContext', 'GlobalHandlers'];
 
 // Span status codes
@@ -116,10 +114,15 @@ function buildUserData(settings = {}) {
 
 /**
  * Get user settings from storage
+ * Note: onboardingComplete remains in sync storage, other settings are in local storage
  */
 async function getUserSettings() {
   try {
-    return await chrome.storage.sync.get(USER_SETTINGS_KEYS);
+    // onboardingComplete stays in sync storage (cross-device)
+    const syncData = await chrome.storage.sync.get(['onboardingComplete']);
+    // Other settings are in local storage (device-specific)
+    const localData = await chrome.storage.local.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled']);
+    return { ...syncData, ...localData };
   } catch (error) {
     logError('Failed to get user settings:', error);
     return {};
@@ -231,17 +234,17 @@ function addCustomIntegrations(integrations) {
 
   // Browser tracing (production + browser context only)
   if (!isWorker && CONFIG.SENTRY.ENVIRONMENT === 'production' && Sentry.browserTracingIntegration) {
-    result.push(Sentry.browserTracingIntegration({
-      enableLongTask: false,
-      enableInp: true,
-    }));
+      result.push(Sentry.browserTracingIntegration({
+        enableLongTask: false,
+        enableInp: true,
+      }));
   }
 
   // Console capture (browser context only)
   if (!isWorker && Sentry.captureConsoleIntegration) {
-    result.push(Sentry.captureConsoleIntegration({
-      levels: ['error', 'warn'],
-    }));
+      result.push(Sentry.captureConsoleIntegration({
+        levels: ['error', 'warn'],
+      }));
   }
 
   return result;
@@ -250,82 +253,82 @@ function addCustomIntegrations(integrations) {
 // Configuration object for Sentry
 const SENTRY_CONFIG = {
   // DSN from config
-  dsn: CONFIG.SENTRY.DSN,
-  environment: CONFIG.SENTRY.ENVIRONMENT,
-  debug: CONFIG.SENTRY.DEBUG,
-
+    dsn: CONFIG.SENTRY.DSN,
+    environment: CONFIG.SENTRY.ENVIRONMENT,
+    debug: CONFIG.SENTRY.DEBUG,
+    
   // Lazy getter to avoid calling chrome API at module load time
-  get release() {
-    return `birdtab@${chrome.runtime.getManifest().version}`;
-  },
+    get release() {
+      return `birdtab@${chrome.runtime.getManifest().version}`;
+    },
 
   // Performance monitoring sample rate (5% for free tier optimization)
   // With 1000+ daily users opening new tabs, this keeps us well within limits
-  tracesSampleRate: CONFIG.SENTRY.TRACES_SAMPLE_RATE,
-  
+    tracesSampleRate: CONFIG.SENTRY.TRACES_SAMPLE_RATE,
+    
   // Dynamic sampling: prioritize transactions with errors
-  tracesSampler: (samplingContext) => {
+    tracesSampler: (samplingContext) => {
     // Always sample transactions that have errors
-    if (samplingContext.parentSampled !== undefined) {
-      return samplingContext.parentSampled;
-    }
+      if (samplingContext.parentSampled !== undefined) {
+        return samplingContext.parentSampled;
+      }
 
     // Sample critical operations more frequently (cap at 1.0)
-    const operationName = samplingContext.name || '';
-    if (operationName.includes('error') || operationName.includes('fetch-bird-info')) {
-      return Math.min(CONFIG.SENTRY.TRACES_SAMPLE_RATE * 2, 1.0);
-    }
+      const operationName = samplingContext.name || '';
+      if (operationName.includes('error') || operationName.includes('fetch-bird-info')) {
+        return Math.min(CONFIG.SENTRY.TRACES_SAMPLE_RATE * 2, 1.0);
+      }
 
     // Default sample rate for other transactions
-    return CONFIG.SENTRY.TRACES_SAMPLE_RATE;
-  },
+      return CONFIG.SENTRY.TRACES_SAMPLE_RATE;
+    },
 
-  integrations: (defaultIntegrations) => {
-    try {
-      const filtered = filterIntegrations(defaultIntegrations);
-      return addCustomIntegrations(filtered);
-    } catch (error) {
-      console.error('[Sentry] Error configuring integrations:', error);
-      return defaultIntegrations;
-    }
-  },
+    integrations: (defaultIntegrations) => {
+      try {
+        const filtered = filterIntegrations(defaultIntegrations);
+        return addCustomIntegrations(filtered);
+      } catch (error) {
+        console.error('[Sentry] Error configuring integrations:', error);
+        return defaultIntegrations;
+      }
+    },
 
   beforeSend(event, hint) {
     // Don't send events when offline (works in both browser and service worker contexts)
     // navigator.onLine is available in service workers via WorkerNavigator
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    return null;
+  }
+
+  // Reset error count after time window
+  if (Date.now() > errorCountResetTime) {
+    errorCount = 0;
+    errorCountResetTime = Date.now() + ERROR_COUNT_RESET_INTERVAL;
+  }
+
+  // Rate limiting
+  if (errorCount >= MAX_ERRORS_PER_SESSION) {
+    return null;
+  }
+
+  // Check if error should be ignored
+  if (event.exception) {
+    const errorMessage = hint.originalException?.message || event.exception?.values?.[0]?.value || '';
+
+    if (shouldIgnoreError(errorMessage)) {
       return null;
     }
 
-    // Reset error count after time window
-    if (Date.now() > errorCountResetTime) {
-      errorCount = 0;
-      errorCountResetTime = Date.now() + ERROR_COUNT_RESET_INTERVAL;
-    }
+    errorCount++;
+  }
 
-    // Rate limiting
-    if (errorCount >= MAX_ERRORS_PER_SESSION) {
-      return null;
-    }
+  // Remove sensitive data
+  removeSensitiveData(event.extra);
 
-    // Check if error should be ignored
-    if (event.exception) {
-      const errorMessage = hint.originalException?.message || event.exception?.values?.[0]?.value || '';
+  // Sanitize URLs
+  sanitizeEvent(event);
 
-      if (shouldIgnoreError(errorMessage)) {
-        return null;
-      }
-
-      errorCount++;
-    }
-
-    // Remove sensitive data
-    removeSensitiveData(event.extra);
-
-    // Sanitize URLs
-    sanitizeEvent(event);
-
-    return event;
+  return event;
   },
 
   // Transport error handling (detects ad-blockers)
@@ -377,7 +380,7 @@ export function initSentry(component, additionalConfig = {}) {
       logError('Invalid Sentry DSN format detected');
       return;
     }
-
+    
     const config = {
       ...SENTRY_CONFIG,
       ...additionalConfig,

@@ -386,7 +386,7 @@ class QuizMode {
   }
 
   async getCurrentRegion() {
-    const region = await this.getFromStorage('sync', 'region');
+    const region = await this.getFromStorage('local', 'region');
     return region || 'US';
   }
 
@@ -1422,9 +1422,9 @@ class QuizMode {
   /**
    * Draw a checkmark icon on the canvas
    */
-  drawCheckmark(ctx, x, y, size) {
+  drawCheckmark(ctx, x, y, size, color = '#ffffff') {
     ctx.save();
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = color;
     ctx.lineWidth = size / 6;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -1439,9 +1439,9 @@ class QuizMode {
   /**
    * Draw an X icon on the canvas
    */
-  drawCross(ctx, x, y, size) {
+  drawCross(ctx, x, y, size, color = '#ffffff') {
     ctx.save();
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = color;
     ctx.lineWidth = size / 6;
     ctx.lineCap = 'round';
     ctx.beginPath();
@@ -1478,17 +1478,19 @@ class QuizMode {
     canvas.height = 630;
     const ctx = canvas.getContext('2d');
 
-    // Design system colors - Clean, minimal palette
+    // Design system colors - read from CSS custom properties where applicable
+    const rootStyle = getComputedStyle(document.documentElement);
+    const cssVar = (name) => rootStyle.getPropertyValue(name).trim();
     const colors = {
-      bgDark: '#0a0a0a',
-      bgCard: '#141414',
-      textPrimary: '#ffffff',
-      textSecondary: '#a3a3a3',
-      textMuted: '#525252',
-      correct: '#22c55e',
-      incorrect: '#ef4444',
-      border: '#262626',
-      accent: '#fafafa'
+      bgDark: cssVar('--surface-dark') || '#1a1a1a',
+      bgCard: '#141414',                              // canvas-specific: between bgDark and surface
+      textPrimary: cssVar('--text-primary') || '#ffffff',
+      textSecondary: cssVar('--modal-text-secondary') || '#a3a3a3',
+      textMuted: '#525252',                            // canvas-specific: low-contrast muted text
+      correct: cssVar('--status-success') || '#22c55e',
+      incorrect: cssVar('--status-error') || '#ef4444',
+      border: '#262626',                               // canvas-specific: subtle card border
+      accent: cssVar('--text-primary') || '#fafafa'
     };
 
     // Fill solid dark background
@@ -1498,10 +1500,10 @@ class QuizMode {
     // ===== LEFT SIDE: Score & Branding =====
     const leftPanelWidth = 400;
     
-    // Subtle gradient on left panel
+    // Subtle gradient on left panel (canvas-specific: slightly lighter → bgDark)
     const leftGradient = ctx.createLinearGradient(0, 0, leftPanelWidth, canvas.height);
     leftGradient.addColorStop(0, '#0f0f0f');
-    leftGradient.addColorStop(1, '#0a0a0a');
+    leftGradient.addColorStop(1, colors.bgDark);
     ctx.fillStyle = leftGradient;
     ctx.fillRect(0, 0, leftPanelWidth, canvas.height);
 
@@ -1642,8 +1644,8 @@ class QuizMode {
       ctx.fill();
 
       answer.isCorrect 
-        ? this.drawCheckmark(ctx, statusX, statusY, 10)
-        : this.drawCross(ctx, statusX, statusY, 10);
+        ? this.drawCheckmark(ctx, statusX, statusY, 10, colors.textPrimary)
+        : this.drawCross(ctx, statusX, statusY, 10, colors.textPrimary);
     }
 
     return canvas.toDataURL('image/png');

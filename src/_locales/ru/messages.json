@@ -1250,5 +1250,292 @@
   "tourOptionsMenuDescription": {
     "message": "Доступ к настройкам, истории просмотра и викторине о птицах из этого меню. Нажмите, чтобы изучить опции!",
     "description": "Feature tour: options menu description"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "Перейти на BirdTab Pro",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "Разблокируйте все премиум-функции",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "Превратите каждую новую вкладку в приключение по наблюдению за птицами",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "Присоединяйтесь к тысячам любителей природы, которые начинают день с захватывающих встреч с птицами",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "Оживите птиц",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "Смотрите завораживающие видео с птицами, которые превращают каждую новую вкладку в документальный фильм о природе",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "Увидьте каждое перо",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "Кристально чёткая фотография 2400px раскрывает потрясающие детали, которые вы никогда не замечали",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "Исследуйте мир",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "Откройте для себя экзотических птиц с любого континента — от африканских птиц-носорогов до австралийских какаду",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "Оставайтесь сфокусированными",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "Следите за временем с элегантными часами или повышайте продуктивность с таймером концентрации",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "Посмотреть тарифы",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "Гибкие тарифы от $20/год",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "Уже есть лицензия?",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "Режим видео",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "Смотрите потрясающие видео с птицами вместо фото",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "Изображения высокого разрешения",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "Кристально чёткая фотография птиц в 2400px",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "Международные регионы",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "Откройте для себя птиц из любой страны мира",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "Часы и таймер",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "Отображайте время или таймер концентрации на новой вкладке",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "Лучшее предложение",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "или активируйте существующую лицензию",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "Введите ключ лицензии",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "Активировать",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "Активация...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "Пожалуйста, введите действительный ключ лицензии",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "Лицензия успешно активирована!",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "Активация не удалась. Пожалуйста, проверьте ключ лицензии.",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "Произошла ошибка. Пожалуйста, попробуйте снова.",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "Вопросы? Свяжитесь с support@birdtab.app",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "Активна",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "Продлите скоро",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "Истекла",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "Пожизненная",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "Годовая",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "Пробная",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "дней осталось",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "Истекла",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "Тариф",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "Эл. почта",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "Лицензия",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "Истекает",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "Деактивировать",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "Вы уверены, что хотите деактивировать лицензию?",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "Деактивация…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "Лицензия деактивирована. Перезагрузка…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "Бесплатно",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "Разблокируйте Режим видео, Изображения высокого разрешения, Международные регионы и Часы/Таймер.",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "Перейти на Pro",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "Не удалось загрузить статус лицензии",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "Обновить сейчас",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "Напомнить позже",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "Закрыть",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "Разблокировать функции Pro",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "Управление",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "Подписка",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "Оплата",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "Продлить",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "Обновить статус",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "Остался 1 день",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "Осталось $1 дней",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "Сохранить Pro",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "Ваш пробный период скоро закончится",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "Ваш пробный период закончился",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "Офлайн",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "Подключитесь к интернету для проверки лицензии и восстановления функций Pro.",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

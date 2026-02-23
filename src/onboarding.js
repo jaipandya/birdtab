@@ -1,3 +1,4 @@
+import './tokens.css';
 import './onboarding.css';
 import { populateRegionSelect } from './shared.js';
 import { localizeHtml } from './i18n.js';
@@ -46,29 +47,42 @@ document.addEventListener('DOMContentLoaded', async () => {
       autoPlay: autoPlayEnabled 
     });
 
-    chrome.storage.sync.set({
+    // Write user selections to local storage (device-specific)
+    chrome.storage.local.set({
       region: selectedRegion,
-      autoPlay: autoPlayEnabled,
-      onboardingComplete: true
+      autoPlay: autoPlayEnabled
     }, () => {
       if (chrome.runtime.lastError) {
-        captureException(new Error('Failed to save onboarding settings'), {
+        captureException(new Error('Failed to save onboarding settings to local'), {
           tags: { operation: 'saveOnboardingSettings' },
           extra: { error: chrome.runtime.lastError.message, selectedRegion, autoPlayEnabled }
         });
         return;
       }
-      
-      // Track onboarding completion only after settings are successfully saved
-      trackOnboardingCompleted(selectedRegion, autoPlayEnabled);
-      
-      if (transaction) {
-        transaction.setStatus('ok');
-        transaction.finish();
-      }
-      
-      chrome.tabs.create({ url: 'index.html' });
-      window.close();
+
+      // Write onboarding state to sync storage (cross-device)
+      chrome.storage.sync.set({
+        onboardingComplete: true
+      }, () => {
+        if (chrome.runtime.lastError) {
+          captureException(new Error('Failed to save onboarding state to sync'), {
+            tags: { operation: 'saveOnboardingState' },
+            extra: { error: chrome.runtime.lastError.message }
+          });
+          return;
+        }
+
+        // Track onboarding completion only after settings are successfully saved
+        trackOnboardingCompleted(selectedRegion, autoPlayEnabled);
+
+        if (transaction) {
+          transaction.setStatus('ok');
+          transaction.finish();
+        }
+
+        chrome.tabs.create({ url: 'index.html' });
+        window.close();
+      });
     });
   });
 });

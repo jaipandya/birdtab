@@ -177,7 +177,7 @@ function initOptionsMenu() {
         is24HourFormat = checked;
         updateClock();
         // Save to storage
-        await chrome.storage.sync.set({ clockFormat24Hour: checked });
+        await chrome.storage.local.set({ clockFormat24Hour: checked });
       }
     },
     {
@@ -190,7 +190,7 @@ function initOptionsMenu() {
         // Restart interval with new timing
         startClockInterval();
         // Save to storage
-        await chrome.storage.sync.set({ clockShowSeconds: checked });
+        await chrome.storage.local.set({ clockShowSeconds: checked });
       }
     },
     {
@@ -209,7 +209,7 @@ function initOptionsMenu() {
         showTimer();
 
         // Update storage - use new clockDisplayMode enum
-        await chrome.storage.sync.set({
+        await chrome.storage.local.set({
           clockDisplayMode: 'timer'
         });
       }
@@ -322,9 +322,9 @@ export async function initClock() {
     // Clean up existing listeners to prevent duplicates
     cleanupListeners();
 
-    // Get clock settings from storage (visibility is handled by script.js)
+    // Get clock settings from local storage (visibility is handled by script.js)
     const result = await new Promise((resolve) => {
-      chrome.storage.sync.get(['clockFormat24Hour', 'clockShowSeconds'], resolve);
+      chrome.storage.local.get(['clockFormat24Hour', 'clockShowSeconds'], resolve);
     });
 
     is24HourFormat = result.clockFormat24Hour || false;
@@ -336,7 +336,7 @@ export async function initClock() {
     // Create and store storage change listener for format changes only
     // (Mode changes are handled in script.js)
     storageChangeListener = (changes, areaName) => {
-      if (areaName !== 'sync') return;
+      if (areaName !== 'local') return;
 
       if (changes.clockFormat24Hour !== undefined) {
         setClockFormat(changes.clockFormat24Hour.newValue);

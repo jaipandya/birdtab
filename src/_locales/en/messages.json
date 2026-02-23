@@ -1250,5 +1250,296 @@
   "tourOptionsMenuDescription": {
     "message": "Access settings, viewing history, and bird quiz from this menu. Click to explore your options!",
     "description": "Feature tour: options menu description"
+  },
+  "proBadge": {
+    "message": "Pro",
+    "description": "Badge label for Pro features"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "Upgrade to BirdTab Pro",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "Unlock all premium features",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "Transform Every New Tab Into a Birdwatching Adventure",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "Join thousands of nature lovers who start their day with breathtaking bird encounters",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "Bring Birds to Life",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "Watch captivating bird videos that make every new tab feel like a nature documentary",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "See Every Feather",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "Crystal-clear 2400px photography reveals stunning details you've never noticed before",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "Explore the World",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "Discover exotic birds from any continent — from African hornbills to Australian cockatoos",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "Stay Focused & Grounded",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "Keep track of time with an elegant clock or boost productivity with a focus timer",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "See Pricing Options",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "Flexible plans starting at just $20/year",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "Already have a license?",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "Video Mode",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "Watch stunning bird videos instead of photos",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "High-Resolution Images",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "Crystal-clear 2400px bird photography",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "International Regions",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "Discover birds from any country in the world",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "Clock & Timer",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "Display time or focus timer on your new tab",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "Best Value",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "or activate existing license",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "Enter your license key",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "Activate",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "Activating...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "Please enter a valid license key",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "License activated successfully!",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "Activation failed. Please check your license key.",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "An error occurred. Please try again.",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "Questions? Contact support@birdtab.app",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "Active",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "Renew Soon",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "Expired",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "Lifetime",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "Yearly",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "Trial",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "days remaining",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "Expired",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "Plan",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "Email",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "License",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "Expires",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "Deactivate",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "Are you sure you want to deactivate your license?",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "Deactivating…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "License deactivated. Reloading…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "Free",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "Unlock Video Mode, High-Res Images, International Regions, and Clock/Timer.",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "Upgrade to Pro",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "Unable to load license status",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "Upgrade Now",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "Remind Me Later",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "Close",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "Unlock Pro features",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "Manage",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "Subscription",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "Billing",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "Renew",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "Refresh status",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "1 day left",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "$1 days left",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "Keep Pro",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "Your trial is ending soon",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "Your trial has ended",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "Offline",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "Connect to the internet to verify your license and restore Pro features.",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

@@ -5,6 +5,7 @@
 
 import { log } from './logger.js';
 import { localizeHtml } from './i18n.js';
+import { escapeHtml } from './utils/escapeHtml.js';
 
 // Module state
 let historySidebar = null;
@@ -103,20 +104,7 @@ export function getRelativeTimeString(timestamp) {
 
 // ===== Utility Functions =====
 
-/**
- * Escape HTML to prevent XSS
- * @param {string} unsafe - Unsafe string
- * @returns {string} Escaped string
- */
-function escapeHtml(unsafe) {
-  if (!unsafe) return '';
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+// escapeHtml is now imported from utils/escapeHtml.js
 
 // ===== History Modal UI Functions =====
 

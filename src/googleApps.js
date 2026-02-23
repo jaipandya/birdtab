@@ -1087,7 +1087,7 @@ function hideTriggerButton() {
  * Update visibility based on settings
  */
 async function updateVisibility() {
-  const result = await chrome.storage.sync.get(['googleAppsEnabled']);
+  const result = await chrome.storage.local.get(['googleAppsEnabled']);
   const isEnabled = result.googleAppsEnabled || false;
 
   if (isEnabled) {
@@ -1113,7 +1113,7 @@ export async function initializeGoogleApps() {
 
   // Listen for storage changes
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'sync' && changes.googleAppsEnabled) {
+    if (namespace === 'local' && changes.googleAppsEnabled) {
       updateVisibility();
     }
   });

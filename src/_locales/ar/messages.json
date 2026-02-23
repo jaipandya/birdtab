@@ -1250,5 +1250,292 @@
   "tourOptionsMenuDescription": {
     "message": "الوصول إلى الإعدادات وسجل المشاهدة واختبار الطيور من هذه القائمة. انقر لاستكشاف خياراتك!",
     "description": "Feature tour: options menu description"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "الترقية إلى BirdTab Pro",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "افتح جميع الميزات المتقدمة",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "حوّل كل علامة تبويب جديدة إلى مغامرة مراقبة الطيور",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "انضم إلى آلاف محبي الطبيعة الذين يبدأون يومهم بلقاءات مذهلة مع الطيور",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "أحيِ الطيور",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "شاهد مقاطع فيديو آسرة للطيور تجعل كل علامة تبويب جديدة تبدو كفيلم وثائقي عن الطبيعة",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "شاهد كل ريشة",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "تصوير بدقة 2400 بكسل يكشف تفاصيل مذهلة لم تلاحظها من قبل",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "استكشف العالم",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "اكتشف طيورًا غريبة من أي قارة — من طيور أبو قرن الأفريقية إلى الكوكاتو الأسترالي",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "حافظ على تركيزك",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "تابع الوقت بساعة أنيقة أو عزز إنتاجيتك بمؤقت التركيز",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "عرض خيارات الأسعار",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "خطط مرنة تبدأ من $20/سنة فقط",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "هل لديك ترخيص بالفعل؟",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "وضع الفيديو",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "شاهد مقاطع فيديو مذهلة للطيور بدلاً من الصور",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "صور عالية الدقة",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "تصوير طيور بدقة 2400 بكسل فائقة الوضوح",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "مناطق دولية",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "اكتشف الطيور من أي بلد في العالم",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "ساعة ومؤقت",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "اعرض الوقت أو مؤقت التركيز على علامة التبويب الجديدة",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "أفضل قيمة",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "أو فعّل ترخيصًا موجودًا",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "أدخل مفتاح الترخيص",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "تفعيل",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "جارٍ التفعيل...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "يرجى إدخال مفتاح ترخيص صالح",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "تم تفعيل الترخيص بنجاح!",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "فشل التفعيل. يرجى التحقق من مفتاح الترخيص.",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "أسئلة؟ تواصل مع support@birdtab.app",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "نشط",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "جدد قريبًا",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "منتهي",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "مدى الحياة",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "سنوي",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "تجريبي",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "أيام متبقية",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "منتهي",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "الخطة",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "البريد الإلكتروني",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "الترخيص",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "ينتهي",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "إلغاء التفعيل",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "هل أنت متأكد أنك تريد إلغاء تفعيل ترخيصك؟",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "جارٍ إلغاء التفعيل…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "تم إلغاء تفعيل الترخيص. جارٍ إعادة التحميل…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "مجاني",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "افتح وضع الفيديو والصور عالية الدقة والمناطق الدولية والساعة/المؤقت.",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "الترقية إلى Pro",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "تعذر تحميل حالة الترخيص",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "الترقية الآن",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "ذكرني لاحقًا",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "إغلاق",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "افتح ميزات Pro",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "إدارة",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "الاشتراك",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "الفوترة",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "تجديد",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "تحديث الحالة",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "يوم واحد متبقي",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "$1 أيام متبقية",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "الاحتفاظ بـ Pro",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "فترتك التجريبية على وشك الانتهاء",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "انتهت فترتك التجريبية",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "غير متصل",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "اتصل بالإنترنت للتحقق من ترخيصك واستعادة ميزات Pro.",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

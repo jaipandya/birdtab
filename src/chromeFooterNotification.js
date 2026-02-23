@@ -7,7 +7,7 @@
  * Features:
  * - Only shows on Chrome browser (not Edge or others)
  * - Waits for feature tour to complete before showing
- * - Persists dismissed state in chrome.storage.sync
+ * - Persists dismissed state in chrome.storage.local
  * - Subtle, non-intrusive UI matching BirdTab's design language
  */
 
@@ -51,11 +51,11 @@ function isChromeBrowser() {
  */
 export async function isChromeFooterNotificationDismissed() {
   return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
+    if (!chrome?.storage?.local) {
       resolve(false);
       return;
     }
-    chrome.storage.sync.get([STORAGE_KEY], (result) => {
+    chrome.storage.local.get([STORAGE_KEY], (result) => {
       resolve(result[STORAGE_KEY] === true);
     });
   });
@@ -66,11 +66,11 @@ export async function isChromeFooterNotificationDismissed() {
  */
 async function markNotificationDismissed() {
   return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
+    if (!chrome?.storage?.local) {
       resolve();
       return;
     }
-    chrome.storage.sync.set({ [STORAGE_KEY]: true }, resolve);
+    chrome.storage.local.set({ [STORAGE_KEY]: true }, resolve);
   });
 }
 
@@ -79,11 +79,11 @@ async function markNotificationDismissed() {
  */
 export async function resetChromeFooterNotification() {
   return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
+    if (!chrome?.storage?.local) {
       resolve();
       return;
     }
-    chrome.storage.sync.remove([STORAGE_KEY], () => {
+    chrome.storage.local.remove([STORAGE_KEY], () => {
       log('Chrome footer notification reset');
       resolve();
     });

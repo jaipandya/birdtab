@@ -1,3 +1,4 @@
+import './tokens.css';
 import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState, getVideoAutoPlayState, getQuietHoursText } from './quietHours.js';
@@ -16,6 +17,8 @@ import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock, showClock, hideClock } from './clock.js';
 import { initTimer, showTimer, hideTimer } from './timer.js';
+import { checkAndShowTrialWelcome, checkAndShowTrialExpired } from './trialModals.js';
+import { checkAndShowProWelcome } from './proWelcomeModal.js';
 import {
   VideoVisibilityManager,
   initVideoManager,
@@ -75,6 +78,10 @@ import {
   getReviewPromptData,
   showReviewPromptIfNeeded
 } from './reviewPrompt.js';
+import { isPro, getLicenseStatus, resetProFeatureSettings } from './licenseManager.js';
+import { showUpgradeModal } from './upgradeModal.js';
+import { getMessage } from './i18n.js';
+import { escapeHtml } from './utils/escapeHtml.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -87,8 +94,8 @@ const CLOCK_DISPLAY_MODES = {
 };
 
 let isMuted = false;
-let volumeLevel = CONFIG.DEFAULT_VOLUME;
-let lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
+let volumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
+let lastVolumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
 let audio;
 let fadeAudioInterval = null; // Interval for fading audio in/out
 let video; // Video element for video mode
@@ -117,7 +124,7 @@ initVideoManager({
  */
 async function migrateClockSettings() {
   const storage = await new Promise((resolve) => {
-    chrome.storage.sync.get(['clockDisplayMode', 'clockEnabled'], resolve);
+    chrome.storage.local.get(['clockDisplayMode', 'clockEnabled'], resolve);
   });
 
   // If new format already exists, validate and return it
@@ -128,16 +135,20 @@ async function migrateClockSettings() {
     } else {
       // Invalid value found, reset to off
       log(`Invalid clockDisplayMode found: ${storage.clockDisplayMode}, resetting to 'off'`);
-      await chrome.storage.sync.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
+      await chrome.storage.local.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
       return CLOCK_DISPLAY_MODES.OFF;
     }
   }
 
   // One-time migration from old format
-  const mode = storage.clockEnabled ? CLOCK_DISPLAY_MODES.CLOCK : CLOCK_DISPLAY_MODES.OFF;
+  // For fresh installs (neither clockDisplayMode nor clockEnabled exists),
+  // default to CLOCK mode for better UX
+  const mode = storage.clockEnabled !== undefined
+    ? (storage.clockEnabled ? CLOCK_DISPLAY_MODES.CLOCK : CLOCK_DISPLAY_MODES.OFF)
+    : CLOCK_DISPLAY_MODES.CLOCK; // Default for fresh installs
 
   // Set new format only - don't touch clockEnabled for backward compatibility
-  await chrome.storage.sync.set({ clockDisplayMode: mode });
+  await chrome.storage.local.set({ clockDisplayMode: mode });
 
   // TODO: Remove 'clockEnabled' key 5 versions after current (check manifest.json for current version)
   // Before removing, verify <1% of active users are on old versions via Chrome Web Store analytics
@@ -159,8 +170,22 @@ async function initClockDisplay() {
   await initClock();
   await initTimer();
 
-  // Show the appropriate display based on mode
-  switch (mode) {
+  // Pro feature: clock/timer requires Pro access
+  // If the user's mode is clock or timer but they're not Pro, hide it.
+  // This is a runtime safety check (settings are also reset by resetProFeatureSettings
+  // on license expiry, but this catches edge cases between verification cycles).
+  let effectiveMode = mode;
+  if (mode === CLOCK_DISPLAY_MODES.CLOCK || mode === CLOCK_DISPLAY_MODES.TIMER) {
+    const hasPro = await isPro();
+    if (!hasPro) {
+      log('Clock/Timer requires Pro, hiding display');
+      effectiveMode = CLOCK_DISPLAY_MODES.OFF;
+      // Don't persist to storage — preserve the setting for if they re-upgrade
+    }
+  }
+
+  // Show the appropriate display based on effective mode
+  switch (effectiveMode) {
     case CLOCK_DISPLAY_MODES.CLOCK:
       showClock();
       break;
@@ -174,7 +199,7 @@ async function initClockDisplay() {
 
   // Listen for mode changes
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName !== 'sync') return;
+    if (areaName !== 'local') return;
 
     if (changes.clockDisplayMode) {
       const newMode = changes.clockDisplayMode.newValue;
@@ -182,7 +207,7 @@ async function initClockDisplay() {
       // Validate mode value
       if (!Object.values(CLOCK_DISPLAY_MODES).includes(newMode)) {
         log(`Invalid clockDisplayMode: ${newMode}, defaulting to 'off'`);
-        chrome.storage.sync.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
+        chrome.storage.local.set({ clockDisplayMode: CLOCK_DISPLAY_MODES.OFF });
         return;
       }
 
@@ -208,7 +233,7 @@ async function initClockDisplay() {
     }
   });
 
-  log(`Clock display initialized with mode: ${mode}`);
+  log(`Clock display initialized with mode: ${mode}, effective: ${effectiveMode}`);
 }
 
 // VideoVisibilityManager is now imported from videoManager.js
@@ -541,7 +566,7 @@ async function handleQuietHoursDisable(event) {
   event.stopPropagation();
 
   // Disable quiet hours in storage
-  await chrome.storage.sync.set({ quietHours: false });
+  await chrome.storage.local.set({ quietHours: false });
 
   // Remove the pill with animation
   const pill = document.getElementById('quiet-hours-pill');
@@ -810,12 +835,12 @@ function switchToImageModeCredits() {
     </span>
     <span class="credit-item">
       <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-      <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+      <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
     </span>
     ${birdInfo.mediaUrl ? `
     <span class="credit-item">
       <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
-      <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+      <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
     </span>
     ` : ''}
     <span class="credit-item">
@@ -896,14 +921,9 @@ async function initializePage() {
 
     // Track session start with user settings and bird info
     try {
-      const [settings, localData] = await Promise.all([
-        new Promise((resolve) => {
-          chrome.storage.sync.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockDisplayMode'], resolve);
-        }),
-        new Promise((resolve) => {
-          chrome.storage.local.get(['installTime'], resolve);
-        })
-      ]);
+      const settings = await new Promise((resolve) => {
+        chrome.storage.local.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockDisplayMode', 'installTime'], resolve);
+      });
       trackSessionStart({
         region: settings.region || 'US',
         videoMode: settings.videoMode || false,
@@ -915,7 +935,7 @@ async function initializePage() {
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
         hasVideo: !!birdInfo.videoUrl,
-      }, localData.installTime || null);
+      }, settings.installTime || null);
     } catch (analyticsError) {
       log(`Analytics error: ${analyticsError.message}`);
     }
@@ -935,11 +955,11 @@ async function initializePage() {
       creditsHtml = `
         <span class="credit-item">
           <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-          <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+          <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
         </span>
         <span class="credit-item">
           <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-          <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
+          <a href="${escapeHtml(birdInfo.videographerUrl)}" target="_blank">${escapeHtml(birdInfo.videographer)}</a>
         </span>
       `;
     } else {
@@ -947,12 +967,12 @@ async function initializePage() {
       creditsHtml = `
         <span class="credit-item">
           <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
-          <a href="${birdInfo.photographerUrl}" target="_blank">${birdInfo.photographer}</a>
+          <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
         </span>
         ${birdInfo.mediaUrl ? `
         <span class="credit-item">
           <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
-          <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+          <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
         </span>
         ` : ''}
         ${birdInfo.videoDisabledDueToSlowConnection ? `
@@ -965,28 +985,28 @@ async function initializePage() {
 
     contentContainer.innerHTML = `
       ${isVideoMode ? `
-      <video class="background-video hidden" loop playsinline preload="metadata" poster="${birdInfo.imageUrl}">
-        <source src="${birdInfo.videoUrl}" type="video/mp4">
+      <video class="background-video hidden" loop playsinline preload="metadata" poster="${escapeHtml(birdInfo.imageUrl)}">
+        <source src="${escapeHtml(birdInfo.videoUrl)}" type="video/mp4">
       </video>
       ` : ''}
-      <img src="" alt="${birdInfo.name}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
+      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
       <div class="gradient-overlay"></div>
       <div class="info-panel">
         <div class="external-links">
           <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
             <img src="images/svg/bing-default.svg" alt="${chrome.i18n.getMessage('bingSearchAlt')}" width="24" height="24">
           </a>
-          <a href="${birdInfo.ebirdUrl}" target="_blank" class="external-link ebird-link">
+          <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="external-link ebird-link">
             <img src="images/svg/ebird-default.svg" alt="${chrome.i18n.getMessage('eBirdPageAlt')}" width="24" height="24">
           </a>
         </div>
         <div class="info-panel-header">
-          <a href="${birdInfo.ebirdUrl}" target="_blank" class="bird-name-link">
+          <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="bird-name-link">
             <h1 id="bird-name"></h1>
           </a>
           <div class="scientific-name-row">
             <p id="scientific-name"></p>
-            <span class="info-icon" data-tooltip="${birdInfo.description}&#10;&#10;Conservation Status: ${birdInfo.conservationStatus}">
+            <span class="info-icon" data-tooltip="${escapeHtml(birdInfo.description)}&#10;&#10;Conservation Status: ${escapeHtml(birdInfo.conservationStatus)}">
               <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
             </span>
           </div>
@@ -1059,10 +1079,10 @@ async function initializePage() {
       createVideoVisibilityManager(video, birdInfo);
 
       // Load volume settings for video
-      chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
+      chrome.storage.local.get(['isMuted', 'volumeLevel'], (result) => {
         isMuted = result.isMuted || false;
-        volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
-        lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+        volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
+        lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
         updateVolumeControl();
         if (video) {
           video.muted = isMuted;
@@ -1095,10 +1115,10 @@ async function initializePage() {
           document.querySelector('.control-buttons').appendChild(audioPlayer);
         }
 
-        chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
+        chrome.storage.local.get(['isMuted', 'volumeLevel'], (result) => {
           isMuted = result.isMuted || false;
-          volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : 0.8;
-          lastVolumeLevel = volumeLevel > 0 ? volumeLevel : 0.8;
+          volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
+          lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
           updateVolumeControl();
           if (audio) {
             audio.muted = isMuted;
@@ -1400,7 +1420,7 @@ function toggleMute() {
   if (isMuted) {
     // Unmute: restore last volume level
     isMuted = false;
-    if (lastVolumeLevel === 0) lastVolumeLevel = CONFIG.DEFAULT_VOLUME;
+    if (lastVolumeLevel === 0) lastVolumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
     setVolume(lastVolumeLevel, true); // immediate save for mute/unmute
   } else {
     // Mute: save current volume and set to 0
@@ -1444,7 +1464,7 @@ function saveVolumeState(immediate = false) {
 
   if (immediate) {
     // Save immediately (for mute/unmute actions)
-    chrome.storage.sync.set({ isMuted, volumeLevel }, () => {
+    chrome.storage.local.set({ isMuted, volumeLevel }, () => {
       if (chrome.runtime.lastError) {
         console.warn('Failed to save volume state:', chrome.runtime.lastError);
       } else {
@@ -1454,7 +1474,7 @@ function saveVolumeState(immediate = false) {
   } else {
     // Debounce for volume slider movements
     saveVolumeTimeout = setTimeout(() => {
-      chrome.storage.sync.set({ isMuted, volumeLevel }, () => {
+      chrome.storage.local.set({ isMuted, volumeLevel }, () => {
         if (chrome.runtime.lastError) {
           console.warn('Failed to save volume state:', chrome.runtime.lastError);
         } else {
@@ -1557,6 +1577,18 @@ function setupMediaToggle(isImageMode = false) {
   isShowingVideo = !isImageMode;
 
   toggleSwitch.addEventListener('change', async function () {
+    if (this.checked) {
+      // User wants to switch to video mode - check if Pro
+      const hasPro = await isPro();
+      if (!hasPro) {
+        // Not Pro - revert toggle and show upgrade modal
+        this.checked = false;
+        this.setAttribute('aria-checked', 'false');
+        showUpgradeModal('videoMode');
+        return;
+      }
+    }
+
     // Update aria-checked for accessibility
     this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
 
@@ -1749,7 +1781,7 @@ function updateCreditsForVideoMode() {
   videoCredit.className = 'credit-item credit-item-video credit-item-slide-in';
   videoCredit.innerHTML = `
     <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-    <a href="${birdInfo.videographerUrl}" target="_blank">${birdInfo.videographer}</a>
+    <a href="${escapeHtml(birdInfo.videographerUrl)}" target="_blank">${escapeHtml(birdInfo.videographer)}</a>
   `;
 
   if (macaulayCredit) {
@@ -1786,7 +1818,7 @@ function updateCreditsForPhotoMode() {
   audioCredit.className = 'credit-item credit-item-audio credit-item-slide-in';
   audioCredit.innerHTML = `
     <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
-    <a href="${birdInfo.recordistUrl}" target="_blank">${birdInfo.recordist}</a>
+    <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
   `;
 
   // Insert after the camera credit
@@ -1928,7 +1960,7 @@ async function switchToPhotoMode() {
     showAudioControls();
 
     // Check autoplay setting and play audio if enabled
-    chrome.storage.sync.get(['autoPlay'], (result) => {
+    chrome.storage.local.get(['autoPlay'], (result) => {
       const shouldAutoPlay = result.autoPlay !== false; // Default to true
       if (shouldAutoPlay && audio && !isPlaying) {
         playAudio();
@@ -2125,7 +2157,7 @@ async function checkSyncedQuickAccessPermissions() {
   try {
     // Get the settings from storage
     const result = await new Promise((resolve) => {
-      chrome.storage.sync.get(['quickAccessEnabled', 'hideTopSites'], resolve);
+      chrome.storage.local.get(['quickAccessEnabled', 'hideTopSites'], resolve);
     });
 
     // If quick access is not enabled or top sites are already hidden, nothing to do
@@ -2151,7 +2183,7 @@ async function checkSyncedQuickAccessPermissions() {
     addBreadcrumb('Synced top sites detected without permissions - hiding', 'info', 'info');
 
     await new Promise((resolve) => {
-      chrome.storage.sync.set({ hideTopSites: true }, resolve);
+      chrome.storage.local.set({ hideTopSites: true }, resolve);
     });
   } catch (error) {
     log('Error checking synced quick access permissions: ' + error.message);
@@ -2160,6 +2192,8 @@ async function checkSyncedQuickAccessPermissions() {
     });
   }
 }
+
+// Legacy Pro migration removed - all users now get 14-day free trial via background.js onInstalled handler
 
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -2184,14 +2218,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   log('Onboarding complete, initializing UI components first');
 
+  // Note: Free trial is now started via background.js onInstalled handler (14 days for all users)
+
   // Check if quick access is enabled but permissions are missing (synced from another device)
   await checkSyncedQuickAccessPermissions();
 
   // Load volume settings initially
-  chrome.storage.sync.get(['isMuted', 'volumeLevel'], (result) => {
+  chrome.storage.local.get(['isMuted', 'volumeLevel'], (result) => {
     isMuted = result.isMuted || false;
-    volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.DEFAULT_VOLUME;
-    lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.DEFAULT_VOLUME;
+    volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
+    lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
     updateVolumeControl();
   });
 
@@ -2293,6 +2329,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Check and show trial modals (welcome or expired) and Pro welcome modal.
+  // The modal functions handle their own timing - they wait for screen to be clear
+  // of other modals/overlays before showing (feature tour, chrome footer, etc.)
+  try {
+    // Small initial delay to let page stabilize, then modals handle the rest
+    setTimeout(async () => {
+      await checkAndShowProWelcome();
+      await checkAndShowTrialWelcome();
+      await checkAndShowTrialExpired();
+    }, 1000);
+  } catch (error) {
+    log('Error checking trial/pro modals: ' + error.message);
+  }
+
+  // One-time check: reset Pro feature settings if user has lost Pro access
+  // (e.g., trial expired, subscription lapsed) but settings weren't reset yet
+  try {
+    const licenseStatus = await getLicenseStatus();
+    if (!licenseStatus.isPro && licenseStatus.status !== 'trial') {
+      await resetProFeatureSettings();
+    }
+  } catch (error) {
+    log('Error checking Pro settings reset: ' + error.message);
+  }
+
   // Finish performance monitoring transaction
   if (transaction) {
     transaction.setStatus('ok');
@@ -2331,7 +2392,7 @@ log('Main script loaded');
 
 // Add storage change listener
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === 'sync') {
+  if (namespace === 'local') {
     // Handle quick access toggle
     if (changes.quickAccessEnabled) {
       const searchContainer = document.getElementById('search-container');

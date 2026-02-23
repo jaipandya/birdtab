@@ -1250,5 +1250,292 @@
   "tourOptionsMenuDescription": {
     "message": "このメニューから設定、閲覧履歴、鳥クイズにアクセスできます。クリックしてオプションを確認しましょう！",
     "description": "Feature tour: options menu description"
+  },
+  "settingsCategoryPro": {
+    "message": "BirdTab Pro",
+    "description": "Section header for Pro license settings"
+  },
+  "upgradeTitle": {
+    "message": "BirdTab Proにアップグレード",
+    "description": "Title for upgrade modal (legacy)"
+  },
+  "upgradeSubtitle": {
+    "message": "すべてのプレミアム機能をアンロック",
+    "description": "Subtitle for upgrade modal (legacy)"
+  },
+  "upgradeModalTitle": {
+    "message": "すべての新しいタブをバードウォッチングの冒険に変えましょう",
+    "description": "Persuasive title for upgrade modal"
+  },
+  "upgradeModalSubtitle": {
+    "message": "息をのむような鳥との出会いで一日を始める、何千人もの自然愛好家に加わりましょう",
+    "description": "Persuasive subtitle for upgrade modal"
+  },
+  "proBenefitVideoTitle": {
+    "message": "鳥に命を吹き込む",
+    "description": "Pro benefit: Video Mode title (persuasive)"
+  },
+  "proBenefitVideoDesc": {
+    "message": "すべての新しいタブが自然ドキュメンタリーのように感じられる、魅力的な鳥の動画を観ましょう",
+    "description": "Pro benefit: Video Mode description (persuasive)"
+  },
+  "proBenefitHighResTitle": {
+    "message": "すべての羽を見る",
+    "description": "Pro benefit: High-Res Images title (persuasive)"
+  },
+  "proBenefitHighResDesc": {
+    "message": "今まで気づかなかった驚くべきディテールを明らかにする、クリスタルクリアな2400px写真",
+    "description": "Pro benefit: High-Res Images description (persuasive)"
+  },
+  "proBenefitRegionTitle": {
+    "message": "世界を探検する",
+    "description": "Pro benefit: Region title (persuasive)"
+  },
+  "proBenefitRegionDesc": {
+    "message": "アフリカのサイチョウからオーストラリアのオウムまで、あらゆる大陸のエキゾチックな鳥を発見しましょう",
+    "description": "Pro benefit: Region description (persuasive)"
+  },
+  "proBenefitClockTitle": {
+    "message": "集中力を維持する",
+    "description": "Pro benefit: Clock/Timer title (persuasive)"
+  },
+  "proBenefitClockDesc": {
+    "message": "エレガントな時計で時間を確認したり、集中タイマーで生産性を向上させましょう",
+    "description": "Pro benefit: Clock/Timer description (persuasive)"
+  },
+  "seePricingOptions": {
+    "message": "料金プランを見る",
+    "description": "CTA button text for pricing page"
+  },
+  "upgradeCtaNote": {
+    "message": "年額$20からの柔軟なプラン",
+    "description": "Note below CTA button"
+  },
+  "alreadyHaveLicense": {
+    "message": "ライセンスをお持ちですか？",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "ビデオモード",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "写真の代わりに美しい鳥の動画を観る",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "高解像度画像",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "クリスタルクリアな2400pxの鳥の写真",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "国際リージョン",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "世界中の国の鳥を発見する",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "時計とタイマー",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "新しいタブに時計または集中タイマーを表示",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "bestValue": {
+    "message": "最もお得",
+    "description": "Badge for lifetime plan"
+  },
+  "orActivateKey": {
+    "message": "または既存のライセンスを有効化",
+    "description": "Divider text for license activation (legacy)"
+  },
+  "enterLicenseKey": {
+    "message": "ライセンスキーを入力",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "有効化",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "有効化中...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "有効なライセンスキーを入力してください",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "ライセンスが正常に有効化されました！",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "有効化に失敗しました。ライセンスキーを確認してください。",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "エラーが発生しました。もう一度お試しください。",
+    "description": "Generic error for activation"
+  },
+  "upgradeFooter": {
+    "message": "ご質問は？ support@birdtab.app までお問い合わせください",
+    "description": "Footer text in upgrade modal"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "有効",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "まもなく更新",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "期限切れ",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "永久",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "年間",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "トライアル",
+    "description": "License type: trial"
+  },
+  "daysRemaining": {
+    "message": "日残り",
+    "description": "Label for days until expiry"
+  },
+  "expired": {
+    "message": "期限切れ",
+    "description": "Generic expired label"
+  },
+  "planType": {
+    "message": "プラン",
+    "description": "Label for plan type"
+  },
+  "email": {
+    "message": "メール",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "ライセンス",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "有効期限",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "無効化",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "ライセンスを無効化してもよろしいですか？",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "無効化中…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "ライセンスが無効化されました。再読み込み中…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "無料",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "ビデオモード、高解像度画像、国際リージョン、時計/タイマーをアンロックしましょう。",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "Proにアップグレード",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "ライセンスステータスを読み込めませんでした",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "今すぐアップグレード",
+    "description": "Button to upgrade immediately"
+  },
+  "remindLater": {
+    "message": "後で通知",
+    "description": "Button to dismiss notice temporarily"
+  },
+  "close": {
+    "message": "閉じる",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "Pro機能をアンロック",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "管理",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "サブスクリプション",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "請求",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "更新",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "ステータスを更新",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "残り1日",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "残り$1日",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": { "content": "$1", "example": "7" }
+    }
+  },
+  "keepPro": {
+    "message": "Proを維持",
+    "description": "CTA button for trial users to upgrade and keep Pro features"
+  },
+  "trialEnding": {
+    "message": "トライアル期間がまもなく終了します",
+    "description": "Warning message when trial is about to expire"
+  },
+  "trialExpired": {
+    "message": "トライアル期間が終了しました",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "オフライン",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "インターネットに接続してライセンスを確認し、Pro機能を復元してください。",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
   }
 }

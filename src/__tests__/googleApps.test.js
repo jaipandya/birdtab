@@ -53,6 +53,15 @@ describe('Google Apps Feature - Unit Tests', () => {
           }),
           set: jest.fn()
         },
+        local: {
+          get: jest.fn((keys, callback) => {
+            if (callback) {
+              callback({ googleAppsEnabled: false });
+            }
+            return Promise.resolve({ googleAppsEnabled: false });
+          }),
+          set: jest.fn()
+        },
         onChanged: {
           addListener: jest.fn((callback) => {
             storageListeners.push(callback);
@@ -95,7 +104,7 @@ describe('Google Apps Feature - Unit Tests', () => {
      */
     async function updateVisibility() {
       return new Promise((resolve) => {
-        chrome.storage.sync.get(['googleAppsEnabled'], (result) => {
+        chrome.storage.local.get(['googleAppsEnabled'], (result) => {
           const isEnabled = result.googleAppsEnabled || false;
           const button = document.getElementById('google-apps-trigger');
           
@@ -112,7 +121,7 @@ describe('Google Apps Feature - Unit Tests', () => {
     }
 
     test('should hide trigger button when googleAppsEnabled is false', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ googleAppsEnabled: false });
       });
 
@@ -123,7 +132,7 @@ describe('Google Apps Feature - Unit Tests', () => {
     });
 
     test('should show trigger button when googleAppsEnabled is true', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ googleAppsEnabled: true });
       });
 
@@ -134,7 +143,7 @@ describe('Google Apps Feature - Unit Tests', () => {
     });
 
     test('should add google-apps-enabled class to body when enabled', async () => {
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ googleAppsEnabled: true });
       });
 
@@ -147,7 +156,7 @@ describe('Google Apps Feature - Unit Tests', () => {
     test('should remove google-apps-enabled class when disabled', async () => {
       document.body.classList.add('google-apps-enabled');
       
-      global.chrome.storage.sync.get = jest.fn((keys, callback) => {
+      global.chrome.storage.local.get = jest.fn((keys, callback) => {
         callback({ googleAppsEnabled: false });
       });
 
@@ -322,7 +331,7 @@ describe('Google Apps Feature - Unit Tests', () => {
 
       // Simulate storage change handler
       const storageChangeHandler = async (changes, namespace) => {
-        if (namespace === 'sync' && changes.googleAppsEnabled) {
+        if (namespace === 'local' && changes.googleAppsEnabled) {
           const isEnabled = changes.googleAppsEnabled.newValue || false;
           if (isEnabled) {
             button.classList.remove('hidden');
@@ -333,11 +342,11 @@ describe('Google Apps Feature - Unit Tests', () => {
       };
 
       // Simulate change to enabled
-      storageChangeHandler({ googleAppsEnabled: { newValue: true } }, 'sync');
+      storageChangeHandler({ googleAppsEnabled: { newValue: true } }, 'local');
       expect(button.classList.contains('hidden')).toBe(false);
 
       // Simulate change to disabled
-      storageChangeHandler({ googleAppsEnabled: { newValue: false } }, 'sync');
+      storageChangeHandler({ googleAppsEnabled: { newValue: false } }, 'local');
       expect(button.classList.contains('hidden')).toBe(true);
     });
   });
