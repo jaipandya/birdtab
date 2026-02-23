@@ -5264,7 +5264,8 @@ body.dragging-app .google-app-item:hover .google-app-name {
 .upgrade-modal-content {
   position: relative;
   width: 94%;
-  max-width: 460px;
+  max-width: 500px;
+  overflow-x: hidden;
   background: var(--surface-modal);
   border-radius: 16px;
   border: 1px solid var(--white-10);
@@ -6105,8 +6106,9 @@ body.dragging-app .google-app-item:hover .google-app-name {
 .trial-modal-content {
   position: relative;
   width: 94%;
-  max-width: 460px;
+  max-width: 500px;
   max-height: 90vh;
+  overflow-x: hidden;
   overflow-y: auto;
   background: var(--surface-modal);
   border-radius: 16px;
@@ -6262,7 +6264,7 @@ body.dragging-app .google-app-item:hover .google-app-name {
   font-size: 13px;
   font-weight: 500;
   color: var(--white-90);
-  white-space: nowrap;
+  text-align: left;
 }
 
 /* Timeline */
@@ -6350,7 +6352,6 @@ body.dragging-app .google-app-item:hover .google-app-name {
   font-size: 12px;
   font-weight: 500;
   color: var(--white-70);
-  white-space: nowrap;
 }
 
 /* Value Proposition */
