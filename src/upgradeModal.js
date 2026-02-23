@@ -140,7 +140,7 @@ export function showUpgradeModal(triggerFeature = null) {
   document.body.insertAdjacentHTML('beforeend', modalHTML);
   modalInstance = document.getElementById('upgrade-modal');
 
-  bindModalEvents();
+  bindModalEvents(triggerFeature);
 
   requestAnimationFrame(() => {
     modalInstance.classList.add('open');
@@ -173,7 +173,7 @@ export function hideUpgradeModal() {
 /**
  * Bind event handlers for the modal
  */
-function bindModalEvents() {
+function bindModalEvents(triggerFeature) {
   if (!modalInstance) return;
 
   // Close button
