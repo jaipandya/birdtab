@@ -622,7 +622,7 @@ function renderStep(stepIndex) {
   if (isWelcome) {
     headerHtml = `
       <div class="tour-welcome-icon">
-        <img src="icons/icon128.png" alt="BirdTab" width="64" height="64">
+        <img src="icons/icon128.png" alt="${chrome.i18n.getMessage('pageTitle') || 'BirdTab'}" width="64" height="64">
       </div>
       <h3 class="tour-tooltip-title tour-welcome-title">${title}</h3>
     `;

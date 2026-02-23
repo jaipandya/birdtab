@@ -5,6 +5,7 @@
 
 import { log } from './logger.js';
 import { isQuietHoursActive } from './quietHours.js';
+import { getMessage } from './i18n.js';
 
 // Module state
 let videoVisibilityManager = null;
@@ -187,7 +188,7 @@ export class VideoVisibilityManager {
     indicator.className = 'video-pause-indicator';
     indicator.innerHTML = `
       <div class="pause-icon-container">
-        <img src="images/svg/pause.svg" alt="Paused" width="56" height="56">
+        <img src="images/svg/pause.svg" alt="${getMessage('pausedAlt')}" width="56" height="56">
       </div>
     `;
 
@@ -223,7 +224,7 @@ export class VideoVisibilityManager {
     indicator.className = 'video-play-indicator';
     indicator.innerHTML = `
       <div class="play-icon-container">
-        <img src="images/svg/play.svg" alt="Play" width="56" height="56">
+        <img src="images/svg/play.svg" alt="${getMessage('playAlt')}" width="56" height="56">
       </div>
     `;
 
@@ -253,7 +254,7 @@ export class VideoVisibilityManager {
     overlay.className = 'video-play-overlay';
     overlay.innerHTML = `
       <button class="video-play-btn" aria-label="${chrome.i18n.getMessage('playTooltip') || 'Play video'}">
-        <img src="images/svg/play.svg" alt="Play" width="32" height="32">
+        <img src="images/svg/play.svg" alt="${getMessage('playAlt')}" width="32" height="32">
       </button>
     `;
 

@@ -21,8 +21,8 @@ const PRO_FEATURES = [
       <polygon points="23 7 16 12 23 17 23 7"/>
       <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
     </svg>`,
-    title: 'Video Mode',
-    description: 'Watch birds come alive with stunning video clips'
+    titleKey: 'proWelcomeVideoTitle',
+    descKey: 'proWelcomeVideoDesc'
   },
   {
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -30,8 +30,8 @@ const PRO_FEATURES = [
       <circle cx="8.5" cy="8.5" r="1.5"/>
       <polyline points="21 15 16 10 5 21"/>
     </svg>`,
-    title: 'High-Res Photos',
-    description: 'Crystal clear 2400px images for stunning detail'
+    titleKey: 'proWelcomeHighResTitle',
+    descKey: 'proWelcomeHighResDesc'
   },
   {
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -39,16 +39,16 @@ const PRO_FEATURES = [
       <line x1="2" y1="12" x2="22" y2="12"/>
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
     </svg>`,
-    title: 'World Regions',
-    description: 'Discover birds from any country in the world'
+    titleKey: 'proWelcomeRegionTitle',
+    descKey: 'proWelcomeRegionDesc'
   },
   {
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"/>
       <polyline points="12 6 12 12 16 14"/>
     </svg>`,
-    title: 'Clock & Timer',
-    description: 'Keep track of time while enjoying nature'
+    titleKey: 'proWelcomeClockTitle',
+    descKey: 'proWelcomeClockDesc'
   }
 ];
 
@@ -163,8 +163,8 @@ export function showProWelcomeModal(licenseType = 'yearly') {
     <div class="pro-welcome-feature">
       <div class="pro-welcome-feature-icon">${f.icon}</div>
       <div class="pro-welcome-feature-text">
-        <span class="pro-welcome-feature-title">${f.title}</span>
-        <span class="pro-welcome-feature-desc">${f.description}</span>
+        <span class="pro-welcome-feature-title">${getMessage(f.titleKey)}</span>
+        <span class="pro-welcome-feature-desc">${getMessage(f.descKey)}</span>
       </div>
     </div>
   `).join('');
@@ -184,15 +184,13 @@ export function showProWelcomeModal(licenseType = 'yearly') {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
             </svg>
-            <span>Pro ${isLifetime ? 'Lifetime' : 'Yearly'}</span>
+            <span>${getMessage(isLifetime ? 'proWelcomeBadgeLifetime' : 'proWelcomeBadgeYearly')}</span>
           </div>
           <h2 id="pro-welcome-title" class="pro-welcome-title">
-            Welcome to BirdTab Pro
+            ${getMessage('proWelcomeTitle')}
           </h2>
           <p class="pro-welcome-subtitle">
-            ${isLifetime
-              ? 'You now have <strong>lifetime access</strong> to every Pro feature. Every new tab is a window to the natural world.'
-              : 'All Pro features are now <strong>unlocked</strong>. Every new tab is a window to the natural world.'}
+            ${getMessage(isLifetime ? 'proWelcomeSubtitleLifetime' : 'proWelcomeSubtitleYearly')}
           </p>
         </div>
 
@@ -202,13 +200,13 @@ export function showProWelcomeModal(licenseType = 'yearly') {
 
         <div class="pro-welcome-thanks">
           <p>
-            Your support directly funds BirdTab's development — better data, new features, and keeping the experience ad-free. Thank you for being part of this journey.
+            ${getMessage('proWelcomeThanks')}
           </p>
         </div>
 
         <div class="pro-welcome-actions">
           <button class="pro-welcome-btn-primary" id="pro-welcome-start">
-            Start Exploring
+            ${getMessage('startExploring')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>

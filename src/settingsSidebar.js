@@ -343,7 +343,7 @@ class SettingsSidebar {
           <div class="settings-header">
             <h2 id="settings-sidebar-title" data-i18n="settingsTitle">BirdTab Settings</h2>
             <button id="close-settings" class="close-button" data-i18n-aria-label="closeSettings" aria-label="Close settings">
-              <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+              <img src="images/svg/close.svg" data-i18n-alt="closeAlt" alt="Close" width="20" height="20">
             </button>
           </div>
 
@@ -1425,7 +1425,7 @@ class SettingsSidebar {
             <div class="license-compact license-compact-trial">
               <div class="license-compact-info">
                 <img src="images/svg/crown.svg" alt="" width="16" height="16" class="license-compact-icon">
-                <span class="license-compact-label">Pro</span>
+                <span class="license-compact-label">${getMessage('proBadgeLabel') || 'Pro'}</span>
                 <span class="license-status-dot trial"></span>
                 <span class="license-compact-status trial">${getMessage('licenseTrial') || 'Trial'}</span>
                 <span class="license-compact-days">${daysText}</span>

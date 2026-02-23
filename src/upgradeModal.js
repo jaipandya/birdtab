@@ -4,7 +4,6 @@
  */
 
 import { activateLicense, getLicenseStatus } from './licenseManager.js';
-import { getMessage } from './i18n.js';
 import { log } from './logger.js';
 import { CONFIG } from './config.js';
 import { trackProUpgradeClicked, trackLicenseActivated } from './analytics.js';
@@ -28,19 +27,27 @@ export function showUpgradeModal(triggerFeature = null) {
 
   // Get the trigger feature name for personalized messaging
   const featureNames = {
-    videoMode: 'Video Mode',
-    highResImages: 'High-Resolution Images',
-    region: 'International Regions',
-    clockTimer: 'Clock & Timer'
+    videoMode: chrome.i18n.getMessage('proFeatureVideoMode') || 'Video Mode',
+    highResImages: chrome.i18n.getMessage('proFeatureHighRes') || 'High-Resolution Images',
+    region: chrome.i18n.getMessage('proFeatureRegion') || 'International Regions',
+    clockTimer: chrome.i18n.getMessage('proFeatureClock') || 'Clock & Timer'
   };
   const triggerName = triggerFeature ? featureNames[triggerFeature] : null;
+
+  // Build title and subtitle
+  const title = triggerName
+    ? (chrome.i18n.getMessage('unlockFeature', [triggerName]) || `Unlock ${triggerName}`)
+    : (chrome.i18n.getMessage('unlockFullExperience') || 'Unlock the Full Experience');
+  const subtitle = triggerName
+    ? (chrome.i18n.getMessage('upgradeFeatureSubtitle', [triggerName.toLowerCase()]) || `This feature is part of BirdTab Pro. Upgrade to access ${triggerName.toLowerCase()} and all premium features.`)
+    : (chrome.i18n.getMessage('upgradePrompt') || 'Get Video Mode, High-Res Images, International Regions, and Clock/Timer.');
 
   // Create modal HTML - clean, focused design
   const modalHTML = `
     <div id="upgrade-modal" class="upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="upgrade-modal-title">
       <div class="upgrade-modal-backdrop"></div>
       <div class="upgrade-modal-content">
-        <button class="upgrade-modal-close" aria-label="${getMessage('close') || 'Close'}">
+        <button class="upgrade-modal-close" aria-label="${chrome.i18n.getMessage('close') || 'Close'}">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -51,15 +58,13 @@ export function showUpgradeModal(triggerFeature = null) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
             </svg>
-            <span>BirdTab Pro</span>
+            <span>${chrome.i18n.getMessage('birdtabPro') || 'BirdTab Pro'}</span>
           </div>
           <h2 id="upgrade-modal-title" class="upgrade-title">
-            ${triggerName ? `Unlock ${triggerName}` : 'Unlock the Full Experience'}
+            ${title}
           </h2>
           <p class="upgrade-subtitle">
-            ${triggerName 
-              ? `This feature is part of BirdTab Pro. Upgrade to access ${triggerName.toLowerCase()} and all premium features.`
-              : 'Get Video Mode, High-Res Images, International Regions, and Clock/Timer.'}
+            ${subtitle}
           </p>
         </div>
 
@@ -71,7 +76,7 @@ export function showUpgradeModal(triggerFeature = null) {
                 <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
               </svg>
             </div>
-            <span>Video Mode</span>
+            <span>${chrome.i18n.getMessage('proFeatureVideoMode') || 'Video Mode'}</span>
           </div>
           <div class="upgrade-feature ${triggerFeature === 'highResImages' ? 'active' : ''}">
             <div class="feature-icon">
@@ -81,7 +86,7 @@ export function showUpgradeModal(triggerFeature = null) {
                 <polyline points="21 15 16 10 5 21"/>
               </svg>
             </div>
-            <span>High-Res Photos</span>
+            <span>${chrome.i18n.getMessage('proFeatureHighRes') || 'High-Res Photos'}</span>
           </div>
           <div class="upgrade-feature ${triggerFeature === 'region' ? 'active' : ''}">
             <div class="feature-icon">
@@ -91,7 +96,7 @@ export function showUpgradeModal(triggerFeature = null) {
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
               </svg>
             </div>
-            <span>World Regions</span>
+            <span>${chrome.i18n.getMessage('proFeatureRegion') || 'World Regions'}</span>
           </div>
           <div class="upgrade-feature ${triggerFeature === 'clockTimer' ? 'active' : ''}">
             <div class="feature-icon">
@@ -100,12 +105,12 @@ export function showUpgradeModal(triggerFeature = null) {
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
             </div>
-            <span>Clock & Timer</span>
+            <span>${chrome.i18n.getMessage('proFeatureClock') || 'Clock & Timer'}</span>
           </div>
         </div>
 
         <button class="upgrade-cta" id="upgrade-cta-btn">
-          Upgrade Now
+          ${chrome.i18n.getMessage('upgradeNow') || 'Upgrade Now'}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"/>
             <polyline points="12 5 19 12 12 19"/>
@@ -113,17 +118,17 @@ export function showUpgradeModal(triggerFeature = null) {
         </button>
 
         <div class="upgrade-license">
-          <span class="license-label">Have a license key?</span>
+          <span class="license-label">${chrome.i18n.getMessage('alreadyHaveLicense') || 'Have a license key?'}</span>
           <div class="license-input-row">
             <input
               type="text"
               id="license-key-input"
               class="license-input"
-              placeholder="XXXX-XXXX-XXXX-XXXX"
+              placeholder="${chrome.i18n.getMessage('enterLicenseKey') || 'XXXX-XXXX-XXXX-XXXX'}"
               autocomplete="off"
               spellcheck="false"
             >
-            <button id="activate-license-btn" class="license-btn">Activate</button>
+            <button id="activate-license-btn" class="license-btn">${chrome.i18n.getMessage('activate') || 'Activate'}</button>
           </div>
           <p id="license-error" class="license-message error hidden"></p>
           <p id="license-success" class="license-message success hidden"></p>
@@ -211,12 +216,12 @@ function bindModalEvents() {
     successEl?.classList.add('hidden');
 
     if (!licenseKey) {
-      showError('Please enter a license key');
+      showError(chrome.i18n.getMessage('enterValidKey') || 'Please enter a license key');
       return;
     }
 
     activateBtn.disabled = true;
-    activateBtn.textContent = 'Activating...';
+    activateBtn.textContent = chrome.i18n.getMessage('activating') || 'Activating...';
 
     try {
       const result = await activateLicense(licenseKey);
@@ -231,15 +236,15 @@ function bindModalEvents() {
       } else if (result.error === 'activation_limit_reached') {
         showActivationLimitReached();
       } else {
-        showError(result.error || 'Invalid license key');
+        showError(result.error || (chrome.i18n.getMessage('activationFailed') || 'Invalid license key'));
         activateBtn.disabled = false;
-        activateBtn.textContent = 'Activate';
+        activateBtn.textContent = chrome.i18n.getMessage('activate') || 'Activate';
       }
     } catch (error) {
       log(`License activation error: ${error.message}`);
-      showError('Something went wrong. Try again.');
+      showError(chrome.i18n.getMessage('activationError') || 'Something went wrong. Try again.');
       activateBtn.disabled = false;
-      activateBtn.textContent = 'Activate';
+      activateBtn.textContent = chrome.i18n.getMessage('activate') || 'Activate';
     }
   });
 
@@ -272,8 +277,8 @@ function bindModalEvents() {
               style="animation: draw-check 0.4s 0.5s ease forwards;"/>
           </svg>
         </div>
-        <h2 class="upgrade-success-title">BirdTab Pro activated!</h2>
-        <p class="upgrade-success-body">Every new tab is now a window to the natural world. Reloading in a moment…</p>
+        <h2 class="upgrade-success-title">${chrome.i18n.getMessage('licenseActivated') || 'BirdTab Pro activated!'}</h2>
+        <p class="upgrade-success-body">${chrome.i18n.getMessage('proActivatedBody') || 'Every new tab is now a window to the natural world. Reloading in a moment…'}</p>
       </div>
     `;
   }
@@ -296,14 +301,12 @@ function bindModalEvents() {
               style="animation: draw-check 0.3s 0.5s ease forwards;"/>
           </svg>
         </div>
-        <h2 class="upgrade-success-title">Device limit reached</h2>
+        <h2 class="upgrade-success-title">${chrome.i18n.getMessage('deviceLimitTitle') || 'Device limit reached'}</h2>
         <p class="upgrade-success-body">
-          All device slots on your license are in use. To activate here, free up a slot first:
-          go to Settings → Manage → Deactivate on another device where BirdTab is installed,
-          or remove a device from your account.
+          ${chrome.i18n.getMessage('deviceLimitBody') || 'All device slots on your license are in use. To activate here, free up a slot first: go to Settings → Manage → Deactivate on another device where BirdTab is installed, or remove a device from your account.'}
         </p>
         <a href="https://birdtab.lemonsqueezy.com/billing" target="_blank" class="upgrade-cta" style="display:inline-flex;text-decoration:none;margin-top:8px;">
-          Manage Devices
+          ${chrome.i18n.getMessage('manageDevices') || 'Manage Devices'}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"/>
             <polyline points="12 5 19 12 12 19"/>

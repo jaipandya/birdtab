@@ -130,7 +130,7 @@ export function showMediaPlayIndicator() {
   indicator.className = 'video-play-indicator';
   indicator.innerHTML = `
     <div class="play-icon-container">
-      <img src="images/svg/waveform.svg" alt="Audio Playing" width="56" height="56">
+      <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioPlayingAlt') || 'Audio Playing'}" width="56" height="56">
     </div>
   `;
 
@@ -168,7 +168,7 @@ export function showMediaPauseIndicator() {
   indicator.className = 'video-pause-indicator';
   indicator.innerHTML = `
     <div class="pause-icon-container">
-      <img src="images/svg/pause.svg" alt="Audio Paused" width="56" height="56">
+      <img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('audioPausedAlt') || 'Audio Paused'}" width="56" height="56">
     </div>
   `;
 

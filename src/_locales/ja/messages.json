@@ -23,17 +23,9 @@
     "message": "カメラ",
     "description": "Alt text for camera icon"
   },
-  "photographer": {
-    "message": "写真家",
-    "description": "Label for photographer credit"
-  },
   "audioAlt": {
     "message": "音声",
     "description": "Alt text for audio waveform icon"
-  },
-  "recordist": {
-    "message": "録音者",
-    "description": "Label for audio recordist credit"
   },
   "openSettings": {
     "message": "設定を開く",
@@ -355,10 +347,6 @@
     "message": "設定を閉じる",
     "description": "Aria label for close settings button"
   },
-  "currentLocale": {
-    "message": "@@ui_locale",
-    "description": "Shows current UI locale using predefined message"
-  },
   "textDirection": {
     "message": "@@bidi_dir",
     "description": "Text direction (ltr or rtl)"
@@ -382,10 +370,6 @@
   "settingsTooltip": {
     "message": "設定を開いてBirdTabエクスペリエンスをカスタマイズ",
     "description": "Tooltip for settings button"
-  },
-  "quizTooltip": {
-    "message": "鳥類識別クイズを開始",
-    "description": "Tooltip for quiz button"
   },
   "refreshTooltip": {
     "message": "新しい鳥の写真と情報を読み込み",
@@ -470,10 +454,6 @@
   "quizNextQuestion": {
     "message": "次の問題",
     "description": "Button text for next question"
-  },
-  "quizSubmitAnswer": {
-    "message": "回答を送信",
-    "description": "Button text to submit answer"
   },
   "quizShowResults": {
     "message": "結果を表示",
@@ -635,10 +615,6 @@
     "message": "問題の振り返り",
     "description": "Question review section title"
   },
-  "correctAnswer": {
-    "message": "正解：$1",
-    "description": "Correct answer display"
-  },
   "yourAnswer": {
     "message": "あなたの回答：$1",
     "description": "Shows what the user answered (when incorrect)"
@@ -799,17 +775,9 @@
     "message": "表示履歴",
     "description": "Title for history modal"
   },
-  "historyTooltip": {
-    "message": "バードウォッチング履歴を表示",
-    "description": "Tooltip for history button"
-  },
   "historyAlt": {
     "message": "履歴",
     "description": "Alt text for history icon"
-  },
-  "openHistory": {
-    "message": "履歴を開く",
-    "description": "Aria label for history button"
   },
   "emptyHistoryTitle": {
     "message": "バードウォッチングの旅はここから！",
@@ -891,14 +859,6 @@
     "message": "戻る",
     "description": "Feature tour: back button text"
   },
-  "tourHistoryTitle": {
-    "message": "閲覧履歴",
-    "description": "Feature tour: history button title"
-  },
-  "tourHistoryDescription": {
-    "message": "発見したすべての鳥を見よう！ここをクリックしてお気に入りを再訪できます。",
-    "description": "Feature tour: history button description"
-  },
   "tourVideoToggleTitle": {
     "message": "ビデオモード",
     "description": "Feature tour: video toggle title"
@@ -906,14 +866,6 @@
   "tourVideoToggleDescription": {
     "message": "写真とビデオを切り替えよう！これをオンにして、美しいビデオクリップで鳥の動きを観察しましょう。",
     "description": "Feature tour: video toggle description"
-  },
-  "tourSettingsTitle": {
-    "message": "設定",
-    "description": "Feature tour: settings button title"
-  },
-  "tourSettingsDescription": {
-    "message": "BirdTab体験をカスタマイズ。地域を選択し、自動再生を有効にするなど。",
-    "description": "Feature tour: settings button description"
   },
   "tourVolumeTitle": {
     "message": "音量調整",
@@ -930,14 +882,6 @@
   "tourRefreshDescription": {
     "message": "新しい羽毛の友達に会う準備はできましたか？ここをクリックして新しい鳥の写真を読み込みます。",
     "description": "Feature tour: refresh button description"
-  },
-  "tourQuizTitle": {
-    "message": "鳥クイズ",
-    "description": "Feature tour: quiz button title"
-  },
-  "tourQuizDescription": {
-    "message": "鳥の識別スキルをテストしよう！楽しいクイズに挑戦。",
-    "description": "Feature tour: quiz button description"
   },
   "tourPlayPauseTitle": {
     "message": "再生 / 一時停止",
@@ -970,10 +914,6 @@
   "resetTour": {
     "message": "機能ツアーをリセット",
     "description": "Button to reset the feature tour in debug section"
-  },
-  "tourReset": {
-    "message": "機能ツアーがリセットされました。次回ページ読み込み時に再表示されます。",
-    "description": "Success message after resetting the feature tour"
   },
   "errorResettingTour": {
     "message": "機能ツアーのリセット中にエラーが発生しました",
@@ -1191,16 +1131,28 @@
     "message": "$1。$3 個中 $2 番目。Ctrl+矢印キーで移動。",
     "description": "Aria label for draggable Google App item",
     "placeholders": {
-      "1": { "content": "$1", "example": "Gmail" },
-      "2": { "content": "$2", "example": "1" },
-      "3": { "content": "$3", "example": "18" }
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
     }
   },
   "appMovedToPosition": {
     "message": "$1 番目に移動しました",
     "description": "Screen reader announcement when app is moved",
     "placeholders": {
-      "1": { "content": "$1", "example": "3" }
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "orderResetToDefault": {
@@ -1251,66 +1203,6 @@
     "message": "このメニューから設定、閲覧履歴、鳥クイズにアクセスできます。クリックしてオプションを確認しましょう！",
     "description": "Feature tour: options menu description"
   },
-  "settingsCategoryPro": {
-    "message": "BirdTab Pro",
-    "description": "Section header for Pro license settings"
-  },
-  "upgradeTitle": {
-    "message": "BirdTab Proにアップグレード",
-    "description": "Title for upgrade modal (legacy)"
-  },
-  "upgradeSubtitle": {
-    "message": "すべてのプレミアム機能をアンロック",
-    "description": "Subtitle for upgrade modal (legacy)"
-  },
-  "upgradeModalTitle": {
-    "message": "すべての新しいタブをバードウォッチングの冒険に変えましょう",
-    "description": "Persuasive title for upgrade modal"
-  },
-  "upgradeModalSubtitle": {
-    "message": "息をのむような鳥との出会いで一日を始める、何千人もの自然愛好家に加わりましょう",
-    "description": "Persuasive subtitle for upgrade modal"
-  },
-  "proBenefitVideoTitle": {
-    "message": "鳥に命を吹き込む",
-    "description": "Pro benefit: Video Mode title (persuasive)"
-  },
-  "proBenefitVideoDesc": {
-    "message": "すべての新しいタブが自然ドキュメンタリーのように感じられる、魅力的な鳥の動画を観ましょう",
-    "description": "Pro benefit: Video Mode description (persuasive)"
-  },
-  "proBenefitHighResTitle": {
-    "message": "すべての羽を見る",
-    "description": "Pro benefit: High-Res Images title (persuasive)"
-  },
-  "proBenefitHighResDesc": {
-    "message": "今まで気づかなかった驚くべきディテールを明らかにする、クリスタルクリアな2400px写真",
-    "description": "Pro benefit: High-Res Images description (persuasive)"
-  },
-  "proBenefitRegionTitle": {
-    "message": "世界を探検する",
-    "description": "Pro benefit: Region title (persuasive)"
-  },
-  "proBenefitRegionDesc": {
-    "message": "アフリカのサイチョウからオーストラリアのオウムまで、あらゆる大陸のエキゾチックな鳥を発見しましょう",
-    "description": "Pro benefit: Region description (persuasive)"
-  },
-  "proBenefitClockTitle": {
-    "message": "集中力を維持する",
-    "description": "Pro benefit: Clock/Timer title (persuasive)"
-  },
-  "proBenefitClockDesc": {
-    "message": "エレガントな時計で時間を確認したり、集中タイマーで生産性を向上させましょう",
-    "description": "Pro benefit: Clock/Timer description (persuasive)"
-  },
-  "seePricingOptions": {
-    "message": "料金プランを見る",
-    "description": "CTA button text for pricing page"
-  },
-  "upgradeCtaNote": {
-    "message": "年額$20からの柔軟なプラン",
-    "description": "Note below CTA button"
-  },
   "alreadyHaveLicense": {
     "message": "ライセンスをお持ちですか？",
     "description": "Divider text for license activation section"
@@ -1347,14 +1239,6 @@
     "message": "新しいタブに時計または集中タイマーを表示",
     "description": "Pro feature: Clock/Timer description"
   },
-  "bestValue": {
-    "message": "最もお得",
-    "description": "Badge for lifetime plan"
-  },
-  "orActivateKey": {
-    "message": "または既存のライセンスを有効化",
-    "description": "Divider text for license activation (legacy)"
-  },
   "enterLicenseKey": {
     "message": "ライセンスキーを入力",
     "description": "Placeholder for license key input"
@@ -1382,10 +1266,6 @@
   "activationError": {
     "message": "エラーが発生しました。もう一度お試しください。",
     "description": "Generic error for activation"
-  },
-  "upgradeFooter": {
-    "message": "ご質問は？ support@birdtab.app までお問い合わせください",
-    "description": "Footer text in upgrade modal"
   },
   "birdtabPro": {
     "message": "BirdTab Pro",
@@ -1415,17 +1295,9 @@
     "message": "トライアル",
     "description": "License type: trial"
   },
-  "daysRemaining": {
-    "message": "日残り",
-    "description": "Label for days until expiry"
-  },
   "expired": {
     "message": "期限切れ",
     "description": "Generic expired label"
-  },
-  "planType": {
-    "message": "プラン",
-    "description": "Label for plan type"
   },
   "email": {
     "message": "メール",
@@ -1475,10 +1347,6 @@
     "message": "今すぐアップグレード",
     "description": "Button to upgrade immediately"
   },
-  "remindLater": {
-    "message": "後で通知",
-    "description": "Button to dismiss notice temporarily"
-  },
   "close": {
     "message": "閉じる",
     "description": "Generic close button label"
@@ -1515,16 +1383,11 @@
     "message": "残り$1日",
     "description": "Trial period: multiple days remaining",
     "placeholders": {
-      "1": { "content": "$1", "example": "7" }
+      "1": {
+        "content": "$1",
+        "example": "7"
+      }
     }
-  },
-  "keepPro": {
-    "message": "Proを維持",
-    "description": "CTA button for trial users to upgrade and keep Pro features"
-  },
-  "trialEnding": {
-    "message": "トライアル期間がまもなく終了します",
-    "description": "Warning message when trial is about to expire"
   },
   "trialExpired": {
     "message": "トライアル期間が終了しました",
@@ -1537,5 +1400,195 @@
   "offlineGraceExpiredNotice": {
     "message": "インターネットに接続してライセンスを確認し、Pro機能を復元してください。",
     "description": "Notice shown when offline grace period has expired and Pro features are disabled"
+  },
+  "unlockFeature": {
+    "message": "$1をアンロック",
+    "description": "Title for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Video Mode"
+      }
+    }
+  },
+  "unlockFullExperience": {
+    "message": "フル体験をアンロック",
+    "description": "Title for upgrade modal when opened without a specific feature trigger"
+  },
+  "upgradeFeatureSubtitle": {
+    "message": "この機能はBirdTab Proの一部です。アップグレードして$1とすべてのプレミアム機能にアクセスしましょう。",
+    "description": "Subtitle for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "video mode"
+      }
+    }
+  },
+  "proActivatedBody": {
+    "message": "新しいタブが自然の世界への窓になりました。まもなくリロードします…",
+    "description": "Body text shown after successful Pro license activation"
+  },
+  "deviceLimitTitle": {
+    "message": "デバイス数の上限に達しました",
+    "description": "Title shown when license activation fails due to device limit"
+  },
+  "deviceLimitBody": {
+    "message": "ライセンスのデバイス枠がすべて使用中です。ここでアクティベートするには、まず枠を空けてください：設定 → 管理 → BirdTabがインストールされている別のデバイスで無効化するか、アカウントからデバイスを削除してください。",
+    "description": "Body text explaining device limit and how to resolve it"
+  },
+  "manageDevices": {
+    "message": "デバイスを管理",
+    "description": "Button text to manage devices in customer portal"
+  },
+  "proTrialActive": {
+    "message": "Proトライアル中",
+    "description": "Badge text shown during active Pro trial"
+  },
+  "trialWelcomeTitle": {
+    "message": "BirdTab Proへようこそ",
+    "description": "Title for trial welcome modal"
+  },
+  "trialWelcomeSubtitle": {
+    "message": "$1日間の無料トライアルが始まりました。すべてのPro機能をお楽しみいただき、世界中の鳥の美しさを発見してください。",
+    "description": "Subtitle for trial welcome modal",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "14"
+      }
+    }
+  },
+  "today": {
+    "message": "今日",
+    "description": "Label for today in trial timeline"
+  },
+  "startExploring": {
+    "message": "探索を始める",
+    "description": "Button text to dismiss trial welcome modal"
+  },
+  "trialFooterNote": {
+    "message": "クレジットカードは不要です。トライアル終了後、無料版に戻ります。",
+    "description": "Footer note in trial welcome modal"
+  },
+  "trialEnded": {
+    "message": "トライアル終了",
+    "description": "Badge text shown when trial has expired"
+  },
+  "trialExpiredTitle": {
+    "message": "無料トライアルが終了しました",
+    "description": "Title for trial expired modal"
+  },
+  "trialExpiredSubtitle": {
+    "message": "BirdTab Proをお試しいただきありがとうございます！基本機能は引き続き無料でご利用いただけます。フル体験を続けるにはアップグレードしてください。",
+    "description": "Subtitle for trial expired modal"
+  },
+  "trialLostFeatures": {
+    "message": "失われるPro機能：",
+    "description": "Heading for list of Pro features lost after trial"
+  },
+  "trialValueProp": {
+    "message": "Proにアップグレードして、すべての機能を楽しみながら独立した開発を支援しましょう。あなたのサブスクリプションがBirdTabを広告なしで改善し続けます。",
+    "description": "Value proposition text in trial expired modal"
+  },
+  "continueWithFree": {
+    "message": "無料版で続ける",
+    "description": "Button text to dismiss trial expired modal and continue with free version"
+  },
+  "proWelcomeBadgeLifetime": {
+    "message": "Pro 永久版",
+    "description": "Badge text in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeBadgeYearly": {
+    "message": "Pro 年間版",
+    "description": "Badge text in Pro welcome modal for yearly license"
+  },
+  "proWelcomeTitle": {
+    "message": "BirdTab Proへようこそ",
+    "description": "Title in Pro welcome modal"
+  },
+  "proWelcomeSubtitleLifetime": {
+    "message": "すべてのPro機能への<strong>永久アクセス</strong>が可能になりました。新しいタブはすべて、自然界への窓です。",
+    "description": "Subtitle in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeSubtitleYearly": {
+    "message": "すべてのPro機能が<strong>解放</strong>されました。新しいタブはすべて、自然界への窓です。",
+    "description": "Subtitle in Pro welcome modal for yearly license"
+  },
+  "proWelcomeThanks": {
+    "message": "あなたのサポートがBirdTabの開発を直接支えています — より良いデータ、新機能、そして広告なしの体験。この旅の一員になってくださりありがとうございます。",
+    "description": "Thank you message in Pro welcome modal"
+  },
+  "proWelcomeVideoTitle": {
+    "message": "ビデオモード",
+    "description": "Video feature title in Pro welcome modal"
+  },
+  "proWelcomeVideoDesc": {
+    "message": "美しいビデオクリップで鳥たちの生き生きとした姿をご覧ください",
+    "description": "Video feature description in Pro welcome modal"
+  },
+  "proWelcomeHighResTitle": {
+    "message": "高解像度写真",
+    "description": "High-res feature title in Pro welcome modal"
+  },
+  "proWelcomeHighResDesc": {
+    "message": "驚くほどの詳細を持つ鮮明な2400px画像",
+    "description": "High-res feature description in Pro welcome modal"
+  },
+  "proWelcomeRegionTitle": {
+    "message": "世界の地域",
+    "description": "Region feature title in Pro welcome modal"
+  },
+  "proWelcomeRegionDesc": {
+    "message": "世界中の国々の鳥を発見しましょう",
+    "description": "Region feature description in Pro welcome modal"
+  },
+  "proWelcomeClockTitle": {
+    "message": "時計とタイマー",
+    "description": "Clock feature title in Pro welcome modal"
+  },
+  "proWelcomeClockDesc": {
+    "message": "自然を楽しみながら時間を管理",
+    "description": "Clock feature description in Pro welcome modal"
+  },
+  "pausedAlt": {
+    "message": "一時停止",
+    "description": "Alt text for pause indicator icon"
+  },
+  "audioPlayingAlt": {
+    "message": "オーディオ再生中",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "オーディオ一時停止",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatus": {
+    "message": "保全状況：",
+    "description": "Label prefix for conservation status in bird info tooltip"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "履歴を閉じる",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "proBadgeLabel": {
+    "message": "Pro",
+    "description": "Short label for Pro badge in settings sidebar"
+  },
+  "onboardingStep1": {
+    "message": "ステップ1",
+    "description": "Aria label for onboarding progress dot 1"
+  },
+  "onboardingStep2": {
+    "message": "ステップ2",
+    "description": "Aria label for onboarding progress dot 2"
+  },
+  "onboardingStep3": {
+    "message": "ステップ3",
+    "description": "Aria label for onboarding progress dot 3"
   }
 }

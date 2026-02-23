@@ -346,7 +346,7 @@ function createPanelHTML() {
               ${resetButtonText}
             </button>
             <button id="close-google-apps" class="close-button" data-i18n-aria-label="closeGoogleApps" aria-label="Close Google Apps">
-              <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+              <img src="images/svg/close.svg" data-i18n-alt="closeAlt" alt="Close" width="20" height="20">
             </button>
           </div>
         </div>

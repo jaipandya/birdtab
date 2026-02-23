@@ -1007,7 +1007,7 @@ async function initializePage() {
           </a>
           <div class="scientific-name-row">
             <p id="scientific-name"></p>
-            <span class="info-icon" data-tooltip="${escapeHtml(birdInfo.description)}&#10;&#10;Conservation Status: ${escapeHtml(birdInfo.conservationStatus)}">
+            <span class="info-icon" data-tooltip="${escapeHtml(birdInfo.description)}&#10;&#10;${chrome.i18n.getMessage('conservationStatus') || 'Conservation Status:'} ${escapeHtml(birdInfo.conservationStatus)}">
               <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
             </span>
           </div>

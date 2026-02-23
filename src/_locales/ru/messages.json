@@ -23,17 +23,9 @@
     "message": "Камера",
     "description": "Alt text for camera icon"
   },
-  "photographer": {
-    "message": "Фотограф",
-    "description": "Label for photographer credit"
-  },
   "audioAlt": {
     "message": "Аудио",
     "description": "Alt text for audio waveform icon"
-  },
-  "recordist": {
-    "message": "Звукооператор",
-    "description": "Label for audio recordist credit"
   },
   "openSettings": {
     "message": "Открыть настройки",
@@ -355,10 +347,6 @@
     "message": "Закрыть настройки",
     "description": "Aria label for close settings button"
   },
-  "currentLocale": {
-    "message": "@@ui_locale",
-    "description": "Shows current UI locale using predefined message"
-  },
   "textDirection": {
     "message": "@@bidi_dir",
     "description": "Text direction (ltr or rtl)"
@@ -382,10 +370,6 @@
   "settingsTooltip": {
     "message": "Открыть настройки для персонализации вашего опыта BirdTab",
     "description": "Tooltip for settings button"
-  },
-  "quizTooltip": {
-    "message": "Начать викторину по идентификации птиц",
-    "description": "Tooltip for quiz button"
   },
   "refreshTooltip": {
     "message": "Загрузить новое фото и информацию о птице",
@@ -470,10 +454,6 @@
   "quizNextQuestion": {
     "message": "Следующий вопрос",
     "description": "Button text for next question"
-  },
-  "quizSubmitAnswer": {
-    "message": "Отправить ответ",
-    "description": "Button text to submit answer"
   },
   "quizShowResults": {
     "message": "Показать результаты",
@@ -635,10 +615,6 @@
     "message": "Обзор вопросов",
     "description": "Question review section title"
   },
-  "correctAnswer": {
-    "message": "Правильный ответ: $1",
-    "description": "Correct answer display"
-  },
   "yourAnswer": {
     "message": "Ваш ответ: $1",
     "description": "Shows what the user answered (when incorrect)"
@@ -799,17 +775,9 @@
     "message": "История просмотров",
     "description": "Title for history modal"
   },
-  "historyTooltip": {
-    "message": "Посмотреть историю наблюдений за птицами",
-    "description": "Tooltip for history button"
-  },
   "historyAlt": {
     "message": "История",
     "description": "Alt text for history icon"
-  },
-  "openHistory": {
-    "message": "Открыть историю",
-    "description": "Aria label for history button"
   },
   "emptyHistoryTitle": {
     "message": "Ваше путешествие в мир птиц начинается здесь!",
@@ -891,14 +859,6 @@
     "message": "Назад",
     "description": "Feature tour: back button text"
   },
-  "tourHistoryTitle": {
-    "message": "История Просмотров",
-    "description": "Feature tour: history button title"
-  },
-  "tourHistoryDescription": {
-    "message": "Посмотрите всех обнаруженных птиц! Нажмите здесь, чтобы вернуться к избранным.",
-    "description": "Feature tour: history button description"
-  },
   "tourVideoToggleTitle": {
     "message": "Режим видео",
     "description": "Feature tour: video toggle title"
@@ -906,14 +866,6 @@
   "tourVideoToggleDescription": {
     "message": "Переключайтесь между фото и видео! Включите это, чтобы наблюдать за птицами в движении с красивыми видеоклипами.",
     "description": "Feature tour: video toggle description"
-  },
-  "tourSettingsTitle": {
-    "message": "Настройки",
-    "description": "Feature tour: settings button title"
-  },
-  "tourSettingsDescription": {
-    "message": "Настройте свой опыт BirdTab. Выберите регион, включите автовоспроизведение и многое другое.",
-    "description": "Feature tour: settings button description"
   },
   "tourVolumeTitle": {
     "message": "Регулировка Громкости",
@@ -930,14 +882,6 @@
   "tourRefreshDescription": {
     "message": "Готовы к новому пернатому другу? Нажмите здесь, чтобы загрузить новое фото птицы.",
     "description": "Feature tour: refresh button description"
-  },
-  "tourQuizTitle": {
-    "message": "Викторина о Птицах",
-    "description": "Feature tour: quiz button title"
-  },
-  "tourQuizDescription": {
-    "message": "Проверьте свои навыки определения птиц! Пройдите весёлую викторину.",
-    "description": "Feature tour: quiz button description"
   },
   "tourPlayPauseTitle": {
     "message": "Воспроизведение / Пауза",
@@ -970,10 +914,6 @@
   "resetTour": {
     "message": "Сбросить тур по функциям",
     "description": "Button to reset the feature tour in debug section"
-  },
-  "tourReset": {
-    "message": "Тур по функциям сброшен. Он появится снова при следующей загрузке страницы.",
-    "description": "Success message after resetting the feature tour"
   },
   "errorResettingTour": {
     "message": "Ошибка сброса тура по функциям",
@@ -1191,16 +1131,28 @@
     "message": "$1. Позиция $2 из $3. Ctrl+стрелки для перемещения.",
     "description": "Aria label for draggable Google App item",
     "placeholders": {
-      "1": { "content": "$1", "example": "Gmail" },
-      "2": { "content": "$2", "example": "1" },
-      "3": { "content": "$3", "example": "18" }
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
     }
   },
   "appMovedToPosition": {
     "message": "Перемещено на позицию $1",
     "description": "Screen reader announcement when app is moved",
     "placeholders": {
-      "1": { "content": "$1", "example": "3" }
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "orderResetToDefault": {
@@ -1251,66 +1203,6 @@
     "message": "Доступ к настройкам, истории просмотра и викторине о птицах из этого меню. Нажмите, чтобы изучить опции!",
     "description": "Feature tour: options menu description"
   },
-  "settingsCategoryPro": {
-    "message": "BirdTab Pro",
-    "description": "Section header for Pro license settings"
-  },
-  "upgradeTitle": {
-    "message": "Перейти на BirdTab Pro",
-    "description": "Title for upgrade modal (legacy)"
-  },
-  "upgradeSubtitle": {
-    "message": "Разблокируйте все премиум-функции",
-    "description": "Subtitle for upgrade modal (legacy)"
-  },
-  "upgradeModalTitle": {
-    "message": "Превратите каждую новую вкладку в приключение по наблюдению за птицами",
-    "description": "Persuasive title for upgrade modal"
-  },
-  "upgradeModalSubtitle": {
-    "message": "Присоединяйтесь к тысячам любителей природы, которые начинают день с захватывающих встреч с птицами",
-    "description": "Persuasive subtitle for upgrade modal"
-  },
-  "proBenefitVideoTitle": {
-    "message": "Оживите птиц",
-    "description": "Pro benefit: Video Mode title (persuasive)"
-  },
-  "proBenefitVideoDesc": {
-    "message": "Смотрите завораживающие видео с птицами, которые превращают каждую новую вкладку в документальный фильм о природе",
-    "description": "Pro benefit: Video Mode description (persuasive)"
-  },
-  "proBenefitHighResTitle": {
-    "message": "Увидьте каждое перо",
-    "description": "Pro benefit: High-Res Images title (persuasive)"
-  },
-  "proBenefitHighResDesc": {
-    "message": "Кристально чёткая фотография 2400px раскрывает потрясающие детали, которые вы никогда не замечали",
-    "description": "Pro benefit: High-Res Images description (persuasive)"
-  },
-  "proBenefitRegionTitle": {
-    "message": "Исследуйте мир",
-    "description": "Pro benefit: Region title (persuasive)"
-  },
-  "proBenefitRegionDesc": {
-    "message": "Откройте для себя экзотических птиц с любого континента — от африканских птиц-носорогов до австралийских какаду",
-    "description": "Pro benefit: Region description (persuasive)"
-  },
-  "proBenefitClockTitle": {
-    "message": "Оставайтесь сфокусированными",
-    "description": "Pro benefit: Clock/Timer title (persuasive)"
-  },
-  "proBenefitClockDesc": {
-    "message": "Следите за временем с элегантными часами или повышайте продуктивность с таймером концентрации",
-    "description": "Pro benefit: Clock/Timer description (persuasive)"
-  },
-  "seePricingOptions": {
-    "message": "Посмотреть тарифы",
-    "description": "CTA button text for pricing page"
-  },
-  "upgradeCtaNote": {
-    "message": "Гибкие тарифы от $20/год",
-    "description": "Note below CTA button"
-  },
   "alreadyHaveLicense": {
     "message": "Уже есть лицензия?",
     "description": "Divider text for license activation section"
@@ -1347,14 +1239,6 @@
     "message": "Отображайте время или таймер концентрации на новой вкладке",
     "description": "Pro feature: Clock/Timer description"
   },
-  "bestValue": {
-    "message": "Лучшее предложение",
-    "description": "Badge for lifetime plan"
-  },
-  "orActivateKey": {
-    "message": "или активируйте существующую лицензию",
-    "description": "Divider text for license activation (legacy)"
-  },
   "enterLicenseKey": {
     "message": "Введите ключ лицензии",
     "description": "Placeholder for license key input"
@@ -1382,10 +1266,6 @@
   "activationError": {
     "message": "Произошла ошибка. Пожалуйста, попробуйте снова.",
     "description": "Generic error for activation"
-  },
-  "upgradeFooter": {
-    "message": "Вопросы? Свяжитесь с support@birdtab.app",
-    "description": "Footer text in upgrade modal"
   },
   "birdtabPro": {
     "message": "BirdTab Pro",
@@ -1415,17 +1295,9 @@
     "message": "Пробная",
     "description": "License type: trial"
   },
-  "daysRemaining": {
-    "message": "дней осталось",
-    "description": "Label for days until expiry"
-  },
   "expired": {
     "message": "Истекла",
     "description": "Generic expired label"
-  },
-  "planType": {
-    "message": "Тариф",
-    "description": "Label for plan type"
   },
   "email": {
     "message": "Эл. почта",
@@ -1475,10 +1347,6 @@
     "message": "Обновить сейчас",
     "description": "Button to upgrade immediately"
   },
-  "remindLater": {
-    "message": "Напомнить позже",
-    "description": "Button to dismiss notice temporarily"
-  },
   "close": {
     "message": "Закрыть",
     "description": "Generic close button label"
@@ -1515,16 +1383,11 @@
     "message": "Осталось $1 дней",
     "description": "Trial period: multiple days remaining",
     "placeholders": {
-      "1": { "content": "$1", "example": "7" }
+      "1": {
+        "content": "$1",
+        "example": "7"
+      }
     }
-  },
-  "keepPro": {
-    "message": "Сохранить Pro",
-    "description": "CTA button for trial users to upgrade and keep Pro features"
-  },
-  "trialEnding": {
-    "message": "Ваш пробный период скоро закончится",
-    "description": "Warning message when trial is about to expire"
   },
   "trialExpired": {
     "message": "Ваш пробный период закончился",
@@ -1537,5 +1400,195 @@
   "offlineGraceExpiredNotice": {
     "message": "Подключитесь к интернету для проверки лицензии и восстановления функций Pro.",
     "description": "Notice shown when offline grace period has expired and Pro features are disabled"
+  },
+  "unlockFeature": {
+    "message": "Разблокировать $1",
+    "description": "Title for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Video Mode"
+      }
+    }
+  },
+  "unlockFullExperience": {
+    "message": "Разблокируйте полный доступ",
+    "description": "Title for upgrade modal when opened without a specific feature trigger"
+  },
+  "upgradeFeatureSubtitle": {
+    "message": "Эта функция входит в BirdTab Pro. Обновитесь, чтобы получить доступ к $1 и всем премиум-функциям.",
+    "description": "Subtitle for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "video mode"
+      }
+    }
+  },
+  "proActivatedBody": {
+    "message": "Каждая новая вкладка теперь — окно в мир природы. Перезагрузка через мгновение…",
+    "description": "Body text shown after successful Pro license activation"
+  },
+  "deviceLimitTitle": {
+    "message": "Достигнут лимит устройств",
+    "description": "Title shown when license activation fails due to device limit"
+  },
+  "deviceLimitBody": {
+    "message": "Все слоты устройств вашей лицензии заняты. Чтобы активировать здесь, сначала освободите слот: перейдите в Настройки → Управление → Деактивировать на другом устройстве, где установлен BirdTab, или удалите устройство из вашей учётной записи.",
+    "description": "Body text explaining device limit and how to resolve it"
+  },
+  "manageDevices": {
+    "message": "Управление устройствами",
+    "description": "Button text to manage devices in customer portal"
+  },
+  "proTrialActive": {
+    "message": "Пробный период Pro активен",
+    "description": "Badge text shown during active Pro trial"
+  },
+  "trialWelcomeTitle": {
+    "message": "Добро пожаловать в BirdTab Pro",
+    "description": "Title for trial welcome modal"
+  },
+  "trialWelcomeSubtitle": {
+    "message": "Ваш бесплатный пробный период на $1 дней начался. Наслаждайтесь всеми функциями Pro и откройте для себя всю красоту птиц мира.",
+    "description": "Subtitle for trial welcome modal",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "14"
+      }
+    }
+  },
+  "today": {
+    "message": "Сегодня",
+    "description": "Label for today in trial timeline"
+  },
+  "startExploring": {
+    "message": "Начать исследование",
+    "description": "Button text to dismiss trial welcome modal"
+  },
+  "trialFooterNote": {
+    "message": "Кредитная карта не требуется. После пробного периода вы вернётесь к бесплатной версии.",
+    "description": "Footer note in trial welcome modal"
+  },
+  "trialEnded": {
+    "message": "Пробный период завершён",
+    "description": "Badge text shown when trial has expired"
+  },
+  "trialExpiredTitle": {
+    "message": "Ваш бесплатный пробный период завершён",
+    "description": "Title for trial expired modal"
+  },
+  "trialExpiredSubtitle": {
+    "message": "Спасибо за то, что попробовали BirdTab Pro! Вы можете продолжить использовать базовые функции бесплатно или обновиться, чтобы сохранить полный доступ.",
+    "description": "Subtitle for trial expired modal"
+  },
+  "trialLostFeatures": {
+    "message": "Функции Pro, которые вы потеряете:",
+    "description": "Heading for list of Pro features lost after trial"
+  },
+  "trialValueProp": {
+    "message": "Обновитесь до Pro и поддержите независимую разработку, наслаждаясь всеми функциями. Ваша подписка поддерживает BirdTab без рекламы и в постоянном развитии.",
+    "description": "Value proposition text in trial expired modal"
+  },
+  "continueWithFree": {
+    "message": "Продолжить с бесплатной версией",
+    "description": "Button text to dismiss trial expired modal and continue with free version"
+  },
+  "proWelcomeBadgeLifetime": {
+    "message": "Pro навсегда",
+    "description": "Badge text in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeBadgeYearly": {
+    "message": "Pro годовой",
+    "description": "Badge text in Pro welcome modal for yearly license"
+  },
+  "proWelcomeTitle": {
+    "message": "Добро пожаловать в BirdTab Pro",
+    "description": "Title in Pro welcome modal"
+  },
+  "proWelcomeSubtitleLifetime": {
+    "message": "Теперь у вас есть <strong>пожизненный доступ</strong> ко всем функциям Pro. Каждая новая вкладка — окно в мир природы.",
+    "description": "Subtitle in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeSubtitleYearly": {
+    "message": "Все функции Pro теперь <strong>разблокированы</strong>. Каждая новая вкладка — окно в мир природы.",
+    "description": "Subtitle in Pro welcome modal for yearly license"
+  },
+  "proWelcomeThanks": {
+    "message": "Ваша поддержка напрямую финансирует разработку BirdTab — улучшенные данные, новые функции и отсутствие рекламы. Спасибо, что вы с нами.",
+    "description": "Thank you message in Pro welcome modal"
+  },
+  "proWelcomeVideoTitle": {
+    "message": "Режим видео",
+    "description": "Video feature title in Pro welcome modal"
+  },
+  "proWelcomeVideoDesc": {
+    "message": "Смотрите, как птицы оживают в потрясающих видеороликах",
+    "description": "Video feature description in Pro welcome modal"
+  },
+  "proWelcomeHighResTitle": {
+    "message": "Фото высокого разрешения",
+    "description": "High-res feature title in Pro welcome modal"
+  },
+  "proWelcomeHighResDesc": {
+    "message": "Кристально чёткие изображения 2400px с невероятной детализацией",
+    "description": "High-res feature description in Pro welcome modal"
+  },
+  "proWelcomeRegionTitle": {
+    "message": "Регионы мира",
+    "description": "Region feature title in Pro welcome modal"
+  },
+  "proWelcomeRegionDesc": {
+    "message": "Открывайте птиц из любой страны мира",
+    "description": "Region feature description in Pro welcome modal"
+  },
+  "proWelcomeClockTitle": {
+    "message": "Часы и таймер",
+    "description": "Clock feature title in Pro welcome modal"
+  },
+  "proWelcomeClockDesc": {
+    "message": "Следите за временем, наслаждаясь природой",
+    "description": "Clock feature description in Pro welcome modal"
+  },
+  "pausedAlt": {
+    "message": "Пауза",
+    "description": "Alt text for pause indicator icon"
+  },
+  "audioPlayingAlt": {
+    "message": "Воспроизведение аудио",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "Аудио приостановлено",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatus": {
+    "message": "Охранный статус:",
+    "description": "Label prefix for conservation status in bird info tooltip"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "Закрыть историю",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "proBadgeLabel": {
+    "message": "Pro",
+    "description": "Short label for Pro badge in settings sidebar"
+  },
+  "onboardingStep1": {
+    "message": "Шаг 1",
+    "description": "Aria label for onboarding progress dot 1"
+  },
+  "onboardingStep2": {
+    "message": "Шаг 2",
+    "description": "Aria label for onboarding progress dot 2"
+  },
+  "onboardingStep3": {
+    "message": "Шаг 3",
+    "description": "Aria label for onboarding progress dot 3"
   }
 }

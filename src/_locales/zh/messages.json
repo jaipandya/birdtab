@@ -23,17 +23,9 @@
     "message": "相机",
     "description": "Alt text for camera icon"
   },
-  "photographer": {
-    "message": "摄影师",
-    "description": "Label for photographer credit"
-  },
   "audioAlt": {
     "message": "音频",
     "description": "Alt text for audio waveform icon"
-  },
-  "recordist": {
-    "message": "录音师",
-    "description": "Label for audio recordist credit"
   },
   "openSettings": {
     "message": "打开设置",
@@ -355,10 +347,6 @@
     "message": "关闭设置",
     "description": "Aria label for close settings button"
   },
-  "currentLocale": {
-    "message": "@@ui_locale",
-    "description": "Shows current UI locale using predefined message"
-  },
   "textDirection": {
     "message": "@@bidi_dir",
     "description": "Text direction (ltr or rtl)"
@@ -382,10 +370,6 @@
   "settingsTooltip": {
     "message": "打开设置以自定义您的 BirdTab 体验",
     "description": "Tooltip for settings button"
-  },
-  "quizTooltip": {
-    "message": "开始鸟类识别测验",
-    "description": "Tooltip for quiz button"
   },
   "refreshTooltip": {
     "message": "加载新的鸟类照片和信息",
@@ -470,10 +454,6 @@
   "quizNextQuestion": {
     "message": "下一题",
     "description": "Button text for next question"
-  },
-  "quizSubmitAnswer": {
-    "message": "提交答案",
-    "description": "Button text to submit answer"
   },
   "quizShowResults": {
     "message": "查看结果",
@@ -635,10 +615,6 @@
     "message": "题目回顾",
     "description": "Question review section title"
   },
-  "correctAnswer": {
-    "message": "正确答案：$1",
-    "description": "Correct answer display"
-  },
   "yourAnswer": {
     "message": "你的答案：$1",
     "description": "Shows what the user answered (when incorrect)"
@@ -799,17 +775,9 @@
     "message": "查看历史",
     "description": "Title for history modal"
   },
-  "historyTooltip": {
-    "message": "查看您的观鸟历史",
-    "description": "Tooltip for history button"
-  },
   "historyAlt": {
     "message": "历史",
     "description": "Alt text for history icon"
-  },
-  "openHistory": {
-    "message": "打开历史记录",
-    "description": "Aria label for history button"
   },
   "emptyHistoryTitle": {
     "message": "您的观鸟之旅从这里开始！",
@@ -891,14 +859,6 @@
     "message": "返回",
     "description": "Feature tour: back button text"
   },
-  "tourHistoryTitle": {
-    "message": "浏览历史",
-    "description": "Feature tour: history button title"
-  },
-  "tourHistoryDescription": {
-    "message": "查看您发现的所有鸟类！点击这里重温您的收藏。",
-    "description": "Feature tour: history button description"
-  },
   "tourVideoToggleTitle": {
     "message": "视频模式",
     "description": "Feature tour: video toggle title"
@@ -906,14 +866,6 @@
   "tourVideoToggleDescription": {
     "message": "在照片和视频之间切换！开启此功能，观看精美的鸟类视频片段。",
     "description": "Feature tour: video toggle description"
-  },
-  "tourSettingsTitle": {
-    "message": "设置",
-    "description": "Feature tour: settings button title"
-  },
-  "tourSettingsDescription": {
-    "message": "自定义您的BirdTab体验。选择您的地区、启用自动播放等。",
-    "description": "Feature tour: settings button description"
   },
   "tourVolumeTitle": {
     "message": "音量控制",
@@ -930,14 +882,6 @@
   "tourRefreshDescription": {
     "message": "准备好认识新的羽毛朋友了吗？点击这里加载新的鸟类照片。",
     "description": "Feature tour: refresh button description"
-  },
-  "tourQuizTitle": {
-    "message": "鸟类问答",
-    "description": "Feature tour: quiz button title"
-  },
-  "tourQuizDescription": {
-    "message": "测试您的鸟类识别技能！来一个有趣的问答。",
-    "description": "Feature tour: quiz button description"
   },
   "tourPlayPauseTitle": {
     "message": "播放 / 暂停",
@@ -970,10 +914,6 @@
   "resetTour": {
     "message": "重置功能导览",
     "description": "Button to reset the feature tour in debug section"
-  },
-  "tourReset": {
-    "message": "功能导览已重置。下次加载页面时将再次显示。",
-    "description": "Success message after resetting the feature tour"
   },
   "errorResettingTour": {
     "message": "重置功能导览时出错",
@@ -1191,16 +1131,28 @@
     "message": "$1。位置 $2（共 $3）。Ctrl+方向键移动。",
     "description": "Aria label for draggable Google App item",
     "placeholders": {
-      "1": { "content": "$1", "example": "Gmail" },
-      "2": { "content": "$2", "example": "1" },
-      "3": { "content": "$3", "example": "18" }
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
     }
   },
   "appMovedToPosition": {
     "message": "已移动到位置 $1",
     "description": "Screen reader announcement when app is moved",
     "placeholders": {
-      "1": { "content": "$1", "example": "3" }
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "orderResetToDefault": {
@@ -1251,66 +1203,6 @@
     "message": "从此菜单访问设置、浏览历史和鸟类问答。点击探索您的选项！",
     "description": "Feature tour: options menu description"
   },
-  "settingsCategoryPro": {
-    "message": "BirdTab Pro",
-    "description": "Section header for Pro license settings"
-  },
-  "upgradeTitle": {
-    "message": "升级到 BirdTab Pro",
-    "description": "Title for upgrade modal (legacy)"
-  },
-  "upgradeSubtitle": {
-    "message": "解锁所有高级功能",
-    "description": "Subtitle for upgrade modal (legacy)"
-  },
-  "upgradeModalTitle": {
-    "message": "将每个新标签页变成观鸟冒险",
-    "description": "Persuasive title for upgrade modal"
-  },
-  "upgradeModalSubtitle": {
-    "message": "加入数千名自然爱好者，每天以令人惊叹的鸟类邂逅开始新的一天",
-    "description": "Persuasive subtitle for upgrade modal"
-  },
-  "proBenefitVideoTitle": {
-    "message": "让鸟儿活起来",
-    "description": "Pro benefit: Video Mode title (persuasive)"
-  },
-  "proBenefitVideoDesc": {
-    "message": "观看引人入胜的鸟类视频，让每个新标签页都像自然纪录片",
-    "description": "Pro benefit: Video Mode description (persuasive)"
-  },
-  "proBenefitHighResTitle": {
-    "message": "看清每根羽毛",
-    "description": "Pro benefit: High-Res Images title (persuasive)"
-  },
-  "proBenefitHighResDesc": {
-    "message": "晶莹剔透的 2400px 摄影作品揭示了您从未注意到的惊人细节",
-    "description": "Pro benefit: High-Res Images description (persuasive)"
-  },
-  "proBenefitRegionTitle": {
-    "message": "探索世界",
-    "description": "Pro benefit: Region title (persuasive)"
-  },
-  "proBenefitRegionDesc": {
-    "message": "发现来自各大洲的异域鸟类——从非洲犀鸟到澳大利亚凤头鹦鹉",
-    "description": "Pro benefit: Region description (persuasive)"
-  },
-  "proBenefitClockTitle": {
-    "message": "保持专注",
-    "description": "Pro benefit: Clock/Timer title (persuasive)"
-  },
-  "proBenefitClockDesc": {
-    "message": "用优雅的时钟追踪时间，或用专注计时器提高生产力",
-    "description": "Pro benefit: Clock/Timer description (persuasive)"
-  },
-  "seePricingOptions": {
-    "message": "查看定价方案",
-    "description": "CTA button text for pricing page"
-  },
-  "upgradeCtaNote": {
-    "message": "灵活方案，低至 $20/年",
-    "description": "Note below CTA button"
-  },
   "alreadyHaveLicense": {
     "message": "已有许可证？",
     "description": "Divider text for license activation section"
@@ -1347,14 +1239,6 @@
     "message": "在新标签页上显示时间或专注计时器",
     "description": "Pro feature: Clock/Timer description"
   },
-  "bestValue": {
-    "message": "最超值",
-    "description": "Badge for lifetime plan"
-  },
-  "orActivateKey": {
-    "message": "或激活现有许可证",
-    "description": "Divider text for license activation (legacy)"
-  },
   "enterLicenseKey": {
     "message": "输入您的许可证密钥",
     "description": "Placeholder for license key input"
@@ -1382,10 +1266,6 @@
   "activationError": {
     "message": "发生错误。请重试。",
     "description": "Generic error for activation"
-  },
-  "upgradeFooter": {
-    "message": "有疑问？联系 support@birdtab.app",
-    "description": "Footer text in upgrade modal"
   },
   "birdtabPro": {
     "message": "BirdTab Pro",
@@ -1415,17 +1295,9 @@
     "message": "试用",
     "description": "License type: trial"
   },
-  "daysRemaining": {
-    "message": "天剩余",
-    "description": "Label for days until expiry"
-  },
   "expired": {
     "message": "已过期",
     "description": "Generic expired label"
-  },
-  "planType": {
-    "message": "方案",
-    "description": "Label for plan type"
   },
   "email": {
     "message": "电子邮件",
@@ -1475,10 +1347,6 @@
     "message": "立即升级",
     "description": "Button to upgrade immediately"
   },
-  "remindLater": {
-    "message": "稍后提醒",
-    "description": "Button to dismiss notice temporarily"
-  },
   "close": {
     "message": "关闭",
     "description": "Generic close button label"
@@ -1515,16 +1383,11 @@
     "message": "剩余 $1 天",
     "description": "Trial period: multiple days remaining",
     "placeholders": {
-      "1": { "content": "$1", "example": "7" }
+      "1": {
+        "content": "$1",
+        "example": "7"
+      }
     }
-  },
-  "keepPro": {
-    "message": "保留 Pro",
-    "description": "CTA button for trial users to upgrade and keep Pro features"
-  },
-  "trialEnding": {
-    "message": "您的试用即将结束",
-    "description": "Warning message when trial is about to expire"
   },
   "trialExpired": {
     "message": "您的试用已结束",
@@ -1537,5 +1400,195 @@
   "offlineGraceExpiredNotice": {
     "message": "请连接互联网以验证您的许可证并恢复 Pro 功能。",
     "description": "Notice shown when offline grace period has expired and Pro features are disabled"
+  },
+  "unlockFeature": {
+    "message": "解锁 $1",
+    "description": "Title for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Video Mode"
+      }
+    }
+  },
+  "unlockFullExperience": {
+    "message": "解锁完整体验",
+    "description": "Title for upgrade modal when opened without a specific feature trigger"
+  },
+  "upgradeFeatureSubtitle": {
+    "message": "此功能是 BirdTab Pro 的一部分。升级以访问$1和所有高级功能。",
+    "description": "Subtitle for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "video mode"
+      }
+    }
+  },
+  "proActivatedBody": {
+    "message": "每个新标签页现在都是通往自然世界的窗口。即将重新加载…",
+    "description": "Body text shown after successful Pro license activation"
+  },
+  "deviceLimitTitle": {
+    "message": "已达设备数量上限",
+    "description": "Title shown when license activation fails due to device limit"
+  },
+  "deviceLimitBody": {
+    "message": "您许可证的所有设备名额已被占用。要在此处激活，请先释放一个名额：前往设置 → 管理 → 在安装了 BirdTab 的其他设备上停用，或从您的帐户中移除设备。",
+    "description": "Body text explaining device limit and how to resolve it"
+  },
+  "manageDevices": {
+    "message": "管理设备",
+    "description": "Button text to manage devices in customer portal"
+  },
+  "proTrialActive": {
+    "message": "Pro 试用中",
+    "description": "Badge text shown during active Pro trial"
+  },
+  "trialWelcomeTitle": {
+    "message": "欢迎使用 BirdTab Pro",
+    "description": "Title for trial welcome modal"
+  },
+  "trialWelcomeSubtitle": {
+    "message": "您的 $1 天免费试用已开始。尽情享受所有 Pro 功能，探索世界各地鸟类的完整之美。",
+    "description": "Subtitle for trial welcome modal",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "14"
+      }
+    }
+  },
+  "today": {
+    "message": "今天",
+    "description": "Label for today in trial timeline"
+  },
+  "startExploring": {
+    "message": "开始探索",
+    "description": "Button text to dismiss trial welcome modal"
+  },
+  "trialFooterNote": {
+    "message": "无需信用卡。试用结束后，您将恢复为免费版本。",
+    "description": "Footer note in trial welcome modal"
+  },
+  "trialEnded": {
+    "message": "试用已结束",
+    "description": "Badge text shown when trial has expired"
+  },
+  "trialExpiredTitle": {
+    "message": "您的免费试用已结束",
+    "description": "Title for trial expired modal"
+  },
+  "trialExpiredSubtitle": {
+    "message": "感谢您试用 BirdTab Pro！您可以继续免费使用基本功能，或升级以继续享受完整体验。",
+    "description": "Subtitle for trial expired modal"
+  },
+  "trialLostFeatures": {
+    "message": "您将失去的 Pro 功能：",
+    "description": "Heading for list of Pro features lost after trial"
+  },
+  "trialValueProp": {
+    "message": "升级到 Pro，在享受所有功能的同时支持独立开发。您的订阅让 BirdTab 保持无广告并持续改进。",
+    "description": "Value proposition text in trial expired modal"
+  },
+  "continueWithFree": {
+    "message": "继续使用免费版",
+    "description": "Button text to dismiss trial expired modal and continue with free version"
+  },
+  "proWelcomeBadgeLifetime": {
+    "message": "Pro 终身版",
+    "description": "Badge text in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeBadgeYearly": {
+    "message": "Pro 年度版",
+    "description": "Badge text in Pro welcome modal for yearly license"
+  },
+  "proWelcomeTitle": {
+    "message": "欢迎使用 BirdTab Pro",
+    "description": "Title in Pro welcome modal"
+  },
+  "proWelcomeSubtitleLifetime": {
+    "message": "您现在拥有所有 Pro 功能的<strong>终身访问权限</strong>。每个新标签页都是通往自然世界的窗口。",
+    "description": "Subtitle in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeSubtitleYearly": {
+    "message": "所有 Pro 功能现已<strong>解锁</strong>。每个新标签页都是通往自然世界的窗口。",
+    "description": "Subtitle in Pro welcome modal for yearly license"
+  },
+  "proWelcomeThanks": {
+    "message": "您的支持直接资助 BirdTab 的开发——更好的数据、新功能以及保持无广告体验。感谢您成为这段旅程的一部分。",
+    "description": "Thank you message in Pro welcome modal"
+  },
+  "proWelcomeVideoTitle": {
+    "message": "视频模式",
+    "description": "Video feature title in Pro welcome modal"
+  },
+  "proWelcomeVideoDesc": {
+    "message": "观看令人惊叹的鸟类视频片段",
+    "description": "Video feature description in Pro welcome modal"
+  },
+  "proWelcomeHighResTitle": {
+    "message": "高清照片",
+    "description": "High-res feature title in Pro welcome modal"
+  },
+  "proWelcomeHighResDesc": {
+    "message": "2400像素的超清晰图像，细节令人惊叹",
+    "description": "High-res feature description in Pro welcome modal"
+  },
+  "proWelcomeRegionTitle": {
+    "message": "世界各地区",
+    "description": "Region feature title in Pro welcome modal"
+  },
+  "proWelcomeRegionDesc": {
+    "message": "发现世界各国的鸟类",
+    "description": "Region feature description in Pro welcome modal"
+  },
+  "proWelcomeClockTitle": {
+    "message": "时钟和计时器",
+    "description": "Clock feature title in Pro welcome modal"
+  },
+  "proWelcomeClockDesc": {
+    "message": "在欣赏自然的同时掌握时间",
+    "description": "Clock feature description in Pro welcome modal"
+  },
+  "pausedAlt": {
+    "message": "已暂停",
+    "description": "Alt text for pause indicator icon"
+  },
+  "audioPlayingAlt": {
+    "message": "正在播放音频",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "音频已暂停",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatus": {
+    "message": "保护状态：",
+    "description": "Label prefix for conservation status in bird info tooltip"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "关闭历史记录",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "proBadgeLabel": {
+    "message": "Pro",
+    "description": "Short label for Pro badge in settings sidebar"
+  },
+  "onboardingStep1": {
+    "message": "第1步",
+    "description": "Aria label for onboarding progress dot 1"
+  },
+  "onboardingStep2": {
+    "message": "第2步",
+    "description": "Aria label for onboarding progress dot 2"
+  },
+  "onboardingStep3": {
+    "message": "第3步",
+    "description": "Aria label for onboarding progress dot 3"
   }
 }

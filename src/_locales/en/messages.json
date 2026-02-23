@@ -23,17 +23,9 @@
     "message": "Camera",
     "description": "Alt text for camera icon"
   },
-  "photographer": {
-    "message": "Photographer",
-    "description": "Label for photographer credit"
-  },
   "audioAlt": {
     "message": "Audio",
     "description": "Alt text for audio waveform icon"
-  },
-  "recordist": {
-    "message": "Recordist",
-    "description": "Label for audio recordist credit"
   },
   "openSettings": {
     "message": "Open settings",
@@ -233,7 +225,7 @@
   },
   "playAlt": {
     "message": "Play",
-    "description": "Alt text for play button"
+    "description": "Alt text for play indicator icon"
   },
   "pauseAlt": {
     "message": "Pause",
@@ -351,10 +343,6 @@
     "message": "Sharpening beaks...",
     "description": "Loading message 16"
   },
-  "currentLocale": {
-    "message": "@@ui_locale",
-    "description": "Shows current UI locale using predefined message"
-  },
   "textDirection": {
     "message": "@@bidi_dir",
     "description": "Text direction (ltr or rtl)"
@@ -382,10 +370,6 @@
   "settingsTooltip": {
     "message": "Open settings to customize your BirdTab experience",
     "description": "Tooltip for settings button"
-  },
-  "quizTooltip": {
-    "message": "Start a bird identification quiz",
-    "description": "Tooltip for quiz button"
   },
   "refreshTooltip": {
     "message": "Load a new bird photo and information",
@@ -470,10 +454,6 @@
   "quizNextQuestion": {
     "message": "Next Question",
     "description": "Button text for next question"
-  },
-  "quizSubmitAnswer": {
-    "message": "Submit Answer",
-    "description": "Button text to submit answer"
   },
   "quizShowResults": {
     "message": "Show Results",
@@ -639,10 +619,6 @@
     "message": "Question Review",
     "description": "Title for question review section"
   },
-  "correctAnswer": {
-    "message": "Correct answer: $1",
-    "description": "Shows the correct answer for a question"
-  },
   "yourAnswer": {
     "message": "Your answer: $1",
     "description": "Shows what the user answered (when incorrect)"
@@ -799,17 +775,9 @@
     "message": "Viewing History",
     "description": "Title for history modal"
   },
-  "historyTooltip": {
-    "message": "View your bird watching history",
-    "description": "Tooltip for history button"
-  },
   "historyAlt": {
     "message": "History",
     "description": "Alt text for history icon"
-  },
-  "openHistory": {
-    "message": "Open history",
-    "description": "Aria label for history button"
   },
   "emptyHistoryTitle": {
     "message": "Your birding journey begins here!",
@@ -891,14 +859,6 @@
     "message": "Back",
     "description": "Feature tour: back button text"
   },
-  "tourHistoryTitle": {
-    "message": "Viewing History",
-    "description": "Feature tour: history button title"
-  },
-  "tourHistoryDescription": {
-    "message": "See all the birds you've discovered! Click here to revisit your favorites and explore your birding journey.",
-    "description": "Feature tour: history button description"
-  },
   "tourVideoToggleTitle": {
     "message": "Video Mode",
     "description": "Feature tour: video toggle title"
@@ -906,14 +866,6 @@
   "tourVideoToggleDescription": {
     "message": "Switch between photos and videos! Toggle this to watch birds in motion with beautiful video clips.",
     "description": "Feature tour: video toggle description"
-  },
-  "tourSettingsTitle": {
-    "message": "Settings",
-    "description": "Feature tour: settings button title"
-  },
-  "tourSettingsDescription": {
-    "message": "Customize your BirdTab experience. Choose your region, enable auto-play for bird calls, and more.",
-    "description": "Feature tour: settings button description"
   },
   "tourVolumeTitle": {
     "message": "Volume Control",
@@ -930,14 +882,6 @@
   "tourRefreshDescription": {
     "message": "Ready for a new feathered friend? Click here anytime to load a fresh bird photo and learn something new.",
     "description": "Feature tour: refresh button description"
-  },
-  "tourQuizTitle": {
-    "message": "Bird Quiz",
-    "description": "Feature tour: quiz button title"
-  },
-  "tourQuizDescription": {
-    "message": "Test your bird identification skills! Take a fun quiz to see how well you know your feathered friends.",
-    "description": "Feature tour: quiz button description"
   },
   "tourPlayPauseTitle": {
     "message": "Play / Pause",
@@ -971,17 +915,13 @@
     "message": "Reset Feature Tour",
     "description": "Button to reset the feature tour in debug section"
   },
-  "tourReset": {
-    "message": "Feature tour has been reset. It will show again on the next page load.",
-    "description": "Success message after resetting the feature tour"
-  },
   "errorResettingTour": {
     "message": "Error resetting the feature tour",
     "description": "Error message when tour reset fails"
   },
   "proBadge": {
     "message": "Pro",
-    "description": "Badge text for premium features"
+    "description": "Badge label for Pro features"
   },
   "highResImages": {
     "message": "High-Resolution Images",
@@ -1191,16 +1131,28 @@
     "message": "$1. Position $2 of $3. Use Ctrl+Arrow to move.",
     "description": "Aria label for draggable Google App item",
     "placeholders": {
-      "1": { "content": "$1", "example": "Gmail" },
-      "2": { "content": "$2", "example": "1" },
-      "3": { "content": "$3", "example": "18" }
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
     }
   },
   "appMovedToPosition": {
     "message": "Moved to position $1",
     "description": "Screen reader announcement when app is moved",
     "placeholders": {
-      "1": { "content": "$1", "example": "3" }
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "orderResetToDefault": {
@@ -1251,70 +1203,6 @@
     "message": "Access settings, viewing history, and bird quiz from this menu. Click to explore your options!",
     "description": "Feature tour: options menu description"
   },
-  "proBadge": {
-    "message": "Pro",
-    "description": "Badge label for Pro features"
-  },
-  "settingsCategoryPro": {
-    "message": "BirdTab Pro",
-    "description": "Section header for Pro license settings"
-  },
-  "upgradeTitle": {
-    "message": "Upgrade to BirdTab Pro",
-    "description": "Title for upgrade modal (legacy)"
-  },
-  "upgradeSubtitle": {
-    "message": "Unlock all premium features",
-    "description": "Subtitle for upgrade modal (legacy)"
-  },
-  "upgradeModalTitle": {
-    "message": "Transform Every New Tab Into a Birdwatching Adventure",
-    "description": "Persuasive title for upgrade modal"
-  },
-  "upgradeModalSubtitle": {
-    "message": "Join thousands of nature lovers who start their day with breathtaking bird encounters",
-    "description": "Persuasive subtitle for upgrade modal"
-  },
-  "proBenefitVideoTitle": {
-    "message": "Bring Birds to Life",
-    "description": "Pro benefit: Video Mode title (persuasive)"
-  },
-  "proBenefitVideoDesc": {
-    "message": "Watch captivating bird videos that make every new tab feel like a nature documentary",
-    "description": "Pro benefit: Video Mode description (persuasive)"
-  },
-  "proBenefitHighResTitle": {
-    "message": "See Every Feather",
-    "description": "Pro benefit: High-Res Images title (persuasive)"
-  },
-  "proBenefitHighResDesc": {
-    "message": "Crystal-clear 2400px photography reveals stunning details you've never noticed before",
-    "description": "Pro benefit: High-Res Images description (persuasive)"
-  },
-  "proBenefitRegionTitle": {
-    "message": "Explore the World",
-    "description": "Pro benefit: Region title (persuasive)"
-  },
-  "proBenefitRegionDesc": {
-    "message": "Discover exotic birds from any continent — from African hornbills to Australian cockatoos",
-    "description": "Pro benefit: Region description (persuasive)"
-  },
-  "proBenefitClockTitle": {
-    "message": "Stay Focused & Grounded",
-    "description": "Pro benefit: Clock/Timer title (persuasive)"
-  },
-  "proBenefitClockDesc": {
-    "message": "Keep track of time with an elegant clock or boost productivity with a focus timer",
-    "description": "Pro benefit: Clock/Timer description (persuasive)"
-  },
-  "seePricingOptions": {
-    "message": "See Pricing Options",
-    "description": "CTA button text for pricing page"
-  },
-  "upgradeCtaNote": {
-    "message": "Flexible plans starting at just $20/year",
-    "description": "Note below CTA button"
-  },
   "alreadyHaveLicense": {
     "message": "Already have a license?",
     "description": "Divider text for license activation section"
@@ -1351,14 +1239,6 @@
     "message": "Display time or focus timer on your new tab",
     "description": "Pro feature: Clock/Timer description"
   },
-  "bestValue": {
-    "message": "Best Value",
-    "description": "Badge for lifetime plan"
-  },
-  "orActivateKey": {
-    "message": "or activate existing license",
-    "description": "Divider text for license activation (legacy)"
-  },
   "enterLicenseKey": {
     "message": "Enter your license key",
     "description": "Placeholder for license key input"
@@ -1386,10 +1266,6 @@
   "activationError": {
     "message": "An error occurred. Please try again.",
     "description": "Generic error for activation"
-  },
-  "upgradeFooter": {
-    "message": "Questions? Contact support@birdtab.app",
-    "description": "Footer text in upgrade modal"
   },
   "birdtabPro": {
     "message": "BirdTab Pro",
@@ -1419,17 +1295,9 @@
     "message": "Trial",
     "description": "License type: trial"
   },
-  "daysRemaining": {
-    "message": "days remaining",
-    "description": "Label for days until expiry"
-  },
   "expired": {
     "message": "Expired",
     "description": "Generic expired label"
-  },
-  "planType": {
-    "message": "Plan",
-    "description": "Label for plan type"
   },
   "email": {
     "message": "Email",
@@ -1479,10 +1347,6 @@
     "message": "Upgrade Now",
     "description": "Button to upgrade immediately"
   },
-  "remindLater": {
-    "message": "Remind Me Later",
-    "description": "Button to dismiss notice temporarily"
-  },
   "close": {
     "message": "Close",
     "description": "Generic close button label"
@@ -1519,16 +1383,11 @@
     "message": "$1 days left",
     "description": "Trial period: multiple days remaining",
     "placeholders": {
-      "1": { "content": "$1", "example": "7" }
+      "1": {
+        "content": "$1",
+        "example": "7"
+      }
     }
-  },
-  "keepPro": {
-    "message": "Keep Pro",
-    "description": "CTA button for trial users to upgrade and keep Pro features"
-  },
-  "trialEnding": {
-    "message": "Your trial is ending soon",
-    "description": "Warning message when trial is about to expire"
   },
   "trialExpired": {
     "message": "Your trial has ended",
@@ -1541,5 +1400,195 @@
   "offlineGraceExpiredNotice": {
     "message": "Connect to the internet to verify your license and restore Pro features.",
     "description": "Notice shown when offline grace period has expired and Pro features are disabled"
+  },
+  "unlockFeature": {
+    "message": "Unlock $1",
+    "description": "Title for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Video Mode"
+      }
+    }
+  },
+  "unlockFullExperience": {
+    "message": "Unlock the Full Experience",
+    "description": "Title for upgrade modal when opened without a specific feature trigger"
+  },
+  "upgradeFeatureSubtitle": {
+    "message": "This feature is part of BirdTab Pro. Upgrade to access $1 and all premium features.",
+    "description": "Subtitle for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "video mode"
+      }
+    }
+  },
+  "proActivatedBody": {
+    "message": "Every new tab is now a window to the natural world. Reloading in a moment…",
+    "description": "Body text shown after successful Pro license activation"
+  },
+  "deviceLimitTitle": {
+    "message": "Device limit reached",
+    "description": "Title shown when license activation fails due to device limit"
+  },
+  "deviceLimitBody": {
+    "message": "All device slots on your license are in use. To activate here, free up a slot first: go to Settings → Manage → Deactivate on another device where BirdTab is installed, or remove a device from your account.",
+    "description": "Body text explaining device limit and how to resolve it"
+  },
+  "manageDevices": {
+    "message": "Manage Devices",
+    "description": "Button text to manage devices in customer portal"
+  },
+  "proTrialActive": {
+    "message": "Pro Trial Active",
+    "description": "Badge text shown during active Pro trial"
+  },
+  "trialWelcomeTitle": {
+    "message": "Welcome to BirdTab Pro",
+    "description": "Title for trial welcome modal"
+  },
+  "trialWelcomeSubtitle": {
+    "message": "Your $1-day free trial has started. Enjoy all Pro features and discover the full beauty of birds worldwide.",
+    "description": "Subtitle for trial welcome modal",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "14"
+      }
+    }
+  },
+  "today": {
+    "message": "Today",
+    "description": "Label for today in trial timeline"
+  },
+  "startExploring": {
+    "message": "Start Exploring",
+    "description": "Button text to dismiss trial welcome modal"
+  },
+  "trialFooterNote": {
+    "message": "No credit card required. After your trial, you'll return to the free version.",
+    "description": "Footer note in trial welcome modal"
+  },
+  "trialEnded": {
+    "message": "Trial Ended",
+    "description": "Badge text shown when trial has expired"
+  },
+  "trialExpiredTitle": {
+    "message": "Your Free Trial Has Ended",
+    "description": "Title for trial expired modal"
+  },
+  "trialExpiredSubtitle": {
+    "message": "Thank you for trying BirdTab Pro! You can continue using the core features for free, or upgrade to keep enjoying the full experience.",
+    "description": "Subtitle for trial expired modal"
+  },
+  "trialLostFeatures": {
+    "message": "Pro features you'll miss:",
+    "description": "Heading for list of Pro features lost after trial"
+  },
+  "trialValueProp": {
+    "message": "Upgrade to Pro and support independent development while enjoying all features. Your subscription keeps BirdTab ad-free and constantly improving.",
+    "description": "Value proposition text in trial expired modal"
+  },
+  "continueWithFree": {
+    "message": "Continue with Free",
+    "description": "Button text to dismiss trial expired modal and continue with free version"
+  },
+  "proWelcomeBadgeLifetime": {
+    "message": "Pro Lifetime",
+    "description": "Badge text in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeBadgeYearly": {
+    "message": "Pro Yearly",
+    "description": "Badge text in Pro welcome modal for yearly license"
+  },
+  "proWelcomeTitle": {
+    "message": "Welcome to BirdTab Pro",
+    "description": "Title in Pro welcome modal"
+  },
+  "proWelcomeSubtitleLifetime": {
+    "message": "You now have <strong>lifetime access</strong> to every Pro feature. Every new tab is a window to the natural world.",
+    "description": "Subtitle in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeSubtitleYearly": {
+    "message": "All Pro features are now <strong>unlocked</strong>. Every new tab is a window to the natural world.",
+    "description": "Subtitle in Pro welcome modal for yearly license"
+  },
+  "proWelcomeThanks": {
+    "message": "Your support directly funds BirdTab's development — better data, new features, and keeping the experience ad-free. Thank you for being part of this journey.",
+    "description": "Thank you message in Pro welcome modal"
+  },
+  "proWelcomeVideoTitle": {
+    "message": "Video Mode",
+    "description": "Video feature title in Pro welcome modal"
+  },
+  "proWelcomeVideoDesc": {
+    "message": "Watch birds come alive with stunning video clips",
+    "description": "Video feature description in Pro welcome modal"
+  },
+  "proWelcomeHighResTitle": {
+    "message": "High-Res Photos",
+    "description": "High-res feature title in Pro welcome modal"
+  },
+  "proWelcomeHighResDesc": {
+    "message": "Crystal clear 2400px images for stunning detail",
+    "description": "High-res feature description in Pro welcome modal"
+  },
+  "proWelcomeRegionTitle": {
+    "message": "World Regions",
+    "description": "Region feature title in Pro welcome modal"
+  },
+  "proWelcomeRegionDesc": {
+    "message": "Discover birds from any country in the world",
+    "description": "Region feature description in Pro welcome modal"
+  },
+  "proWelcomeClockTitle": {
+    "message": "Clock & Timer",
+    "description": "Clock feature title in Pro welcome modal"
+  },
+  "proWelcomeClockDesc": {
+    "message": "Keep track of time while enjoying nature",
+    "description": "Clock feature description in Pro welcome modal"
+  },
+  "pausedAlt": {
+    "message": "Paused",
+    "description": "Alt text for pause indicator icon"
+  },
+  "audioPlayingAlt": {
+    "message": "Audio Playing",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "Audio Paused",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatus": {
+    "message": "Conservation Status:",
+    "description": "Label prefix for conservation status in bird info tooltip"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "Close history",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "onboardingStep1": {
+    "message": "Step 1",
+    "description": "Aria label for onboarding progress dot 1"
+  },
+  "onboardingStep2": {
+    "message": "Step 2",
+    "description": "Aria label for onboarding progress dot 2"
+  },
+  "onboardingStep3": {
+    "message": "Step 3",
+    "description": "Aria label for onboarding progress dot 3"
+  },
+  "proBadgeLabel": {
+    "message": "Pro",
+    "description": "Short label for Pro badge in settings sidebar"
   }
 }

@@ -120,14 +120,14 @@ function createHistoryModal() {
       <div class="settings-content history-content">
         <div class="settings-header">
           <h2 id="history-sidebar-title" data-i18n="historyTitle">Viewing History</h2>
-          <button id="close-history" class="close-button" aria-label="Close history">
-            <img src="images/svg/close.svg" alt="Close" width="20" height="20">
+          <button id="close-history" class="close-button" data-i18n-aria-label="closeHistoryAriaLabel" aria-label="Close history">
+            <img src="images/svg/close.svg" data-i18n-alt="closeAlt" alt="Close" width="20" height="20">
           </button>
         </div>
         <div class="settings-body">
           <div id="history-list" class="history-list"></div>
           <div id="empty-history" class="empty-history hidden">
-            <img src="icons/icon128.png" alt="BirdTab" class="empty-history-icon" width="64" height="64">
+            <img src="icons/icon128.png" data-i18n-alt="pageTitle" alt="BirdTab" class="empty-history-icon" width="64" height="64">
             <p class="empty-history-title" data-i18n="emptyHistoryTitle">Your birding journey begins here!</p>
             <p class="empty-history-subtitle" data-i18n="emptyHistorySubtitle">Discover new birds and they'll appear in your viewing history.</p>
           </div>
