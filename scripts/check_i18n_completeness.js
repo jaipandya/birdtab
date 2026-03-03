@@ -13,7 +13,8 @@ const languages = [
   { code: 'fr', name: 'French' },
   { code: 'de', name: 'German' },
   { code: 'ru', name: 'Russian' },
-  { code: 'ja', name: 'Japanese' }
+  { code: 'ja', name: 'Japanese' },
+  { code: 'pl', name: 'Polish' }
 ];
 
 const localesDir = path.join(__dirname, '..', 'src', '_locales');
