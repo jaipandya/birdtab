@@ -82,6 +82,7 @@ export const CONFIG = {
     searchEngine: 'default',
     isMuted: false,
     volumeLevel: 0.3,
+    lowDistractionMode: false,
     chromeFooterNotificationDismissed: false,
     timerSetupHours: 0,
     timerSetupMinutes: 5,

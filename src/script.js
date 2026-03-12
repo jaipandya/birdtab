@@ -1002,9 +1002,18 @@ async function initializePage() {
           </a>
         </div>
         <div class="info-panel-header">
-          <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="bird-name-link">
-            <h1 id="bird-name"></h1>
-          </a>
+          <div class="bird-name-row">
+            <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="bird-name-link">
+              <h1 id="bird-name"></h1>
+            </a>
+            <button class="low-distraction-toggle" id="low-distraction-toggle"
+              title="${chrome.i18n.getMessage('lowDistractionToggle') || 'Hide details'}"
+              aria-label="${chrome.i18n.getMessage('lowDistractionAriaHide') || 'Hide bird information panel'}">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6l4 4 4-4"/>
+              </svg>
+            </button>
+          </div>
           <div class="scientific-name-row">
             <p id="scientific-name"></p>
             <span class="info-icon" data-tooltip="${escapeHtml(birdInfo.description)}&#10;&#10;${chrome.i18n.getMessage('conservationStatus') || 'Conservation Status:'} ${escapeHtml(birdInfo.conservationStatus)}">
@@ -1063,6 +1072,13 @@ async function initializePage() {
         </div>
         ` : ''}
       </div>
+      <button class="low-distraction-expand" id="low-distraction-expand"
+        title="${chrome.i18n.getMessage('lowDistractionExpand') || 'Show details'}"
+        aria-label="${chrome.i18n.getMessage('lowDistractionAriaShow') || 'Show bird information panel'}">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 10l4-4 4 4"/>
+        </svg>
+      </button>
     `;
 
     // Set up video or image source
@@ -1171,6 +1187,7 @@ async function initializePage() {
     showReviewPromptIfNeeded(document.body);
 
     setupExternalLinks();
+    initLowDistractionMode();
 
     // Initialize settings modal immediately after DOM elements are created
     // (before initializeAudio which may take time for video to load)
@@ -2085,6 +2102,71 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
 });
 
+let _lowDistractionTimer = null;
+let _lowDistractionActive = false;
+
+function setLowDistractionState(enabled, animate = true) {
+  if (enabled === _lowDistractionActive && animate) return;
+
+  const infoPanel = document.querySelector('.info-panel');
+  const expandBtn = document.getElementById('low-distraction-expand');
+
+  if (!infoPanel || !expandBtn) return;
+
+  _lowDistractionActive = enabled;
+
+  if (_lowDistractionTimer) {
+    clearTimeout(_lowDistractionTimer);
+    _lowDistractionTimer = null;
+  }
+
+  if (!animate) {
+    infoPanel.style.transition = 'none';
+  }
+
+  if (enabled) {
+    infoPanel.classList.add('low-distraction-hidden');
+    const delay = animate ? 200 : 0;
+    _lowDistractionTimer = setTimeout(() => expandBtn.classList.add('visible'), delay);
+  } else {
+    expandBtn.classList.remove('visible');
+    const delay = animate ? 150 : 0;
+    _lowDistractionTimer = setTimeout(() => {
+      infoPanel.classList.remove('low-distraction-hidden');
+    }, delay);
+  }
+
+  if (!animate) {
+    infoPanel.offsetHeight;
+    infoPanel.style.transition = '';
+  }
+}
+
+function initLowDistractionMode() {
+  const toggleBtn = document.getElementById('low-distraction-toggle');
+  const expandBtn = document.getElementById('low-distraction-expand');
+
+  if (!toggleBtn || !expandBtn) return;
+
+  chrome.storage.local.get('lowDistractionMode', (result) => {
+    if (result.lowDistractionMode) {
+      setLowDistractionState(true, false);
+    }
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    chrome.storage.local.set({ lowDistractionMode: true });
+    setLowDistractionState(true);
+    trackFeature('low_distraction_on');
+  });
+
+  expandBtn.addEventListener('click', () => {
+    chrome.storage.local.set({ lowDistractionMode: false });
+    setLowDistractionState(false);
+    trackFeature('low_distraction_off');
+  });
+}
+
 function setupExternalLinks() {
   const bingLink = document.querySelector('.bing-link');
   const ebirdLink = document.querySelector('.ebird-link');
@@ -2492,6 +2574,13 @@ function restoreMainUIElements() {
   // Re-setup volume control after quiz exit
   setupVolumeControl();
   updateVolumeControl();
+
+  // Re-apply low distraction state if it was active
+  chrome.storage.local.get('lowDistractionMode', (result) => {
+    if (result.lowDistractionMode) {
+      setLowDistractionState(true);
+    }
+  });
 }
 
 // Export for use by quiz mode

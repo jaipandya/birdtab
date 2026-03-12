@@ -1590,5 +1590,21 @@
   "onboardingStep3": {
     "message": "Etapa 3",
     "description": "Aria label for onboarding progress dot 3"
+  },
+  "lowDistractionToggle": {
+    "message": "Ocultar detalhes",
+    "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
+  },
+  "lowDistractionExpand": {
+    "message": "Mostrar detalhes",
+    "description": "Tooltip for the button that restores the hidden bottom info panel"
+  },
+  "lowDistractionAriaHide": {
+    "message": "Ocultar painel de informações da ave",
+    "description": "Accessible label for the button that hides the bottom info panel"
+  },
+  "lowDistractionAriaShow": {
+    "message": "Mostrar painel de informações da ave",
+    "description": "Accessible label for the button that restores the hidden bottom info panel"
   }
 }

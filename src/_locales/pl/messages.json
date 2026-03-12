@@ -1590,5 +1590,21 @@
   "proBadgeLabel": {
     "message": "Pro",
     "description": "Short label for Pro badge in settings sidebar"
+  },
+  "lowDistractionToggle": {
+    "message": "Ukryj szczegóły",
+    "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
+  },
+  "lowDistractionExpand": {
+    "message": "Pokaż szczegóły",
+    "description": "Tooltip for the button that restores the hidden bottom info panel"
+  },
+  "lowDistractionAriaHide": {
+    "message": "Ukryj panel informacji o ptaku",
+    "description": "Accessible label for the button that hides the bottom info panel"
+  },
+  "lowDistractionAriaShow": {
+    "message": "Pokaż panel informacji o ptaku",
+    "description": "Accessible label for the button that restores the hidden bottom info panel"
   }
 }

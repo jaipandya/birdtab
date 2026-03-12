@@ -1009,6 +1009,11 @@ body.loaded {
   margin-bottom: 0.75rem;
 }
 
+.bird-name-row {
+  display: flex;
+  align-items: center;
+}
+
 .scientific-name-row {
   display: flex;
   align-items: baseline;
@@ -6730,4 +6735,138 @@ body.dragging-app .google-app-item:hover .google-app-name {
   .pro-welcome-title {
     font-size: 20px;
   }
+}
+
+/* ── Low Distraction Mode ── */
+
+/* Minimize button — appears inline after bird name */
+.low-distraction-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--white-30);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s linear 0.25s,
+    color 0.2s ease;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
+
+.info-panel-header:hover .low-distraction-toggle,
+.low-distraction-toggle:focus-visible {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear,
+    color 0.2s ease;
+}
+
+.low-distraction-toggle:hover {
+  color: var(--white-60);
+}
+
+.low-distraction-toggle:active {
+  transform: scale(0.9);
+}
+
+.low-distraction-toggle:focus-visible {
+  outline: 2px solid var(--white-40);
+  outline-offset: 2px;
+}
+
+.low-distraction-toggle svg {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+/* Expand button — fixed bottom-left, visible only when minimized */
+.low-distraction-expand {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--white-30);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition:
+    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 0.35s,
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s ease;
+}
+
+.low-distraction-expand.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+    visibility 0s linear,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s,
+    color 0.2s ease;
+}
+
+.low-distraction-expand:hover {
+  color: var(--white-60);
+}
+
+.low-distraction-expand:active {
+  transform: scale(0.92);
+}
+
+.low-distraction-expand:focus-visible {
+  outline: 2px solid var(--white-40);
+  outline-offset: 2px;
+}
+
+.low-distraction-expand svg {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* Info panel collapse/expand transitions */
+.info-panel {
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-panel.low-distraction-hidden {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+}
+
+/* RTL support for low distraction mode */
+html[dir="rtl"] .low-distraction-toggle {
+  margin-left: 0;
+  margin-right: 0.625rem;
+}
+
+html[dir="rtl"] .low-distraction-expand {
+  left: auto;
+  right: 2rem;
 }
