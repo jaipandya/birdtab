@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.3.8",
+  "short_name": "BirdTab",
+  "version": "1.3.9",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
+  "homepage_url": "https://birdtab.app",
   "permissions": [
     "storage",
     "search"
@@ -29,7 +31,14 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Open BirdTab",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "icons": {
     "16": "icons/icon16.png",
