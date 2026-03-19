@@ -40,18 +40,33 @@ export function populateRegionSelect(selectElement) {
     displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
   }
   
+  // Add "World" option at the top
+  const worldOption = document.createElement('option');
+  worldOption.value = 'WLD';
+  worldOption.textContent = chrome.i18n.getMessage('regionWorld') || 'World';
+  selectElement.appendChild(worldOption);
+
+  // Add visual separator
+  const separator = document.createElement('option');
+  separator.disabled = true;
+  separator.textContent = '───────────';
+  selectElement.appendChild(separator);
+
   REGIONS.forEach(region => {
     const option = document.createElement('option');
     option.value = region.code;
-    
-    // Get localized country name, fallback to original name if not available
-    try {
-      option.textContent = displayNames.of(region.code) || region.name;
-    } catch (error) {
-      // If the country code is not recognized, use the original name
-      option.textContent = region.name;
+
+    // Get localized name — use i18n for non-standard codes, Intl.DisplayNames for countries
+    if (region.code === 'XX') {
+      option.textContent = chrome.i18n.getMessage('regionHighSeas') || region.name;
+    } else {
+      try {
+        option.textContent = displayNames.of(region.code) || region.name;
+      } catch (error) {
+        option.textContent = region.name;
+      }
     }
-    
+
     selectElement.appendChild(option);
   });
 }

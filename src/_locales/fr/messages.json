@@ -1606,5 +1606,13 @@
   "lowDistractionAriaShow": {
     "message": "Afficher le panneau d'informations sur l'oiseau",
     "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "Monde",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "Haute Mer",
+    "description": "Label for the High Seas (XX) region option in the region selector"
   }
 }

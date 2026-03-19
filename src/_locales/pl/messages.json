@@ -1606,5 +1606,13 @@
   "lowDistractionAriaShow": {
     "message": "Pokaż panel informacji o ptaku",
     "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "Świat",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "Pełne Morze",
+    "description": "Label for the High Seas (XX) region option in the region selector"
   }
 }

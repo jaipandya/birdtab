@@ -1606,5 +1606,13 @@
   "lowDistractionAriaShow": {
     "message": "Mostrar painel de informações da ave",
     "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "Mundo",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "Alto-Mar",
+    "description": "Label for the High Seas (XX) region option in the region selector"
   }
 }

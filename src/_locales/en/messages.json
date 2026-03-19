@@ -1606,5 +1606,13 @@
   "lowDistractionAriaShow": {
     "message": "Show bird information panel",
     "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "World",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "High Seas",
+    "description": "Label for the High Seas (XX) region option in the region selector"
   }
 }
