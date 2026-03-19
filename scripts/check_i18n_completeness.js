@@ -7,9 +7,9 @@ const path = require('path');
 const languages = [
   { code: 'en', name: 'English' },
   { code: 'es', name: 'Spanish' },
-  { code: 'zh', name: 'Chinese Simplified' },
+  { code: 'zh_CN', name: 'Chinese (Simplified)' },
   { code: 'ar', name: 'Arabic' },
-  { code: 'pt', name: 'Portuguese' },
+  { code: 'pt_BR', name: 'Portuguese (Brazil)' },
   { code: 'fr', name: 'French' },
   { code: 'de', name: 'German' },
   { code: 'ru', name: 'Russian' },

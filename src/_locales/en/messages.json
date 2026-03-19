@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - Discover Bird Pictures & Songs in New Tabs",
+    "message": "BirdTab - Bird Wallpapers, Videos and Nature Sounds for New Tab Page",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "Enhance your Chrome new tab with beautiful bird photos and soothing sounds. Enjoy a refreshing bird background every time.",
+    "message": "Transform your new tab page with bird wallpapers, bird videos, and calming nature sounds",
     "description": "Description of the extension"
   },
   "pageTitle": {

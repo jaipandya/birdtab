@@ -1,0 +1,1610 @@
+{
+  "extensionName": {
+    "message": "BirdTab - Papéis de Parede de Aves, Vídeos e Sons da Natureza na Nova Aba",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Transforme sua nova aba com papéis de parede de aves, vídeos de pássaros e sons relaxantes da natureza",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "Informações sobre a ave",
+    "description": "Tooltip for the info icon"
+  },
+  "infoAlt": {
+    "message": "Informações",
+    "description": "Alt text for info icon"
+  },
+  "cameraAlt": {
+    "message": "Câmera",
+    "description": "Alt text for camera icon"
+  },
+  "audioAlt": {
+    "message": "Áudio",
+    "description": "Alt text for audio waveform icon"
+  },
+  "openSettings": {
+    "message": "Abrir configurações",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "Configurações",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "Atualizar",
+    "description": "Alt text for refresh icon"
+  },
+  "errorTitle": {
+    "message": "Hmm, os pássaros parecem tímidos hoje",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "Estamos tendo alguns problemas para encontrar nossos amigos emplumados. Não se preocupe, geralmente é apenas um bater de asas momentâneo!",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "Tentar novamente",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "Detalhes do erro",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "Pesquisar na web...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "Pesquisar",
+    "description": "Alt text for search icon"
+  },
+  "searchTooltip": {
+    "message": "Pesquisar na web",
+    "description": "Tooltip for search button"
+  },
+  "settingsTitle": {
+    "message": "Configurações do BirdTab",
+    "description": "Title for settings page"
+  },
+  "settingsCategoryMedia": {
+    "message": "Media & Playback",
+    "description": "Section header for media settings"
+  },
+  "settingsCategoryProductivity": {
+    "message": "Productivity & Interface",
+    "description": "Section header for productivity settings"
+  },
+  "birdingRegion": {
+    "message": "Região de Observação de Aves",
+    "description": "Label for region selection"
+  },
+  "regionTooltip": {
+    "message": "Escolha a região de onde você gostaria de ver aves. Você ainda verá aves de todo o mundo!",
+    "description": "Tooltip for region selection"
+  },
+  "regionHelpText": {
+    "message": "Isso nos ajuda a mostrar aves que você pode avistar na sua área.",
+    "description": "Help text for region selection"
+  },
+  "autoPlayBirdCalls": {
+    "message": "Reproduzir mídia automaticamente",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "Toca cantos de aves no modo foto ou vídeos no modo vídeo automaticamente a cada nova aba. Horário silencioso substitui isso quando ativo.",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "Ative para reproduzir automaticamente cantos de aves ou vídeos ao abrir uma nova aba",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "Horas Silenciosas",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "Silencia cantos de aves durante horários silenciosos especificados.",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "Ative para desligar automaticamente a reprodução automática durante horários silenciosos",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "Horário Silencioso Ativo",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "Horário Silencioso",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quietHoursDisabled": {
+    "message": "Horário silencioso desativado",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "A reprodução de áudio está pausada durante o horário silencioso.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
+  "quickAccessFeatures": {
+    "message": "Recursos de Acesso Rápido",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "Habilita caixa de pesquisa, sites principais e atalhos personalizados para melhor produtividade.",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "Mostra caixa de pesquisa, sites mais visitados e permite atalhos personalizados",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "Configurações salvas",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "Opções de Depuração",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "Excluir Cache",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "Reiniciar Integração",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "Bem-vindo ao BirdTab!",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "Demonstração do BirdTab",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "Prepare-se para uma dose diária de maravilhas aviárias! Cada nova aba te traz cara a cara com uma fotografia deslumbrante de ave e fatos fascinantes.",
+    "description": "First paragraph of welcome description"
+  },
+  "welcomeDescription2": {
+    "message": "É como ter uma janela para o mundo das aves direto no seu navegador!",
+    "description": "Second paragraph of welcome description"
+  },
+  "nextButton": {
+    "message": "Próximo",
+    "description": "Next button text for onboarding"
+  },
+  "chooseBirdingRegion": {
+    "message": "Escolha Sua Região de Observação de Aves",
+    "description": "Header for region selection step"
+  },
+  "regionSelectionDescription": {
+    "message": "Selecione sua região preferida para ver aves comumente encontradas na sua área. Não se preocupe, você ainda poderá explorar aves de todo o mundo!",
+    "description": "Description for region selection"
+  },
+  "unitedStates": {
+    "message": "Estados Unidos",
+    "description": "Country name for United States"
+  },
+  "canada": {
+    "message": "Canadá",
+    "description": "Country name for Canada"
+  },
+  "unitedKingdom": {
+    "message": "Reino Unido",
+    "description": "Country name for United Kingdom"
+  },
+  "india": {
+    "message": "Índia",
+    "description": "Country name for India"
+  },
+  "regionSelectionHelpText": {
+    "message": "Isso nos ajuda a mostrar aves que você pode avistar na sua área local. Você pode alterar isso a qualquer momento nas configurações.",
+    "description": "Help text for region selection in onboarding"
+  },
+  "birdCallsTitle": {
+    "message": "Cantos de Aves: Música aos Seus Ouvidos?",
+    "description": "Title for bird calls onboarding step"
+  },
+  "birdCallsDescription": {
+    "message": "Quer ouvir os piados e chilreios? Ative a reprodução automática para uma experiência imersiva de observação de aves!",
+    "description": "Description for bird calls setting"
+  },
+  "autoPlayNote": {
+    "message": "Não se preocupe, você sempre pode ligar ou desligar os sons para cada ave. Esta configuração apenas determina o comportamento padrão, e você pode alterá-la depois se desejar.",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "Começar a Observar Pássaros!",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "Reproduzir",
+    "description": "Alt text for play button"
+  },
+  "pauseAlt": {
+    "message": "Pausar",
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "Gostando do BirdTab?",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "Sua avaliação significaria o mundo para nós e ajudaria outros entusiastas de aves a descobrir nossa extensão!",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "Deixar uma avaliação",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "Talvez mais tarde",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "Não, obrigado",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "Isso irá redefinir todas as configurações para os padrões e mostrar a integração novamente. Continuar?",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ Erro ao redefinir configurações. Tente novamente.",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ Redefinição de Configurações Concluída!\n\nTodas as suas configurações do BirdTab foram restauradas para os padrões.\n\nAbra uma nova aba para ver o assistente de configuração novamente.",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ Erro ao limpar cache. Tente novamente.",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 Cache Limpo!\n\nTodas as imagens de aves em cache, atalhos personalizados e dados temporários foram removidos.\n\nIsso deve ajudar se você estava enfrentando problemas de carregamento.",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 Permissão Necessária\n\nPara usar recursos de produtividade (caixa de pesquisa, sites mais visitados e atalhos personalizados), o BirdTab precisa de acesso aos seus sites principais do navegador.\n\nVocê pode habilitar isso a qualquer momento alternando a configuração novamente.",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ Algo deu errado\n\nNão conseguimos atualizar suas configurações de produtividade. Isso pode ser um problema temporário.\n\nTente novamente em um momento. Se o problema continuar, tente reiniciar seu navegador.",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "Alisando penas...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "Afinando cantos de pássaros...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "Vasculhando os céus...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "Espiando ninhos...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "Enchendo comedouros...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "Polindo binóculos...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "Alisando penas da cauda...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "Aquecendo chilreios...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "Ajustando envergadura das asas...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "Limpando banhos de aves...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "Preparando rotas de migração...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "Separando sementes e frutas...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "Praticando padrões de voo...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "Tirando pó dos guias de campo...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "Instalando casas de aves...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "Afiando bicos...",
+    "description": "Loading message 16"
+  },
+  "closeSettings": {
+    "message": "Fechar configurações",
+    "description": "Aria label for close settings button"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "Sites mais visitados e atalhos personalizados",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "Visitar",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "Site",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "Remover atalho",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "settingsTooltip": {
+    "message": "Abrir configurações para personalizar sua experiência BirdTab",
+    "description": "Tooltip for settings button"
+  },
+  "refreshTooltip": {
+    "message": "Carregar nova foto e informações de ave",
+    "description": "Tooltip for refresh button"
+  },
+  "playTooltip": {
+    "message": "Reproduzir som de ave",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Pausar som de ave",
+    "description": "Tooltip for pause button"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "Adicionar novo atalho personalizado",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "Adicionar atalho",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "Editar atalho",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "Remover",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "Adicionar atalho",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "Editar atalho",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "Nome:",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "Digite o nome do atalho",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "URL:",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "Digite a URL (ex: google.com)",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "Cancelar",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "OK",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "Nome é obrigatório",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "URL é obrigatória",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "Por favor, digite uma URL válida",
+    "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "Que ave é esta?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Pergunta {currentQuestion} de {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Próxima Pergunta",
+    "description": "Button text for next question"
+  },
+  "quizShowResults": {
+    "message": "Ver Resultados",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Iniciar Novo Quiz",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Sair do Quiz",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizShareResults": {
+    "message": "Compartilhar Resultados",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "Resultados do Quiz de Aves",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareGenerating": {
+    "message": "Gerando...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "Falha ao gerar",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "Compartilhe seus Resultados",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "Baixar Imagem",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "Baixado!",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "Copiar para Área de Transferência",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "Copiado!",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "Falha ao copiar",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "Voltar aos Resultados",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "de 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "$1 corretas",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "$1 incorretas",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "RESULTADOS DE IDENTIFICAÇÃO",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "Ave desconhecida",
+    "description": "Fallback text for unknown bird name"
+  },
+  "quizShareCollageAlt": {
+    "message": "Quiz Results Collage",
+    "description": "Alt text for the quiz results share image"
+  },
+  "quizImageUnavailable": {
+    "message": "Imagem indisponível",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Você consegue identificar este pássaro?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Tem certeza de que deseja fechar?",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
+  "quizExitConfirmTitle": {
+    "message": "Sair do Quiz?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "Tem certeza de que deseja sair do quiz? Seu progresso será perdido.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirm": {
+    "message": "Sair do Quiz",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Cancelar",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "Excelente! Você é um verdadeiro especialista em aves!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "Ótimo trabalho! Você conhece bem suas aves!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "Bom trabalho! Continue observando aves!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "Nada mal! A prática leva à perfeição!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "Continue aprendendo! Todo especialista em aves começou em algum lugar!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "Não há aves suficientes disponíveis para o quiz nesta região. Tente uma região diferente.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "Não foi possível iniciar o quiz. Tente novamente.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Erro do Quiz",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "Preparando seu quiz...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "photoBy": {
+    "message": "Foto por",
+    "description": "Text before photographer credit"
+  },
+  "quizResults": {
+    "message": "Resultados do Quiz",
+    "description": "Title for quiz results section"
+  },
+  "questionReview": {
+    "message": "Revisão das Perguntas",
+    "description": "Question review section title"
+  },
+  "yourAnswer": {
+    "message": "Sua resposta: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
+  "correct": {
+    "message": "Correto",
+    "description": "Correct answer indicator"
+  },
+  "incorrect": {
+    "message": "Incorreto",
+    "description": "Incorrect answer indicator"
+  },
+  "closeAlt": {
+    "message": "Fechar",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "Fechar quiz",
+    "description": "Aria label for close quiz button"
+  },
+  "bingSearchAlt": {
+    "message": "Busca Bing",
+    "description": "Alt text for Bing search icon"
+  },
+  "eBirdPageAlt": {
+    "message": "Página eBird",
+    "description": "Alt text for eBird page icon"
+  },
+  "quizAlt": {
+    "message": "Quiz",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "Iniciar quiz",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "Carregando...",
+    "description": "Loading text placeholder"
+  },
+  "networkErrorTitle": {
+    "message": "Não foi possível alcançar os pássaros",
+    "description": "Title for network error when no cached birds available"
+  },
+  "networkErrorMessage": {
+    "message": "Estamos tendo problemas para conectar ao nosso banco de dados de pássaros. Isso pode ser devido a problemas de rede do seu lado ou do nosso.",
+    "description": "Message explaining the network error"
+  },
+  "networkErrorSuggestion": {
+    "message": "Verifique sua conexão com a internet e tente novamente. Se isso continuar acontecendo, adoraríamos ouvir de você!",
+    "description": "Suggestion for resolving network error"
+  },
+  "contactSupport": {
+    "message": "Contatar suporte",
+    "description": "Button text to contact support"
+  },
+  "volumeTooltip": {
+    "message": "Ajustar volume",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volume",
+    "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "Compartilhar este pássaro",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "Compartilhar",
+    "description": "Alt text for share icon"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "Não há imagens de pássaros suficientes disponíveis. Por favor, verifique sua conexão com a internet e tente novamente.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "shareLink": {
+    "message": "Compartilhar link",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "Copiar",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "Copiado!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "Compartilhar em",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "Veja este lindo {birdName}!",
+    "description": "Default share text with bird name placeholder"
+  },
+  "videoAlt": {
+    "message": "Vídeo",
+    "description": "Alt text for video icon"
+  },
+  "videoMode": {
+    "message": "Modo Vídeo",
+    "description": "Label for video mode setting"
+  },
+  "videoModeHelpText": {
+    "message": "Mostrar vídeos de pássaros em vez de fotos quando disponíveis.",
+    "description": "Help text for video mode setting"
+  },
+  "videoModeTooltip": {
+    "message": "Ativar para mostrar vídeos de pássaros em vez de fotos quando disponíveis",
+    "description": "Tooltip for video mode toggle"
+  },
+  "videoUnavailableAlt": {
+    "message": "Vídeo indisponível (conexão lenta)",
+    "description": "Alt text for video unavailable icon when connection is slow"
+  },
+  "videoUnavailableTooltip": {
+    "message": "Vídeo indisponível: Sua conexão está lenta (2G/3G) ou a economia de dados está ativada. Mostrando foto para economizar dados.",
+    "description": "Tooltip explaining why video is unavailable due to slow connection"
+  },
+  "videoNotAvailableForBird": {
+    "message": "Nenhum vídeo disponível para este pássaro",
+    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
+  },
+  "loadingAudio": {
+    "message": "Carregando áudio",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "loadingVideo": {
+    "message": "Carregando vídeo",
+    "description": "Loading indicator text when loading video"
+  },
+  "buffering": {
+    "message": "Armazenando em buffer",
+    "description": "Loading indicator text when video is buffering"
+  },
+  "viaText": {
+    "message": "via",
+    "description": "Text before Macaulay Library link in credits"
+  },
+  "macaulayLibrary": {
+    "message": "Biblioteca Macaulay",
+    "description": "Name of Macaulay Library attribution source"
+  },
+  "historyTitle": {
+    "message": "Histórico de visualização",
+    "description": "Title for history modal"
+  },
+  "historyAlt": {
+    "message": "Histórico",
+    "description": "Alt text for history icon"
+  },
+  "emptyHistoryTitle": {
+    "message": "Sua jornada de observação começa aqui!",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "Descubra novas aves e elas aparecerão no seu histórico.",
+    "description": "Subtitle shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Limpar histórico",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Tem certeza de que deseja limpar seu histórico de visualização?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "Agora mesmo",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "Há $1 minuto",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "Há $1 minutos",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "Há $1 hora",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "Há $1 horas",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Ontem",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "Há $1 dias",
+    "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "Bem-vindo ao BirdTab!",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "Deixe-nos mostrar tudo! Este tour rápido ajudará você a descobrir todos os recursos.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "Tudo pronto!",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "Aproveite para descobrir belas aves de todo o mundo. Boa observação!",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "Vamos lá!",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "Começar a explorar!",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "Entendi!",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "Novo!",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "Voltar",
+    "description": "Feature tour: back button text"
+  },
+  "tourVideoToggleTitle": {
+    "message": "Modo Vídeo",
+    "description": "Feature tour: video toggle title"
+  },
+  "tourVideoToggleDescription": {
+    "message": "Alterne entre fotos e vídeos! Ative isto para ver pássaros em movimento com belos clipes de vídeo.",
+    "description": "Feature tour: video toggle description"
+  },
+  "tourVolumeTitle": {
+    "message": "Controle de Volume",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Ajuste o volume conforme sua preferência. Controle o som dos cantos de aves e vídeos para criar sua experiência perfeita.",
+    "description": "Feature tour: volume controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "Descobrir Novas Aves",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "Pronto para um novo amigo emplumado? Clique aqui para carregar uma nova foto de ave.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourPlayPauseTitle": {
+    "message": "Reproduzir / Pausar",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Controle a reprodução dos cantos das aves. Clique para reproduzir ou pausar a qualquer momento.",
+    "description": "Feature tour: play/pause button description"
+  },
+  "tourChromeTabTitle": {
+    "message": "Nova Guia do Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Precisa acessar sua página padrão de nova guia do Chrome? Clique aqui para abri-la em uma nova guia.",
+    "description": "Feature tour: Chrome tab link description"
+  },
+  "tourNextButton": {
+    "message": "Próximo",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "Pular tour",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "Entendi!",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "resetTour": {
+    "message": "Reiniciar tour de recursos",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "errorResettingTour": {
+    "message": "Erro ao reiniciar o tour de recursos",
+    "description": "Error message when tour reset fails"
+  },
+  "proBadge": {
+    "message": "Pro",
+    "description": "Badge text for premium features"
+  },
+  "highResImages": {
+    "message": "Imagens de Alta Resolução",
+    "description": "Label for high-resolution images feature"
+  },
+  "highResHelpText": {
+    "message": "Exibir fotos de pássaros em ultra alta resolução para detalhes cristalinos.",
+    "description": "Help text for high-resolution images setting"
+  },
+  "highResTooltip": {
+    "message": "Ativar para mostrar imagens de alta resolução",
+    "description": "Tooltip for high-resolution images toggle"
+  },
+  "chromeTabTooltip": {
+    "message": "Abrir a página padrão de nova guia do Chrome",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Guia Chrome",
+    "description": "Text label for Chrome tab link"
+  },
+  "sendFeedback": {
+    "message": "Enviar feedback",
+    "description": "Link text for sending feedback to support"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTab precisa de permissões adicionais",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "Para exibir seus sites mais visitados e atalhos personalizados, o BirdTab precisa de acesso a recursos adicionais do navegador.",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "Valorizamos e protegemos sua privacidade. Saiba mais em nossa",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "Política de Privacidade",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "Voltar",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "Continuar",
+    "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Está vendo um banner na parte inferior?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "É o novo rodapé do Chrome. Para ocultá-lo, clique com o botão direito e selecione 'Ocultar rodapé na página Nova guia'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Saiba mais",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Fechar notificação",
+    "description": "Aria label for close button on Chrome footer notification"
+  },
+  "clockDisplay": {
+    "message": "Mostrar relógio",
+    "description": "Label for clock display toggle in settings"
+  },
+  "clockDisplayHelpText": {
+    "message": "Exibir um relógio grande acima da caixa de pesquisa.",
+    "description": "Help text for clock display setting"
+  },
+  "clockDisplayTooltip": {
+    "message": "Mostrar hora atual na página de nova guia",
+    "description": "Tooltip for clock display toggle"
+  },
+  "clock24Hour": {
+    "message": "Formato 24 horas",
+    "description": "Option to use 24-hour time format"
+  },
+  "clockShowSeconds": {
+    "message": "Mostrar segundos",
+    "description": "Option to display seconds in the clock"
+  },
+  "clockOptionsAriaLabel": {
+    "message": "Opções do relógio",
+    "description": "Aria label for clock options button"
+  },
+  "switchToTimer": {
+    "message": "Mudar para Temporizador",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "Mudar para Relógio",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "Iniciar",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "Pausar",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "Continuar",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "Reiniciar",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "h",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "m",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "s",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "Opções do temporizador",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "Som do alarme",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
+  "showTopSites": {
+    "message": "Mostrar sites principais",
+    "description": "Option to show the most visited sites grid"
+  },
+  "quickAccessOptionsAriaLabel": {
+    "message": "Opções de acesso rápido",
+    "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "Ocultar relógio?",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "Você pode mostrá-lo novamente a qualquer momento nas Configurações.",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "Ocultar acesso rápido?",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "A pesquisa e os sites principais serão ocultados. Você pode mostrá-los novamente nas Configurações.",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "Ocultar relógio",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "Ocultar acesso rápido",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "Ocultar",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Apps do Google",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Mostrar um botão de acesso rápido aos apps do Google como Gmail, Drive, YouTube e mais.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Ativar para mostrar o botão de apps do Google",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Apps do Google",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Apps do Google",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Abrir apps do Google",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Fechar apps do Google",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "resetGoogleAppsOrder": {
+    "message": "Redefinir ordem",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1. Posição $2 de $3. Ctrl+Setas para mover.",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "Movido para a posição $1",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "Ordem redefinida para padrão",
+    "description": "Screen reader announcement when order is reset"
+  },
+  "showChromeTab": {
+    "message": "Atalho da guia Chrome",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "Mostrar um atalho para acessar rapidamente a página de nova guia padrão do Chrome.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Ativar para mostrar atalho da guia Chrome",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
+  },
+  "searchEngineLabel": {
+    "message": "Motor de busca",
+    "description": "Label for search engine selection in quick access options"
+  },
+  "searchEngineBrowserDefault": {
+    "message": "Padrão do navegador",
+    "description": "Option for using browser's default search engine"
+  },
+  "searchEngineGoogle": {
+    "message": "Google",
+    "description": "Option for Google search engine"
+  },
+  "searchEngineDuckDuckGo": {
+    "message": "DuckDuckGo",
+    "description": "Option for DuckDuckGo search engine"
+  },
+  "searchEngineChatGPT": {
+    "message": "ChatGPT",
+    "description": "Option for ChatGPT search"
+  },
+  "searchEnginePerplexity": {
+    "message": "Perplexity",
+    "description": "Option for Perplexity AI search"
+  },
+  "tourOptionsMenuTitle": {
+    "message": "Menu rápido",
+    "description": "Feature tour: options menu title"
+  },
+  "tourOptionsMenuDescription": {
+    "message": "Acesse configurações, histórico e quiz de aves a partir deste menu. Clique para explorar suas opções!",
+    "description": "Feature tour: options menu description"
+  },
+  "alreadyHaveLicense": {
+    "message": "Já tem uma licença?",
+    "description": "Divider text for license activation section"
+  },
+  "proFeatureVideoMode": {
+    "message": "Modo Vídeo",
+    "description": "Pro feature: Video Mode title"
+  },
+  "proFeatureVideoModeDesc": {
+    "message": "Assista a vídeos incríveis de aves em vez de fotos",
+    "description": "Pro feature: Video Mode description"
+  },
+  "proFeatureHighRes": {
+    "message": "Imagens de alta resolução",
+    "description": "Pro feature: High-Res Images title"
+  },
+  "proFeatureHighResDesc": {
+    "message": "Fotografia de aves nítida em 2400px",
+    "description": "Pro feature: High-Res Images description"
+  },
+  "proFeatureRegion": {
+    "message": "Regiões internacionais",
+    "description": "Pro feature: Region title"
+  },
+  "proFeatureRegionDesc": {
+    "message": "Descubra aves de qualquer país do mundo",
+    "description": "Pro feature: Region description"
+  },
+  "proFeatureClock": {
+    "message": "Relógio e temporizador",
+    "description": "Pro feature: Clock/Timer title"
+  },
+  "proFeatureClockDesc": {
+    "message": "Exiba a hora ou um temporizador de foco na sua nova aba",
+    "description": "Pro feature: Clock/Timer description"
+  },
+  "enterLicenseKey": {
+    "message": "Digite sua chave de licença",
+    "description": "Placeholder for license key input"
+  },
+  "activate": {
+    "message": "Ativar",
+    "description": "Button text for license activation"
+  },
+  "activating": {
+    "message": "Ativando...",
+    "description": "Button text while activating license"
+  },
+  "enterValidKey": {
+    "message": "Por favor, insira uma chave de licença válida",
+    "description": "Error when no key entered"
+  },
+  "licenseActivated": {
+    "message": "Licença ativada com sucesso!",
+    "description": "Success message for license activation"
+  },
+  "activationFailed": {
+    "message": "Ativação falhou. Por favor, verifique sua chave de licença.",
+    "description": "Error message for failed activation"
+  },
+  "activationError": {
+    "message": "Ocorreu um erro. Por favor, tente novamente.",
+    "description": "Generic error for activation"
+  },
+  "birdtabPro": {
+    "message": "BirdTab Pro",
+    "description": "Product name"
+  },
+  "licenseActive": {
+    "message": "Ativa",
+    "description": "License status: active"
+  },
+  "licenseGrace": {
+    "message": "Renovar em breve",
+    "description": "License status: subscription expired but within renewal window"
+  },
+  "licenseExpired": {
+    "message": "Expirada",
+    "description": "License status: expired"
+  },
+  "licenseLifetime": {
+    "message": "Vitalícia",
+    "description": "License type: lifetime"
+  },
+  "licenseYearly": {
+    "message": "Anual",
+    "description": "License type: yearly subscription"
+  },
+  "licenseTrial": {
+    "message": "Teste",
+    "description": "License type: trial"
+  },
+  "expired": {
+    "message": "Expirada",
+    "description": "Generic expired label"
+  },
+  "email": {
+    "message": "E-mail",
+    "description": "Label for email"
+  },
+  "licenseKey": {
+    "message": "Licença",
+    "description": "Label for license key"
+  },
+  "expires": {
+    "message": "Expira",
+    "description": "Label for expiry date"
+  },
+  "deactivate": {
+    "message": "Desativar",
+    "description": "Button to deactivate license"
+  },
+  "confirmDeactivate": {
+    "message": "Tem certeza de que deseja desativar sua licença?",
+    "description": "Confirmation for license deactivation"
+  },
+  "deactivating": {
+    "message": "Desativando…",
+    "description": "Button label while license deactivation is in progress"
+  },
+  "licenseDeactivated": {
+    "message": "Licença desativada. Recarregando…",
+    "description": "Toast shown after license is successfully deactivated"
+  },
+  "free": {
+    "message": "Gratuito",
+    "description": "License status: free tier"
+  },
+  "upgradePrompt": {
+    "message": "Desbloqueie Modo Vídeo, Imagens de Alta Resolução, Regiões Internacionais e Relógio/Temporizador.",
+    "description": "Prompt to upgrade to Pro"
+  },
+  "upgradeToPro": {
+    "message": "Atualizar para Pro",
+    "description": "Button to upgrade"
+  },
+  "licenseStatusError": {
+    "message": "Não foi possível carregar o status da licença",
+    "description": "Error loading license status"
+  },
+  "upgradeNow": {
+    "message": "Atualizar agora",
+    "description": "Button to upgrade immediately"
+  },
+  "close": {
+    "message": "Fechar",
+    "description": "Generic close button label"
+  },
+  "unlockProFeatures": {
+    "message": "Desbloqueie recursos Pro",
+    "description": "Prompt for free users to upgrade"
+  },
+  "manage": {
+    "message": "Gerenciar",
+    "description": "Button to manage license details"
+  },
+  "manageSubscription": {
+    "message": "Assinatura",
+    "description": "Button to manage subscription in customer portal"
+  },
+  "billingHistory": {
+    "message": "Faturamento",
+    "description": "Button to view billing history and invoices in customer portal"
+  },
+  "renew": {
+    "message": "Renovar",
+    "description": "Button to renew subscription"
+  },
+  "refreshStatus": {
+    "message": "Atualizar status",
+    "description": "Button to refresh license status"
+  },
+  "trialDayLeft": {
+    "message": "1 dia restante",
+    "description": "Trial period: single day remaining"
+  },
+  "trialDaysLeft": {
+    "message": "$1 dias restantes",
+    "description": "Trial period: multiple days remaining",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "7"
+      }
+    }
+  },
+  "trialExpired": {
+    "message": "Seu período de teste terminou",
+    "description": "Message when trial period has expired"
+  },
+  "licenseOffline": {
+    "message": "Offline",
+    "description": "Status label when license cannot be verified due to being offline"
+  },
+  "offlineGraceExpiredNotice": {
+    "message": "Conecte-se à internet para verificar sua licença e restaurar os recursos Pro.",
+    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
+  },
+  "unlockFeature": {
+    "message": "Desbloquear $1",
+    "description": "Title for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Video Mode"
+      }
+    }
+  },
+  "unlockFullExperience": {
+    "message": "Desbloqueie a experiência completa",
+    "description": "Title for upgrade modal when opened without a specific feature trigger"
+  },
+  "upgradeFeatureSubtitle": {
+    "message": "Este recurso faz parte do BirdTab Pro. Atualize para acessar $1 e todos os recursos premium.",
+    "description": "Subtitle for upgrade modal when triggered by a specific feature",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "video mode"
+      }
+    }
+  },
+  "proActivatedBody": {
+    "message": "Cada nova aba agora é uma janela para o mundo natural. Recarregando em um momento…",
+    "description": "Body text shown after successful Pro license activation"
+  },
+  "deviceLimitTitle": {
+    "message": "Limite de dispositivos atingido",
+    "description": "Title shown when license activation fails due to device limit"
+  },
+  "deviceLimitBody": {
+    "message": "Todas as vagas de dispositivos da sua licença estão em uso. Para ativar aqui, libere uma vaga primeiro: vá em Configurações → Gerenciar → Desativar em outro dispositivo onde o BirdTab está instalado, ou remova um dispositivo da sua conta.",
+    "description": "Body text explaining device limit and how to resolve it"
+  },
+  "manageDevices": {
+    "message": "Gerenciar dispositivos",
+    "description": "Button text to manage devices in customer portal"
+  },
+  "proTrialActive": {
+    "message": "Teste Pro ativo",
+    "description": "Badge text shown during active Pro trial"
+  },
+  "trialWelcomeTitle": {
+    "message": "Bem-vindo ao BirdTab Pro",
+    "description": "Title for trial welcome modal"
+  },
+  "trialWelcomeSubtitle": {
+    "message": "Seu teste gratuito de $1 dias começou. Aproveite todos os recursos Pro e descubra a beleza completa das aves do mundo.",
+    "description": "Subtitle for trial welcome modal",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "14"
+      }
+    }
+  },
+  "today": {
+    "message": "Hoje",
+    "description": "Label for today in trial timeline"
+  },
+  "startExploring": {
+    "message": "Começar a explorar",
+    "description": "Button text to dismiss trial welcome modal"
+  },
+  "trialFooterNote": {
+    "message": "Não é necessário cartão de crédito. Após o teste, você voltará para a versão gratuita.",
+    "description": "Footer note in trial welcome modal"
+  },
+  "trialEnded": {
+    "message": "Teste encerrado",
+    "description": "Badge text shown when trial has expired"
+  },
+  "trialExpiredTitle": {
+    "message": "Seu teste gratuito terminou",
+    "description": "Title for trial expired modal"
+  },
+  "trialExpiredSubtitle": {
+    "message": "Obrigado por experimentar o BirdTab Pro! Você pode continuar usando os recursos básicos gratuitamente, ou atualizar para continuar aproveitando a experiência completa.",
+    "description": "Subtitle for trial expired modal"
+  },
+  "trialLostFeatures": {
+    "message": "Recursos Pro que você perderá:",
+    "description": "Heading for list of Pro features lost after trial"
+  },
+  "trialValueProp": {
+    "message": "Atualize para o Pro e apoie o desenvolvimento independente enquanto aproveita todos os recursos. Sua assinatura mantém o BirdTab sem anúncios e em constante melhoria.",
+    "description": "Value proposition text in trial expired modal"
+  },
+  "continueWithFree": {
+    "message": "Continuar com a versão gratuita",
+    "description": "Button text to dismiss trial expired modal and continue with free version"
+  },
+  "proWelcomeBadgeLifetime": {
+    "message": "Pro Vitalício",
+    "description": "Badge text in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeBadgeYearly": {
+    "message": "Pro Anual",
+    "description": "Badge text in Pro welcome modal for yearly license"
+  },
+  "proWelcomeTitle": {
+    "message": "Bem-vindo ao BirdTab Pro",
+    "description": "Title in Pro welcome modal"
+  },
+  "proWelcomeSubtitleLifetime": {
+    "message": "Agora você tem <strong>acesso vitalício</strong> a todos os recursos Pro. Cada nova aba é uma janela para o mundo natural.",
+    "description": "Subtitle in Pro welcome modal for lifetime license"
+  },
+  "proWelcomeSubtitleYearly": {
+    "message": "Todos os recursos Pro estão agora <strong>desbloqueados</strong>. Cada nova aba é uma janela para o mundo natural.",
+    "description": "Subtitle in Pro welcome modal for yearly license"
+  },
+  "proWelcomeThanks": {
+    "message": "Seu apoio financia diretamente o desenvolvimento do BirdTab — melhores dados, novos recursos e uma experiência sem anúncios. Obrigado por fazer parte desta jornada.",
+    "description": "Thank you message in Pro welcome modal"
+  },
+  "proWelcomeVideoTitle": {
+    "message": "Modo vídeo",
+    "description": "Video feature title in Pro welcome modal"
+  },
+  "proWelcomeVideoDesc": {
+    "message": "Veja aves ganharem vida com clipes de vídeo impressionantes",
+    "description": "Video feature description in Pro welcome modal"
+  },
+  "proWelcomeHighResTitle": {
+    "message": "Fotos em alta resolução",
+    "description": "High-res feature title in Pro welcome modal"
+  },
+  "proWelcomeHighResDesc": {
+    "message": "Imagens nítidas de 2400px com detalhes surpreendentes",
+    "description": "High-res feature description in Pro welcome modal"
+  },
+  "proWelcomeRegionTitle": {
+    "message": "Regiões do mundo",
+    "description": "Region feature title in Pro welcome modal"
+  },
+  "proWelcomeRegionDesc": {
+    "message": "Descubra aves de qualquer país do mundo",
+    "description": "Region feature description in Pro welcome modal"
+  },
+  "proWelcomeClockTitle": {
+    "message": "Relógio e cronômetro",
+    "description": "Clock feature title in Pro welcome modal"
+  },
+  "proWelcomeClockDesc": {
+    "message": "Acompanhe o tempo enquanto aprecia a natureza",
+    "description": "Clock feature description in Pro welcome modal"
+  },
+  "pausedAlt": {
+    "message": "Pausado",
+    "description": "Alt text for pause indicator icon"
+  },
+  "audioPlayingAlt": {
+    "message": "Reproduzindo áudio",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "Áudio pausado",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatus": {
+    "message": "Estado de conservação:",
+    "description": "Label prefix for conservation status in bird info tooltip"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "Fechar histórico",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "proBadgeLabel": {
+    "message": "Pro",
+    "description": "Short label for Pro badge in settings sidebar"
+  },
+  "onboardingStep1": {
+    "message": "Etapa 1",
+    "description": "Aria label for onboarding progress dot 1"
+  },
+  "onboardingStep2": {
+    "message": "Etapa 2",
+    "description": "Aria label for onboarding progress dot 2"
+  },
+  "onboardingStep3": {
+    "message": "Etapa 3",
+    "description": "Aria label for onboarding progress dot 3"
+  },
+  "lowDistractionToggle": {
+    "message": "Ocultar detalhes",
+    "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
+  },
+  "lowDistractionExpand": {
+    "message": "Mostrar detalhes",
+    "description": "Tooltip for the button that restores the hidden bottom info panel"
+  },
+  "lowDistractionAriaHide": {
+    "message": "Ocultar painel de informações da ave",
+    "description": "Accessible label for the button that hides the bottom info panel"
+  },
+  "lowDistractionAriaShow": {
+    "message": "Mostrar painel de informações da ave",
+    "description": "Accessible label for the button that restores the hidden bottom info panel"
+  }
+}

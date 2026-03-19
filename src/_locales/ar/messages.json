@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - اكتشف صور وأصوات الطيور في علامات التبويب الجديدة",
+    "message": "BirdTab - خلفيات طيور وفيديوهات وأصوات طبيعة في صفحة علامة التبويب الجديدة",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "حسّن تبويب جديد في Chrome بصور الطيور الجميلة والأصوات المهدئة. استمتع بخلفية منعشة للطيور في كل مرة.",
+    "message": "حوّل صفحة علامة التبويب الجديدة بخلفيات الطيور وفيديوهات الطيور وأصوات الطبيعة الهادئة",
     "description": "Description of the extension"
   },
   "pageTitle": {
