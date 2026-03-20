@@ -1,0 +1,51 @@
+Verwandle jeden neuen Tab in eine entspannende Naturauszeit mit atemberaubenden Vogel-Hintergrundbildern, beruhigenden Vogelstimmen und faszinierenden Fakten über die Tierwelt.
+
+BirdTab ersetzt deine Chrome-Neuer-Tab-Seite mit beeindruckender Vogelfotografie und Videos aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart — mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
+
+WARUM NUTZER BIRDTAB LIEBEN
+
+Anders als gewöhnliche Hintergrundbild-Erweiterungen ist BirdTab ein vollständiges Naturerlebnis. Jeder neue Tab bringt einen Moment der Ruhe — ein wunderschönes Vogelfoto, einen entspannenden Vogelruf und etwas Neues zum Lernen. Die perfekte Mischung aus Achtsamkeit, Bildung und ästhetischer Schönheit.
+
+HAUPTFUNKTIONEN
+
+- Neues Vogel-Hintergrundbild mit jedem neuen Tab — beeindruckende Wildtierfotografie
+- HD-Vogelvideos — beobachte Vögel beim Fliegen, Singen und Futtersuchen in ihrem natürlichen Lebensraum
+- Authentische Vogelrufe und Naturgeräusche — mit einstellbarer Lautstärke und Ruhezeiten
+- Faszinierende Vogelfakten — Verhalten, Lebensraum und Schutzstatus
+- Globale Vogelbeobachtung — entdecke Vögel aus jeder Region und jedem Land
+- Interaktives Vogelbestimmungsquiz — teste dein Wissen und teile Ergebnisse
+- Beobachtungshistorie — verfolge jeden entdeckten Vogel
+- Integrierte Produktivitätstools — Suchfeld, Verknüpfungen, Uhr und Fokus-Timer
+- Funktioniert offline — genieße deine Vögel auch ohne Internet
+- 100% datenschutzfreundlich — keine persönlichen Daten, keine Werbung, kein Tracking
+
+UNTERSTÜTZT VON EBIRD
+
+Alle Artendaten stammen von eBird (Cornell Lab of Ornithology), dem weltweit größten Citizen-Science-Biodiversitätsprojekt, für präzise und aktuelle Fotos, Rufe und Fakten. Es gibt Tausende von Vogelarten — von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen.
+
+PERFEKT FÜR
+
+- Vogelbeobachter und Birding-Begeisterte
+- Naturliebhaber und Wildtierfotografen
+- Alle, die ein ruhiges, ästhetisches Neuer-Tab-Erlebnis suchen
+- Achtsamkeit, Meditation und Stressabbau
+- Schüler und Lehrkräfte mit Interesse an Ornithologie
+- Liebhaber von Natur-Hintergrundbildern
+
+PRO-FUNKTIONEN (optionales Upgrade)
+
+- Videomodus — erlebe Vögel in Bewegung mit beeindruckenden Clips
+- Hochauflösende 2400px Fotos — gestochen scharfe Details auf jedem Bildschirm
+- Internationale Regionen — entdecke Vögel aus jedem Land der Welt
+- Uhr und Countdown-Timer — bleib fokussiert und genieße die Natur
+
+NEUIGKEITEN
+
+1.3.9 - Vogel-Info-Popover mit eBird-Link, Verbreitungskarte und Vogelbeschreibung. Ablenkungsfreier Modus.
+1.3.8 — Pro-Abonnements: Jahres- und Lebenszeitpläne für Videomodus, hochauflösende Fotos und mehr.
+1.3.7 — Google Apps-Verknüpfungen zur Oberfläche hinzugefügt.
+1.3.6 — Neues Optionsmenü mit Google Apps, Countdown-Timer, Klick-zum-Abspielen, Suchmaschinenauswahl und Wiedergabekorrekturen.
+1.3.5 — Korrektur der Video-Play/Pause-Position, Uhr-Schalter im Popup, verbesserte Analysen.
+1.3.4 — Uhranzeige mit Formatoptionen, Häufig besuchte Seiten ausblenden und Fehlerbehebungen.
+
+Vollständiges Änderungsprotokoll: https://birdtab.app/changelog
