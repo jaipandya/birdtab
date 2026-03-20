@@ -122,6 +122,13 @@
   --review-btn-bg: #f1f3f4;
   --review-btn-hover-bg: #e8eaed;
 
+  /* ── Liquid Glass ── */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-focus: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-border-bottom: rgba(255, 255, 255, 0.15);
+  --glass-border-focus: rgba(255, 255, 255, 0.5);
+
   /* ── Image error state (light fallback surface) ── */
   --error-surface-start: #f8f9fa;
   --error-surface-end: #e9ecef;

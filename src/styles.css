@@ -2098,26 +2098,94 @@ p {
 #search-form {
   position: relative;
   width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
 }
 
 #search-input {
   width: 100%;
   padding: 16px 48px 16px 20px;
   font-size: 16px;
-  background-color: var(--black-20);
-  border: 1px solid var(--white-12);
-  border-radius: 24px;
-  box-shadow: 0 1px 3px var(--black-5), 0 0 0 1px var(--white-5);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
   color: var(--text-primary);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid;
+  border-color:
+    rgba(255, 255, 255, 0.40)
+    rgba(255, 255, 255, 0.25)
+    rgba(255, 255, 255, 0.12)
+    rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  backdrop-filter: url(#liquid-glass-refraction) blur(14px) saturate(180%) brightness(1.08);
+  -webkit-backdrop-filter: url(#liquid-glass-refraction) blur(14px) saturate(180%) brightness(1.08);
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#search-form::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background:
+    radial-gradient(
+      80% 100% at 35% 0%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #search-input:focus {
-  background-color: var(--black-30);
-  border-color: var(--white-20);
-  box-shadow: 0 2px 6px var(--black-10), 0 0 0 2px var(--white-15);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.05) 100%);
+  border-color:
+    rgba(255, 255, 255, 0.50)
+    rgba(255, 255, 255, 0.30)
+    rgba(255, 255, 255, 0.15)
+    rgba(255, 255, 255, 0.30);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.10);
   outline: none;
+  backdrop-filter: url(#liquid-glass-refraction) blur(16px) saturate(190%) brightness(1.10);
+  -webkit-backdrop-filter: url(#liquid-glass-refraction) blur(16px) saturate(190%) brightness(1.10);
+}
+
+#search-form:focus-within::before {
+  background:
+    radial-gradient(
+      80% 100% at 35% 0%,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%);
+}
+
+#search-input:focus-visible {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.15),
+    0 0 0 2px rgba(255, 255, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.10);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #search-input,
+  #search-form::before { transition: none; }
 }
 
 #search-input::placeholder {
