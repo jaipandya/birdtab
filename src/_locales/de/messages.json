@@ -1567,6 +1567,82 @@
     "message": "Schutzstatus:",
     "description": "Label prefix for conservation status in bird info tooltip"
   },
+  "conservationStatusTitle": {
+    "message": "Schutzstatus",
+    "description": "Heading for the bird conservation status in the info popover"
+  },
+  "conservationLeastConcern": {
+    "message": "Nicht gefährdet",
+    "description": "Localized conservation status label for Least Concern"
+  },
+  "conservationLeastConcernHelp": {
+    "message": "Gilt derzeit nicht als vom Aussterben bedroht.",
+    "description": "Plain-language explanation for Least Concern conservation status"
+  },
+  "conservationNearThreatened": {
+    "message": "Potenziell gefährdet",
+    "description": "Localized conservation status label for Near Threatened"
+  },
+  "conservationNearThreatenedHelp": {
+    "message": "Könnte ohne fortlaufenden Schutz bedroht werden.",
+    "description": "Plain-language explanation for Near Threatened conservation status"
+  },
+  "conservationVulnerable": {
+    "message": "Gefährdet",
+    "description": "Localized conservation status label for Vulnerable"
+  },
+  "conservationVulnerableHelp": {
+    "message": "Trägt in freier Wildbahn ein hohes Aussterberisiko.",
+    "description": "Plain-language explanation for Vulnerable conservation status"
+  },
+  "conservationEndangered": {
+    "message": "Stark gefährdet",
+    "description": "Localized conservation status label for Endangered"
+  },
+  "conservationEndangeredHelp": {
+    "message": "Trägt in freier Wildbahn ein sehr hohes Aussterberisiko.",
+    "description": "Plain-language explanation for Endangered conservation status"
+  },
+  "conservationCriticallyEndangered": {
+    "message": "Vom Aussterben bedroht",
+    "description": "Localized conservation status label for Critically Endangered"
+  },
+  "conservationCriticallyEndangeredHelp": {
+    "message": "Trägt in freier Wildbahn ein extrem hohes Aussterberisiko.",
+    "description": "Plain-language explanation for Critically Endangered conservation status"
+  },
+  "conservationExtinctInWild": {
+    "message": "In der Natur ausgestorben",
+    "description": "Localized conservation status label for Extinct in the Wild"
+  },
+  "conservationExtinctInWildHelp": {
+    "message": "Überlebt nur in Gefangenschaft oder in betreuten Populationen.",
+    "description": "Plain-language explanation for Extinct in the Wild conservation status"
+  },
+  "conservationExtinct": {
+    "message": "Ausgestorben",
+    "description": "Localized conservation status label for Extinct"
+  },
+  "conservationExtinctHelp": {
+    "message": "Es sind keine lebenden Individuen bekannt.",
+    "description": "Plain-language explanation for Extinct conservation status"
+  },
+  "aboutThisBird": {
+    "message": "Über diesen Vogel",
+    "description": "Heading for the bird description in the info popover"
+  },
+  "viewOnEbird": {
+    "message": "Auf eBird ansehen",
+    "description": "Label for the link that opens the current bird on eBird"
+  },
+  "rangeMap": {
+    "message": "Verbreitungskarte",
+    "description": "Heading for the bird range map in the info popover"
+  },
+  "loadingRangeMap": {
+    "message": "Verbreitungskarte wird geladen...",
+    "description": "Loading text shown while the bird range map is loading"
+  },
   "closeHistoryAriaLabel": {
     "message": "Verlauf schließen",
     "description": "Aria label for close history button"

@@ -80,7 +80,7 @@ import {
 } from './reviewPrompt.js';
 import { isPro, getLicenseStatus, resetProFeatureSettings } from './licenseManager.js';
 import { showUpgradeModal } from './upgradeModal.js';
-import { getMessage } from './i18n.js';
+import { setupInfoPopover } from './birdInfoPopover.js';
 import { escapeHtml } from './utils/escapeHtml.js';
 
 // Initialize Sentry for content script
@@ -993,19 +993,15 @@ async function initializePage() {
       <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
       <div class="gradient-overlay"></div>
       <div class="info-panel">
-        <div class="external-links">
-          <a href="https://www.bing.com/search?q=${encodeURIComponent(birdInfo.name)}" target="_blank" class="external-link bing-link">
-            <img src="images/svg/bing-default.svg" alt="${chrome.i18n.getMessage('bingSearchAlt')}" width="24" height="24">
-          </a>
-          <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="external-link ebird-link">
-            <img src="images/svg/ebird-default.svg" alt="${chrome.i18n.getMessage('eBirdPageAlt')}" width="24" height="24">
-          </a>
-        </div>
         <div class="info-panel-header">
           <div class="bird-name-row">
-            <a href="${escapeHtml(birdInfo.ebirdUrl)}" target="_blank" class="bird-name-link">
-              <h1 id="bird-name"></h1>
-            </a>
+            <button class="info-popover-trigger" id="bird-name" aria-expanded="false" aria-haspopup="dialog"
+              data-scientific-name="${escapeHtml(birdInfo.scientificName)}"
+              data-description="${escapeHtml(birdInfo.description)}"
+              data-conservation="${escapeHtml(birdInfo.conservationStatus)}"
+              data-species-code="${escapeHtml(birdInfo.speciesCode)}"
+              data-ebird-url="${escapeHtml(birdInfo.ebirdUrl)}">
+            </button>
             <button class="low-distraction-toggle" id="low-distraction-toggle"
               title="${chrome.i18n.getMessage('lowDistractionToggle') || 'Hide details'}"
               aria-label="${chrome.i18n.getMessage('lowDistractionAriaHide') || 'Hide bird information panel'}">
@@ -1013,12 +1009,6 @@ async function initializePage() {
                 <path d="M4 6l4 4 4-4"/>
               </svg>
             </button>
-          </div>
-          <div class="scientific-name-row">
-            <p id="scientific-name"></p>
-            <span class="info-icon" data-tooltip="${escapeHtml(birdInfo.description)}&#10;&#10;${chrome.i18n.getMessage('conservationStatus') || 'Conservation Status:'} ${escapeHtml(birdInfo.conservationStatus)}">
-              <img src="images/svg/info.svg" alt="${chrome.i18n.getMessage('infoAlt')}" width="16" height="16">
-            </span>
           </div>
         </div>
         <p class="credits">
@@ -1168,7 +1158,6 @@ async function initializePage() {
     }
 
     document.getElementById('bird-name').textContent = nameToDisplay;
-    document.getElementById('scientific-name').textContent = birdInfo.scientificName;
 
     document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();
@@ -1186,7 +1175,9 @@ async function initializePage() {
     // After updating the page content, add the review prompt if needed
     showReviewPromptIfNeeded(document.body);
 
-    setupExternalLinks();
+    setupInfoPopover({
+      onEbirdClick: () => trackFeature('ebird_click'),
+    });
     initLowDistractionMode();
 
     // Initialize settings modal immediately after DOM elements are created
@@ -1532,6 +1523,12 @@ function setupMediaClickHandler() {
       return; // Let the options menu handler handle this click
     }
 
+    // Check if info popover is open — click is meant to close it, not toggle media
+    const openPopover = document.querySelector('.info-popover');
+    if (openPopover) {
+      return;
+    }
+
     // List of interactive elements to ignore
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
@@ -1541,6 +1538,7 @@ function setupMediaClickHandler() {
       '.media-toggle', '.media-toggle-container',
       '.search-container',
       '.options-menu', '.options-menu-item',
+      '.info-popover',
       '#clock-options-trigger',
       '.timer-controls', '.timer-digit-group', '.timer-preset-btn', '.timer-start-btn', '.timer-time',
       '.confirmation-dialog', '.confirmation-dialog-backdrop'
@@ -2167,39 +2165,6 @@ function initLowDistractionMode() {
   });
 }
 
-function setupExternalLinks() {
-  const bingLink = document.querySelector('.bing-link');
-  const ebirdLink = document.querySelector('.ebird-link');
-
-  bingLink.addEventListener('mouseenter', () => {
-    bingLink.querySelector('img').src = 'images/svg/bing-hover.svg';
-  });
-
-  bingLink.addEventListener('mouseleave', () => {
-    bingLink.querySelector('img').src = 'images/svg/bing-default.svg';
-  });
-
-  ebirdLink.addEventListener('mouseenter', () => {
-    ebirdLink.querySelector('img').src = 'images/svg/ebird-hover.svg';
-  });
-
-  ebirdLink.addEventListener('mouseleave', () => {
-    ebirdLink.querySelector('img').src = 'images/svg/ebird-default.svg';
-  });
-
-  // Track eBird link clicks
-  ebirdLink.addEventListener('click', () => {
-    trackFeature('ebird_click');
-  });
-
-  // Also track bird name link clicks (goes to eBird)
-  const birdNameLink = document.querySelector('.bird-name-link');
-  if (birdNameLink) {
-    birdNameLink.addEventListener('click', () => {
-      trackFeature('ebird_click');
-    });
-  }
-}
 
 // Share functionality is now imported from shareMenu.js
 

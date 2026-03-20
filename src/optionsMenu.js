@@ -335,7 +335,7 @@ export function createOptionsMenu(config) {
 
     // Close when clicking outside
     setTimeout(() => {
-      document.addEventListener('click', handleOutsideClick);
+      document.addEventListener('click', handleOutsideClick, true);
       document.addEventListener('keydown', handleKeydown);
     }, 0);
 
@@ -360,7 +360,7 @@ export function createOptionsMenu(config) {
     
     isOpen = false;
     
-    document.removeEventListener('click', handleOutsideClick);
+    document.removeEventListener('click', handleOutsideClick, true);
     document.removeEventListener('keydown', handleKeydown);
     
     log(`Options menu ${menuId} closed`);
@@ -389,7 +389,9 @@ export function createOptionsMenu(config) {
     if (triggerElement && triggerElement.contains(e.target)) {
       return;
     }
-    // Stop event propagation to prevent media click handler from triggering
+    // Swallow the outside click before target handlers run so background UI
+    // does not react to the same click that dismisses the menu.
+    e.preventDefault();
     e.stopPropagation();
     close();
   }

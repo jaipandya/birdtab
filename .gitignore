@@ -33,3 +33,6 @@ doc/*
 opencode.json
 .cursor/
 .vscode/mcp.json
+
+# Local Claude agent state
+.claude/agent-memory/
