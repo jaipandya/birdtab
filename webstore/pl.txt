@@ -1,27 +1,27 @@
 Zamień każdą nową kartę w relaksującą ucieczkę do natury z oszałamiającymi tapetami z ptakami, kojącymi ptasimi głosami i fascynującymi faktami o dzikiej przyrodzie.
 
-BirdTab zastępuje stronę nowej karty Chrome zapierającą dech fotografią ptaków i filmami z całego świata. Za każdym razem, gdy otworzysz kartę, odkryjesz nowy gatunek ptaka — z autentycznymi głosami, dźwiękami natury i ciekawymi informacjami. To jak okno na świat przyrody prosto w Twojej przeglądarce.
+BirdTab zastępuje stronę nowej karty Chrome zapierającą dech fotografią ptaków i filmami z całego świata. Za każdym razem, gdy otworzysz kartę, odkryjesz nowy gatunek ptaka - z autentycznymi głosami, dźwiękami natury i ciekawymi informacjami. To jak okno na świat przyrody prosto w Twojej przeglądarce.
 
 DLACZEGO UŻYTKOWNICY KOCHAJĄ BIRDTAB
 
-W przeciwieństwie do zwykłych rozszerzeń z tapetami, BirdTab to pełne doświadczenie natury. Każda nowa karta przynosi chwilę spokoju — piękne zdjęcie ptaka, relaksujący głos i coś nowego do nauczenia się. Idealne połączenie uważności, edukacji i estetycznego piękna.
+W przeciwieństwie do zwykłych rozszerzeń z tapetami, BirdTab to pełne doświadczenie natury. Każda nowa karta przynosi chwilę spokoju - piękne zdjęcie ptaka, relaksujący głos i coś nowego do nauczenia się. Idealne połączenie uważności, edukacji i estetycznego piękna.
 
 GŁÓWNE FUNKCJE
 
-- Nowa tapeta z ptakiem w każdej nowej karcie — oszałamiająca fotografia dzikiej przyrody
-- Filmy z ptakami w HD — obserwuj ptaki w locie, podczas śpiewu i żerowania w ich naturalnym środowisku
-- Autentyczne głosy ptaków i dźwięki natury — z regulacją głośności i cichymi godzinami
-- Fascynujące fakty o ptakach — zachowanie, siedlisko i status ochrony
-- Globalne obserwacje — odkrywaj ptaki z dowolnego regionu i kraju
-- Interaktywny quiz identyfikacji ptaków — sprawdź swoją wiedzę i podziel się wynikami
-- Historia obserwacji — śledź każdego odkrytego ptaka
-- Wbudowane narzędzia produktywności — wyszukiwarka, skróty, zegar i timer skupienia
-- Działa offline — ciesz się ptakami nawet bez internetu
-- 100% prywatność — bez danych osobowych, bez reklam, bez śledzenia
+- Nowa tapeta z ptakiem w każdej nowej karcie - oszałamiająca fotografia dzikiej przyrody
+- Filmy z ptakami w HD - obserwuj ptaki w locie, podczas śpiewu i żerowania w ich naturalnym środowisku
+- Autentyczne głosy ptaków i dźwięki natury - z regulacją głośności i cichymi godzinami
+- Fascynujące fakty o ptakach - zachowanie, siedlisko i status ochrony
+- Globalne obserwacje - odkrywaj ptaki z dowolnego regionu i kraju
+- Interaktywny quiz identyfikacji ptaków - sprawdź swoją wiedzę i podziel się wynikami
+- Historia obserwacji - śledź każdego odkrytego ptaka
+- Wbudowane narzędzia produktywności - wyszukiwarka, skróty, zegar i timer skupienia
+- Działa offline - ciesz się ptakami nawet bez internetu
+- 100% prywatność - bez danych osobowych, bez reklam, bez śledzenia
 
 WSPIERANE PRZEZ EBIRD
 
-Wszystkie dane o gatunkach pochodzą z eBird (Cornell Lab of Ornithology), największego na świecie projektu nauki obywatelskiej dotyczącego bioróżnorodności, gwarantującego dokładność każdego zdjęcia, głosu i faktu. Są tu tysiące gatunków ptaków — od tropikalnych papug i kolibrów po majestatyczne orły i sowy.
+Wszystkie dane o gatunkach pochodzą z eBird (Cornell Lab of Ornithology), największego na świecie projektu nauki obywatelskiej dotyczącego bioróżnorodności, gwarantującego dokładność każdego zdjęcia, głosu i faktu. Są tu tysiące gatunków ptaków - od tropikalnych papug i kolibrów po majestatyczne orły i sowy.
 
 IDEALNE DLA
 
@@ -34,18 +34,18 @@ IDEALNE DLA
 
 FUNKCJE PRO (opcjonalna aktualizacja)
 
-- Tryb wideo — zobacz ptaki ożywające w niesamowitych klipach
-- Zdjęcia w wysokiej rozdzielczości 2400px — krystalicznie czyste detale na każdym ekranie
-- Międzynarodowe regiony — odkrywaj ptaki z dowolnego kraju świata
-- Zegar i minutnik odliczający — zachowaj skupienie, ciesząc się naturą
+- Tryb wideo - zobacz ptaki ożywające w niesamowitych klipach
+- Zdjęcia w wysokiej rozdzielczości 2400px - krystalicznie czyste detale na każdym ekranie
+- Międzynarodowe regiony - odkrywaj ptaki z dowolnego kraju świata
+- Zegar i minutnik odliczający - zachowaj skupienie, ciesząc się naturą
 
 CO NOWEGO
 
 1.3.9 - Dymek informacyjny o ptaku z linkiem do eBird, mapą zasięgu i opisem ptaka. Tryb bez rozpraszania.
-1.3.8 — Plany subskrypcji Pro: roczne i dożywotnie dla trybu wideo, zdjęć w wysokiej rozdzielczości i więcej.
-1.3.7 — Skróty Google Apps dodane do interfejsu.
-1.3.6 — Nowe menu opcji z Google Apps, minutnikiem, kliknij aby odtworzyć, wyborem wyszukiwarki i poprawkami odtwarzania.
-1.3.5 — Poprawka pozycji play/pauza wideo, przełącznik zegara w popupie, ulepszone analizy.
-1.3.4 — Wyświetlanie zegara z opcjami formatu, ukrywanie często odwiedzanych stron i poprawki błędów.
+1.3.8 - Plany subskrypcji Pro: roczne i dożywotnie dla trybu wideo, zdjęć w wysokiej rozdzielczości i więcej.
+1.3.7 - Skróty Google Apps dodane do interfejsu.
+1.3.6 - Nowe menu opcji z Google Apps, minutnikiem, kliknij aby odtworzyć, wyborem wyszukiwarki i poprawkami odtwarzania.
+1.3.5 - Poprawka pozycji play/pauza wideo, przełącznik zegara w popupie, ulepszone analizy.
+1.3.4 - Wyświetlanie zegara z opcjami formatu, ukrywanie często odwiedzanych stron i poprawki błędów.
 
 Pełny dziennik zmian: https://birdtab.app/changelog

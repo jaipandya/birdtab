@@ -1,27 +1,27 @@
 Transformez chaque nouvel onglet en une escapade nature apaisante avec de superbes fonds d'écran d'oiseaux, des chants d'oiseaux relaxants et des faits fascinants sur la faune.
 
-BirdTab remplace votre page de nouvel onglet Chrome par une photographie d'oiseaux époustouflante et des vidéos du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau — avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
+BirdTab remplace votre page de nouvel onglet Chrome par une photographie d'oiseaux époustouflante et des vidéos du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
 
 POURQUOI LES UTILISATEURS ADORENT BIRDTAB
 
-Contrairement aux extensions de fonds d'écran classiques, BirdTab est une expérience nature complète. Chaque nouvel onglet apporte un moment de calme — une belle photographie d'oiseau, un chant apaisant et quelque chose de nouveau à apprendre. Le mélange parfait de pleine conscience, d'éducation et de beauté visuelle.
+Contrairement aux extensions de fonds d'écran classiques, BirdTab est une expérience nature complète. Chaque nouvel onglet apporte un moment de calme - une belle photographie d'oiseau, un chant apaisant et quelque chose de nouveau à apprendre. Le mélange parfait de pleine conscience, d'éducation et de beauté visuelle.
 
 FONCTIONNALITÉS PRINCIPALES
 
-- Nouveau fond d'écran d'oiseau à chaque nouvel onglet — photographie animalière époustouflante
-- Vidéos d'oiseaux en HD — observez les oiseaux voler, chanter et se nourrir dans leur habitat naturel
-- Chants d'oiseaux et sons de la nature authentiques — volume réglable et heures calmes
-- Faits fascinants sur les oiseaux — comportement, habitat et statut de conservation
-- Observation mondiale — explorez les oiseaux de n'importe quelle région ou pays
-- Quiz interactif d'identification d'oiseaux — testez vos connaissances et partagez vos résultats
-- Historique d'observation — suivez chaque oiseau que vous avez découvert
-- Outils de productivité intégrés — barre de recherche, raccourcis, horloge et minuteur
-- Fonctionne hors ligne — profitez de vos oiseaux même sans internet
-- 100% respectueux de la vie privée — aucune donnée personnelle, aucune pub, aucun pistage
+- Nouveau fond d'écran d'oiseau à chaque nouvel onglet - photographie animalière époustouflante
+- Vidéos d'oiseaux en HD - observez les oiseaux voler, chanter et se nourrir dans leur habitat naturel
+- Chants d'oiseaux et sons de la nature authentiques - volume réglable et heures calmes
+- Faits fascinants sur les oiseaux - comportement, habitat et statut de conservation
+- Observation mondiale - explorez les oiseaux de n'importe quelle région ou pays
+- Quiz interactif d'identification d'oiseaux - testez vos connaissances et partagez vos résultats
+- Historique d'observation - suivez chaque oiseau que vous avez découvert
+- Outils de productivité intégrés - barre de recherche, raccourcis, horloge et minuteur
+- Fonctionne hors ligne - profitez de vos oiseaux même sans internet
+- 100% respectueux de la vie privée - aucune donnée personnelle, aucune pub, aucun pistage
 
 ALIMENTÉ PAR EBIRD
 
-Toutes les données d'espèces proviennent d'eBird (Cornell Lab of Ornithology), le plus grand projet de science citoyenne sur la biodiversité au monde, pour des photos, chants et faits toujours précis et actuels. Il existe des milliers d'espèces d'oiseaux — des perroquets tropicaux et colibris aux majestueux aigles et hiboux.
+Toutes les données d'espèces proviennent d'eBird (Cornell Lab of Ornithology), le plus grand projet de science citoyenne sur la biodiversité au monde, pour des photos, chants et faits toujours précis et actuels. Il existe des milliers d'espèces d'oiseaux - des perroquets tropicaux et colibris aux majestueux aigles et hiboux.
 
 IDÉAL POUR
 
@@ -34,18 +34,18 @@ IDÉAL POUR
 
 FONCTIONS PRO (mise à niveau optionnelle)
 
-- Mode Vidéo — regardez les oiseaux prendre vie avec de superbes clips
-- Photos haute résolution 2400px — détails cristallins sur n'importe quel écran
-- Régions internationales — découvrez les oiseaux de n'importe quel pays au monde
-- Horloge et minuteur — restez concentré tout en profitant de la nature
+- Mode Vidéo - regardez les oiseaux prendre vie avec de superbes clips
+- Photos haute résolution 2400px - détails cristallins sur n'importe quel écran
+- Régions internationales - découvrez les oiseaux de n'importe quel pays au monde
+- Horloge et minuteur - restez concentré tout en profitant de la nature
 
 NOUVEAUTÉS
 
 1.3.9 - Popover d'informations sur l'oiseau avec lien eBird, carte de répartition et description de l'oiseau. Mode sans distraction.
-1.3.8 — Abonnements Pro : forfaits annuels et à vie pour le mode vidéo, les photos haute résolution et plus encore.
-1.3.7 — Raccourcis Google Apps ajoutés à l'interface.
-1.3.6 — Nouveau menu d'options avec Google Apps, minuteur, lecture au clic, sélection du moteur de recherche et corrections de lecture.
-1.3.5 — Correction du positionnement lecture/pause vidéo, bouton horloge dans le popup, analyses améliorées.
-1.3.4 — Affichage de l'horloge avec options de format, masquer les sites fréquents et corrections de bugs.
+1.3.8 - Abonnements Pro : forfaits annuels et à vie pour le mode vidéo, les photos haute résolution et plus encore.
+1.3.7 - Raccourcis Google Apps ajoutés à l'interface.
+1.3.6 - Nouveau menu d'options avec Google Apps, minuteur, lecture au clic, sélection du moteur de recherche et corrections de lecture.
+1.3.5 - Correction du positionnement lecture/pause vidéo, bouton horloge dans le popup, analyses améliorées.
+1.3.4 - Affichage de l'horloge avec options de format, masquer les sites fréquents et corrections de bugs.
 
 Journal complet des modifications : https://birdtab.app/changelog

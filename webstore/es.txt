@@ -1,27 +1,27 @@
 Convierte cada nueva pestaña en un relajante escape a la naturaleza con impresionantes fondos de pantalla de aves, cantos relajantes y fascinantes datos sobre la vida silvestre.
 
-BirdTab reemplaza tu nueva pestaña de Chrome con fotografía de aves espectacular y vídeos de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave — con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
+BirdTab reemplaza tu nueva pestaña de Chrome con fotografía de aves espectacular y vídeos de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave - con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
 
 POR QUÉ LES ENCANTA BIRDTAB
 
-A diferencia de las extensiones de fondos de pantalla genéricas, BirdTab es una experiencia completa de naturaleza. Cada nueva pestaña trae un momento de calma — una hermosa fotografía de ave, un canto relajante y algo nuevo que aprender. La combinación perfecta de mindfulness, educación y belleza visual.
+A diferencia de las extensiones de fondos de pantalla genéricas, BirdTab es una experiencia completa de naturaleza. Cada nueva pestaña trae un momento de calma - una hermosa fotografía de ave, un canto relajante y algo nuevo que aprender. La combinación perfecta de mindfulness, educación y belleza visual.
 
 CARACTERÍSTICAS PRINCIPALES
 
-- Nuevo fondo de pantalla de ave con cada nueva pestaña — fotografía de vida silvestre impresionante
-- Vídeos de aves en HD — observa pájaros volar, cantar y buscar alimento en su hábitat natural
-- Cantos de aves y sonidos de naturaleza auténticos — con volumen ajustable y horas de silencio
-- Datos fascinantes sobre aves — comportamiento, hábitat y estado de conservación
-- Aves del mundo entero — explora aves de cualquier región o país
-- Quiz interactivo de identificación de aves — pon a prueba tus conocimientos y comparte resultados
-- Historial de observación — registra cada ave que has descubierto
-- Herramientas de productividad integradas — buscador, accesos directos, reloj y temporizador
-- Funciona sin conexión — disfruta de tus aves incluso sin internet
-- 100% respetuoso con la privacidad — sin datos personales, sin anuncios, sin rastreo
+- Nuevo fondo de pantalla de ave con cada nueva pestaña - fotografía de vida silvestre impresionante
+- Vídeos de aves en HD - observa pájaros volar, cantar y buscar alimento en su hábitat natural
+- Cantos de aves y sonidos de naturaleza auténticos - con volumen ajustable y horas de silencio
+- Datos fascinantes sobre aves - comportamiento, hábitat y estado de conservación
+- Aves del mundo entero - explora aves de cualquier región o país
+- Quiz interactivo de identificación de aves - pon a prueba tus conocimientos y comparte resultados
+- Historial de observación - registra cada ave que has descubierto
+- Herramientas de productividad integradas - buscador, accesos directos, reloj y temporizador
+- Funciona sin conexión - disfruta de tus aves incluso sin internet
+- 100% respetuoso con la privacidad - sin datos personales, sin anuncios, sin rastreo
 
 RESPALDADO POR EBIRD
 
-Todos los datos de especies provienen de eBird (Cornell Lab of Ornithology), el mayor proyecto de ciencia ciudadana sobre biodiversidad del mundo, asegurando que cada foto, canto y dato sea preciso y actualizado. Hay miles de especies de aves — desde loros tropicales y colibríes hasta majestuosas águilas y búhos.
+Todos los datos de especies provienen de eBird (Cornell Lab of Ornithology), el mayor proyecto de ciencia ciudadana sobre biodiversidad del mundo, asegurando que cada foto, canto y dato sea preciso y actualizado. Hay miles de especies de aves - desde loros tropicales y colibríes hasta majestuosas águilas y búhos.
 
 PERFECTO PARA
 
@@ -34,18 +34,18 @@ PERFECTO PARA
 
 FUNCIONES PRO (actualización opcional)
 
-- Modo Vídeo — observa cómo las aves cobran vida con increíbles clips
-- Fotos en alta resolución 2400px — detalles cristalinos en cualquier pantalla
-- Regiones internacionales — descubre aves de cualquier país del mundo
-- Reloj y temporizador — mantén el enfoque mientras disfrutas de la naturaleza
+- Modo Vídeo - observa cómo las aves cobran vida con increíbles clips
+- Fotos en alta resolución 2400px - detalles cristalinos en cualquier pantalla
+- Regiones internacionales - descubre aves de cualquier país del mundo
+- Reloj y temporizador - mantén el enfoque mientras disfrutas de la naturaleza
 
 NOVEDADES
 
 1.3.9 - Popover de información del ave con enlace a eBird, mapa de distribución y descripción del ave. Modo sin distracciones.
-1.3.8 — Planes de suscripción Pro: planes anuales y de por vida para modo vídeo, fotos en alta resolución y más.
-1.3.7 — Accesos directos de Google Apps añadidos a la interfaz.
-1.3.6 — Nuevo menú de opciones con Google Apps, temporizador, clic para reproducir, selección de motor de búsqueda y correcciones de reproducción.
-1.3.5 — Corrección de posición de play/pausa de vídeo, interruptor de reloj en el popup, analíticas mejoradas.
-1.3.4 — Reloj con opciones de formato, ocultar sitios frecuentes y correcciones de errores.
+1.3.8 - Planes de suscripción Pro: planes anuales y de por vida para modo vídeo, fotos en alta resolución y más.
+1.3.7 - Accesos directos de Google Apps añadidos a la interfaz.
+1.3.6 - Nuevo menú de opciones con Google Apps, temporizador, clic para reproducir, selección de motor de búsqueda y correcciones de reproducción.
+1.3.5 - Corrección de posición de play/pausa de vídeo, interruptor de reloj en el popup, analíticas mejoradas.
+1.3.4 - Reloj con opciones de formato, ocultar sitios frecuentes y correcciones de errores.
 
 Historial completo: https://birdtab.app/changelog
