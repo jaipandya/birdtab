@@ -1,0 +1,41 @@
+STORAGE
+
+BirdTab uses the storage permission to save extension settings and local app state required for the new tab experience.
+
+We use chrome.storage.sync for small user preferences, including:
+- selected birding region
+- audio autoplay preference
+- mute state
+- onboarding completion state
+
+We use local extension storage for app state needed to load BirdTab quickly and to keep offline-ready data available on the device.
+
+This permission is only used for BirdTab settings and extension data.
+
+
+UNLIMITEDSTORAGE
+
+BirdTab uses unlimitedStorage to support offline mode.
+
+The extension stores BirdTab's bird dataset and related offline assets locally on the user's device so birds can still be shown when the user is offline. The default extension storage quota is not sufficient for the full offline dataset, and unlimitedStorage is required so this data can be stored reliably without being evicted by normal browser quota limits.
+
+This permission is only used for BirdTab's offline bird data and assets.
+
+
+HOST PERMISSIONS
+
+https://*.birdtab.app/*
+
+BirdTab uses this host permission to access BirdTab-owned services required by the extension.
+
+This includes:
+- fetching the BirdTab media manifest and related dataset updates from BirdTab infrastructure
+- loading extension data needed to support the offline bird library
+- calling BirdTab endpoints used by extension lifecycle flows such as uninstall feedback
+
+This permission is limited to BirdTab-owned domains and is only used for extension functionality.
+
+
+https://*.ingest.us.sentry.io/*
+
+Used for error monitoring and crash reporting via Sentry. This helps us identify and fix bugs that users encounter. No personal user data is collected - only technical error information such as stack traces, error messages, extension version, and browser environment details needed to improve extension stability and reliability.

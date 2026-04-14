@@ -1,6 +1,6 @@
 Transforme cada nova aba em um refúgio relaxante na natureza com belos papéis de parede de aves, cantos de pássaros relaxantes e fatos fascinantes sobre a vida selvagem.
 
-BirdTab substitui sua página de nova aba do Chrome com fotografia de aves de tirar o fôlego e vídeos de todo o mundo. Toda vez que você abre uma aba, descobre uma nova espécie de ave - com cantos autênticos, sons da natureza e informações interessantes. É como ter uma janela para o mundo natural direto no seu navegador.
+BirdTab substitui sua página de nova aba do Chrome com fotografia de aves de tirar o fôlego de todo o mundo. Toda vez que você abre uma aba, descobre uma nova espécie de ave - com cantos autênticos, sons da natureza e informações interessantes. É como ter uma janela para o mundo natural direto no seu navegador.
 
 POR QUE OS USUÁRIOS AMAM O BIRDTAB
 
@@ -8,20 +8,21 @@ Diferente das extensões genéricas de papel de parede, BirdTab é uma experiên
 
 RECURSOS PRINCIPAIS
 
-- Novo papel de parede de ave em cada nova aba - fotografia de vida selvagem impressionante
-- Vídeos de aves em HD - assista pássaros voar, cantar e buscar alimento em seu habitat natural
+- Novo papel de parede de ave em cada nova aba - fotografia de vida selvagem em alta resolução
 - Cantos de aves e sons da natureza autênticos - com volume ajustável e horários silenciosos
 - Fatos fascinantes sobre aves - comportamento, habitat e status de conservação
-- Observação global - explore aves de qualquer região ou país
+- Observação global - explore aves de todo o mundo, com mais regiões a caminho
 - Quiz interativo de identificação de aves - teste seus conhecimentos e compartilhe resultados
 - Histórico de observação - acompanhe cada ave que você descobriu
-- Ferramentas de produtividade integradas - busca, atalhos, relógio e temporizador
+- Relógio e temporizador - mantenha o foco enquanto aprecia a natureza
+- Ferramentas de produtividade integradas - busca, atalhos e mais
 - Funciona offline - aproveite suas aves mesmo sem internet
-- 100% focado em privacidade - sem dados pessoais, sem anúncios, sem rastreamento
+- Sem anúncios, sem cadastro, sem compromissos
+- 100% focado em privacidade - sem dados pessoais, sem rastreamento
 
-ALIMENTADO PELO EBIRD
+MILHARES DE ESPÉCIES
 
-Todos os dados de espécies vêm do eBird (Cornell Lab of Ornithology), o maior projeto de ciência cidadã sobre biodiversidade do mundo, garantindo fotos, cantos e fatos sempre precisos e atualizados. São milhares de espécies de aves - de araras tropicais e beija-flores a majestosas águias e corujas.
+Descubra milhares de espécies de aves de todos os continentes - de araras tropicais e beija-flores a majestosas águias e corujas. Cada foto é de alta resolução e cuidadosamente selecionada para oferecer a experiência de observação de aves mais impressionante e diversa possível.
 
 PERFEITO PARA
 
@@ -32,20 +33,12 @@ PERFEITO PARA
 - Estudantes e educadores interessados em ornitologia
 - Amantes de papéis de parede de natureza
 
-RECURSOS PRO (upgrade opcional)
-
-- Modo Vídeo - veja as aves ganharem vida com clipes impressionantes
-- Fotos em alta resolução 2400px - detalhes nítidos em qualquer tela
-- Regiões internacionais - descubra aves de qualquer país do mundo
-- Relógio e temporizador - mantenha o foco enquanto aprecia a natureza
-
 NOVIDADES
 
-1.3.9 - Popover de informações da ave com link do eBird, mapa de distribuição e descrição da ave. Modo sem distrações.
-1.3.8 - Planos de assinatura Pro: planos anuais e vitalícios para modo vídeo, fotos em alta resolução e mais.
+2.0.0 - Fotos em alta resolução, regiões internacionais, relógio, temporizador, suporte offline aprimorado e uma experiência renovada.
+1.3.9 - Popover de informações da ave com mapa de distribuição e descrição da ave. Modo sem distrações.
 1.3.7 - Atalhos do Google Apps adicionados à interface.
 1.3.6 - Novo menu de opções com Google Apps, temporizador, clique para reproduzir, seleção de mecanismo de busca e correções de reprodução.
-1.3.5 - Correção de posição de play/pause do vídeo, botão do relógio no popup, análises aprimoradas.
 1.3.4 - Exibição do relógio com opções de formato, ocultar sites frequentes e correções de bugs.
 
 Registro completo de alterações: https://birdtab.app/changelog

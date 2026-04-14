@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - خلفيات طيور وفيديوهات وأصوات طبيعة في صفحة علامة التبويب الجديدة",
+    "message": "BirdTab - خلفيات طيور وأصوات طبيعة في صفحة علامة التبويب الجديدة",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "حوّل صفحة علامة التبويب الجديدة بخلفيات الطيور وفيديوهات الطيور وأصوات الطبيعة الهادئة",
+    "message": "حوّل صفحة علامة التبويب الجديدة بخلفيات الطيور وأصوات الطبيعة الهادئة",
     "description": "Description of the extension"
   },
   "pageTitle": {
@@ -14,10 +14,6 @@
   "infoTooltip": {
     "message": "معلومات الطائر",
     "description": "Tooltip for the info icon"
-  },
-  "infoAlt": {
-    "message": "معلومات",
-    "description": "Alt text for info icon"
   },
   "cameraAlt": {
     "message": "كاميرا",
@@ -83,24 +79,20 @@
     "message": "منطقة مراقبة الطيور",
     "description": "Label for region selection"
   },
-  "regionTooltip": {
-    "message": "اختر المنطقة التي تريد رؤية الطيور منها. ستظل ترى طيوراً من جميع أنحاء العالم!",
-    "description": "Tooltip for region selection"
-  },
-  "regionHelpText": {
-    "message": "يساعدنا هذا في إظهار الطيور التي قد تشاهدها في منطقتك.",
-    "description": "Help text for region selection"
+  "regionComingSoon": {
+    "message": "Discover birds from every corner of the globe. More regions coming soon!",
+    "description": "Message shown when region selection is disabled"
   },
   "autoPlayBirdCalls": {
     "message": "تشغيل الوسائط تلقائياً",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "تشغيل أصوات الطيور في وضع الصورة أو الفيديو في وضع الفيديو تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
+    "message": "تشغيل أصوات الطيور تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "تمكين التشغيل التلقائي لأصوات الطيور أو الفيديو عند فتح علامة تبويب جديدة",
+    "message": "تمكين التشغيل التلقائي لأصوات الطيور عند فتح علامة تبويب جديدة",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -168,55 +160,11 @@
     "description": "Alt text for demo image"
   },
   "welcomeDescription1": {
-    "message": "استعد لجرعة يومية من عجائب الطيور! كل علامة تبويب جديدة تجلب لك وجهاً لوجه مع صور مذهلة للطيور وحقائق رائعة.",
+    "message": "اكتشف طائراً مذهلاً مع كل علامة تبويب جديدة. تصوير جميل وحقائق رائعة وأصوات طبيعة هادئة من حول العالم.",
     "description": "First paragraph of welcome description"
   },
-  "welcomeDescription2": {
-    "message": "إنه مثل وجود نافذة على عالم الطيور مباشرة في متصفحك!",
-    "description": "Second paragraph of welcome description"
-  },
-  "nextButton": {
-    "message": "التالي",
-    "description": "Next button text for onboarding"
-  },
-  "chooseBirdingRegion": {
-    "message": "اختر منطقة مراقبة الطيور الخاصة بك",
-    "description": "Header for region selection step"
-  },
-  "regionSelectionDescription": {
-    "message": "حدد منطقتك المفضلة لرؤية الطيور الموجودة عادة في منطقتك. لا تقلق، ستظل قادراً على استكشاف الطيور من جميع أنحاء العالم!",
-    "description": "Description for region selection"
-  },
-  "unitedStates": {
-    "message": "الولايات المتحدة",
-    "description": "Country name for United States"
-  },
-  "canada": {
-    "message": "كندا",
-    "description": "Country name for Canada"
-  },
-  "unitedKingdom": {
-    "message": "المملكة المتحدة",
-    "description": "Country name for United Kingdom"
-  },
-  "india": {
-    "message": "الهند",
-    "description": "Country name for India"
-  },
-  "regionSelectionHelpText": {
-    "message": "يساعدنا هذا في إظهار الطيور التي قد تشاهدها في منطقتك المحلية. يمكنك تغيير هذا في أي وقت في الإعدادات.",
-    "description": "Help text for region selection in onboarding"
-  },
-  "birdCallsTitle": {
-    "message": "أصوات الطيور: موسيقى لأذنيك؟",
-    "description": "Title for bird calls onboarding step"
-  },
-  "birdCallsDescription": {
-    "message": "تريد سماع الزقزقة والتغريد؟ فعّل التشغيل التلقائي لتجربة مراقبة طيور غامرة!",
-    "description": "Description for bird calls setting"
-  },
   "autoPlayNote": {
-    "message": "لا تقلق، يمكنك دائماً تشغيل أو إيقاف الأصوات لكل طائر. هذا الإعداد يحدد فقط السلوك الافتراضي، ويمكنك تغييره لاحقاً إذا رغبت.",
+    "message": "استمع لأصوات الطيور في كل مرة تفتح فيها علامة تبويب جديدة. يمكنك تعديل هذا في أي وقت من الإعدادات.",
     "description": "Note about auto-play setting flexibility"
   },
   "startBirding": {
@@ -635,14 +583,6 @@
     "message": "إغلاق الاختبار",
     "description": "Aria label for close quiz button"
   },
-  "bingSearchAlt": {
-    "message": "بحث بينغ",
-    "description": "Alt text for Bing search icon"
-  },
-  "eBirdPageAlt": {
-    "message": "صفحة eBird",
-    "description": "Alt text for eBird page icon"
-  },
   "quizAlt": {
     "message": "اختبار",
     "description": "Alt text for quiz icon"
@@ -723,53 +663,9 @@
     "message": "شاهد هذا الطائر الجميل {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoAlt": {
-    "message": "فيديو",
-    "description": "Alt text for video icon"
-  },
-  "videoMode": {
-    "message": "وضع الفيديو",
-    "description": "Label for video mode setting"
-  },
-  "videoModeHelpText": {
-    "message": "عرض مقاطع فيديو الطيور بدلاً من الصور عند توفرها.",
-    "description": "Help text for video mode setting"
-  },
-  "videoModeTooltip": {
-    "message": "تفعيل لعرض مقاطع فيديو الطيور بدلاً من الصور عند توفرها",
-    "description": "Tooltip for video mode toggle"
-  },
-  "videoUnavailableAlt": {
-    "message": "الفيديو غير متاح (اتصال بطيء)",
-    "description": "Alt text for video unavailable icon when connection is slow"
-  },
-  "videoUnavailableTooltip": {
-    "message": "الفيديو غير متاح: اتصالك بطيء (2G/3G) أو تم تفعيل موفر البيانات. يتم عرض الصورة لتوفير البيانات.",
-    "description": "Tooltip explaining why video is unavailable due to slow connection"
-  },
-  "videoNotAvailableForBird": {
-    "message": "لا يوجد فيديو متاح لهذا الطائر",
-    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
-  },
   "loadingAudio": {
     "message": "جارٍ تحميل الصوت",
     "description": "Loading indicator text when fetching audio for photo mode"
-  },
-  "loadingVideo": {
-    "message": "جارٍ تحميل الفيديو",
-    "description": "Loading indicator text when loading video"
-  },
-  "buffering": {
-    "message": "تخزين مؤقت",
-    "description": "Loading indicator text when video is buffering"
-  },
-  "viaText": {
-    "message": "عبر",
-    "description": "Text before Macaulay Library link in credits"
-  },
-  "macaulayLibrary": {
-    "message": "مكتبة ماكولاي",
-    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "سجل المشاهدة",
@@ -859,20 +755,12 @@
     "message": "رجوع",
     "description": "Feature tour: back button text"
   },
-  "tourVideoToggleTitle": {
-    "message": "وضع الفيديو",
-    "description": "Feature tour: video toggle title"
-  },
-  "tourVideoToggleDescription": {
-    "message": "قم بالتبديل بين الصور والفيديو! فعّل هذا لمشاهدة الطيور وهي تتحرك مع مقاطع فيديو جميلة.",
-    "description": "Feature tour: video toggle description"
-  },
   "tourVolumeTitle": {
     "message": "التحكم في مستوى الصوت",
     "description": "Feature tour: volume controls title"
   },
   "tourVolumeDescription": {
-    "message": "اضبط مستوى الصوت حسب تفضيلك. تحكم في صوت أصوات الطيور ومقاطع الفيديو لإنشاء تجربتك المثالية.",
+    "message": "اضبط مستوى الصوت حسب تفضيلك. تحكم في صوت أصوات الطيور لإنشاء تجربتك المثالية.",
     "description": "Feature tour: volume controls description"
   },
   "tourRefreshTitle": {
@@ -918,22 +806,6 @@
   "errorResettingTour": {
     "message": "خطأ في إعادة تعيين جولة الميزات",
     "description": "Error message when tour reset fails"
-  },
-  "proBadge": {
-    "message": "Pro",
-    "description": "Badge text for premium features"
-  },
-  "highResImages": {
-    "message": "صور عالية الدقة",
-    "description": "Label for high-resolution images feature"
-  },
-  "highResHelpText": {
-    "message": "عرض صور طيور عالية الدقة للحصول على تفاصيل واضحة للغاية.",
-    "description": "Help text for high-resolution images setting"
-  },
-  "highResTooltip": {
-    "message": "تمكين لإظهار الصور عالية الدقة",
-    "description": "Tooltip for high-resolution images toggle"
   },
   "chromeTabTooltip": {
     "message": "فتح صفحة علامة تبويب Chrome الجديدة الافتراضية",
@@ -1195,6 +1067,14 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
+  "tourCreditsTitle": {
+    "message": "الاعتمادات والترخيص",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "ستجد هنا اسم المصوّر ومسجّل الصوت لكل طائر. اضغط على أي اسم لمعرفة المزيد والاطلاع على تفاصيل الترخيص.",
+    "description": "Feature tour: credits line description"
+  },
   "tourOptionsMenuTitle": {
     "message": "القائمة السريعة",
     "description": "Feature tour: options menu title"
@@ -1203,358 +1083,6 @@
     "message": "الوصول إلى الإعدادات وسجل المشاهدة واختبار الطيور من هذه القائمة. انقر لاستكشاف خياراتك!",
     "description": "Feature tour: options menu description"
   },
-  "alreadyHaveLicense": {
-    "message": "هل لديك ترخيص بالفعل؟",
-    "description": "Divider text for license activation section"
-  },
-  "proFeatureVideoMode": {
-    "message": "وضع الفيديو",
-    "description": "Pro feature: Video Mode title"
-  },
-  "proFeatureVideoModeDesc": {
-    "message": "شاهد مقاطع فيديو مذهلة للطيور بدلاً من الصور",
-    "description": "Pro feature: Video Mode description"
-  },
-  "proFeatureHighRes": {
-    "message": "صور عالية الدقة",
-    "description": "Pro feature: High-Res Images title"
-  },
-  "proFeatureHighResDesc": {
-    "message": "تصوير طيور بدقة 2400 بكسل فائقة الوضوح",
-    "description": "Pro feature: High-Res Images description"
-  },
-  "proFeatureRegion": {
-    "message": "مناطق دولية",
-    "description": "Pro feature: Region title"
-  },
-  "proFeatureRegionDesc": {
-    "message": "اكتشف الطيور من أي بلد في العالم",
-    "description": "Pro feature: Region description"
-  },
-  "proFeatureClock": {
-    "message": "ساعة ومؤقت",
-    "description": "Pro feature: Clock/Timer title"
-  },
-  "proFeatureClockDesc": {
-    "message": "اعرض الوقت أو مؤقت التركيز على علامة التبويب الجديدة",
-    "description": "Pro feature: Clock/Timer description"
-  },
-  "enterLicenseKey": {
-    "message": "أدخل مفتاح الترخيص",
-    "description": "Placeholder for license key input"
-  },
-  "activate": {
-    "message": "تفعيل",
-    "description": "Button text for license activation"
-  },
-  "activating": {
-    "message": "جارٍ التفعيل...",
-    "description": "Button text while activating license"
-  },
-  "enterValidKey": {
-    "message": "يرجى إدخال مفتاح ترخيص صالح",
-    "description": "Error when no key entered"
-  },
-  "licenseActivated": {
-    "message": "تم تفعيل الترخيص بنجاح!",
-    "description": "Success message for license activation"
-  },
-  "activationFailed": {
-    "message": "فشل التفعيل. يرجى التحقق من مفتاح الترخيص.",
-    "description": "Error message for failed activation"
-  },
-  "activationError": {
-    "message": "حدث خطأ. يرجى المحاولة مرة أخرى.",
-    "description": "Generic error for activation"
-  },
-  "birdtabPro": {
-    "message": "BirdTab Pro",
-    "description": "Product name"
-  },
-  "licenseActive": {
-    "message": "نشط",
-    "description": "License status: active"
-  },
-  "licenseGrace": {
-    "message": "جدد قريبًا",
-    "description": "License status: subscription expired but within renewal window"
-  },
-  "licenseExpired": {
-    "message": "منتهي",
-    "description": "License status: expired"
-  },
-  "licenseLifetime": {
-    "message": "مدى الحياة",
-    "description": "License type: lifetime"
-  },
-  "licenseYearly": {
-    "message": "سنوي",
-    "description": "License type: yearly subscription"
-  },
-  "licenseTrial": {
-    "message": "تجريبي",
-    "description": "License type: trial"
-  },
-  "expired": {
-    "message": "منتهي",
-    "description": "Generic expired label"
-  },
-  "email": {
-    "message": "البريد الإلكتروني",
-    "description": "Label for email"
-  },
-  "licenseKey": {
-    "message": "الترخيص",
-    "description": "Label for license key"
-  },
-  "expires": {
-    "message": "ينتهي",
-    "description": "Label for expiry date"
-  },
-  "deactivate": {
-    "message": "إلغاء التفعيل",
-    "description": "Button to deactivate license"
-  },
-  "confirmDeactivate": {
-    "message": "هل أنت متأكد أنك تريد إلغاء تفعيل ترخيصك؟",
-    "description": "Confirmation for license deactivation"
-  },
-  "deactivating": {
-    "message": "جارٍ إلغاء التفعيل…",
-    "description": "Button label while license deactivation is in progress"
-  },
-  "licenseDeactivated": {
-    "message": "تم إلغاء تفعيل الترخيص. جارٍ إعادة التحميل…",
-    "description": "Toast shown after license is successfully deactivated"
-  },
-  "free": {
-    "message": "مجاني",
-    "description": "License status: free tier"
-  },
-  "upgradePrompt": {
-    "message": "افتح وضع الفيديو والصور عالية الدقة والمناطق الدولية والساعة/المؤقت.",
-    "description": "Prompt to upgrade to Pro"
-  },
-  "upgradeToPro": {
-    "message": "الترقية إلى Pro",
-    "description": "Button to upgrade"
-  },
-  "licenseStatusError": {
-    "message": "تعذر تحميل حالة الترخيص",
-    "description": "Error loading license status"
-  },
-  "upgradeNow": {
-    "message": "الترقية الآن",
-    "description": "Button to upgrade immediately"
-  },
-  "close": {
-    "message": "إغلاق",
-    "description": "Generic close button label"
-  },
-  "unlockProFeatures": {
-    "message": "افتح ميزات Pro",
-    "description": "Prompt for free users to upgrade"
-  },
-  "manage": {
-    "message": "إدارة",
-    "description": "Button to manage license details"
-  },
-  "manageSubscription": {
-    "message": "الاشتراك",
-    "description": "Button to manage subscription in customer portal"
-  },
-  "billingHistory": {
-    "message": "الفوترة",
-    "description": "Button to view billing history and invoices in customer portal"
-  },
-  "renew": {
-    "message": "تجديد",
-    "description": "Button to renew subscription"
-  },
-  "refreshStatus": {
-    "message": "تحديث الحالة",
-    "description": "Button to refresh license status"
-  },
-  "trialDayLeft": {
-    "message": "يوم واحد متبقي",
-    "description": "Trial period: single day remaining"
-  },
-  "trialDaysLeft": {
-    "message": "$1 أيام متبقية",
-    "description": "Trial period: multiple days remaining",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "7"
-      }
-    }
-  },
-  "trialExpired": {
-    "message": "انتهت فترتك التجريبية",
-    "description": "Message when trial period has expired"
-  },
-  "licenseOffline": {
-    "message": "غير متصل",
-    "description": "Status label when license cannot be verified due to being offline"
-  },
-  "offlineGraceExpiredNotice": {
-    "message": "اتصل بالإنترنت للتحقق من ترخيصك واستعادة ميزات Pro.",
-    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
-  },
-  "unlockFeature": {
-    "message": "فتح $1",
-    "description": "Title for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "Video Mode"
-      }
-    }
-  },
-  "unlockFullExperience": {
-    "message": "افتح التجربة الكاملة",
-    "description": "Title for upgrade modal when opened without a specific feature trigger"
-  },
-  "upgradeFeatureSubtitle": {
-    "message": "هذه الميزة جزء من BirdTab Pro. قم بالترقية للوصول إلى $1 وجميع الميزات المميزة.",
-    "description": "Subtitle for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "video mode"
-      }
-    }
-  },
-  "proActivatedBody": {
-    "message": "كل علامة تبويب جديدة أصبحت الآن نافذة على عالم الطبيعة. جارٍ إعادة التحميل…",
-    "description": "Body text shown after successful Pro license activation"
-  },
-  "deviceLimitTitle": {
-    "message": "تم الوصول إلى حد الأجهزة",
-    "description": "Title shown when license activation fails due to device limit"
-  },
-  "deviceLimitBody": {
-    "message": "جميع خانات الأجهزة في ترخيصك مستخدمة. للتفعيل هنا، قم بتحرير خانة أولاً: اذهب إلى الإعدادات ← إدارة ← إلغاء التفعيل على جهاز آخر مثبت عليه BirdTab، أو قم بإزالة جهاز من حسابك.",
-    "description": "Body text explaining device limit and how to resolve it"
-  },
-  "manageDevices": {
-    "message": "إدارة الأجهزة",
-    "description": "Button text to manage devices in customer portal"
-  },
-  "proTrialActive": {
-    "message": "الفترة التجريبية Pro نشطة",
-    "description": "Badge text shown during active Pro trial"
-  },
-  "trialWelcomeTitle": {
-    "message": "مرحباً في BirdTab Pro",
-    "description": "Title for trial welcome modal"
-  },
-  "trialWelcomeSubtitle": {
-    "message": "بدأت فترتك التجريبية المجانية لمدة $1 يوم. استمتع بجميع ميزات Pro واكتشف الجمال الكامل للطيور حول العالم.",
-    "description": "Subtitle for trial welcome modal",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "14"
-      }
-    }
-  },
-  "today": {
-    "message": "اليوم",
-    "description": "Label for today in trial timeline"
-  },
-  "startExploring": {
-    "message": "ابدأ الاستكشاف",
-    "description": "Button text to dismiss trial welcome modal"
-  },
-  "trialFooterNote": {
-    "message": "لا حاجة لبطاقة ائتمان. بعد انتهاء الفترة التجريبية، ستعود إلى النسخة المجانية.",
-    "description": "Footer note in trial welcome modal"
-  },
-  "trialEnded": {
-    "message": "انتهت الفترة التجريبية",
-    "description": "Badge text shown when trial has expired"
-  },
-  "trialExpiredTitle": {
-    "message": "انتهت فترتك التجريبية المجانية",
-    "description": "Title for trial expired modal"
-  },
-  "trialExpiredSubtitle": {
-    "message": "شكراً لتجربتك BirdTab Pro! يمكنك الاستمرار في استخدام الميزات الأساسية مجاناً، أو الترقية للاستمرار في الاستمتاع بالتجربة الكاملة.",
-    "description": "Subtitle for trial expired modal"
-  },
-  "trialLostFeatures": {
-    "message": "ميزات Pro التي ستفقدها:",
-    "description": "Heading for list of Pro features lost after trial"
-  },
-  "trialValueProp": {
-    "message": "قم بالترقية إلى Pro وادعم التطوير المستقل مع الاستمتاع بجميع الميزات. اشتراكك يبقي BirdTab خالياً من الإعلانات ويتحسن باستمرار.",
-    "description": "Value proposition text in trial expired modal"
-  },
-  "continueWithFree": {
-    "message": "المتابعة مع النسخة المجانية",
-    "description": "Button text to dismiss trial expired modal and continue with free version"
-  },
-  "proWelcomeBadgeLifetime": {
-    "message": "Pro مدى الحياة",
-    "description": "Badge text in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeBadgeYearly": {
-    "message": "Pro سنوي",
-    "description": "Badge text in Pro welcome modal for yearly license"
-  },
-  "proWelcomeTitle": {
-    "message": "مرحبًا بك في BirdTab Pro",
-    "description": "Title in Pro welcome modal"
-  },
-  "proWelcomeSubtitleLifetime": {
-    "message": "لديك الآن <strong>وصول مدى الحياة</strong> إلى جميع ميزات Pro. كل علامة تبويب جديدة هي نافذة على العالم الطبيعي.",
-    "description": "Subtitle in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeSubtitleYearly": {
-    "message": "جميع ميزات Pro <strong>مفتوحة</strong> الآن. كل علامة تبويب جديدة هي نافذة على العالم الطبيعي.",
-    "description": "Subtitle in Pro welcome modal for yearly license"
-  },
-  "proWelcomeThanks": {
-    "message": "دعمك يموّل مباشرة تطوير BirdTab — بيانات أفضل وميزات جديدة وتجربة خالية من الإعلانات. شكرًا لك على كونك جزءًا من هذه الرحلة.",
-    "description": "Thank you message in Pro welcome modal"
-  },
-  "proWelcomeVideoTitle": {
-    "message": "وضع الفيديو",
-    "description": "Video feature title in Pro welcome modal"
-  },
-  "proWelcomeVideoDesc": {
-    "message": "شاهد الطيور تنبض بالحياة مع مقاطع فيديو مذهلة",
-    "description": "Video feature description in Pro welcome modal"
-  },
-  "proWelcomeHighResTitle": {
-    "message": "صور عالية الدقة",
-    "description": "High-res feature title in Pro welcome modal"
-  },
-  "proWelcomeHighResDesc": {
-    "message": "صور واضحة بدقة 2400 بكسل بتفاصيل مذهلة",
-    "description": "High-res feature description in Pro welcome modal"
-  },
-  "proWelcomeRegionTitle": {
-    "message": "مناطق العالم",
-    "description": "Region feature title in Pro welcome modal"
-  },
-  "proWelcomeRegionDesc": {
-    "message": "اكتشف طيورًا من أي بلد في العالم",
-    "description": "Region feature description in Pro welcome modal"
-  },
-  "proWelcomeClockTitle": {
-    "message": "الساعة والمؤقت",
-    "description": "Clock feature title in Pro welcome modal"
-  },
-  "proWelcomeClockDesc": {
-    "message": "تتبع الوقت أثناء الاستمتاع بالطبيعة",
-    "description": "Clock feature description in Pro welcome modal"
-  },
-  "pausedAlt": {
-    "message": "متوقف مؤقتًا",
-    "description": "Alt text for pause indicator icon"
-  },
   "audioPlayingAlt": {
     "message": "تشغيل الصوت",
     "description": "Alt text for audio playing waveform icon"
@@ -1562,10 +1090,6 @@
   "audioPausedAlt": {
     "message": "الصوت متوقف مؤقتًا",
     "description": "Alt text for audio paused icon"
-  },
-  "conservationStatus": {
-    "message": "حالة الحماية:",
-    "description": "Label prefix for conservation status in bird info tooltip"
   },
   "conservationStatusTitle": {
     "message": "حالة الحماية",
@@ -1651,22 +1175,6 @@
     "message": "Microsoft Edge",
     "description": "Alt text for Microsoft Edge icon in search"
   },
-  "proBadgeLabel": {
-    "message": "Pro",
-    "description": "Short label for Pro badge in settings sidebar"
-  },
-  "onboardingStep1": {
-    "message": "الخطوة 1",
-    "description": "Aria label for onboarding progress dot 1"
-  },
-  "onboardingStep2": {
-    "message": "الخطوة 2",
-    "description": "Aria label for onboarding progress dot 2"
-  },
-  "onboardingStep3": {
-    "message": "الخطوة 3",
-    "description": "Aria label for onboarding progress dot 3"
-  },
   "lowDistractionToggle": {
     "message": "إخفاء التفاصيل",
     "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
@@ -1690,5 +1198,79 @@
   "regionHighSeas": {
     "message": "أعالي البحار",
     "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "preparingExperience": {
+    "message": "جاري تحضير تجربتك…",
+    "description": "Loading message shown during onboarding while manifest downloads"
+  },
+  "creditPhotoBy": {
+    "message": "تصوير",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "تسجيل صوتي",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "نوع الصوت",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "موقع التصوير",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "موقع التسجيل",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditViewOnMap": {
+    "message": "انقر للعرض على الخريطة",
+    "description": "Suffix appended to location tooltip when location is clickable"
+  },
+  "creditDateTaken": {
+    "message": "تاريخ الالتقاط",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "تاريخ التسجيل",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "تم تغيير حجمها من الأصل",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "تم تغيير حجم الصورة من الأصل للعرض",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "تم التحويل إلى $1",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "تم تحويل الصوت من التنسيق الأصلي للتشغيل",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "المصدر",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "الترخيص",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "حقوق الوسائط والتراخيص",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "الحقوق والتراخيص",
+    "description": "Alt text for the credit info trigger icon"
   }
 }

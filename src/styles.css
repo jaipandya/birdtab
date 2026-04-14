@@ -197,389 +197,6 @@ body.loaded {
   /* transition: transform 0.3s ease; */
 }
 
-.background-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-/* Image used as fallback when video fails to load */
-.background-image.video-fallback {
-  z-index: 0;
-}
-
-/* Video play overlay - shown when returning to tab after unload */
-/* z-index 1000: Above info-panel (100) and control-buttons (1000), but below share-menu (1001), modals (2000+), and feature tour (9998+) */
-.video-play-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  z-index: 1000;
-  pointer-events: none;
-  /* Allow clicks through to elements beneath */
-  cursor: pointer;
-}
-
-/* Shift play button down when top sites are visible (without clock) */
-.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-play-overlay {
-  /* Move to bottom portion of screen to avoid overlap with search/top sites */
-  align-items: flex-end;
-  padding-bottom: 20vh;
-}
-
-/* Shift play button down further when clock AND top sites are visible */
-.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-play-overlay {
-  /* Move further down to avoid overlap with clock/search/top sites */
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-/* Shift play button down slightly when clock AND search bar are visible but top sites are hidden */
-.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-play-overlay {
-  /* Move down a bit to avoid overlap with clock/search area */
-  align-items: flex-end;
-  padding-bottom: 30vh;
-}
-
-/* Shift play button down when timer is active (running/paused/finished) */
-/* Timer takes visual priority - uses same position as clock+top-sites (12vh) */
-.timer-active .video-play-overlay {
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-/* Clock only (no search bar, no top sites) - keep centered, no shift needed */
-
-@keyframes overlayFadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-/* Subtle fade in for play button after pause */
-@keyframes playOverlaySubtleFadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.video-play-btn {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: var(--white-8);
-  border: 2px solid var(--white-15);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
-  pointer-events: auto;
-  /* Re-enable pointer events for the button */
-}
-
-.video-play-btn:hover {
-  transform: scale(1.05);
-  background: var(--white-15);
-  border-color: var(--white-30);
-}
-
-.video-play-btn:active {
-  transform: scale(0.98);
-}
-
-.video-play-btn img {
-  width: 56px;
-  height: 56px;
-  margin-left: 8px;
-  /* Optical centering for play triangle */
-  filter: brightness(0) invert(1);
-  /* Make SVG white */
-  opacity: 0.4;
-  transition: opacity 0.25s ease;
-}
-
-.video-play-btn:hover img {
-  opacity: 0.7;
-}
-
-/* Video pause indicator - YouTube-like brief pause symbol */
-/* z-index 1000: Same as video-play-overlay, above panels but below interactive overlays */
-.video-pause-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  pointer-events: none;
-  animation: pauseIndicatorFade 0.4s ease forwards;
-}
-
-/* Shift pause indicator down when top sites are visible (without clock) - matches play overlay */
-.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-pause-indicator {
-  align-items: flex-end;
-  padding-bottom: 20vh;
-}
-
-/* Shift pause indicator down further when clock AND top sites are visible - matches play overlay */
-.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-pause-indicator {
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-/* Shift pause indicator down when clock AND search bar are visible but top sites are hidden - matches play overlay */
-.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-pause-indicator {
-  align-items: flex-end;
-  padding-bottom: 30vh;
-}
-
-/* Shift pause indicator down when timer is active - matches play overlay */
-.timer-active .video-pause-indicator {
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-/* Clock only (no search bar, no top sites) - keep centered, no shift needed */
-
-@keyframes pauseIndicatorFade {
-  0% {
-    opacity: 0;
-  }
-
-  15% {
-    opacity: 0.6;
-  }
-
-  70% {
-    opacity: 0.6;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Pause icon container - matches play button style */
-.pause-icon-container {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: var(--white-15);
-  border: 2px solid var(--white-30);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pause-icon-container img {
-  width: 56px;
-  height: 56px;
-  filter: brightness(0) invert(1);
-  opacity: 0.7;
-}
-
-/* Video play indicator - brief play symbol shown on resume */
-/* z-index 1000: Same as video-pause-indicator, above panels but below interactive overlays */
-.video-play-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  pointer-events: none;
-  animation: playIndicatorFade 0.4s ease forwards;
-}
-
-/* Shift play indicator down when top sites are visible (without clock) - matches pause indicator */
-.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-play-indicator {
-  align-items: flex-end;
-  padding-bottom: 20vh;
-}
-
-/* Shift play indicator down further when clock AND top sites are visible - matches pause indicator */
-.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-play-indicator {
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-/* Shift play indicator down when clock AND search bar are visible but top sites are hidden - matches pause indicator */
-.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-play-indicator {
-  align-items: flex-end;
-  padding-bottom: 30vh;
-}
-
-/* Shift play indicator down when timer is active - matches pause indicator */
-.timer-active .video-play-indicator {
-  align-items: flex-end;
-  padding-bottom: 12vh;
-}
-
-@keyframes playIndicatorFade {
-  0% {
-    opacity: 0;
-  }
-
-  15% {
-    opacity: 0.6;
-  }
-
-  70% {
-    opacity: 0.6;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Play icon container - matches pause icon container style */
-.play-icon-container {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: var(--white-15);
-  border: 2px solid var(--white-30);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.play-icon-container img {
-  width: 56px;
-  height: 56px;
-  margin-left: 8px;
-  /* Optical centering for play triangle */
-  filter: brightness(0) invert(1);
-  opacity: 0.7;
-}
-
-/* Video loading/buffering indicator - minimal floating pill */
-.video-loading-indicator {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.625rem;
-  background: var(--black-25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 1.5rem;
-  z-index: 100;
-  animation: videoLoadingFadeIn 0.25s ease;
-  pointer-events: none;
-}
-
-@keyframes videoLoadingFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-.video-loading-indicator .loading-spinner {
-  width: 10px;
-  height: 10px;
-  border: 1.5px solid var(--white-20);
-  border-top-color: var(--white-70);
-  border-radius: 50%;
-  animation: videoLoadingSpinnerSpin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-.video-loading-indicator .loading-text {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--white-70);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-@keyframes videoLoadingSpinnerSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Video progress bar - shown on hover */
-.video-progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  opacity: 0;
-  transition: opacity 0.3s ease, height 0.2s ease;
-  z-index: 150;
-  cursor: pointer;
-  background: var(--white-15);
-}
-
-.video-progress.visible {
-  opacity: 1;
-}
-
-.video-progress:hover {
-  height: 8px;
-}
-
-.video-progress-buffered {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: var(--white-40);
-  pointer-events: none;
-  transition: width 0.1s ease;
-}
-
-.video-progress-played {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: var(--control-track-fill);
-  pointer-events: none;
-  transition: width 0.1s linear;
-}
-
 .control-buttons {
   position: fixed;
   bottom: 40px;
@@ -1467,11 +1084,26 @@ p {
   transition: color 0.2s ease;
 }
 
+.credit-attribution {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .credit-item {
   display: flex;
   align-items: center;
   gap: 0.375rem;
   transition: opacity 0.2s ease;
+  min-width: 0;
+}
+
+.credit-item a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .credit-item img,
@@ -1487,6 +1119,19 @@ p {
 
 .credit-item:hover img,
 .credit-item:hover svg {
+  opacity: 1;
+}
+
+.credit-info-trigger {
+  cursor: pointer;
+}
+
+.credit-info-trigger img {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.credit-info-trigger:hover img {
   opacity: 1;
 }
 
@@ -1507,103 +1152,6 @@ p {
   }
 }
 
-/* Media Toggle Switch (Video/Photo) */
-.credits .media-toggle-container {
-  margin-left: 0;
-  margin-right: 0.5rem;
-}
-
-.media-toggle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-.media-toggle input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.media-toggle-slider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 52px;
-  height: 24px;
-  background: var(--white-15);
-  border-radius: 12px;
-  transition: background 0.2s ease;
-  overflow: hidden;
-}
-
-.media-toggle-slider:hover {
-  background: var(--white-20);
-}
-
-.media-toggle-slider::before {
-  content: '';
-  position: absolute;
-  width: 22px;
-  height: 20px;
-  left: 2px;
-  background: var(--white-50);
-  border-radius: 10px;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1;
-}
-
-.media-toggle input:checked+.media-toggle-slider::before {
-  transform: translateX(26px);
-}
-
-/* Focus visible style for keyboard navigation */
-.media-toggle input:focus-visible+.media-toggle-slider {
-  outline: 2px solid var(--white-80);
-  outline-offset: 2px;
-}
-
-.media-toggle-icon {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  transition: opacity 0.2s ease;
-}
-
-.media-toggle-icon img {
-  width: 12px;
-  height: 12px;
-  transition: filter 0.2s ease, opacity 0.2s ease;
-}
-
-/* Photo icon - active (dark) when unchecked */
-.media-toggle-photo img {
-  filter: brightness(0);
-  opacity: 0.7;
-}
-
-/* Video icon - inactive (light) when unchecked */
-.media-toggle-video img {
-  filter: brightness(0) invert(1);
-  opacity: 0.5;
-}
-
-/* When checked (video mode): flip the states */
-.media-toggle input:checked+.media-toggle-slider .media-toggle-photo img {
-  filter: brightness(0) invert(1);
-  opacity: 0.5;
-}
-
-.media-toggle input:checked+.media-toggle-slider .media-toggle-video img {
-  filter: brightness(0);
-  opacity: 0.7;
-}
-
 .icon {
   width: 16px;
   height: 16px;
@@ -1613,6 +1161,322 @@ p {
 #photographer,
 #recordist {
   font-weight: bold;
+}
+
+/* ── Credit Attribution Popover ── */
+
+.credit-popover {
+  position: fixed;
+  z-index: 10001;
+  width: 272px;
+  background: var(--surface-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--white-10);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px var(--black-40);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.credit-popover[data-placement="below"] {
+  transform: translateY(-6px);
+}
+
+.credit-popover--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.credit-popover__divider {
+  height: 1px;
+  background: var(--white-8);
+  margin: 2px 14px;
+}
+
+/* Top section: eyebrow + name */
+.credit-popover__top {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 12px 14px 6px;
+}
+
+.credit-popover__eyebrow {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--white-30);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.credit-popover__name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--white-90);
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.credit-popover__name a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.credit-popover__name a:hover {
+  color: var(--text-primary);
+}
+
+/* Title line (original work name) */
+.credit-popover__title {
+  display: block;
+  padding: 0 14px 4px;
+  font-size: 0.62rem;
+  line-height: 1.4;
+  color: var(--white-30);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+a.credit-popover__title:hover {
+  color: var(--white-50);
+}
+
+a.credit-popover__title:focus-visible {
+  outline: 2px solid var(--white-35);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Caption line (description / alt text) */
+.credit-popover__caption {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 14px 8px;
+  padding: 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: var(--white-40);
+  font-style: italic;
+  text-align: left;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a.credit-popover__caption:hover {
+  color: var(--white-60);
+}
+
+a.credit-popover__caption:focus-visible {
+  outline: 2px solid var(--white-35);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Inline tags row (sound type, quality, location) */
+.credit-popover__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 14px 10px;
+  overflow: hidden;
+}
+
+.credit-popover__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--white-50);
+  background: var(--white-6);
+  border-radius: 4px;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.credit-popover__tag-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.credit-popover__tag--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.credit-popover__tag--link:hover {
+  color: var(--white-80);
+  background: var(--white-12);
+}
+
+.credit-popover__tag--link:focus-visible {
+  outline: 2px solid var(--white-35);
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
+.credit-popover__tag-icon {
+  width: 8px;
+  height: 10px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.credit-popover__tag-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.credit-popover__tag--muted {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.credit-popover__tag--link:hover .credit-popover__tag-icon {
+  opacity: 0.9;
+}
+
+/* Fields grid: label | value, two-column */
+.credit-popover__fields {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--white-6);
+}
+
+.credit-popover__field {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 14px;
+  text-align: left;
+}
+
+.credit-popover__field + .credit-popover__field {
+  border-top: 1px solid var(--white-4);
+}
+
+.credit-popover__label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--white-25);
+}
+
+.credit-popover__value {
+  min-width: 0;
+}
+
+.credit-popover__value-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: var(--white-60);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  line-height: 1.2;
+}
+
+.credit-popover__value-link:hover {
+  color: var(--white-90);
+}
+
+.credit-popover__value-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: var(--white-50);
+  line-height: 1.2;
+}
+
+.credit-popover__value-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+
+.credit-popover__value-link:hover .credit-popover__value-icon {
+  opacity: 0.8;
+}
+
+.credit-popover__value-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.credit-popover__ext-icon {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  margin-left: 1px;
+}
+
+.credit-popover__value-link:hover .credit-popover__ext-icon {
+  opacity: 0.5;
+}
+
+/* Focus styles */
+.credit-popover__name a:focus-visible,
+.credit-popover__value-link:focus-visible {
+  outline: 2px solid var(--white-35);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* RTL */
+html[dir="rtl"] .credit-popover__top {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .credit-popover__ext-icon {
+  margin-left: 0;
+  margin-right: 1px;
+}
+
+@media (max-width: 480px) {
+  .credit-popover {
+    width: calc(100vw - 2rem);
+    max-width: 272px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credit-popover {
+    transition: none;
+  }
 }
 
 @keyframes fade {
@@ -3359,38 +3223,6 @@ html[dir="rtl"] .history-footer {
   }
 }
 
-/* Share Menu Styles */
-.share-container {
-  position: relative;
-  display: inline-flex;
-}
-
-/* .share-container.credit-item inherits from .credit-item */
-
-.share-inline-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
-  padding: 4px;
-  margin: -4px;
-}
-
-.share-inline-button:hover {
-  opacity: 1;
-  background-color: var(--white-20);
-}
-
-.share-inline-button img {
-  width: 16px;
-  height: 16px;
-}
-
 .feedback-inline-link {
   display: inline-flex;
   align-items: center;
@@ -3414,142 +3246,6 @@ html[dir="rtl"] .history-footer {
 .feedback-inline-link img {
   width: 16px;
   height: 16px;
-}
-
-.share-menu {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  background: var(--black-90);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid var(--white-10);
-  box-shadow: 0 8px 32px var(--black-40);
-  width: 300px;
-  z-index: 1001;
-  animation: shareMenuFadeIn 0.2s ease-out;
-  overflow: hidden;
-}
-
-@keyframes shareMenuFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.share-menu-section {
-  padding: 12px 14px;
-}
-
-.share-menu-section:first-child {
-  border-bottom: 1px solid var(--white-10);
-}
-
-.share-menu-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--white-50);
-  margin: 0 0 8px 0;
-}
-
-.share-menu-url-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.share-menu-url {
-  flex: 1;
-  min-width: 0;
-  background: var(--white-5);
-  border-radius: 8px;
-  padding: 8px 12px;
-  border: 1px solid var(--white-10);
-  overflow: hidden;
-}
-
-.share-menu-url-text {
-  font-size: 13px;
-  color: var(--white-80);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-}
-
-.share-menu-copy-btn {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  background: var(--white-100);
-  color: var(--primary-foreground);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.share-menu-copy-btn:hover {
-  background: var(--white-90);
-}
-
-.share-menu-copy-btn.copied {
-  background: var(--status-success);
-  color: var(--text-on-accent);
-}
-
-.share-menu-social {
-  display: flex;
-  gap: 8px;
-}
-
-.share-social-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px 8px;
-  background: var(--white-5);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-}
-
-.share-social-btn:hover {
-  background: var(--white-10);
-}
-
-.share-social-btn svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-
-/* RTL support for share menu */
-html[dir="rtl"] .share-menu {
-  left: auto;
-  right: 0;
-}
-
-html[dir="rtl"] .share-menu-url-row {
-  flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .share-menu-social {
-  flex-direction: row-reverse;
 }
 
 /* Network Error State - Beautiful fallback when no cached birds available */
@@ -7235,4 +6931,312 @@ html[dir="rtl"] .low-distraction-toggle {
 html[dir="rtl"] .low-distraction-expand {
   left: auto;
   right: 2rem;
+}
+
+/* Share Menu Styles */
+.share-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.share-inline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  padding: 4px;
+  margin: -4px;
+}
+
+.share-inline-button:hover {
+  opacity: 1;
+  background-color: var(--white-20);
+}
+
+.share-inline-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.share-menu {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  background: var(--black-90);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid var(--white-10);
+  box-shadow: 0 8px 32px var(--black-40);
+  width: 300px;
+  z-index: 1001;
+  animation: shareMenuFadeIn 0.2s ease-out;
+  overflow: hidden;
+}
+
+@keyframes shareMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.share-menu-section {
+  padding: 12px 14px;
+}
+
+.share-menu-section:first-child {
+  border-bottom: 1px solid var(--white-10);
+}
+
+.share-menu-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--white-50);
+  margin: 0 0 8px 0;
+}
+
+.share-menu-url-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.share-menu-url {
+  flex: 1;
+  min-width: 0;
+  background: var(--white-5);
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--white-10);
+  overflow: hidden;
+}
+
+.share-menu-url-text {
+  font-size: 13px;
+  color: var(--white-80);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.share-menu-copy-btn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--white-100);
+  color: var(--primary-foreground);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-menu-copy-btn:hover {
+  background: var(--white-90);
+}
+
+.share-menu-copy-btn.copied {
+  background: var(--status-success);
+  color: var(--text-on-accent);
+}
+
+.share-menu-social {
+  display: flex;
+  gap: 8px;
+}
+
+.share-social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  background: var(--white-5);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.share-social-btn:hover {
+  background: var(--white-10);
+}
+
+.share-social-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* RTL support for share menu */
+html[dir="rtl"] .share-menu {
+  left: auto;
+  right: 0;
+}
+
+html[dir="rtl"] .share-menu-url-row {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .share-menu-social {
+  flex-direction: row-reverse;
+}
+
+/* Audio pause indicator */
+.video-pause-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  animation: pauseIndicatorFade 0.4s ease forwards;
+}
+
+.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-pause-indicator {
+  align-items: flex-end;
+  padding-bottom: 20vh;
+}
+
+.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-pause-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-pause-indicator {
+  align-items: flex-end;
+  padding-bottom: 30vh;
+}
+
+.timer-active .video-pause-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+@keyframes pauseIndicatorFade {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.6;
+  }
+
+  70% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.pause-icon-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--white-15);
+  border: 2px solid var(--white-30);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pause-icon-container img {
+  width: 56px;
+  height: 56px;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+
+/* Audio play indicator */
+.video-play-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  animation: playIndicatorFade 0.4s ease forwards;
+}
+
+.quick-access-has-top-sites:not(.quick-access-has-clock):not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 20vh;
+}
+
+.quick-access-has-clock.quick-access-has-top-sites:not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+.quick-access-has-clock.quick-access-enabled:not(.quick-access-has-top-sites):not(.timer-active) .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 30vh;
+}
+
+.timer-active .video-play-indicator {
+  align-items: flex-end;
+  padding-bottom: 12vh;
+}
+
+@keyframes playIndicatorFade {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.6;
+  }
+
+  70% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.play-icon-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--white-15);
+  border: 2px solid var(--white-30);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-icon-container img {
+  width: 56px;
+  height: 56px;
+  margin-left: 8px;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
 }

@@ -1,6 +1,6 @@
 Verwandle jeden neuen Tab in eine entspannende Naturauszeit mit atemberaubenden Vogel-Hintergrundbildern, beruhigenden Vogelstimmen und faszinierenden Fakten über die Tierwelt.
 
-BirdTab ersetzt deine Chrome-Neuer-Tab-Seite mit beeindruckender Vogelfotografie und Videos aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
+BirdTab ersetzt deine Chrome-Neuer-Tab-Seite mit beeindruckender Vogelfotografie aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
 
 WARUM NUTZER BIRDTAB LIEBEN
 
@@ -8,20 +8,21 @@ Anders als gewöhnliche Hintergrundbild-Erweiterungen ist BirdTab ein vollständ
 
 HAUPTFUNKTIONEN
 
-- Neues Vogel-Hintergrundbild mit jedem neuen Tab - beeindruckende Wildtierfotografie
-- HD-Vogelvideos - beobachte Vögel beim Fliegen, Singen und Futtersuchen in ihrem natürlichen Lebensraum
+- Neues Vogel-Hintergrundbild mit jedem neuen Tab - hochauflösende Wildtierfotografie
 - Authentische Vogelrufe und Naturgeräusche - mit einstellbarer Lautstärke und Ruhezeiten
 - Faszinierende Vogelfakten - Verhalten, Lebensraum und Schutzstatus
-- Globale Vogelbeobachtung - entdecke Vögel aus jeder Region und jedem Land
+- Globale Vogelbeobachtung - entdecke Vögel aus aller Welt, weitere Regionen folgen
 - Interaktives Vogelbestimmungsquiz - teste dein Wissen und teile Ergebnisse
 - Beobachtungshistorie - verfolge jeden entdeckten Vogel
-- Integrierte Produktivitätstools - Suchfeld, Verknüpfungen, Uhr und Fokus-Timer
+- Uhr und Countdown-Timer - bleib fokussiert und genieße die Natur
+- Integrierte Produktivitätstools - Suchfeld, Verknüpfungen und mehr
 - Funktioniert offline - genieße deine Vögel auch ohne Internet
-- 100% datenschutzfreundlich - keine persönlichen Daten, keine Werbung, kein Tracking
+- Keine Werbung, keine Registrierung, keine Verpflichtungen
+- 100% datenschutzfreundlich - keine persönlichen Daten, kein Tracking
 
-UNTERSTÜTZT VON EBIRD
+TAUSENDE VON ARTEN
 
-Alle Artendaten stammen von eBird (Cornell Lab of Ornithology), dem weltweit größten Citizen-Science-Biodiversitätsprojekt, für präzise und aktuelle Fotos, Rufe und Fakten. Es gibt Tausende von Vogelarten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen.
+Entdecke Tausende von Vogelarten aus allen Kontinenten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen. Jedes Foto ist hochauflösend und sorgfältig ausgewählt, um dir das beeindruckendste und vielfältigste Vogelbeobachtungserlebnis zu bieten.
 
 PERFEKT FÜR
 
@@ -32,20 +33,12 @@ PERFEKT FÜR
 - Schüler und Lehrkräfte mit Interesse an Ornithologie
 - Liebhaber von Natur-Hintergrundbildern
 
-PRO-FUNKTIONEN (optionales Upgrade)
-
-- Videomodus - erlebe Vögel in Bewegung mit beeindruckenden Clips
-- Hochauflösende 2400px Fotos - gestochen scharfe Details auf jedem Bildschirm
-- Internationale Regionen - entdecke Vögel aus jedem Land der Welt
-- Uhr und Countdown-Timer - bleib fokussiert und genieße die Natur
-
 NEUIGKEITEN
 
-1.3.9 - Vogel-Info-Popover mit eBird-Link, Verbreitungskarte und Vogelbeschreibung. Ablenkungsfreier Modus.
-1.3.8 - Pro-Abonnements: Jahres- und Lebenszeitpläne für Videomodus, hochauflösende Fotos und mehr.
+2.0.0 - Hochauflösende Fotos, internationale Regionen, Uhr, Countdown-Timer, deutlich verbesserte Offline-Unterstützung und ein erfrischtes Neuer-Tab-Erlebnis.
+1.3.9 - Vogel-Info-Popover mit Verbreitungskarte und Vogelbeschreibung. Ablenkungsfreier Modus.
 1.3.7 - Google Apps-Verknüpfungen zur Oberfläche hinzugefügt.
 1.3.6 - Neues Optionsmenü mit Google Apps, Countdown-Timer, Klick-zum-Abspielen, Suchmaschinenauswahl und Wiedergabekorrekturen.
-1.3.5 - Korrektur der Video-Play/Pause-Position, Uhr-Schalter im Popup, verbesserte Analysen.
 1.3.4 - Uhranzeige mit Formatoptionen, Häufig besuchte Seiten ausblenden und Fehlerbehebungen.
 
 Vollständiges Änderungsprotokoll: https://birdtab.app/changelog

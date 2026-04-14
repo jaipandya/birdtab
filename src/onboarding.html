@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="welcomeTitle">Welcome to BirdTab!</title>
     <style>
-        /* Critical CSS to prevent layout shift */
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: #0a0a0a;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
@@ -21,54 +20,53 @@
         .onboarding-container {
             opacity: 0;
         }
-        .progress-dots {
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
     <div class="onboarding-container">
-        <div id="step1" class="step active">
-            <h1 data-i18n="welcomeTitle">Welcome to BirdTab!</h1>
-            <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image" width="400" height="225">
-            <p data-i18n="welcomeDescription1">Get ready for a daily dose of avian wonder! Every new tab brings you face-to-face with a stunning bird photograph and fascinating facts.</p>
-            <p><strong data-i18n="welcomeDescription2">It's like having a window to the bird world right in your browser!</strong></p>
-            <button class="next-btn" data-i18n="nextButton">Next</button>
-        </div>
-        
-        <div id="step2" class="step">
-            <h2 data-i18n="chooseBirdingRegion">Choose Your Birding Region</h2>
-            <p data-i18n="regionSelectionDescription">Select your preferred region to see birds commonly found in your area. Don't worry, you'll still get to explore birds from around the world!</p>
-            <select id="region-select" aria-describedby="region-help">
-                <option value="US" data-i18n="unitedStates">United States</option>
-                <option value="CA" data-i18n="canada">Canada</option>
-                <option value="GB" data-i18n="unitedKingdom">United Kingdom</option>
-                <option value="IN" data-i18n="india">India</option>
-            </select>
-            <p id="region-help" class="help-text" data-i18n="regionSelectionHelpText">This helps us show you birds that you might spot in your local area. You can change this anytime in the settings.</p>
-            <button class="next-btn" data-i18n="nextButton">Next</button>
-        </div>
-        
-        <div id="step3" class="step">
-            <h2 data-i18n="birdCallsTitle">Bird Calls: Music to Your Ears?</h2>
-            <p data-i18n="birdCallsDescription">Want to hear the chirps and tweets? Enable auto-play for an immersive birding experience!</p>
-            <div class="toggle-container">
-                <div class="toggle-text">
-                    <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
-                    <p class="help-text" data-i18n="autoPlayNote">Don't worry, you can always toggle sounds on or off for each bird. This setting just determines the default behavior, and you can change it later if you wish.</p>
+        <div class="onboarding-card">
+            <div class="card-glow"></div>
+            
+            <div class="hero-section">
+                <div class="logo-mark">
+                    <img src="icons/icon128.png" alt="BirdTab" width="48" height="48" class="logo-icon">
                 </div>
-                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
-                    <input type="checkbox" id="autoplay-toggle" aria-describedby="autoplay-help">
-                    <span class="slider round"></span>
-                </label>
+                <h1 data-i18n="welcomeTitle">Welcome to BirdTab!</h1>
+                <p class="hero-text" data-i18n="welcomeDescription1">Discover a stunning bird with every new tab. Beautiful photography, fascinating facts, and soothing nature sounds from around the world.</p>
             </div>
-            <button id="finish-btn" data-i18n="startBirding">Start Birding!</button>
+
+            <div class="preview-section">
+                <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image" width="400" height="225">
+            </div>
+
+            <div class="setting-section">
+                <div class="toggle-container">
+                    <div class="toggle-text">
+                        <div class="toggle-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                            <span data-i18n="autoPlayBirdCalls">Auto-play bird calls</span>
+                        </div>
+                        <p class="help-text" data-i18n="autoPlayNote">Hear bird songs each time you open a new tab. You can adjust this anytime in settings.</p>
+                    </div>
+                    <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
+                        <input type="checkbox" id="autoplay-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button id="finish-btn" class="start-btn">
+                <span data-i18n="startBirding">Start Birding!</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
         </div>
-    </div>
-    <div class="progress-dots" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3">
-        <span class="dot active" data-i18n-aria-label="onboardingStep1" aria-label="Step 1"></span>
-        <span class="dot" data-i18n-aria-label="onboardingStep2" aria-label="Step 2"></span>
-        <span class="dot" data-i18n-aria-label="onboardingStep3" aria-label="Step 3"></span>
     </div>
 </body>
 </html>

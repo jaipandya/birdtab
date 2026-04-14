@@ -2,6 +2,7 @@ import { captureException } from './sentry.js';
 import './quiz.css';
 import { log } from './logger.js';
 import { trackQuizCompleted } from './analytics.js';
+import { escapeHtml, truncateName } from './utils/escapeHtml.js';
 
 /*
  * IMAGE PRELOADING OPTIMIZATION STRATEGY
@@ -31,11 +32,7 @@ import { trackQuizCompleted } from './analytics.js';
 // ==========================================
 const QUIZ_TOTAL_QUESTIONS = 10;
 const MIN_QUESTIONS_REQUIRED = 5;
-const IMAGE_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-const IMAGE_REQUEST_DELAY = 300; // ms between API requests
 const ERROR_MODAL_AUTO_CLOSE = 5000; // ms
-const MACAULAY_API_URL = 'https://search.macaulaylibrary.org/api/v1/search';
-const MACAULAY_ASSET_URL = 'https://macaulaylibrary.org/asset';
 const BUTTON_FEEDBACK_DELAY = 2000; // ms
 
 class QuizMode {
@@ -55,7 +52,7 @@ class QuizMode {
     this.eventListeners = []; // Track event listeners for cleanup
     this.onQuizStart = options.onQuizStart || null; // Callback when quiz starts
     this.loadingProgress = 0; // Track image loading progress (0-100%)
-    this.totalImagesToLoad = QUIZ_TOTAL_QUESTIONS; // Total images to preload
+    this.totalImagesToLoad = QUIZ_TOTAL_QUESTIONS;
     this.quizStartTime = null; // Track quiz start time for analytics
 
     this.setupKeyboardListener();
@@ -118,40 +115,6 @@ class QuizMode {
     this.eventListeners.push({ element, event, handler, persist });
   }
 
-  /**
-   * Create a promise wrapper for chrome.storage operations
-   */
-  getFromStorage(storageType, key) {
-    return new Promise((resolve) => {
-      chrome.storage[storageType].get([key], (result) => {
-        resolve(result[key]);
-      });
-    });
-  }
-
-  /**
-   * Get cached data with expiry check
-   */
-  async getCachedData(key) {
-    const data = await this.getFromStorage('local', key);
-    if (data && Date.now() - data.timestamp < data.duration) {
-      return data.value;
-    }
-    return null;
-  }
-
-  /**
-   * Cache data with timestamp and duration
-   */
-  setCachedData(key, value, duration = IMAGE_CACHE_DURATION) {
-    chrome.storage.local.set({
-      [key]: {
-        value,
-        timestamp: Date.now(),
-        duration
-      }
-    });
-  }
 
   // ==========================================
   // IMAGE HELPERS
@@ -193,12 +156,7 @@ class QuizMode {
    * Load image for a species, checking cache first
    */
   async loadImageForSpecies(speciesCode, priority = false) {
-    // Check cache first
-    let imageInfo = await this.getBirdImage(speciesCode);
-    if (!imageInfo) {
-      imageInfo = await this.loadBirdImageFromCDN(speciesCode, priority);
-    }
-    return imageInfo;
+    return this.loadBirdImageFromCDN(speciesCode, priority);
   }
 
   // ==========================================
@@ -219,7 +177,7 @@ class QuizMode {
             <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 10%"></div>
           </div>
           <div class="quiz-meta">
-            <span>${chrome.i18n.getMessage('quizProgress').replace('{currentQuestion}', '<span id="quiz-current">1</span>').replace('{totalQuestions}', QUIZ_TOTAL_QUESTIONS.toString())}</span>
+            <span>${chrome.i18n.getMessage('quizProgress').replace('{currentQuestion}', '<span id="quiz-current">1</span>').replace('{totalQuestions}', `<span id="quiz-total">${this.questions.length || QUIZ_TOTAL_QUESTIONS}</span>`)}</span>
           </div>
         </div>
         
@@ -321,29 +279,20 @@ class QuizMode {
   async startQuiz() {
     try {
       this.onQuizStart?.();
-      this.quizStartTime = Date.now(); // Track quiz start time for analytics
+      this.quizStartTime = Date.now();
 
       const region = await this.getCurrentRegion();
-      let birds = await this.getCachedBirds(region);
-      const needsDataFetch = !birds;
 
-      // Show loading UI early if data needs fetching
-      if (needsDataFetch) {
-        this.activateQuizUI();
-        birds = await this.fetchBirdsWithErrorHandling(region);
-        if (!birds) return;
-      }
+      this.activateQuizUI();
+      const birds = await this.fetchBirdsWithErrorHandling(region);
+      if (!birds) return;
 
-      if (!birds || birds.length < QUIZ_TOTAL_QUESTIONS) {
+      if (birds.length < MIN_QUESTIONS_REQUIRED) {
         this.showError(chrome.i18n.getMessage('quizErrorNotEnoughBirds'));
         return;
       }
 
       await this.prepareQuestions(birds);
-
-      if (!needsDataFetch) {
-        this.activateQuizUI();
-      }
 
       await this.ensureFirstImageLoaded();
 
@@ -386,12 +335,7 @@ class QuizMode {
   }
 
   async getCurrentRegion() {
-    const region = await this.getFromStorage('local', 'region');
-    return region || 'US';
-  }
-
-  getCachedBirds(region) {
-    return this.getCachedData(`birds_${region}`);
+    return 'WLD';
   }
 
   fetchBirdsForRegion(region) {
@@ -412,33 +356,31 @@ class QuizMode {
   }
 
   async prepareQuestions(birds) {
-    // Select 10 unique birds for questions
-    const shuffledBirds = [...birds].sort(() => 0.5 - Math.random());
-    const selectedBirds = shuffledBirds.slice(0, 10);
+    this._birdsByCode = new Map(birds.map(b => [b.speciesCode, b]));
 
-    // Prepare questions without loading images first
+    const shuffledBirds = [...birds].sort(() => 0.5 - Math.random());
+    const questionCount = Math.min(QUIZ_TOTAL_QUESTIONS, shuffledBirds.length);
+    const selectedBirds = shuffledBirds.slice(0, questionCount);
+
     this.questions = selectedBirds.map(bird => {
-      // Get 3 other birds as distractors (same region, different species)
       const distractors = shuffledBirds
         .filter(b => b.speciesCode !== bird.speciesCode)
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
 
-      // Create options array with correct answer and distractors
       const options = [
         { name: bird.primaryComName, isCorrect: true },
         ...distractors.map(d => ({ name: d.primaryComName, isCorrect: false }))
       ];
 
-      // Shuffle options
       options.sort(() => 0.5 - Math.random());
 
       return {
         bird: {
           ...bird,
-          imageUrl: null, // Will be loaded when needed
-          photographer: null,
-          photographerUrl: null
+          imageUrl: bird.imageUrl ?? null,
+          photographer: bird.photographer ?? null,
+          photographerUrl: bird.photographerUrl ?? null
         },
         options: options,
         correctAnswer: bird.primaryComName
@@ -473,10 +415,9 @@ class QuizMode {
   }
 
   async startImagePreloading() {
-    // Reset loading progress
     this.loadingProgress = 0;
+    this.totalImagesToLoad = this.questions.length;
     
-    // Load first question's image with priority
     await this.loadQuestionImage(0, true);
     this.incrementLoadingProgress();
     
@@ -535,22 +476,18 @@ class QuizMode {
   async preloadRemainingImages() {
     for (let i = 1; i < this.questions.length; i++) {
       const bird = this.questions?.[i]?.bird;
-      if (!bird || bird.imageUrl) {
-        // If already loaded, count it towards progress
+      if (!bird) {
         this.incrementLoadingProgress();
         continue;
       }
 
-      // Check cache first
-      const cachedInfo = await this.getBirdImage(bird.speciesCode);
-      if (cachedInfo?.imageUrl) {
-        this.updateQuestionImage(i, cachedInfo);
+      if (bird.imageUrl) {
+        this.preloadImageInBrowser(bird.imageUrl);
         this.incrementLoadingProgress();
         continue;
       }
 
-      // Load in background without priority
-      const questionIndex = i; // Capture for closure
+      const questionIndex = i;
       this.loadBirdImageFromCDN(bird.speciesCode, false)
         .then(info => {
           this.updateQuestionImage(questionIndex, info);
@@ -558,82 +495,34 @@ class QuizMode {
         })
         .catch(error => {
           log(`Failed to preload image for ${bird.primaryComName}: ${error.message}`);
-          // Still increment progress even on failure to avoid getting stuck
           this.incrementLoadingProgress();
         });
     }
   }
 
-  getBirdImage(speciesCode) {
-    return this.getCachedData(`image_${speciesCode}`);
-  }
-
-  // Throttled image loading to respect Macaulay Library API
+  /**
+   * Load bird image. With the manifest-based flow, bird objects already
+   * contain imageUrl from R2. This method builds the imageInfo and
+   * preloads the image in the browser cache.
+   */
   async loadBirdImageFromCDN(speciesCode, priority = false) {
-    return new Promise((resolve) => {
-      this.imageLoadingQueue.push({ speciesCode, resolve, priority });
-      this.processImageQueue();
-    });
-  }
-
-  async processImageQueue() {
-    if (this.isLoadingImages || this.imageLoadingQueue.length === 0) return;
-
-    this.isLoadingImages = true;
-    this.imageLoadingQueue.sort((a, b) => b.priority - a.priority);
-
-    while (this.imageLoadingQueue.length > 0) {
-      const { speciesCode, resolve } = this.imageLoadingQueue.shift();
-
-      try {
-        resolve(await this.fetchImageFromAPI(speciesCode));
-      } catch {
-        resolve(null);
-      }
-
-      if (this.imageLoadingQueue.length > 0) {
-        await this.delay(IMAGE_REQUEST_DELAY);
-      }
-    }
-
-    this.isLoadingImages = false;
-  }
-
-  async fetchImageFromAPI(speciesCode) {
-    try {
-      this.abortController ??= new AbortController();
-
-      const url = `${MACAULAY_API_URL}?taxonCode=${speciesCode}&count=1&sort=rating_rank_desc&mediaType=photo`;
-      const response = await fetch(url, {
-        signal: this.abortController.signal,
-        cache: 'default'
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const image = data.results?.content?.[0];
-
-      if (!image?.mediaUrl) {
-        throw new Error('No image found in Macaulay Library');
-      }
-
+    const bird = this.findBirdByCode(speciesCode);
+    if (bird?.imageUrl) {
       const imageInfo = this.createImageInfo(
-        image.mediaUrl,
-        image.userDisplayName,
-        `${MACAULAY_ASSET_URL}/${image.assetId}`
+        bird.imageUrl,
+        bird.photographer ?? null,
+        bird.photographerUrl ?? null
       );
-
-      this.setCachedData(`image_${speciesCode}`, imageInfo);
       this.preloadImageInBrowser(imageInfo.imageUrl);
-
       return imageInfo;
-    } catch (error) {
-      log(`Error loading image for ${speciesCode}: ${error.message}`);
-      throw error;
     }
+    log(`No image URL found for ${speciesCode}`);
+    return null;
+  }
+
+  findBirdByCode(speciesCode) {
+    if (!this._birdsByCode) return null;
+    return this._birdsByCode.get(speciesCode) ?? null;
   }
 
   /**
@@ -768,18 +657,20 @@ class QuizMode {
       progressMeta.style.visibility = 'visible';
     }
 
-    const progressPercent = ((this.currentQuestion + 1) / QUIZ_TOTAL_QUESTIONS) * 100;
+    const totalQuestions = this.questions.length;
+    const progressPercent = ((this.currentQuestion + 1) / totalQuestions) * 100;
     elements['quiz-progress-fill'].style.width = `${progressPercent}%`;
     elements['quiz-current'].textContent = this.currentQuestion + 1;
 
-    // Update question text
+    const totalEl = this.getElement('quiz-total');
+    if (totalEl) totalEl.textContent = totalQuestions;
+
     const questionText = this.getElement('quiz-question-text');
     if (questionText) {
       questionText.textContent = chrome.i18n.getMessage('quizModeQuestion');
     }
 
-    // Update next button
-    const isLastQuestion = this.currentQuestion === QUIZ_TOTAL_QUESTIONS - 1;
+    const isLastQuestion = this.currentQuestion === totalQuestions - 1;
     elements['quiz-next'].textContent = chrome.i18n.getMessage(isLastQuestion ? 'quizShowResults' : 'quizNextQuestion');
     elements['quiz-next'].disabled = true;
 
@@ -899,16 +790,23 @@ class QuizMode {
 
   updateImageMeta(bird) {
     const imageMeta = this.getElement('quiz-image-meta');
-    const photographerLink = this.getElement('quiz-photographer');
-    
-    if (imageMeta) {
-      imageMeta.style.visibility = 'visible';
-    }
-    
-    if (photographerLink && bird.photographer) {
-      photographerLink.textContent = bird.photographer;
-      photographerLink.href = bird.photographerUrl || '#';
-    }
+    if (!imageMeta) return;
+
+    imageMeta.style.visibility = 'visible';
+
+    const photographerHtml = bird.photographer
+      ? `<a href="${escapeHtml(bird.photographerUrl || '#')}" id="quiz-photographer" target="_blank">${escapeHtml(truncateName(bird.photographer))}</a>`
+      : '';
+
+    const licenseHtml = bird.imageLicense
+      ? `<a href="${bird.imageLicenseUrl || '#'}" target="_blank" class="quiz-license-link">${bird.imageLicense}</a>`
+      : '';
+
+    const parts = [];
+    if (photographerHtml) parts.push(`${chrome.i18n.getMessage('photoBy')} ${photographerHtml}`);
+    if (licenseHtml) parts.push(licenseHtml);
+
+    imageMeta.innerHTML = parts.join(' · ');
   }
 
   // Error icon SVG for image load failures
@@ -974,7 +872,7 @@ class QuizMode {
     const nextBtn = this.getElement('quiz-next');
     if (!nextBtn) return;
 
-    const isLastQuestion = this.currentQuestion === QUIZ_TOTAL_QUESTIONS - 1;
+    const isLastQuestion = this.currentQuestion === this.questions.length - 1;
     nextBtn.textContent = chrome.i18n.getMessage(isLastQuestion ? 'quizShowResults' : 'quizNextQuestion');
     nextBtn.disabled = false;
   }
@@ -1041,13 +939,14 @@ class QuizMode {
    */
   async restartQuiz() {
     this.resetQuizState();
-    this.quizStartTime = Date.now(); // Reset timer for analytics
+    this.quizStartTime = Date.now();
 
     try {
       const region = await this.getCurrentRegion();
-      const birds = await this.getCachedBirds(region);
+      const birds = await this.fetchBirdsWithErrorHandling(region);
+      if (!birds) return;
 
-      if (!birds || birds.length < QUIZ_TOTAL_QUESTIONS) {
+      if (birds.length < MIN_QUESTIONS_REQUIRED) {
         this.showError(chrome.i18n.getMessage('quizErrorNotEnoughBirds'));
         return;
       }
@@ -1069,20 +968,34 @@ class QuizMode {
    */
   generateResultsHTML() {
     const resultItems = this.answers.map(answer => {
+      const bird = answer.question.bird;
       const statusClass = answer.isCorrect ? 'correct' : 'incorrect';
       const badge = answer.isCorrect ? '✓' : '✗';
       const incorrectHint = answer.isCorrect ? '' : 
         `<div class="quiz-result-your-answer">${chrome.i18n.getMessage('yourAnswer', [answer.selectedAnswer])}</div>`;
-      
+
+      const creditParts = [];
+      if (bird.photographer) creditParts.push(escapeHtml(truncateName(bird.photographer)));
+      if (bird.imageLicense) {
+        const licenseText = bird.imageLicenseUrl
+          ? `<a href="${bird.imageLicenseUrl}" target="_blank">${bird.imageLicense}</a>`
+          : bird.imageLicense;
+        creditParts.push(licenseText);
+      }
+      const creditHtml = creditParts.length
+        ? `<div class="quiz-result-credit">${creditParts.join(' · ')}</div>`
+        : '';
+
       return `
         <div class="quiz-result-item ${statusClass}">
           <div class="quiz-result-thumbnail-wrapper">
-            <img src="${answer.question.bird.imageUrl}" alt="${answer.question.bird.primaryComName}" class="quiz-result-thumbnail" />
+            <img src="${bird.imageUrl}" alt="${bird.primaryComName}" class="quiz-result-thumbnail" />
             <div class="quiz-result-badge ${statusClass}">${badge}</div>
           </div>
           <div class="quiz-result-info">
-            <div class="quiz-result-bird-name">${answer.question.bird.primaryComName}</div>
+            <div class="quiz-result-bird-name">${bird.primaryComName}</div>
             ${incorrectHint}
+            ${creditHtml}
           </div>
         </div>
       `;
@@ -1102,7 +1015,7 @@ class QuizMode {
         
         <div class="quiz-content">
           <div class="quiz-results">
-            <div class="quiz-final-score">${this.score}/${QUIZ_TOTAL_QUESTIONS}</div>
+            <div class="quiz-final-score">${this.score}/${this.answers.length}</div>
             <div class="quiz-results-summary">${this.getScoreMessage(this.score)}</div>
             <div class="quiz-results-list">
               <h3 class="quiz-results-title">${chrome.i18n.getMessage('questionReview')}</h3>
@@ -1132,7 +1045,7 @@ class QuizMode {
     const durationSec = this.quizStartTime 
       ? Math.round((Date.now() - this.quizStartTime) / 1000) 
       : 0;
-    trackQuizCompleted(this.score, QUIZ_TOTAL_QUESTIONS, durationSec);
+    trackQuizCompleted(this.score, this.questions.length, durationSec);
     
     this.quizContainer.innerHTML = this.generateResultsHTML();
     this.setupResultsEventListeners();
@@ -1148,8 +1061,8 @@ class QuizMode {
 
   showExitConfirmation(forceConfirm = false) {
     // Check if we're on results or share page
-    const isOnResultsOrShare = this.currentQuestion >= QUIZ_TOTAL_QUESTIONS || 
-                               this.answers.length === QUIZ_TOTAL_QUESTIONS ||
+    const isOnResultsOrShare = this.currentQuestion >= this.questions.length || 
+                               this.answers.length === this.questions.length ||
                                this._shareDataUrl;
     
     // On results/share page, exit directly without confirmation unless force is true
@@ -1330,7 +1243,7 @@ class QuizMode {
         e.preventDefault();
         e.stopPropagation();
         log(`Next button clicked. Current question: ${this.currentQuestion}, Answers: ${this.answers.length}`);
-        if (this.currentQuestion < QUIZ_TOTAL_QUESTIONS - 1) {
+        if (this.currentQuestion < this.questions.length - 1) {
           this.nextQuestion();
         } else {
           log('Showing results...');
@@ -1390,6 +1303,9 @@ class QuizMode {
     const closeModal = () => {
       clearTimeout(timeoutId);
       this.removeModal(errorModal);
+      if (this.isActive) {
+        this.exitQuiz();
+      }
     };
 
     const timeoutId = setTimeout(closeModal, ERROR_MODAL_AUTO_CLOSE);
@@ -1546,7 +1462,7 @@ class QuizMode {
     // "out of 10" text
     ctx.font = '400 24px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
     ctx.fillStyle = colors.textSecondary;
-    ctx.fillText(chrome.i18n.getMessage('quizShareOutOf') || 'out of 10', scoreCenterX, scoreCenterY + 70);
+    ctx.fillText(chrome.i18n.getMessage('quizShareOutOf') || `out of ${this.answers.length}`, scoreCenterX, scoreCenterY + 70);
 
     // Score message
     ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
@@ -1603,7 +1519,7 @@ class QuizMode {
 
     // Draw each bird result row
     const cardHeight = rowHeight - 6;
-    const maxAnswers = Math.min(this.answers.length, QUIZ_TOTAL_QUESTIONS);
+    const maxAnswers = this.answers.length;
     
     for (let i = 0; i < maxAnswers; i++) {
       const answer = this.answers[i];

@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - 鳥の壁紙・動画・自然の音で彩る新しいタブ",
+    "message": "BirdTab - 鳥の壁紙・自然の音で彩る新しいタブ",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "新しいタブを鳥の壁紙、野鳥動画、癒しの自然音で彩ろう。毎回異なる鳥と出会える新しいタブ体験",
+    "message": "新しいタブを鳥の壁紙と癒しの自然音で彩ろう。毎回異なる鳥と出会える新しいタブ体験",
     "description": "Description of the extension"
   },
   "pageTitle": {
@@ -14,10 +14,6 @@
   "infoTooltip": {
     "message": "鳥の情報",
     "description": "Tooltip for the info icon"
-  },
-  "infoAlt": {
-    "message": "情報",
-    "description": "Alt text for info icon"
   },
   "cameraAlt": {
     "message": "カメラ",
@@ -83,24 +79,20 @@
     "message": "バードウォッチング地域",
     "description": "Label for region selection"
   },
-  "regionTooltip": {
-    "message": "鳥を見たい地域を選択してください。世界中の鳥を見ることができます！",
-    "description": "Tooltip for region selection"
-  },
-  "regionHelpText": {
-    "message": "これは、あなたの地域で見つけることができる鳥を表示するのに役立ちます。",
-    "description": "Help text for region selection"
+  "regionComingSoon": {
+    "message": "Discover birds from every corner of the globe. More regions coming soon!",
+    "description": "Message shown when region selection is disabled"
   },
   "autoPlayBirdCalls": {
     "message": "メディアを自動再生",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "新しいタブを開くたびに、フォトモードでは鳥の鳴き声を、ビデオモードではビデオを自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
+    "message": "新しいタブを開くたびに鳥の鳴き声を自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "新しいタブを開いたときに鳥の鳴き声またはビデオを自動再生するよう有効にする",
+    "message": "新しいタブを開いたときに鳥の鳴き声を自動再生するよう有効にする",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -168,55 +160,11 @@
     "description": "Alt text for demo image"
   },
   "welcomeDescription1": {
-    "message": "毎日の鳥の驚異の準備をしましょう！新しいタブを開くたびに、美しい鳥の写真と魅力的な事実と向き合うことができます。",
+    "message": "新しいタブを開くたびに美しい鳥を発見。素晴らしい写真、興味深い豆知識、そして世界中の癒しの自然の音をお届けします。",
     "description": "First paragraph of welcome description"
   },
-  "welcomeDescription2": {
-    "message": "まるでブラウザの中に鳥の世界への窓があるようです！",
-    "description": "Second paragraph of welcome description"
-  },
-  "nextButton": {
-    "message": "次へ",
-    "description": "Next button text for onboarding"
-  },
-  "chooseBirdingRegion": {
-    "message": "バードウォッチング地域を選択",
-    "description": "Header for region selection step"
-  },
-  "regionSelectionDescription": {
-    "message": "あなたの地域でよく見られる鳥を見るために、お好みの地域を選択してください。心配しないでください、世界中の鳥を探索することもできます！",
-    "description": "Description for region selection"
-  },
-  "unitedStates": {
-    "message": "アメリカ合衆国",
-    "description": "Country name for United States"
-  },
-  "canada": {
-    "message": "カナダ",
-    "description": "Country name for Canada"
-  },
-  "unitedKingdom": {
-    "message": "イギリス",
-    "description": "Country name for United Kingdom"
-  },
-  "india": {
-    "message": "インド",
-    "description": "Country name for India"
-  },
-  "regionSelectionHelpText": {
-    "message": "これは、あなたの地域で見つけることができる鳥を表示するのに役立ちます。設定でいつでも変更できます。",
-    "description": "Help text for region selection in onboarding"
-  },
-  "birdCallsTitle": {
-    "message": "鳥の鳴き声：あなたの耳に音楽を？",
-    "description": "Title for bird calls onboarding step"
-  },
-  "birdCallsDescription": {
-    "message": "さえずりやツイートを聞きたいですか？没入感のあるバードウォッチング体験のために自動再生を有効にしましょう！",
-    "description": "Description for bird calls setting"
-  },
   "autoPlayNote": {
-    "message": "心配しないでください、各鳥の音をいつでもオンまたはオフに切り替えることができます。この設定はデフォルトの動作を決定するだけで、後で変更することもできます。",
+    "message": "新しいタブを開くたびに鳥のさえずりが流れます。設定でいつでも変更できます。",
     "description": "Note about auto-play setting flexibility"
   },
   "startBirding": {
@@ -635,14 +583,6 @@
     "message": "クイズを閉じる",
     "description": "Aria label for close quiz button"
   },
-  "bingSearchAlt": {
-    "message": "Bing検索",
-    "description": "Alt text for Bing search icon"
-  },
-  "eBirdPageAlt": {
-    "message": "eBirdページ",
-    "description": "Alt text for eBird page icon"
-  },
   "quizAlt": {
     "message": "クイズ",
     "description": "Alt text for quiz icon"
@@ -723,53 +663,9 @@
     "message": "この美しい{birdName}を見てください！",
     "description": "Default share text with bird name placeholder"
   },
-  "videoAlt": {
-    "message": "動画",
-    "description": "Alt text for video icon"
-  },
-  "videoMode": {
-    "message": "動画モード",
-    "description": "Label for video mode setting"
-  },
-  "videoModeHelpText": {
-    "message": "利用可能な場合、写真の代わりに鳥の動画を表示します。",
-    "description": "Help text for video mode setting"
-  },
-  "videoModeTooltip": {
-    "message": "利用可能な場合、写真の代わりに鳥の動画を表示するには有効にしてください",
-    "description": "Tooltip for video mode toggle"
-  },
-  "videoUnavailableAlt": {
-    "message": "動画が利用できません（接続が遅い）",
-    "description": "Alt text for video unavailable icon when connection is slow"
-  },
-  "videoUnavailableTooltip": {
-    "message": "動画が利用できません：接続が遅い（2G/3G）か、データセーバーが有効になっています。データを節約するため写真を表示しています。",
-    "description": "Tooltip explaining why video is unavailable due to slow connection"
-  },
-  "videoNotAvailableForBird": {
-    "message": "この鳥の動画はありません",
-    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
-  },
   "loadingAudio": {
     "message": "音声を読み込み中",
     "description": "Loading indicator text when fetching audio for photo mode"
-  },
-  "loadingVideo": {
-    "message": "動画を読み込み中",
-    "description": "Loading indicator text when loading video"
-  },
-  "buffering": {
-    "message": "バッファ中",
-    "description": "Loading indicator text when video is buffering"
-  },
-  "viaText": {
-    "message": "提供元",
-    "description": "Text before Macaulay Library link in credits"
-  },
-  "macaulayLibrary": {
-    "message": "マコーレー図書館",
-    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "表示履歴",
@@ -859,20 +755,12 @@
     "message": "戻る",
     "description": "Feature tour: back button text"
   },
-  "tourVideoToggleTitle": {
-    "message": "ビデオモード",
-    "description": "Feature tour: video toggle title"
-  },
-  "tourVideoToggleDescription": {
-    "message": "写真とビデオを切り替えよう！これをオンにして、美しいビデオクリップで鳥の動きを観察しましょう。",
-    "description": "Feature tour: video toggle description"
-  },
   "tourVolumeTitle": {
     "message": "音量調整",
     "description": "Feature tour: volume controls title"
   },
   "tourVolumeDescription": {
-    "message": "お好みの音量に調整してください。鳥のさえずりや動画の音をコントロールして、完璧なバードウォッチング体験を作りましょう。",
+    "message": "お好みの音量に調整してください。鳥のさえずりをコントロールして、完璧なバードウォッチング体験を作りましょう。",
     "description": "Feature tour: volume controls description"
   },
   "tourRefreshTitle": {
@@ -918,22 +806,6 @@
   "errorResettingTour": {
     "message": "機能ツアーのリセット中にエラーが発生しました",
     "description": "Error message when tour reset fails"
-  },
-  "proBadge": {
-    "message": "Pro",
-    "description": "Badge text for premium features"
-  },
-  "highResImages": {
-    "message": "高解像度画像",
-    "description": "Label for high-resolution images feature"
-  },
-  "highResHelpText": {
-    "message": "超高解像度鳥の写真を表示して、鮮明なディテールをお楽しみください。",
-    "description": "Help text for high-resolution images setting"
-  },
-  "highResTooltip": {
-    "message": "有効にすると高解像度画像を表示します",
-    "description": "Tooltip for high-resolution images toggle"
   },
   "chromeTabTooltip": {
     "message": "デフォルトのChromeの新しいタブページを開く",
@@ -1195,6 +1067,14 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
+  "tourCreditsTitle": {
+    "message": "クレジットとライセンス",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "ここでは各鳥の写真の撮影者と音声の録音者を確認できます。名前をタップすると、詳細やライセンス情報をご覧いただけます。",
+    "description": "Feature tour: credits line description"
+  },
   "tourOptionsMenuTitle": {
     "message": "クイックメニュー",
     "description": "Feature tour: options menu title"
@@ -1203,358 +1083,6 @@
     "message": "このメニューから設定、閲覧履歴、鳥クイズにアクセスできます。クリックしてオプションを確認しましょう！",
     "description": "Feature tour: options menu description"
   },
-  "alreadyHaveLicense": {
-    "message": "ライセンスをお持ちですか？",
-    "description": "Divider text for license activation section"
-  },
-  "proFeatureVideoMode": {
-    "message": "ビデオモード",
-    "description": "Pro feature: Video Mode title"
-  },
-  "proFeatureVideoModeDesc": {
-    "message": "写真の代わりに美しい鳥の動画を観る",
-    "description": "Pro feature: Video Mode description"
-  },
-  "proFeatureHighRes": {
-    "message": "高解像度画像",
-    "description": "Pro feature: High-Res Images title"
-  },
-  "proFeatureHighResDesc": {
-    "message": "クリスタルクリアな2400pxの鳥の写真",
-    "description": "Pro feature: High-Res Images description"
-  },
-  "proFeatureRegion": {
-    "message": "国際リージョン",
-    "description": "Pro feature: Region title"
-  },
-  "proFeatureRegionDesc": {
-    "message": "世界中の国の鳥を発見する",
-    "description": "Pro feature: Region description"
-  },
-  "proFeatureClock": {
-    "message": "時計とタイマー",
-    "description": "Pro feature: Clock/Timer title"
-  },
-  "proFeatureClockDesc": {
-    "message": "新しいタブに時計または集中タイマーを表示",
-    "description": "Pro feature: Clock/Timer description"
-  },
-  "enterLicenseKey": {
-    "message": "ライセンスキーを入力",
-    "description": "Placeholder for license key input"
-  },
-  "activate": {
-    "message": "有効化",
-    "description": "Button text for license activation"
-  },
-  "activating": {
-    "message": "有効化中...",
-    "description": "Button text while activating license"
-  },
-  "enterValidKey": {
-    "message": "有効なライセンスキーを入力してください",
-    "description": "Error when no key entered"
-  },
-  "licenseActivated": {
-    "message": "ライセンスが正常に有効化されました！",
-    "description": "Success message for license activation"
-  },
-  "activationFailed": {
-    "message": "有効化に失敗しました。ライセンスキーを確認してください。",
-    "description": "Error message for failed activation"
-  },
-  "activationError": {
-    "message": "エラーが発生しました。もう一度お試しください。",
-    "description": "Generic error for activation"
-  },
-  "birdtabPro": {
-    "message": "BirdTab Pro",
-    "description": "Product name"
-  },
-  "licenseActive": {
-    "message": "有効",
-    "description": "License status: active"
-  },
-  "licenseGrace": {
-    "message": "まもなく更新",
-    "description": "License status: subscription expired but within renewal window"
-  },
-  "licenseExpired": {
-    "message": "期限切れ",
-    "description": "License status: expired"
-  },
-  "licenseLifetime": {
-    "message": "永久",
-    "description": "License type: lifetime"
-  },
-  "licenseYearly": {
-    "message": "年間",
-    "description": "License type: yearly subscription"
-  },
-  "licenseTrial": {
-    "message": "トライアル",
-    "description": "License type: trial"
-  },
-  "expired": {
-    "message": "期限切れ",
-    "description": "Generic expired label"
-  },
-  "email": {
-    "message": "メール",
-    "description": "Label for email"
-  },
-  "licenseKey": {
-    "message": "ライセンス",
-    "description": "Label for license key"
-  },
-  "expires": {
-    "message": "有効期限",
-    "description": "Label for expiry date"
-  },
-  "deactivate": {
-    "message": "無効化",
-    "description": "Button to deactivate license"
-  },
-  "confirmDeactivate": {
-    "message": "ライセンスを無効化してもよろしいですか？",
-    "description": "Confirmation for license deactivation"
-  },
-  "deactivating": {
-    "message": "無効化中…",
-    "description": "Button label while license deactivation is in progress"
-  },
-  "licenseDeactivated": {
-    "message": "ライセンスが無効化されました。再読み込み中…",
-    "description": "Toast shown after license is successfully deactivated"
-  },
-  "free": {
-    "message": "無料",
-    "description": "License status: free tier"
-  },
-  "upgradePrompt": {
-    "message": "ビデオモード、高解像度画像、国際リージョン、時計/タイマーをアンロックしましょう。",
-    "description": "Prompt to upgrade to Pro"
-  },
-  "upgradeToPro": {
-    "message": "Proにアップグレード",
-    "description": "Button to upgrade"
-  },
-  "licenseStatusError": {
-    "message": "ライセンスステータスを読み込めませんでした",
-    "description": "Error loading license status"
-  },
-  "upgradeNow": {
-    "message": "今すぐアップグレード",
-    "description": "Button to upgrade immediately"
-  },
-  "close": {
-    "message": "閉じる",
-    "description": "Generic close button label"
-  },
-  "unlockProFeatures": {
-    "message": "Pro機能をアンロック",
-    "description": "Prompt for free users to upgrade"
-  },
-  "manage": {
-    "message": "管理",
-    "description": "Button to manage license details"
-  },
-  "manageSubscription": {
-    "message": "サブスクリプション",
-    "description": "Button to manage subscription in customer portal"
-  },
-  "billingHistory": {
-    "message": "請求",
-    "description": "Button to view billing history and invoices in customer portal"
-  },
-  "renew": {
-    "message": "更新",
-    "description": "Button to renew subscription"
-  },
-  "refreshStatus": {
-    "message": "ステータスを更新",
-    "description": "Button to refresh license status"
-  },
-  "trialDayLeft": {
-    "message": "残り1日",
-    "description": "Trial period: single day remaining"
-  },
-  "trialDaysLeft": {
-    "message": "残り$1日",
-    "description": "Trial period: multiple days remaining",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "7"
-      }
-    }
-  },
-  "trialExpired": {
-    "message": "トライアル期間が終了しました",
-    "description": "Message when trial period has expired"
-  },
-  "licenseOffline": {
-    "message": "オフライン",
-    "description": "Status label when license cannot be verified due to being offline"
-  },
-  "offlineGraceExpiredNotice": {
-    "message": "インターネットに接続してライセンスを確認し、Pro機能を復元してください。",
-    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
-  },
-  "unlockFeature": {
-    "message": "$1をアンロック",
-    "description": "Title for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "Video Mode"
-      }
-    }
-  },
-  "unlockFullExperience": {
-    "message": "フル体験をアンロック",
-    "description": "Title for upgrade modal when opened without a specific feature trigger"
-  },
-  "upgradeFeatureSubtitle": {
-    "message": "この機能はBirdTab Proの一部です。アップグレードして$1とすべてのプレミアム機能にアクセスしましょう。",
-    "description": "Subtitle for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "video mode"
-      }
-    }
-  },
-  "proActivatedBody": {
-    "message": "新しいタブが自然の世界への窓になりました。まもなくリロードします…",
-    "description": "Body text shown after successful Pro license activation"
-  },
-  "deviceLimitTitle": {
-    "message": "デバイス数の上限に達しました",
-    "description": "Title shown when license activation fails due to device limit"
-  },
-  "deviceLimitBody": {
-    "message": "ライセンスのデバイス枠がすべて使用中です。ここでアクティベートするには、まず枠を空けてください：設定 → 管理 → BirdTabがインストールされている別のデバイスで無効化するか、アカウントからデバイスを削除してください。",
-    "description": "Body text explaining device limit and how to resolve it"
-  },
-  "manageDevices": {
-    "message": "デバイスを管理",
-    "description": "Button text to manage devices in customer portal"
-  },
-  "proTrialActive": {
-    "message": "Proトライアル中",
-    "description": "Badge text shown during active Pro trial"
-  },
-  "trialWelcomeTitle": {
-    "message": "BirdTab Proへようこそ",
-    "description": "Title for trial welcome modal"
-  },
-  "trialWelcomeSubtitle": {
-    "message": "$1日間の無料トライアルが始まりました。すべてのPro機能をお楽しみいただき、世界中の鳥の美しさを発見してください。",
-    "description": "Subtitle for trial welcome modal",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "14"
-      }
-    }
-  },
-  "today": {
-    "message": "今日",
-    "description": "Label for today in trial timeline"
-  },
-  "startExploring": {
-    "message": "探索を始める",
-    "description": "Button text to dismiss trial welcome modal"
-  },
-  "trialFooterNote": {
-    "message": "クレジットカードは不要です。トライアル終了後、無料版に戻ります。",
-    "description": "Footer note in trial welcome modal"
-  },
-  "trialEnded": {
-    "message": "トライアル終了",
-    "description": "Badge text shown when trial has expired"
-  },
-  "trialExpiredTitle": {
-    "message": "無料トライアルが終了しました",
-    "description": "Title for trial expired modal"
-  },
-  "trialExpiredSubtitle": {
-    "message": "BirdTab Proをお試しいただきありがとうございます！基本機能は引き続き無料でご利用いただけます。フル体験を続けるにはアップグレードしてください。",
-    "description": "Subtitle for trial expired modal"
-  },
-  "trialLostFeatures": {
-    "message": "失われるPro機能：",
-    "description": "Heading for list of Pro features lost after trial"
-  },
-  "trialValueProp": {
-    "message": "Proにアップグレードして、すべての機能を楽しみながら独立した開発を支援しましょう。あなたのサブスクリプションがBirdTabを広告なしで改善し続けます。",
-    "description": "Value proposition text in trial expired modal"
-  },
-  "continueWithFree": {
-    "message": "無料版で続ける",
-    "description": "Button text to dismiss trial expired modal and continue with free version"
-  },
-  "proWelcomeBadgeLifetime": {
-    "message": "Pro 永久版",
-    "description": "Badge text in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeBadgeYearly": {
-    "message": "Pro 年間版",
-    "description": "Badge text in Pro welcome modal for yearly license"
-  },
-  "proWelcomeTitle": {
-    "message": "BirdTab Proへようこそ",
-    "description": "Title in Pro welcome modal"
-  },
-  "proWelcomeSubtitleLifetime": {
-    "message": "すべてのPro機能への<strong>永久アクセス</strong>が可能になりました。新しいタブはすべて、自然界への窓です。",
-    "description": "Subtitle in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeSubtitleYearly": {
-    "message": "すべてのPro機能が<strong>解放</strong>されました。新しいタブはすべて、自然界への窓です。",
-    "description": "Subtitle in Pro welcome modal for yearly license"
-  },
-  "proWelcomeThanks": {
-    "message": "あなたのサポートがBirdTabの開発を直接支えています — より良いデータ、新機能、そして広告なしの体験。この旅の一員になってくださりありがとうございます。",
-    "description": "Thank you message in Pro welcome modal"
-  },
-  "proWelcomeVideoTitle": {
-    "message": "ビデオモード",
-    "description": "Video feature title in Pro welcome modal"
-  },
-  "proWelcomeVideoDesc": {
-    "message": "美しいビデオクリップで鳥たちの生き生きとした姿をご覧ください",
-    "description": "Video feature description in Pro welcome modal"
-  },
-  "proWelcomeHighResTitle": {
-    "message": "高解像度写真",
-    "description": "High-res feature title in Pro welcome modal"
-  },
-  "proWelcomeHighResDesc": {
-    "message": "驚くほどの詳細を持つ鮮明な2400px画像",
-    "description": "High-res feature description in Pro welcome modal"
-  },
-  "proWelcomeRegionTitle": {
-    "message": "世界の地域",
-    "description": "Region feature title in Pro welcome modal"
-  },
-  "proWelcomeRegionDesc": {
-    "message": "世界中の国々の鳥を発見しましょう",
-    "description": "Region feature description in Pro welcome modal"
-  },
-  "proWelcomeClockTitle": {
-    "message": "時計とタイマー",
-    "description": "Clock feature title in Pro welcome modal"
-  },
-  "proWelcomeClockDesc": {
-    "message": "自然を楽しみながら時間を管理",
-    "description": "Clock feature description in Pro welcome modal"
-  },
-  "pausedAlt": {
-    "message": "一時停止",
-    "description": "Alt text for pause indicator icon"
-  },
   "audioPlayingAlt": {
     "message": "オーディオ再生中",
     "description": "Alt text for audio playing waveform icon"
@@ -1562,10 +1090,6 @@
   "audioPausedAlt": {
     "message": "オーディオ一時停止",
     "description": "Alt text for audio paused icon"
-  },
-  "conservationStatus": {
-    "message": "保全状況：",
-    "description": "Label prefix for conservation status in bird info tooltip"
   },
   "conservationStatusTitle": {
     "message": "保全状況",
@@ -1651,22 +1175,6 @@
     "message": "Microsoft Edge",
     "description": "Alt text for Microsoft Edge icon in search"
   },
-  "proBadgeLabel": {
-    "message": "Pro",
-    "description": "Short label for Pro badge in settings sidebar"
-  },
-  "onboardingStep1": {
-    "message": "ステップ1",
-    "description": "Aria label for onboarding progress dot 1"
-  },
-  "onboardingStep2": {
-    "message": "ステップ2",
-    "description": "Aria label for onboarding progress dot 2"
-  },
-  "onboardingStep3": {
-    "message": "ステップ3",
-    "description": "Aria label for onboarding progress dot 3"
-  },
   "lowDistractionToggle": {
     "message": "詳細を非表示",
     "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
@@ -1690,5 +1198,79 @@
   "regionHighSeas": {
     "message": "公海",
     "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "preparingExperience": {
+    "message": "体験を準備しています…",
+    "description": "Loading message shown during onboarding while manifest downloads"
+  },
+  "creditPhotoBy": {
+    "message": "撮影者",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "録音者",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "音声の種類",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "撮影場所",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "録音場所",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditViewOnMap": {
+    "message": "クリックして地図で表示",
+    "description": "Suffix appended to location tooltip when location is clickable"
+  },
+  "creditDateTaken": {
+    "message": "撮影日",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "録音日",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "オリジナルからリサイズ済み",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "表示用にオリジナルからリサイズされた画像です",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "$1 に変換済み",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "再生のためにオリジナル形式から変換された音声です",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "出典",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "ライセンス",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "メディアのクレジットとライセンス",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "クレジットとライセンス",
+    "description": "Alt text for the credit info trigger icon"
   }
 }

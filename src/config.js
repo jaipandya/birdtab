@@ -1,15 +1,9 @@
 export const CONFIG = {
-  CACHE_DURATION: {
-    BIRD_INFO: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    BIRDS_BY_REGION: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    RECENT_OBSERVATIONS: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
-  },
+  MANIFEST_URL: 'https://media.birdtab.app/m260408r01/manifests/manifest.json',
   DEV_TAB_COUNT: 5,  // Number of new tabs to open before showing the prompt in dev mode
   PROD_TAB_COUNT: 50,  // Number of new tabs to open before showing the prompt in production
   DEV_TIME_DELAY: 1 * 60 * 1000,  // 1 minute in milliseconds
   PROD_TIME_DELAY: 4 * 24 * 60 * 60 * 1000,  // 4 days in milliseconds
-  WEBSITE_URL: process.env.WEBSITE_URL || 'http://localhost:3000',
-  API_SERVER_URL: process.env.API_SERVER_URL || 'http://localhost:3000/api',
   VOLUME_STEP: 0.1, // Volume change step for keyboard shortcuts
 
   // Sentry Configuration - follows same pattern as other config
@@ -41,36 +35,19 @@ export const CONFIG = {
     API_HOST: 'https://eu.i.posthog.com'
   },
 
+  // Uninstall URL - base endpoint for uninstall feedback redirect
+  UNINSTALL_URL: 'https://api.birdtab.app/uninstall',
+
   // Uninstall URL Signing - HMAC secret for validating visitor IDs
   // This prevents URL tampering on the uninstall feedback page
-  // The same secret must be configured on the website (api.birdtab.app)
   UNINSTALL_SECRET: process.env.UNINSTALL_SECRET || 'birdtab-uninstall-secret-change-in-prod',
-
-  // License Configuration for BirdTab Pro
-  LICENSE: {
-    // Verification intervals based on license type
-    VERIFY_INTERVAL_SUBSCRIPTION: 7 * 24 * 60 * 60 * 1000, // 7 days for yearly subscriptions
-    VERIFY_INTERVAL_LIFETIME: 7 * 24 * 60 * 60 * 1000, // 7 days for lifetime licenses
-    VERIFY_INTERVAL_GRACE: 24 * 60 * 60 * 1000, // 24 hours for grace period
-
-    // Offline grace period - how long to trust cached license when offline
-    OFFLINE_GRACE_HOURS: 72, // 72 hours (3 days)
-
-    // Subscription grace period - days after expiry before feature lockout
-    SUBSCRIPTION_GRACE_DAYS: 7,
-
-    // Free trial duration for new installs and updates
-    TRIAL_DURATION_DAYS: 14
-  },
 
   // Default values for local storage settings
   // These are used for fresh installs and as fallbacks during migration
   STORAGE_DEFAULTS: {
-    region: 'US',
+    region: 'WLD',
     autoPlay: false,
-    videoMode: false,
     quietHours: false,
-    highResImages: false,
     clockDisplayMode: 'clock',
     clockShowSeconds: false,
     clockFormat24Hour: false,
@@ -88,15 +65,6 @@ export const CONFIG = {
     timerSetupMinutes: 5,
     timerSetupSeconds: 0,
     timerAlarmEnabled: false,
-    // License defaults
-    licenseKey: null,
-    licenseStatus: 'free',
-    licenseType: null,
-    licenseExpiresAt: null,
-    licenseEmail: null,
-    // Trial defaults (set dynamically on install/update)
-    trialStartDate: null,
-    trialExpired: false
   },
 
   // Keys that should remain in sync storage (cross-device)

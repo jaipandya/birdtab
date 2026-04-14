@@ -1,7 +1,7 @@
 import './tokens.css';
 import './styles.css';
 import CONFIG from './config.js';
-import { getAutoPlayState, getVideoAutoPlayState, getQuietHoursText } from './quietHours.js';
+import { getAutoPlayState, getQuietHoursText } from './quietHours.js';
 import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
@@ -17,26 +17,6 @@ import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock, showClock, hideClock } from './clock.js';
 import { initTimer, showTimer, hideTimer } from './timer.js';
-import { checkAndShowTrialWelcome, checkAndShowTrialExpired } from './trialModals.js';
-import { checkAndShowProWelcome } from './proWelcomeModal.js';
-import {
-  VideoVisibilityManager,
-  initVideoManager,
-  setVideoElement,
-  getVideoElement,
-  getVideoVisibilityManager,
-  setVideoVisibilityManager,
-  createVideoVisibilityManager,
-  destroyVideoVisibilityManager,
-  showVideoLoadingIndicator,
-  hideVideoLoadingIndicator,
-  setupVideoEventListeners,
-  setVideoSource,
-  setupVideoControls,
-  cleanupVideoControls,
-  showPosterImage,
-  showVideoElement
-} from './videoManager.js';
 import {
   addToHistory,
   getHistory,
@@ -53,21 +33,10 @@ import {
   showLoadingIndicator,
   hideLoadingIndicator,
   updateLoadingMessage,
-  showAudioLoadingIndicator,
-  hideAudioLoadingIndicator,
   showMediaPlayIndicator,
   showMediaPauseIndicator,
   showToast
 } from './loadingIndicators.js';
-import {
-  initShareMenu,
-  openShareMenu,
-  closeShareMenu,
-  handleShare,
-  setupShareButton,
-  getShowShareMenu,
-  setShowShareMenu
-} from './shareMenu.js';
 import {
   incrementNewTabCount,
   checkAndPrepareReviewPrompt,
@@ -78,10 +47,11 @@ import {
   getReviewPromptData,
   showReviewPromptIfNeeded
 } from './reviewPrompt.js';
-import { isPro, getLicenseStatus, resetProFeatureSettings } from './licenseManager.js';
-import { showUpgradeModal } from './upgradeModal.js';
+// Share temporarily hidden — will return in a future version
+// import { initShareMenu, setupShareButton } from './shareMenu.js';
 import { setupInfoPopover } from './birdInfoPopover.js';
-import { escapeHtml } from './utils/escapeHtml.js';
+import { setupCreditPopovers } from './creditPopover.js';
+import { escapeHtml, truncateName } from './utils/escapeHtml.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -98,26 +68,11 @@ let volumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
 let lastVolumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
 let audio;
 let fadeAudioInterval = null; // Interval for fading audio in/out
-let video; // Video element for video mode
 let isPlaying = false;
 // shouldShowReviewPrompt and reviewPromptData are now managed by reviewPrompt.js
 let birdInfo;
 let quizMode;
 let saveVolumeTimeout = null;
-// showShareMenu state is now managed by shareMenu.js module
-
-// Initialize video manager callbacks
-initVideoManager({
-  onPlayVideo: (showIndicator) => playVideo(showIndicator),
-  onPauseVideo: () => pauseVideo(),
-  onUpdatePlayPauseButton: () => updatePlayPauseButton(),
-  onVideoReloaded: (videoEl) => { video = videoEl; },
-  getIsPlaying: () => isPlaying,
-  setIsPlaying: (val) => { isPlaying = val; },
-  getIsMuted: () => isMuted,
-  getVolumeLevel: () => volumeLevel,
-  getBirdInfo: () => birdInfo
-});
 
 /**
  * Migrate from legacy clockEnabled to new clockDisplayMode enum
@@ -171,21 +126,8 @@ async function initClockDisplay() {
   await initClock();
   await initTimer();
 
-  // Pro feature: clock/timer requires Pro access
-  // If the user's mode is clock or timer but they're not Pro, hide it.
-  // This is a runtime safety check (settings are also reset by resetProFeatureSettings
-  // on license expiry, but this catches edge cases between verification cycles).
   let effectiveMode = mode;
-  if (mode === CLOCK_DISPLAY_MODES.CLOCK || mode === CLOCK_DISPLAY_MODES.TIMER) {
-    const hasPro = await isPro();
-    if (!hasPro) {
-      log('Clock/Timer requires Pro, hiding display');
-      effectiveMode = CLOCK_DISPLAY_MODES.OFF;
-      // Don't persist to storage — preserve the setting for if they re-upgrade
-    }
-  }
 
-  // Show the appropriate display based on effective mode
   switch (effectiveMode) {
     case CLOCK_DISPLAY_MODES.CLOCK:
       showClock();
@@ -236,8 +178,6 @@ async function initClockDisplay() {
 
   log(`Clock display initialized with mode: ${mode}, effective: ${effectiveMode}`);
 }
-
-// VideoVisibilityManager is now imported from videoManager.js
 
 // Fetch bird information from background script
 // Note: No separate transaction here - this is captured as part of the page-load transaction
@@ -366,49 +306,15 @@ const updatePlayPauseButton = () => {
   }
 };
 
-// Initialize audio/video based on auto-play settings
 async function initializeAudio() {
   const isQuietHour = await isQuietHoursActive();
 
   if (isQuietHour) {
-    // Video mode during quiet hours: allow play/pause, just muted, no volume control
-    if (birdInfo && birdInfo.videoMode && video) {
-      video.muted = true;
-      hideVolumeControl();
-      showQuietHoursPill();
-
-      // Re-append play button so it appears after moon icon (rightmost position)
-      const playBtn = document.getElementById('play-button');
-      if (playBtn) {
-        const controlButtons = document.querySelector('.control-buttons');
-        if (playBtn.parentNode) {
-          playBtn.parentNode.removeChild(playBtn);
-        }
-        controlButtons.appendChild(playBtn);
-      }
-
-      // Auto-play muted video if auto-play is enabled
-      const shouldAutoPlayVideo = await getVideoAutoPlayState();
-      if (shouldAutoPlayVideo) {
-        await playVideo();
-      }
-    } else {
-      // Photo/audio mode during quiet hours: show disabled play button with quiet hours tooltip
-      // Add moon icon first, then reposition play button after it
-      showQuietHoursPill();
-      showDisabledPlayButton();
-    }
+    showQuietHoursPill();
+    showDisabledPlayButton();
   } else {
     const shouldAutoPlay = await getAutoPlayState();
-    // Video mode: auto-play video if enabled
-    if (birdInfo && birdInfo.videoMode && video) {
-      showAudioControls();
-      if (shouldAutoPlay) {
-        await playVideo();
-      }
-    }
-    // Audio mode: auto-play audio if enabled
-    else if (birdInfo && birdInfo.mediaUrl) {
+    if (birdInfo && birdInfo.mediaUrl) {
       showAudioControls();
       if (shouldAutoPlay) {
         await playAudio();
@@ -419,68 +325,11 @@ async function initializeAudio() {
   }
 }
 
-// Play video
-// showIndicator: if true, shows a brief play indicator animation (for user-initiated plays)
-async function playVideo(showIndicator = false) {
-  if (!video) return;
-
-  // Ensure video is muted during quiet hours
-  const isQuietHour = await isQuietHoursActive();
-
-  // Re-check video after async call - it may have been cleaned up during beforeunload
-  if (!video) return;
-
-  if (isQuietHour) {
-    video.muted = true;
-  }
-
-  try {
-    // Show brief play indicator for user-initiated plays
-    const vvm = getVideoVisibilityManager();
-    if (showIndicator && vvm) {
-      vvm.showPlayIndicator();
-    }
-
-    await video.play();
-    isPlaying = true;
-    updatePlayPauseButton();
-    log('Video playback started');
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      log('Video playback interrupted');
-      return;
-    }
-
-    // NotSupportedError occurs when video source failed to load (network issue)
-    if (error.name === 'NotSupportedError') {
-      log('Video unavailable (network issue)');
-      return;
-    }
-
-    console.error('Error playing video:', error);
-    captureException(error, {
-      tags: { operation: 'playVideo' },
-      extra: {
-        videoUrl: birdInfo?.videoUrl,
-        currentTime: video?.currentTime,
-        volume: video?.volume,
-        muted: video?.muted,
-        errorName: error.name
-      }
-    });
-  }
-}
 
 function hideAudioControls() {
   const playButton = document.getElementById('play-button');
   const volumeControl = document.getElementById('volume-control');
   if (playButton) playButton.style.display = 'none';
-  if (volumeControl) volumeControl.style.display = 'none';
-}
-
-// Hide only volume control (for video mode during quiet hours - play/pause still allowed)
-function hideVolumeControl() {
-  const volumeControl = document.getElementById('volume-control');
   if (volumeControl) volumeControl.style.display = 'none';
 }
 
@@ -618,7 +467,7 @@ function loadAudioWithoutPlaying() {
   updatePlayPauseButton();
 }
 
-// Create a play button for media controls (shared between audio and video mode)
+// Create a play button for media controls
 function createPlayButton(onClickHandler) {
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
@@ -655,23 +504,6 @@ function createAudioPlayer(mediaUrl) {
   };
 
   return createPlayButton(togglePlay);
-}
-
-// Create video player controls (video mode)
-function createVideoPlayer() {
-  log('Creating video player controls');
-  return createPlayButton(toggleVideoPlay);
-}
-
-// Toggle video play/pause
-async function toggleVideoPlay() {
-  if (!video) return;
-
-  if (isPlaying) {
-    pauseVideo();
-  } else {
-    await playVideo(true); // Show play indicator for user-initiated play
-  }
 }
 
 // Toggle play/pause
@@ -771,11 +603,6 @@ function pauseAudio() {
   }
 }
 
-// Pause all media (audio and video) - used when starting quiz
-function pauseAllMedia() {
-  pauseAudio();
-  pauseVideo();
-}
 
 // Set image source and show it when loaded
 // Includes retry logic for transient network failures
@@ -800,58 +627,6 @@ function setImageSource(imageUrl, retryCount = 0) {
   };
 
   img.src = imageUrl;
-}
-
-// Switch to full image mode credits (photo + audio) on video fallback
-function switchToImageModeCredits() {
-  const creditsContainer = document.querySelector('.credits');
-  if (!creditsContainer || !birdInfo) return;
-
-  const imageCreditsHtml = `
-    <span class="credit-item media-toggle-container">
-      <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
-        <input type="checkbox" id="media-toggle-switch" checked
-               aria-label="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}"
-               role="switch"
-               aria-checked="true">
-        <span class="media-toggle-slider" aria-hidden="true">
-          <span class="media-toggle-icon media-toggle-photo">
-            <img src="images/svg/camera.svg" alt="" width="12" height="12">
-          </span>
-          <span class="media-toggle-icon media-toggle-video">
-            <img src="images/svg/video.svg" alt="" width="12" height="12">
-          </span>
-        </span>
-      </label>
-    </span>
-    <span class="credit-item credit-icon-group">
-      <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
-        <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
-      </a>
-    </span>
-    <span id="share-container" class="credit-item share-container credit-icon-group">
-      <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip') || 'Share'}">
-        <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt') || 'Share'}" width="16" height="16">
-      </button>
-    </span>
-    <span class="credit-item">
-      <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-      <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
-    </span>
-    ${birdInfo.mediaUrl ? `
-    <span class="credit-item">
-      <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
-      <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
-    </span>
-    ` : ''}
-    <span class="credit-item">
-      ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
-    </span>
-  `;
-
-  creditsContainer.innerHTML = imageCreditsHtml;
-  setupShareButton();
-  log('Switched to image mode credits');
 }
 
 // Main function to update the page with new bird information
@@ -905,8 +680,7 @@ async function initializePage() {
       await addToHistory(birdInfo);
     }
 
-    // Initialize share menu with birdInfo getter
-    initShareMenu(() => birdInfo);
+    // initShareMenu(() => birdInfo);
 
     // add artificial delay of about 4 seconds to simulate a slow loading experience
     // await new Promise(resolve => setTimeout(resolve, 4000));
@@ -923,19 +697,19 @@ async function initializePage() {
     // Track session start with user settings and bird info
     try {
       const settings = await new Promise((resolve) => {
-        chrome.storage.local.get(['region', 'videoMode', 'autoPlay', 'quietHours', 'highResImages', 'quickAccessEnabled', 'clockDisplayMode', 'installTime'], resolve);
+        chrome.storage.local.get(['autoPlay', 'quietHours', 'quickAccessEnabled', 'clockDisplayMode', 'installTime'], resolve);
       });
       trackSessionStart({
-        region: settings.region || 'US',
-        videoMode: settings.videoMode || false,
+        region: 'WLD',
+        videoMode: false,
         autoPlay: settings.autoPlay || false,
         quietHours: settings.quietHours || false,
-        highResImages: settings.highResImages || false,
+        highResImages: false,
         quickAccessEnabled: settings.quickAccessEnabled || false,
         clockDisplayMode: settings.clockDisplayMode || 'off',
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
-        hasVideo: !!birdInfo.videoUrl,
+        hasVideo: false,
       }, settings.installTime || null);
     } catch (analyticsError) {
       log(`Analytics error: ${analyticsError.message}`);
@@ -943,54 +717,108 @@ async function initializePage() {
 
     const contentContainer = document.getElementById('content-container');
 
-    // Determine if we're in video mode (video mode enabled AND video available)
-    const isVideoMode = birdInfo.videoMode;
+    const imgSource = birdInfo.imageSource || '';
+    const imgSourceUrl = birdInfo.imageSourceUrl || '';
+    const imgLicense = birdInfo.imageLicense || '';
+    const imgLicenseUrl = birdInfo.imageLicenseUrl || '';
+    const imgTitle = birdInfo.imageTitle || '';
+    const imgCaption = birdInfo.imageCaption || '';
+    const imgLocation = birdInfo.imageLocation || '';
+    const imgLat = birdInfo.imageLatitude || '';
+    const imgLon = birdInfo.imageLongitude || '';
+    const imgDate = birdInfo.imageDate || '';
+    const imgResized = birdInfo.imageResized !== undefined ? birdInfo.imageResized : false;
 
-    // Build credits HTML based on mode
-    // In video mode, initially show photo credits (poster visible while video loads)
-    // Credits will switch to video credits when video is ready (canplay event)
-    let creditsHtml;
-    if (isVideoMode) {
-      // Video mode: show both photo and video credits
-      // Photo credits for the poster/fallback image, video credits for the video
-      creditsHtml = `
-        <span class="credit-item">
-          <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt') || 'Photo'}" width="16" height="16">
-          <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
-        </span>
-        <span class="credit-item">
-          <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-          <a href="${escapeHtml(birdInfo.videographerUrl)}" target="_blank">${escapeHtml(birdInfo.videographer)}</a>
-        </span>
-      `;
-    } else {
-      // Image mode: show photographer and optionally recordist
-      creditsHtml = `
-        <span class="credit-item">
-          <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
-          <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(birdInfo.photographer)}</a>
-        </span>
-        ${birdInfo.mediaUrl ? `
-        <span class="credit-item">
-          <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
-          <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
-        </span>
-        ` : ''}
-        ${birdInfo.videoDisabledDueToSlowConnection ? `
-        <span class="credit-item info-icon" data-tooltip="${chrome.i18n.getMessage('videoUnavailableTooltip')}">
-          <img src="images/svg/video-off.svg" alt="${chrome.i18n.getMessage('videoUnavailableAlt')}" width="16" height="16">
-        </span>
-        ` : ''}
-      `;
-    }
+    const audSource = birdInfo.audioSource || '';
+    const audSourceUrl = birdInfo.audioSourceUrl || '';
+    const audLicense = birdInfo.audioLicense || '';
+    const audLicenseUrl = birdInfo.audioLicenseUrl || '';
+    const audTitle = birdInfo.audioTitle || '';
+    const audSoundType = birdInfo.audioSoundType || '';
+    const audLocation = birdInfo.audioLocation || '';
+    const audLat = birdInfo.audioLatitude || '';
+    const audLon = birdInfo.audioLongitude || '';
+    const audDate = birdInfo.audioDate || '';
+    const audConvertedFormat = birdInfo.audioConvertedFormat || '';
+
+    const creditsHtml = `
+      <span class="credit-item"
+        data-credit-type="photo"
+        data-credit-name="${escapeHtml(birdInfo.photographer)}"
+        data-credit-url="${escapeHtml(birdInfo.photographerUrl)}"
+        data-credit-source="${escapeHtml(imgSource)}"
+        data-credit-source-url="${escapeHtml(imgSourceUrl)}"
+        data-credit-license="${escapeHtml(imgLicense)}"
+        data-credit-license-url="${escapeHtml(imgLicenseUrl)}"
+        data-credit-title="${escapeHtml(imgTitle)}"
+        data-credit-caption="${escapeHtml(imgCaption)}"
+        data-credit-location="${escapeHtml(imgLocation)}"
+        data-credit-lat="${escapeHtml(imgLat)}"
+        data-credit-lon="${escapeHtml(imgLon)}"
+        data-credit-date="${escapeHtml(imgDate)}"
+        data-credit-resized="${imgResized}">
+        <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
+        <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(truncateName(birdInfo.photographer))}</a>
+      </span>
+      ${birdInfo.mediaUrl ? `
+      <span class="credit-item"
+        data-credit-type="audio"
+        data-credit-name="${escapeHtml(birdInfo.recordist)}"
+        data-credit-url="${escapeHtml(birdInfo.recordistUrl)}"
+        data-credit-source="${escapeHtml(audSource)}"
+        data-credit-source-url="${escapeHtml(audSourceUrl)}"
+        data-credit-license="${escapeHtml(audLicense)}"
+        data-credit-license-url="${escapeHtml(audLicenseUrl)}"
+        data-credit-title="${escapeHtml(audTitle)}"
+        data-credit-sound-type="${escapeHtml(audSoundType)}"
+        data-credit-location="${escapeHtml(audLocation)}"
+        data-credit-lat="${escapeHtml(audLat)}"
+        data-credit-lon="${escapeHtml(audLon)}"
+        data-credit-date="${escapeHtml(audDate)}"
+        data-credit-converted-format="${escapeHtml(audConvertedFormat)}">
+        <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
+        <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(truncateName(birdInfo.recordist))}</a>
+      </span>
+      ` : ''}
+    `;
+
+    const creditInfoData = {
+      photo: {
+        name: birdInfo.photographer,
+        url: birdInfo.photographerUrl,
+        source: imgSource,
+        sourceUrl: imgSourceUrl,
+        license: imgLicense,
+        licenseUrl: imgLicenseUrl,
+        title: imgTitle,
+        caption: imgCaption,
+        location: imgLocation,
+        lat: imgLat,
+        lon: imgLon,
+        date: imgDate,
+        resized: imgResized,
+      },
+      ...(birdInfo.mediaUrl ? {
+        audio: {
+          name: birdInfo.recordist,
+          url: birdInfo.recordistUrl,
+          source: audSource,
+          sourceUrl: audSourceUrl,
+          license: audLicense,
+          licenseUrl: audLicenseUrl,
+          title: audTitle,
+          soundType: audSoundType,
+          location: audLocation,
+          lat: audLat,
+          lon: audLon,
+          date: audDate,
+          convertedFormat: audConvertedFormat,
+        },
+      } : {}),
+    };
 
     contentContainer.innerHTML = `
-      ${isVideoMode ? `
-      <video class="background-video hidden" loop playsinline preload="metadata" poster="${escapeHtml(birdInfo.imageUrl)}">
-        <source src="${escapeHtml(birdInfo.videoUrl)}" type="video/mp4">
-      </video>
-      ` : ''}
-      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image${isVideoMode ? ' video-fallback' : ''}" decoding="async">
+      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image" decoding="async">
       <div class="gradient-overlay"></div>
       <div class="info-panel">
         <div class="info-panel-header">
@@ -1012,35 +840,21 @@ async function initializePage() {
           </div>
         </div>
         <p class="credits">
-          <span class="credit-item media-toggle-container">
-            <label class="media-toggle" title="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}">
-              <input type="checkbox" id="media-toggle-switch" ${isVideoMode ? 'checked' : ''} 
-                     aria-label="${chrome.i18n.getMessage('toggleMediaMode') || 'Toggle video/photo'}"
-                     role="switch"
-                     aria-checked="${isVideoMode ? 'true' : 'false'}">
-              <span class="media-toggle-slider" aria-hidden="true">
-                <span class="media-toggle-icon media-toggle-photo">
-                  <img src="images/svg/camera.svg" alt="" width="12" height="12">
-                </span>
-                <span class="media-toggle-icon media-toggle-video">
-                  <img src="images/svg/video.svg" alt="" width="12" height="12">
-                </span>
-              </span>
-            </label>
-          </span>
           <span class="credit-item credit-icon-group">
             <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
               <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
             </a>
           </span>
+          <!-- Share icon temporarily hidden — will return in a future version
           <span id="share-container" class="credit-item share-container credit-icon-group">
             <button id="share-button" class="share-inline-button" title="${chrome.i18n.getMessage('shareTooltip')}">
               <img src="images/svg/share.svg" alt="${chrome.i18n.getMessage('shareAlt')}" width="16" height="16">
             </button>
           </span>
-          ${creditsHtml}
-          <span class="credit-item">
-            ${chrome.i18n.getMessage('viaText') || 'via'} <a href="https://www.macaulaylibrary.org/" target="_blank">${chrome.i18n.getMessage('macaulayLibrary') || 'Macaulay Library'}</a>
+          -->
+          <span class="credit-attribution">${creditsHtml}</span>
+          <span class="credit-item credit-info-trigger" id="credit-info-trigger" title="${chrome.i18n.getMessage('creditInfoTitle') || 'Media credits & licenses'}">
+            <img src="images/svg/info-circle.svg" alt="${chrome.i18n.getMessage('creditInfoAlt') || 'Credits & licenses'}" width="16" height="16">
           </span>
         </p>
       </div>
@@ -1051,7 +865,7 @@ async function initializePage() {
         <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
           <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
-        ${(isVideoMode || birdInfo.mediaUrl) ? `
+        ${birdInfo.mediaUrl ? `
         <div id="volume-control" class="volume-control">
           <button id="volume-button" class="icon-button" title="${chrome.i18n.getMessage('volumeTooltip')}">
             <img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">
@@ -1071,80 +885,32 @@ async function initializePage() {
       </button>
     `;
 
-    // Set up video or image source
-    if (isVideoMode) {
-      // Video mode: set up video with sound, image as fallback
-      setVideoSource();
-      setImageSource(birdInfo.imageUrl);
+    setImageSource(birdInfo.imageUrl);
 
-      // Get reference to video element
-      video = document.querySelector('.background-video');
-      setVideoElement(video);
+    if (birdInfo.mediaUrl) {
+      log(`Audio URL found: ${birdInfo.mediaUrl}`);
+      const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
+      if (audioPlayer) {
+        document.querySelector('.control-buttons').appendChild(audioPlayer);
+      }
 
-      // Initialize VideoVisibilityManager for tab visibility handling
-      destroyVideoVisibilityManager();
-      createVideoVisibilityManager(video, birdInfo);
-
-      // Load volume settings for video
       chrome.storage.local.get(['isMuted', 'volumeLevel'], (result) => {
         isMuted = result.isMuted || false;
         volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
         lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
         updateVolumeControl();
-        if (video) {
-          video.muted = isMuted;
-          video.volume = isMuted ? 0 : volumeLevel;
+        if (audio) {
+          audio.muted = isMuted;
+          audio.volume = isMuted ? 0 : volumeLevel;
         }
       });
 
-      // Create play button for video
-      const playButton = createVideoPlayer();
-      if (playButton) {
-        document.querySelector('.control-buttons').appendChild(playButton);
-      }
-
       setupVolumeControl();
       updateVolumeControl();
-
-      // Add click-to-pause on empty areas of the page
       setupMediaClickHandler();
-
-      // Set up media toggle button (video/photo switch)
-      setupMediaToggle(false); // false = video mode
     } else {
-      // Image mode: just load the image
-      setImageSource(birdInfo.imageUrl);
-
-      if (birdInfo.mediaUrl) {
-        log(`Audio URL found: ${birdInfo.mediaUrl}`);
-        const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
-        if (audioPlayer) {
-          document.querySelector('.control-buttons').appendChild(audioPlayer);
-        }
-
-        chrome.storage.local.get(['isMuted', 'volumeLevel'], (result) => {
-          isMuted = result.isMuted || false;
-          volumeLevel = result.volumeLevel !== undefined ? result.volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
-          lastVolumeLevel = volumeLevel > 0 ? volumeLevel : CONFIG.STORAGE_DEFAULTS.volumeLevel;
-          updateVolumeControl();
-          if (audio) {
-            audio.muted = isMuted;
-            audio.volume = isMuted ? 0 : volumeLevel;
-          }
-        });
-
-        setupVolumeControl();
-        updateVolumeControl();
-
-        // Add click-to-play/pause on empty areas of the page for audio
-        setupMediaClickHandler();
-      } else {
-        log('No audio URL found in bird info');
-        hideAudioControls();
-      }
-
-      // Set up media toggle in image mode (for on-demand video fetch)
-      setupMediaToggle(true); // true = image mode
+      log('No audio URL found in bird info');
+      hideAudioControls();
     }
 
 
@@ -1169,8 +935,7 @@ async function initializePage() {
     // Initialize Chrome tab link
     initializeChromeTab();
 
-    // Setup share functionality
-    setupShareButton();
+    // setupShareButton();
 
     // After updating the page content, add the review prompt if needed
     showReviewPromptIfNeeded(document.body);
@@ -1178,10 +943,10 @@ async function initializePage() {
     setupInfoPopover({
       onEbirdClick: () => trackFeature('ebird_click'),
     });
+    setupCreditPopovers(creditInfoData);
     initLowDistractionMode();
 
     // Initialize settings modal immediately after DOM elements are created
-    // (before initializeAudio which may take time for video to load)
     try {
       new SettingsSidebar();
     } catch (error) {
@@ -1450,14 +1215,9 @@ function setVolume(newLevel, immediate = false) {
     isMuted = false;
   }
 
-  // Update audio or video volume
   if (audio) {
     audio.volume = volumeLevel;
     audio.muted = isMuted;
-  }
-  if (video) {
-    video.volume = volumeLevel;
-    video.muted = isMuted;
   }
 
   updateVolumeControl();
@@ -1494,21 +1254,10 @@ function saveVolumeState(immediate = false) {
   }
 }
 
-// Pause video if playing
-function pauseVideo() {
-  if (video && !video.paused) {
-    video.pause();
-    isPlaying = false;
-    updatePlayPauseButton();
-    showPosterImage();
-  }
-}
-
 // Track if media click handler is already set up to avoid duplicate listeners
 let mediaClickHandlerSetup = false;
 
-// Set up click-to-play/pause functionality for both video and audio modes
-// Clicking anywhere on the page (except interactive elements) will toggle media play/pause
+// Clicking anywhere on the page (except interactive elements) will toggle audio play/pause
 function setupMediaClickHandler() {
   // Prevent duplicate event listeners
   if (mediaClickHandlerSetup) return;
@@ -1533,15 +1282,16 @@ function setupMediaClickHandler() {
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
-      '.video-play-overlay', '.video-play-btn', '.share-container', '.share-menu',
       '.settings-sidebar', '.quiz-mode',
-      '.media-toggle', '.media-toggle-container',
       '.search-container',
       '.options-menu', '.options-menu-item',
       '.info-popover',
+      '.credit-popover',
+      '.credit-info-trigger',
       '#clock-options-trigger',
       '.timer-controls', '.timer-digit-group', '.timer-preset-btn', '.timer-start-btn', '.timer-time',
-      '.confirmation-dialog', '.confirmation-dialog-backdrop'
+      '.confirmation-dialog', '.confirmation-dialog-backdrop',
+      '.share-container', '.share-menu'
     ];
 
     // Check if click target or its parents match any interactive selector
@@ -1553,26 +1303,7 @@ function setupMediaClickHandler() {
 
     e.preventDefault();
 
-    if (isShowingVideo) {
-      // Video mode: toggle video play/pause
-      const vvm = getVideoVisibilityManager();
-
-      if (vvm && vvm.isUnloaded) {
-        // Video was unloaded due to tab inactivity — reload and play,
-        // same as clicking the play overlay button
-        await vvm.reloadAndPlay();
-        video = getVideoElement();
-        return;
-      }
-
-      if (video && video.paused) {
-        await playVideo(true); // Show play indicator for user-initiated play
-      } else if (video) {
-        pauseVideo();
-      }
-    } else if (!isShowingVideo && audio) {
-      // Photo/audio mode: toggle audio play/pause with indicators
-      // Skip if quiet hours are active (audio is blocked)
+    if (audio) {
       const isQuietHour = await isQuietHoursActive();
       if (isQuietHour) return;
 
@@ -1587,494 +1318,6 @@ function setupMediaClickHandler() {
   });
 }
 
-// Set up media toggle switch (video/photo)
-// Allows quick switching between video and image mode for the current bird
-let isShowingVideo = true; // Track current display mode
-
-function setupMediaToggle(isImageMode = false) {
-  const toggleSwitch = document.getElementById('media-toggle-switch');
-  if (!toggleSwitch) return;
-
-  // Set initial state
-  isShowingVideo = !isImageMode;
-
-  toggleSwitch.addEventListener('change', async function () {
-    if (this.checked) {
-      // User wants to switch to video mode - check if Pro
-      const hasPro = await isPro();
-      if (!hasPro) {
-        // Not Pro - revert toggle and show upgrade modal
-        this.checked = false;
-        this.setAttribute('aria-checked', 'false');
-        showUpgradeModal('videoMode');
-        return;
-      }
-    }
-
-    // Update aria-checked for accessibility
-    this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
-
-    // Track video mode toggle
-    trackFeature('video_toggle', { enabled: this.checked });
-
-    if (this.checked) {
-      // User wants to switch to video mode
-      if (isImageMode && !video) {
-        // Need to fetch video first
-        await fetchAndSwitchToVideo();
-      } else {
-        await switchToVideoMode();
-      }
-    } else {
-      // Switch to photo mode (may need to fetch audio on-demand)
-      await switchToPhotoMode();
-    }
-  });
-}
-
-// Fetch video for current bird and switch to video mode
-async function fetchAndSwitchToVideo() {
-  const toggleSwitch = document.getElementById('media-toggle-switch');
-
-  if (!birdInfo || !birdInfo.speciesCode) {
-    log('No bird info available for video fetch');
-    if (toggleSwitch) {
-      toggleSwitch.checked = false;
-      toggleSwitch.setAttribute('aria-checked', 'false');
-    }
-    return;
-  }
-
-  // Show loading state
-  showVideoLoadingIndicator(false);
-
-  try {
-    // Request video for current bird from background script
-    const response = await new Promise((resolve) => {
-      chrome.runtime.sendMessage({
-        action: 'getVideoForBird',
-        speciesCode: birdInfo.speciesCode
-      }, (result) => {
-        if (chrome.runtime.lastError) {
-          log(`Error fetching video: ${chrome.runtime.lastError.message}`);
-          resolve(null);
-        } else {
-          resolve(result);
-        }
-      });
-    });
-
-    if (response && response.videoUrl) {
-      // Check if user switched back to photo mode while we were fetching
-      if (!toggleSwitch || !toggleSwitch.checked) {
-        log('User switched back to photo mode during video fetch, aborting');
-        return;
-      }
-
-      // Store video info in birdInfo
-      birdInfo.videoUrl = response.videoUrl;
-      birdInfo.videographer = response.videographer;
-      birdInfo.videographerUrl = response.videographerUrl;
-
-      // Create video element
-      await createVideoElement(response.videoUrl);
-
-      // Check again if user switched back during video element creation
-      if (!toggleSwitch || !toggleSwitch.checked) {
-        log('User switched back to photo mode during video creation, aborting');
-        // Stop the video that was just created
-        if (video && !video.paused) {
-          video.pause();
-        }
-        return;
-      }
-
-      // Update credits to show video credits
-      updateCreditsForVideoMode();
-
-      // Switch to video mode
-      await switchToVideoMode();
-
-      log('Successfully fetched and switched to video mode');
-    } else {
-      // No video available
-      log('No video available for this bird');
-      if (toggleSwitch) {
-        toggleSwitch.checked = false;
-        toggleSwitch.setAttribute('aria-checked', 'false');
-      }
-      // Show toast notification to inform user
-      showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
-    }
-  } catch (error) {
-    log(`Error fetching video: ${error.message}`);
-    if (toggleSwitch) {
-      toggleSwitch.checked = false;
-      toggleSwitch.setAttribute('aria-checked', 'false');
-    }
-    // Show toast notification for error
-    showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
-  } finally {
-    hideVideoLoadingIndicator();
-  }
-}
-
-// Create video element dynamically
-async function createVideoElement(videoUrl) {
-  const contentContainer = document.getElementById('content-container');
-  const existingVideo = document.querySelector('.background-video');
-
-  if (existingVideo) {
-    existingVideo.remove();
-  }
-
-  // Check quiet hours - mute video during quiet hours (not a persisted setting)
-  const isQuietHour = await isQuietHoursActive();
-  const shouldMute = isMuted || isQuietHour;
-
-  // Create video element
-  const videoEl = document.createElement('video');
-  videoEl.className = 'background-video hidden';
-  videoEl.loop = true;
-  videoEl.playsInline = true;
-  videoEl.preload = 'metadata';
-  videoEl.poster = birdInfo.imageUrl;
-  videoEl.muted = shouldMute;
-  videoEl.volume = shouldMute ? 0 : volumeLevel;
-
-  const source = document.createElement('source');
-  source.src = videoUrl;
-  source.type = 'video/mp4';
-  videoEl.appendChild(source);
-
-  // Insert at the beginning of content container
-  const firstChild = contentContainer.firstChild;
-  contentContainer.insertBefore(videoEl, firstChild);
-
-  // Store reference
-  video = videoEl;
-
-  // Set up video event listeners
-  setupVideoEventListeners(videoEl, () => {
-    // Fallback to image if video fails
-    showPosterImage();
-
-    // Revert toggle switch to image mode
-    const toggleSwitch = document.getElementById('media-toggle-switch');
-    if (toggleSwitch) {
-      toggleSwitch.checked = false;
-      toggleSwitch.setAttribute('aria-checked', 'false');
-    }
-    isShowingVideo = false;
-
-    // Show toast notification
-    showToast(chrome.i18n.getMessage('videoNotAvailableForBird'), 'info');
-  });
-
-  // Initialize VideoVisibilityManager
-  destroyVideoVisibilityManager();
-  createVideoVisibilityManager(video, birdInfo);
-
-  // Wait for video to be ready
-  return new Promise((resolve) => {
-    videoEl.addEventListener('canplay', () => {
-      // Setup video controls (progress bar) once video is ready
-      setupVideoControls();
-      resolve();
-    }, { once: true });
-    videoEl.load();
-  });
-}
-
-// Update credits display for video mode
-function updateCreditsForVideoMode() {
-  const credits = document.querySelector('.credits');
-  if (!credits || !birdInfo.videographer) return;
-
-  // Check if video credit already exists
-  if (credits.querySelector('.credit-item-video')) return;
-
-  // Find the "via Macaulay Library" credit and insert before it
-  const macaulayCredit = Array.from(credits.querySelectorAll('.credit-item')).find(
-    item => item.textContent.includes('Macaulay Library')
-  );
-
-  const videoCredit = document.createElement('span');
-  videoCredit.className = 'credit-item credit-item-video credit-item-slide-in';
-  videoCredit.innerHTML = `
-    <img src="images/svg/video.svg" alt="${chrome.i18n.getMessage('videoAlt') || 'Video'}" width="16" height="16">
-    <a href="${escapeHtml(birdInfo.videographerUrl)}" target="_blank">${escapeHtml(birdInfo.videographer)}</a>
-  `;
-
-  if (macaulayCredit) {
-    credits.insertBefore(videoCredit, macaulayCredit);
-  }
-
-  // Remove animation class after animation completes
-  setTimeout(() => {
-    videoCredit.classList.remove('credit-item-slide-in');
-  }, 300);
-}
-
-// Update credits display for photo mode (add audio credit if available)
-function updateCreditsForPhotoMode() {
-  const credits = document.querySelector('.credits');
-  if (!credits || !birdInfo.recordist) return;
-
-  // Check if audio credit already exists (with specific class)
-  if (credits.querySelector('.credit-item-audio')) return;
-
-  // Also check if recordist credit already exists (without specific class, from initial render)
-  const existingCredits = Array.from(credits.querySelectorAll('.credit-item a'));
-  const recordistExists = existingCredits.some(link => link.textContent === birdInfo.recordist);
-  if (recordistExists) return;
-
-  // Find the camera credit (photo credit) and insert after it
-  const cameraCredit = Array.from(credits.querySelectorAll('.credit-item')).find(item => {
-    const link = item.querySelector('a');
-    return link && link.getAttribute('href') === birdInfo.photographerUrl;
-  });
-  if (!cameraCredit) return;
-
-  const audioCredit = document.createElement('span');
-  audioCredit.className = 'credit-item credit-item-audio credit-item-slide-in';
-  audioCredit.innerHTML = `
-    <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt') || 'Audio'}" width="16" height="16">
-    <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(birdInfo.recordist)}</a>
-  `;
-
-  // Insert after the camera credit
-  if (cameraCredit.nextSibling) {
-    credits.insertBefore(audioCredit, cameraCredit.nextSibling);
-  } else {
-    credits.appendChild(audioCredit);
-  }
-
-  // Remove animation class after animation completes
-  setTimeout(() => {
-    audioCredit.classList.remove('credit-item-slide-in');
-  }, 300);
-}
-
-async function switchToPhotoMode() {
-  isShowingVideo = false;
-
-  // Pause video if playing
-  if (video && !video.paused) {
-    video.pause();
-    isPlaying = false;
-  }
-
-  // Show image, hide video
-  showPosterImage();
-
-  // Clean up video-related UI
-  cleanupVideoControls();
-
-  // Remove play overlay completely
-  const playOverlay = document.querySelector('.video-play-overlay');
-  if (playOverlay) {
-    playOverlay.remove();
-  }
-
-  // Disable VideoVisibilityManager so it doesn't show overlay
-  destroyVideoVisibilityManager();
-
-  // Initialize audio - fetch on-demand if not available (e.g., when coming from video mode)
-  if (birdInfo && !birdInfo.mediaUrl && birdInfo.speciesCode) {
-    log('Audio not available, fetching on-demand for photo mode');
-
-    // Show loading indicator for audio fetch
-    showAudioLoadingIndicator();
-
-    try {
-      const response = await new Promise((resolve) => {
-        chrome.runtime.sendMessage({
-          action: 'getAudioForBird',
-          speciesCode: birdInfo.speciesCode
-        }, (result) => {
-          if (chrome.runtime.lastError) {
-            log(`Error fetching audio: ${chrome.runtime.lastError.message}`);
-            resolve(null);
-          } else {
-            resolve(result);
-          }
-        });
-      });
-
-      if (response && response.mediaUrl) {
-        // Store audio info in birdInfo
-        birdInfo.mediaUrl = response.mediaUrl;
-        birdInfo.recordist = response.recordist;
-        birdInfo.recordistUrl = response.recordistUrl;
-        log('Successfully fetched audio for photo mode');
-
-        // Update credits to show audio credit
-        updateCreditsForPhotoMode();
-      } else {
-        log('No audio available for this bird');
-      }
-    } catch (error) {
-      log(`Error fetching audio: ${error.message}`);
-    } finally {
-      hideAudioLoadingIndicator();
-    }
-  }
-
-  // Update credits if audio info already exists
-  if (birdInfo && birdInfo.recordist) {
-    updateCreditsForPhotoMode();
-  }
-
-  // Check for quiet hours before showing controls
-  const isQuietHour = await isQuietHoursActive();
-
-  // Initialize audio if available
-  if (birdInfo && birdInfo.mediaUrl) {
-    // Create audio object if it doesn't exist
-    if (!audio) {
-      audio = createBirdAudio(birdInfo.mediaUrl);
-      audio.muted = isMuted;
-      audio.volume = isMuted ? 0 : volumeLevel;
-      audio.onended = () => {
-        isPlaying = false;
-        updatePlayPauseButton();
-      };
-      log('Created audio player for photo mode');
-    }
-
-    // Remove existing button (to remove old video event listeners) and create new one for audio
-    let playBtn = document.getElementById('play-button');
-    if (playBtn) {
-      playBtn.remove();
-    }
-
-    // Create fresh button for audio mode
-    playBtn = document.createElement('button');
-    playBtn.id = 'play-button';
-    playBtn.classList.add('icon-button', 'play-button');
-    playBtn.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-    playBtn.title = chrome.i18n.getMessage('playTooltip');
-    playBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      // Don't trigger handler if button is disabled (quiet hours)
-      if (playBtn.disabled) return;
-      await togglePlay();
-    });
-    document.querySelector('.control-buttons').appendChild(playBtn);
-    log('Created play button for photo mode');
-
-    // Handle quiet hours - show disabled play button, don't auto-play
-    if (isQuietHour) {
-      // Show quiet hours icon first (if not already present), then reposition play button after it
-      if (!document.getElementById('quiet-hours-pill')) {
-        showQuietHoursPill();
-      }
-      showDisabledPlayButton();
-      updatePlayPauseButton();
-      log('Switched to photo mode (quiet hours active - play disabled)');
-      return;
-    }
-
-    // Show audio controls
-    playBtn.style.display = '';
-    showAudioControls();
-
-    // Check autoplay setting and play audio if enabled
-    chrome.storage.local.get(['autoPlay'], (result) => {
-      const shouldAutoPlay = result.autoPlay !== false; // Default to true
-      if (shouldAutoPlay && audio && !isPlaying) {
-        playAudio();
-      }
-    });
-  } else if (isQuietHour) {
-    // No audio available but quiet hours active - show disabled play button and quiet hours icon
-    // Show quiet hours icon first (if not already present), then reposition play button after it
-    if (!document.getElementById('quiet-hours-pill')) {
-      showQuietHoursPill();
-    }
-    showDisabledPlayButton();
-    updatePlayPauseButton();
-    log('Switched to photo mode (quiet hours active - no audio, play disabled)');
-    return;
-  }
-
-  updatePlayPauseButton();
-
-  log('Switched to photo mode');
-}
-
-async function switchToVideoMode() {
-  isShowingVideo = true;
-
-  // Stop audio if playing (video has its own audio)
-  if (audio && !audio.paused) {
-    pauseAudio();
-  }
-
-  // Show video element
-  showVideoElement();
-
-  // Setup video controls (progress bar) if video exists
-  if (video) {
-    setupVideoControls();
-  }
-
-  // Reinitialize VideoVisibilityManager if needed
-  if (!getVideoVisibilityManager() && video) {
-    createVideoVisibilityManager(video, birdInfo);
-  }
-
-  // Setup click-to-play/pause functionality
-  setupMediaClickHandler();
-
-  // Check for quiet hours - mute video, hide volume control, but allow play/pause
-  const isQuietHour = await isQuietHoursActive();
-  if (isQuietHour) {
-    // Mute video during quiet hours (not a persisted setting)
-    if (video) {
-      video.muted = true;
-    }
-    // Hide only volume control during quiet hours (play/pause still allowed)
-    hideVolumeControl();
-    // Show quiet hours pill if not already present
-    if (!document.getElementById('quiet-hours-pill')) {
-      showQuietHoursPill();
-    }
-  } else {
-    // Show audio controls (volume) for normal mode
-    showAudioControls();
-  }
-
-  // Show play button for video mode
-  // Remove existing button (to remove old audio event listeners) and create new one
-  let playBtn = document.getElementById('play-button');
-  if (playBtn) {
-    playBtn.remove();
-  }
-
-  // Create fresh button for video mode
-  playBtn = createVideoPlayer();
-  if (playBtn) {
-    const controlButtons = document.querySelector('.control-buttons');
-    // Append at the end (after moon icon if present in quiet hours)
-    controlButtons.appendChild(playBtn);
-  }
-
-  // Check autoplay setting and play video if enabled (video can auto-play muted during quiet hours)
-  const shouldAutoPlayVideo = await getVideoAutoPlayState();
-  if (shouldAutoPlayVideo && video) {
-    await playVideo();
-  }
-
-  if (isQuietHour) {
-    log('Switched to video mode (quiet hours active - muted, play/pause allowed)');
-  } else {
-    log('Switched to video mode');
-  }
-}
-
 // Combined message listener to handle all background messages
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
@@ -2086,16 +1329,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const isQuietHour = await isQuietHoursActive();
       if (isQuietHour && isPlaying) {
         pauseAudio();
-        pauseVideo();
       }
     }
   } else if (request.action === "pauseAudio") {
-    // Pause both audio and video when switching tabs
     if (audio && !audio.paused) {
       pauseAudio();
-    }
-    if (video && !video.paused) {
-      pauseVideo();
     }
   }
 });
@@ -2165,8 +1403,6 @@ function initLowDistractionMode() {
   });
 }
 
-
-// Share functionality is now imported from shareMenu.js
 
 // Volume keyboard shortcuts (Up/Down arrows)
 function setupVolumeKeyboardShortcuts() {
@@ -2247,8 +1483,6 @@ async function checkSyncedQuickAccessPermissions() {
   }
 }
 
-// Legacy Pro migration removed - all users now get 14-day free trial via background.js onInstalled handler
-
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
   // Start performance monitoring transaction
@@ -2271,8 +1505,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   log('Onboarding complete, initializing UI components first');
-
-  // Note: Free trial is now started via background.js onInstalled handler (14 days for all users)
 
   // Check if quick access is enabled but permissions are missing (synced from another device)
   await checkSyncedQuickAccessPermissions();
@@ -2328,7 +1560,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize quiz mode
   try {
-    quizMode = new QuizMode({ onQuizStart: pauseAllMedia });
+    quizMode = new QuizMode({ onQuizStart: pauseAudio });
     log('Quiz mode initialized');
   } catch (error) {
     captureException(error, {
@@ -2383,31 +1615,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Check and show trial modals (welcome or expired) and Pro welcome modal.
-  // The modal functions handle their own timing - they wait for screen to be clear
-  // of other modals/overlays before showing (feature tour, chrome footer, etc.)
-  try {
-    // Small initial delay to let page stabilize, then modals handle the rest
-    setTimeout(async () => {
-      await checkAndShowProWelcome();
-      await checkAndShowTrialWelcome();
-      await checkAndShowTrialExpired();
-    }, 1000);
-  } catch (error) {
-    log('Error checking trial/pro modals: ' + error.message);
-  }
-
-  // One-time check: reset Pro feature settings if user has lost Pro access
-  // (e.g., trial expired, subscription lapsed) but settings weren't reset yet
-  try {
-    const licenseStatus = await getLicenseStatus();
-    if (!licenseStatus.isPro && licenseStatus.status !== 'trial') {
-      await resetProFeatureSettings();
-    }
-  } catch (error) {
-    log('Error checking Pro settings reset: ' + error.message);
-  }
-
   // Finish performance monitoring transaction
   if (transaction) {
     transaction.setStatus('ok');
@@ -2415,22 +1622,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// Page unload cleanup - release video resources to prevent memory leaks
 window.addEventListener('beforeunload', () => {
-  log('Page unloading, cleaning up resources');
-
-  // Clean up VideoVisibilityManager
-  destroyVideoVisibilityManager();
-
-  // Release video memory
-  if (video) {
-    video.pause();
-    video.src = '';
-    video.load();
-    video = null;
-  }
-
-  // Release audio memory
   if (fadeAudioInterval) {
     clearInterval(fadeAudioInterval);
     fadeAudioInterval = null;
@@ -2483,18 +1675,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         const existingPill = document.getElementById('quiet-hours-pill');
 
         if (isActive && !existingPill) {
-          // Quiet hours just became active - show the pill
           showQuietHoursPill();
-
-          // Update audio controls based on media type
-          if (birdInfo && birdInfo.videoMode && video) {
-            // Video mode: mute video, hide volume control
-            video.muted = true;
-            hideVolumeControl();
-          } else {
-            // Photo/audio mode: show disabled play button
-            showDisabledPlayButton();
-          }
+          showDisabledPlayButton();
         } else if (!isActive && existingPill) {
           // Quiet hours just became inactive - remove the pill
           existingPill.classList.add('fade-out');

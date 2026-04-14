@@ -806,6 +806,26 @@ html[dir="rtl"] .quiz-close-btn {
   margin-top: 2px;
 }
 
+.quiz-result-credit {
+  font-size: 11px;
+  color: var(--white-40, rgba(255,255,255,0.4));
+  margin-top: 3px;
+}
+
+.quiz-result-credit a {
+  color: var(--white-50, rgba(255,255,255,0.5));
+  text-decoration: none;
+}
+
+.quiz-result-credit a:hover {
+  text-decoration: underline;
+  color: var(--white-65);
+}
+
+.quiz-license-link {
+  font-style: normal;
+}
+
 /* Exit Modal */
 .quiz-exit-modal {
   position: fixed;

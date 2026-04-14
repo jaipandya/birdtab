@@ -104,7 +104,7 @@ function shouldIgnoreError(errorMessage) {
  */
 function buildUserData(settings = {}) {
   return {
-    region: settings.region ?? 'US',
+    region: settings.region ?? 'WLD',
     onboarded: settings.onboardingComplete ?? false,
     autoPlay: settings.autoPlay ?? false,
     quietHours: settings.quietHours ?? false,
@@ -708,8 +708,8 @@ export function reportApiError(error, { operation, component, transientLevel = '
   // Build fingerprint for consistent grouping
   // Groups by: operation + error type + status code
   // Examples:
-  //   ['getMacaulayImage', 'network', 'unknown']
-  //   ['getBirdsByRegion', 'serverError', '503']
+  //   ['fetchBirdInfo', 'network', 'unknown']
+  //   ['getManifest', 'serverError', '503']
   //   ['preloadNextBird', 'httpError', '404']
   const fingerprint = [operation, type, tags.statusCode];
 

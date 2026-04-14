@@ -1,66 +1,79 @@
 import './tokens.css';
 import './onboarding.css';
-import { populateRegionSelect } from './shared.js';
 import { localizeHtml } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { initAnalytics, trackOnboardingCompleted } from './analytics.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Initialize Sentry and start transaction
   initSentry('onboarding');
   await initAnalytics('onboarding');
   const transaction = startTransaction('onboarding-flow', 'navigation');
   
-  // Localize immediately
   localizeHtml();
   addBreadcrumb('Onboarding started', 'navigation', 'info');
-  
-  // State and DOM references
-  let currentStep = 1;
-  const totalSteps = 3;
-  const nextButtons = document.querySelectorAll('.next-btn');
+
+  // Start manifest download immediately in the background.
+  // The service worker handles the actual fetch and caching;
+  // we just send a message so it starts early.
+  let manifestReady = false;
+  const manifestPromise = new Promise(resolve => {
+    chrome.runtime.sendMessage({ action: 'fetchManifest' }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.warn('Manifest prefetch message failed:', chrome.runtime.lastError.message);
+      }
+      manifestReady = response?.success === true;
+      resolve(manifestReady);
+    });
+  });
+
+  const autoplayToggle = document.getElementById('autoplay-toggle');
+  const toggleContainer = document.querySelector('.toggle-container');
+  toggleContainer.addEventListener('click', (e) => {
+    if (e.target === autoplayToggle || e.target.closest('.switch')) return;
+    autoplayToggle.checked = !autoplayToggle.checked;
+  });
+
   const finishButton = document.getElementById('finish-btn');
-  const dots = document.querySelectorAll('.dot');
-  const regionSelect = document.getElementById('region-select');
 
-  populateRegionSelect(regionSelect);
-
-  const showStep = (step) => {
-    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    document.getElementById(`step${step}`).classList.add('active');
-    dots.forEach((dot, i) => dot.classList.toggle('active', i === step - 1));
-    addBreadcrumb(`Onboarding step ${step}`, 'navigation', 'info', { step, totalSteps });
-  };
-
-  // Next button handlers
-  nextButtons.forEach(btn => btn.addEventListener('click', () => {
-    if (currentStep < totalSteps) showStep(++currentStep);
-  }));
-
-  // Finish button handler
-  finishButton.addEventListener('click', () => {
-    const selectedRegion = regionSelect.value;
+  finishButton.addEventListener('click', async () => {
     const autoPlayEnabled = document.getElementById('autoplay-toggle').checked;
 
     addBreadcrumb('Onboarding completed', 'user', 'info', { 
-      region: selectedRegion, 
+      region: 'WLD', 
       autoPlay: autoPlayEnabled 
     });
 
-    // Write user selections to local storage (device-specific)
+    // If the manifest isn't ready yet, show a loading state briefly
+    if (!manifestReady) {
+      finishButton.disabled = true;
+      finishButton.classList.add('loading');
+      const btnLabel = finishButton.querySelector('span');
+      const originalText = btnLabel?.textContent;
+      if (btnLabel) {
+        btnLabel.textContent = chrome.i18n.getMessage('preparingExperience') || 'Preparing your experience…';
+      }
+
+      // Wait for manifest (with a timeout so we don't block forever)
+      const timeout = new Promise(resolve => setTimeout(() => resolve(false), 15000));
+      await Promise.race([manifestPromise, timeout]);
+
+      if (btnLabel) btnLabel.textContent = originalText;
+      finishButton.disabled = false;
+      finishButton.classList.remove('loading');
+    }
+
     chrome.storage.local.set({
-      region: selectedRegion,
+      region: 'WLD',
       autoPlay: autoPlayEnabled
     }, () => {
       if (chrome.runtime.lastError) {
         captureException(new Error('Failed to save onboarding settings to local'), {
           tags: { operation: 'saveOnboardingSettings' },
-          extra: { error: chrome.runtime.lastError.message, selectedRegion, autoPlayEnabled }
+          extra: { error: chrome.runtime.lastError.message, autoPlayEnabled }
         });
         return;
       }
 
-      // Write onboarding state to sync storage (cross-device)
       chrome.storage.sync.set({
         onboardingComplete: true
       }, () => {
@@ -72,8 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        // Track onboarding completion only after settings are successfully saved
-        trackOnboardingCompleted(selectedRegion, autoPlayEnabled);
+        trackOnboardingCompleted('WLD', autoPlayEnabled);
 
         if (transaction) {
           transaction.setStatus('ok');

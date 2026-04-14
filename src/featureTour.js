@@ -57,14 +57,15 @@ const TOUR_STEPS = [
     isWelcome: true
   },
   {
-    id: 'videoToggle',
-    targetSelector: '.media-toggle-container, .media-toggle',
-    icon: 'images/svg/video.svg',
-    titleKey: 'tourVideoToggleTitle',
-    descriptionKey: 'tourVideoToggleDescription',
-    fallbackTitle: 'Video Mode',
-    fallbackDescription: 'Switch between photos and videos! Toggle this to watch birds in motion with beautiful video clips.',
-    position: 'top'
+    id: 'credits',
+    targetSelector: '.credit-attribution',
+    icon: 'images/svg/camera.svg',
+    titleKey: 'tourCreditsTitle',
+    descriptionKey: 'tourCreditsDescription',
+    fallbackTitle: 'Credits & Licensing',
+    fallbackDescription: 'Here you\'ll find the photographer and audio recordist for each bird. Tap a name to learn more about them and see the license details.',
+    position: 'top',
+    spotlightShape: 'pill'
   },
   {
     id: 'optionsMenu',
@@ -93,7 +94,7 @@ const TOUR_STEPS = [
     titleKey: 'tourVolumeTitle',
     descriptionKey: 'tourVolumeDescription',
     fallbackTitle: 'Volume Control',
-    fallbackDescription: 'Adjust the volume to your preference. Control the sound of bird calls and videos to create your perfect birding experience.',
+    fallbackDescription: 'Adjust the volume to your preference. Control the sound of bird calls to create your perfect birding experience.',
     position: 'top'
   },
   {
@@ -323,7 +324,7 @@ export async function showFeatureSpotlight(featureKey) {
   // Create backdrop and spotlight
   createBackdrop();
   createSpotlight();
-  positionSpotlight(targetElement);
+  positionSpotlight(targetElement, step.spotlightShape);
   
   // Create tooltip with simplified UI (no progress, no back button)
   const tooltip = createTooltip();
@@ -361,7 +362,7 @@ export async function showFeatureSpotlight(featureKey) {
     });
   }
   
-  positionTooltip(targetElement, step.position);
+  positionTooltip(targetElement, step.position, step.spotlightShape);
   
   // Set up keyboard handler (just Escape to close)
   keyboardHandler = (e) => {
@@ -433,31 +434,40 @@ function createTooltip() {
 /**
  * Position the spotlight around a target element
  */
-function positionSpotlight(targetElement) {
+function positionSpotlight(targetElement, shape) {
   if (!spotlightElement) return;
   
   if (!targetElement) {
-    // Hide spotlight for centered messages
     spotlightElement.classList.add('hidden');
     return;
   }
   
   spotlightElement.classList.remove('hidden');
+  spotlightElement.classList.toggle('pill', shape === 'pill');
   
   const rect = targetElement.getBoundingClientRect();
-  const padding = 10; // Extra padding around the element
-  const size = Math.max(rect.width, rect.height) + padding * 2;
+  const padding = 10;
   
-  spotlightElement.style.width = `${size}px`;
-  spotlightElement.style.height = `${size}px`;
-  spotlightElement.style.left = `${rect.left + rect.width / 2 - size / 2}px`;
-  spotlightElement.style.top = `${rect.top + rect.height / 2 - size / 2}px`;
+  if (shape === 'pill') {
+    const width = rect.width + padding * 2;
+    const height = rect.height + padding * 2;
+    spotlightElement.style.width = `${width}px`;
+    spotlightElement.style.height = `${height}px`;
+    spotlightElement.style.left = `${rect.left - padding}px`;
+    spotlightElement.style.top = `${rect.top - padding}px`;
+  } else {
+    const size = Math.max(rect.width, rect.height) + padding * 2;
+    spotlightElement.style.width = `${size}px`;
+    spotlightElement.style.height = `${size}px`;
+    spotlightElement.style.left = `${rect.left + rect.width / 2 - size / 2}px`;
+    spotlightElement.style.top = `${rect.top + rect.height / 2 - size / 2}px`;
+  }
 }
 
 /**
  * Position the tooltip relative to the target element or center it
  */
-function positionTooltip(targetElement, position) {
+function positionTooltip(targetElement, position, shape) {
   if (!tooltipElement) return;
   
   // For centered tooltips (welcome/complete screens)
@@ -477,14 +487,24 @@ function positionTooltip(targetElement, position) {
   
   const targetRect = targetElement.getBoundingClientRect();
   const viewportWidth = window.innerWidth;
+  const padding = 20; // 10px padding on each side
   
-  // Calculate spotlight radius (10px padding around target)
-  const spotlightRadius = (Math.max(targetRect.width, targetRect.height) + 20) / 2;
   const targetCenterX = targetRect.left + targetRect.width / 2;
   const targetCenterY = targetRect.top + targetRect.height / 2;
   
+  // For pill shapes, use actual half-height/width; for circles, use max dimension
+  let offsetY, offsetX;
+  if (shape === 'pill') {
+    offsetY = (targetRect.height + padding) / 2;
+    offsetX = (targetRect.width + padding) / 2;
+  } else {
+    const spotlightRadius = (Math.max(targetRect.width, targetRect.height) + padding) / 2;
+    offsetY = spotlightRadius;
+    offsetX = spotlightRadius;
+  }
+  
   // Gap from spotlight edge to arrow tip
-  const offset = spotlightRadius + 16; // 8px arrow + 8px gap
+  const offset = (position === 'top' || position === 'bottom' ? offsetY : offsetX) + 16;
   const edgeMargin = 16;
   
   // Position config based on direction
@@ -582,7 +602,7 @@ function renderStep(stepIndex) {
   
   // Create/update spotlight
   createSpotlight();
-  positionSpotlight(targetElement);
+  positionSpotlight(targetElement, step.spotlightShape);
   
   // Create tooltip content
   const tooltip = createTooltip();
@@ -724,7 +744,7 @@ function renderStep(stepIndex) {
   }
   
   // Position the tooltip
-  positionTooltip(targetElement, step.position);
+  positionTooltip(targetElement, step.position, step.spotlightShape);
   
   // Focus the next button for keyboard navigation
   setTimeout(() => nextBtn?.focus(), 100);
@@ -847,8 +867,8 @@ function handleResize() {
   if (!step) return;
   
   const targetElement = findTargetElement(step);
-  positionSpotlight(targetElement);
-  positionTooltip(targetElement, step.position);
+  positionSpotlight(targetElement, step.spotlightShape);
+  positionTooltip(targetElement, step.position, step.spotlightShape);
 }
 
 /**

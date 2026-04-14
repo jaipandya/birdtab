@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - Fondos de Pantalla de Aves, Vídeos y Sonidos de Naturaleza",
+    "message": "BirdTab - Fondos de Pantalla de Aves y Sonidos de Naturaleza",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "Transforma tu nueva pestaña con fondos de pantalla de aves, vídeos de pájaros y relajantes sonidos naturales",
+    "message": "Transforma tu nueva pestaña con fondos de pantalla de aves y relajantes sonidos naturales",
     "description": "Description of the extension"
   },
   "pageTitle": {
@@ -14,10 +14,6 @@
   "infoTooltip": {
     "message": "Información del ave",
     "description": "Tooltip for the info icon"
-  },
-  "infoAlt": {
-    "message": "Información",
-    "description": "Alt text for info icon"
   },
   "cameraAlt": {
     "message": "Cámara",
@@ -83,24 +79,20 @@
     "message": "Región de Observación de Aves",
     "description": "Label for region selection"
   },
-  "regionTooltip": {
-    "message": "Elige la región desde donde te gustaría ver aves. ¡Aún verás aves de todo el mundo!",
-    "description": "Tooltip for region selection"
-  },
-  "regionHelpText": {
-    "message": "Esto nos ayuda a mostrar aves que podrías avistar en tu área.",
-    "description": "Help text for region selection"
+  "regionComingSoon": {
+    "message": "Discover birds from every corner of the globe. More regions coming soon!",
+    "description": "Message shown when region selection is disabled"
   },
   "autoPlayBirdCalls": {
     "message": "Reproducir medios automáticamente",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Reproducir cantos de aves en modo foto o videos en modo video automáticamente con cada nueva pestaña. Las horas silenciosas anularán esto cuando estén activas.",
+    "message": "Reproducir cantos de aves automáticamente con cada nueva pestaña. Las horas silenciosas anularán esto cuando estén activas.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Habilitar para reproducir automáticamente cantos de aves o videos al abrir una nueva pestaña",
+    "message": "Habilitar para reproducir automáticamente cantos de aves al abrir una nueva pestaña",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -168,55 +160,11 @@
     "description": "Alt text for demo image"
   },
   "welcomeDescription1": {
-    "message": "¡Prepárate para una dosis diaria de maravilla aviar! Cada nueva pestaña te trae cara a cara con una fotografía impresionante de aves y datos fascinantes.",
+    "message": "Descubre un ave impresionante con cada nueva pestaña. Hermosa fotografía, datos fascinantes y sonidos relajantes de la naturaleza de todo el mundo.",
     "description": "First paragraph of welcome description"
   },
-  "welcomeDescription2": {
-    "message": "¡Es como tener una ventana al mundo de las aves directamente en tu navegador!",
-    "description": "Second paragraph of welcome description"
-  },
-  "nextButton": {
-    "message": "Siguiente",
-    "description": "Next button text for onboarding"
-  },
-  "chooseBirdingRegion": {
-    "message": "Elige tu Región de Observación de Aves",
-    "description": "Header for region selection step"
-  },
-  "regionSelectionDescription": {
-    "message": "Selecciona tu región preferida para ver aves comúnmente encontradas en tu área. ¡No te preocupes, aún podrás explorar aves de todo el mundo!",
-    "description": "Description for region selection"
-  },
-  "unitedStates": {
-    "message": "Estados Unidos",
-    "description": "Country name for United States"
-  },
-  "canada": {
-    "message": "Canadá",
-    "description": "Country name for Canada"
-  },
-  "unitedKingdom": {
-    "message": "Reino Unido",
-    "description": "Country name for United Kingdom"
-  },
-  "india": {
-    "message": "India",
-    "description": "Country name for India"
-  },
-  "regionSelectionHelpText": {
-    "message": "Esto nos ayuda a mostrarte aves que podrías avistar en tu área local. Puedes cambiar esto en cualquier momento en la configuración.",
-    "description": "Help text for region selection in onboarding"
-  },
-  "birdCallsTitle": {
-    "message": "Cantos de Aves: ¿Música para tus Oídos?",
-    "description": "Title for bird calls onboarding step"
-  },
-  "birdCallsDescription": {
-    "message": "¿Quieres escuchar los pios y trinos? ¡Habilita la reproducción automática para una experiencia inmersiva de observación de aves!",
-    "description": "Description for bird calls setting"
-  },
   "autoPlayNote": {
-    "message": "No te preocupes, siempre puedes activar o desactivar los sonidos para cada ave. Esta configuración solo determina el comportamiento predeterminado, y puedes cambiarla más tarde si lo deseas.",
+    "message": "Escucha cantos de aves cada vez que abras una nueva pestaña. Puedes ajustar esto en cualquier momento en la configuración.",
     "description": "Note about auto-play setting flexibility"
   },
   "startBirding": {
@@ -635,14 +583,6 @@
     "message": "Cerrar quiz",
     "description": "Aria label for close quiz button"
   },
-  "bingSearchAlt": {
-    "message": "Búsqueda Bing",
-    "description": "Alt text for Bing search icon"
-  },
-  "eBirdPageAlt": {
-    "message": "Página eBird",
-    "description": "Alt text for eBird page icon"
-  },
   "quizAlt": {
     "message": "Quiz",
     "description": "Alt text for quiz icon"
@@ -723,53 +663,9 @@
     "message": "¡Mira este hermoso {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoAlt": {
-    "message": "Video",
-    "description": "Alt text for video icon"
-  },
-  "videoMode": {
-    "message": "Modo Video",
-    "description": "Label for video mode setting"
-  },
-  "videoModeHelpText": {
-    "message": "Mostrar videos de aves en lugar de fotos cuando estén disponibles.",
-    "description": "Help text for video mode setting"
-  },
-  "videoModeTooltip": {
-    "message": "Activar para mostrar videos de aves en lugar de fotos cuando estén disponibles",
-    "description": "Tooltip for video mode toggle"
-  },
-  "videoUnavailableAlt": {
-    "message": "Video no disponible (conexión lenta)",
-    "description": "Alt text for video unavailable icon when connection is slow"
-  },
-  "videoUnavailableTooltip": {
-    "message": "Video no disponible: Tu conexión es lenta (2G/3G) o el ahorro de datos está activado. Mostrando foto para ahorrar datos.",
-    "description": "Tooltip explaining why video is unavailable due to slow connection"
-  },
-  "videoNotAvailableForBird": {
-    "message": "No hay video disponible para este pájaro",
-    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
-  },
   "loadingAudio": {
     "message": "Cargando audio",
     "description": "Loading indicator text when fetching audio for photo mode"
-  },
-  "loadingVideo": {
-    "message": "Cargando video",
-    "description": "Loading indicator text when loading video"
-  },
-  "buffering": {
-    "message": "Almacenando en búfer",
-    "description": "Loading indicator text when video is buffering"
-  },
-  "viaText": {
-    "message": "vía",
-    "description": "Text before Macaulay Library link in credits"
-  },
-  "macaulayLibrary": {
-    "message": "Biblioteca Macaulay",
-    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "Historial de Visualización",
@@ -859,20 +755,12 @@
     "message": "Atrás",
     "description": "Feature tour: back button text"
   },
-  "tourVideoToggleTitle": {
-    "message": "Modo Video",
-    "description": "Feature tour: video toggle title"
-  },
-  "tourVideoToggleDescription": {
-    "message": "¡Cambia entre fotos y videos! Actívalo para ver pájaros en movimiento con hermosos clips de video.",
-    "description": "Feature tour: video toggle description"
-  },
   "tourVolumeTitle": {
     "message": "Control de Volumen",
     "description": "Feature tour: volume controls title"
   },
   "tourVolumeDescription": {
-    "message": "Ajusta el volumen a tu preferencia. Controla el sonido de los cantos de aves y videos para crear tu experiencia perfecta.",
+    "message": "Ajusta el volumen a tu preferencia. Controla el sonido de los cantos de aves para crear tu experiencia perfecta.",
     "description": "Feature tour: volume controls description"
   },
   "tourRefreshTitle": {
@@ -918,22 +806,6 @@
   "errorResettingTour": {
     "message": "Error al reiniciar el tour de funciones",
     "description": "Error message when tour reset fails"
-  },
-  "proBadge": {
-    "message": "Pro",
-    "description": "Badge text for premium features"
-  },
-  "highResImages": {
-    "message": "Imágenes de Alta Resolución",
-    "description": "Label for high-resolution images feature"
-  },
-  "highResHelpText": {
-    "message": "Muestra fotos de aves en ultra alta resolución para obtener detalles cristalinos.",
-    "description": "Help text for high-resolution images setting"
-  },
-  "highResTooltip": {
-    "message": "Habilitar para mostrar imágenes de alta resolución",
-    "description": "Tooltip for high-resolution images toggle"
   },
   "chromeTabTooltip": {
     "message": "Abrir la página de nueva pestaña predeterminada de Chrome",
@@ -1195,6 +1067,14 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
+  "tourCreditsTitle": {
+    "message": "Créditos y licencia",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "Aquí encontrarás al fotógrafo y al grabador de audio de cada ave. Toca un nombre para conocerlo mejor y ver los detalles de la licencia.",
+    "description": "Feature tour: credits line description"
+  },
   "tourOptionsMenuTitle": {
     "message": "Menú rápido",
     "description": "Feature tour: options menu title"
@@ -1203,358 +1083,6 @@
     "message": "Accede a configuración, historial y cuestionario de aves desde este menú. ¡Haz clic para explorar tus opciones!",
     "description": "Feature tour: options menu description"
   },
-  "alreadyHaveLicense": {
-    "message": "¿Ya tienes una licencia?",
-    "description": "Divider text for license activation section"
-  },
-  "proFeatureVideoMode": {
-    "message": "Modo Video",
-    "description": "Pro feature: Video Mode title"
-  },
-  "proFeatureVideoModeDesc": {
-    "message": "Ve impresionantes videos de aves en lugar de fotos",
-    "description": "Pro feature: Video Mode description"
-  },
-  "proFeatureHighRes": {
-    "message": "Imágenes de alta resolución",
-    "description": "Pro feature: High-Res Images title"
-  },
-  "proFeatureHighResDesc": {
-    "message": "Fotografía de aves nítida en 2400px",
-    "description": "Pro feature: High-Res Images description"
-  },
-  "proFeatureRegion": {
-    "message": "Regiones internacionales",
-    "description": "Pro feature: Region title"
-  },
-  "proFeatureRegionDesc": {
-    "message": "Descubre aves de cualquier país del mundo",
-    "description": "Pro feature: Region description"
-  },
-  "proFeatureClock": {
-    "message": "Reloj y temporizador",
-    "description": "Pro feature: Clock/Timer title"
-  },
-  "proFeatureClockDesc": {
-    "message": "Muestra la hora o un temporizador de enfoque en tu nueva pestaña",
-    "description": "Pro feature: Clock/Timer description"
-  },
-  "enterLicenseKey": {
-    "message": "Ingresa tu clave de licencia",
-    "description": "Placeholder for license key input"
-  },
-  "activate": {
-    "message": "Activar",
-    "description": "Button text for license activation"
-  },
-  "activating": {
-    "message": "Activando...",
-    "description": "Button text while activating license"
-  },
-  "enterValidKey": {
-    "message": "Por favor ingresa una clave de licencia válida",
-    "description": "Error when no key entered"
-  },
-  "licenseActivated": {
-    "message": "¡Licencia activada correctamente!",
-    "description": "Success message for license activation"
-  },
-  "activationFailed": {
-    "message": "Activación fallida. Por favor verifica tu clave de licencia.",
-    "description": "Error message for failed activation"
-  },
-  "activationError": {
-    "message": "Ocurrió un error. Por favor intenta de nuevo.",
-    "description": "Generic error for activation"
-  },
-  "birdtabPro": {
-    "message": "BirdTab Pro",
-    "description": "Product name"
-  },
-  "licenseActive": {
-    "message": "Activa",
-    "description": "License status: active"
-  },
-  "licenseGrace": {
-    "message": "Renovar pronto",
-    "description": "License status: subscription expired but within renewal window"
-  },
-  "licenseExpired": {
-    "message": "Expirada",
-    "description": "License status: expired"
-  },
-  "licenseLifetime": {
-    "message": "De por vida",
-    "description": "License type: lifetime"
-  },
-  "licenseYearly": {
-    "message": "Anual",
-    "description": "License type: yearly subscription"
-  },
-  "licenseTrial": {
-    "message": "Prueba",
-    "description": "License type: trial"
-  },
-  "expired": {
-    "message": "Expirada",
-    "description": "Generic expired label"
-  },
-  "email": {
-    "message": "Correo electrónico",
-    "description": "Label for email"
-  },
-  "licenseKey": {
-    "message": "Licencia",
-    "description": "Label for license key"
-  },
-  "expires": {
-    "message": "Expira",
-    "description": "Label for expiry date"
-  },
-  "deactivate": {
-    "message": "Desactivar",
-    "description": "Button to deactivate license"
-  },
-  "confirmDeactivate": {
-    "message": "¿Estás seguro de que quieres desactivar tu licencia?",
-    "description": "Confirmation for license deactivation"
-  },
-  "deactivating": {
-    "message": "Desactivando…",
-    "description": "Button label while license deactivation is in progress"
-  },
-  "licenseDeactivated": {
-    "message": "Licencia desactivada. Recargando…",
-    "description": "Toast shown after license is successfully deactivated"
-  },
-  "free": {
-    "message": "Gratis",
-    "description": "License status: free tier"
-  },
-  "upgradePrompt": {
-    "message": "Desbloquea Modo Video, Imágenes de Alta Resolución, Regiones Internacionales y Reloj/Temporizador.",
-    "description": "Prompt to upgrade to Pro"
-  },
-  "upgradeToPro": {
-    "message": "Mejorar a Pro",
-    "description": "Button to upgrade"
-  },
-  "licenseStatusError": {
-    "message": "No se pudo cargar el estado de la licencia",
-    "description": "Error loading license status"
-  },
-  "upgradeNow": {
-    "message": "Mejorar ahora",
-    "description": "Button to upgrade immediately"
-  },
-  "close": {
-    "message": "Cerrar",
-    "description": "Generic close button label"
-  },
-  "unlockProFeatures": {
-    "message": "Desbloquea funciones Pro",
-    "description": "Prompt for free users to upgrade"
-  },
-  "manage": {
-    "message": "Gestionar",
-    "description": "Button to manage license details"
-  },
-  "manageSubscription": {
-    "message": "Suscripción",
-    "description": "Button to manage subscription in customer portal"
-  },
-  "billingHistory": {
-    "message": "Facturación",
-    "description": "Button to view billing history and invoices in customer portal"
-  },
-  "renew": {
-    "message": "Renovar",
-    "description": "Button to renew subscription"
-  },
-  "refreshStatus": {
-    "message": "Actualizar estado",
-    "description": "Button to refresh license status"
-  },
-  "trialDayLeft": {
-    "message": "1 día restante",
-    "description": "Trial period: single day remaining"
-  },
-  "trialDaysLeft": {
-    "message": "$1 días restantes",
-    "description": "Trial period: multiple days remaining",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "7"
-      }
-    }
-  },
-  "trialExpired": {
-    "message": "Tu prueba ha terminado",
-    "description": "Message when trial period has expired"
-  },
-  "licenseOffline": {
-    "message": "Sin conexión",
-    "description": "Status label when license cannot be verified due to being offline"
-  },
-  "offlineGraceExpiredNotice": {
-    "message": "Conéctate a internet para verificar tu licencia y restaurar las funciones Pro.",
-    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
-  },
-  "unlockFeature": {
-    "message": "Desbloquear $1",
-    "description": "Title for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "Video Mode"
-      }
-    }
-  },
-  "unlockFullExperience": {
-    "message": "Desbloquea la experiencia completa",
-    "description": "Title for upgrade modal when opened without a specific feature trigger"
-  },
-  "upgradeFeatureSubtitle": {
-    "message": "Esta función es parte de BirdTab Pro. Actualiza para acceder a $1 y todas las funciones premium.",
-    "description": "Subtitle for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "video mode"
-      }
-    }
-  },
-  "proActivatedBody": {
-    "message": "Cada nueva pestaña es ahora una ventana al mundo natural. Recargando en un momento…",
-    "description": "Body text shown after successful Pro license activation"
-  },
-  "deviceLimitTitle": {
-    "message": "Límite de dispositivos alcanzado",
-    "description": "Title shown when license activation fails due to device limit"
-  },
-  "deviceLimitBody": {
-    "message": "Todas las ranuras de dispositivos de tu licencia están en uso. Para activar aquí, libera una ranura primero: ve a Configuración → Gestionar → Desactivar en otro dispositivo donde BirdTab esté instalado, o elimina un dispositivo de tu cuenta.",
-    "description": "Body text explaining device limit and how to resolve it"
-  },
-  "manageDevices": {
-    "message": "Gestionar dispositivos",
-    "description": "Button text to manage devices in customer portal"
-  },
-  "proTrialActive": {
-    "message": "Prueba Pro activa",
-    "description": "Badge text shown during active Pro trial"
-  },
-  "trialWelcomeTitle": {
-    "message": "Bienvenido a BirdTab Pro",
-    "description": "Title for trial welcome modal"
-  },
-  "trialWelcomeSubtitle": {
-    "message": "Tu prueba gratuita de $1 días ha comenzado. Disfruta de todas las funciones Pro y descubre la belleza completa de las aves del mundo.",
-    "description": "Subtitle for trial welcome modal",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "14"
-      }
-    }
-  },
-  "today": {
-    "message": "Hoy",
-    "description": "Label for today in trial timeline"
-  },
-  "startExploring": {
-    "message": "Comenzar a explorar",
-    "description": "Button text to dismiss trial welcome modal"
-  },
-  "trialFooterNote": {
-    "message": "No se requiere tarjeta de crédito. Después de tu prueba, volverás a la versión gratuita.",
-    "description": "Footer note in trial welcome modal"
-  },
-  "trialEnded": {
-    "message": "Prueba finalizada",
-    "description": "Badge text shown when trial has expired"
-  },
-  "trialExpiredTitle": {
-    "message": "Tu prueba gratuita ha terminado",
-    "description": "Title for trial expired modal"
-  },
-  "trialExpiredSubtitle": {
-    "message": "¡Gracias por probar BirdTab Pro! Puedes seguir usando las funciones básicas gratis, o actualizar para seguir disfrutando de la experiencia completa.",
-    "description": "Subtitle for trial expired modal"
-  },
-  "trialLostFeatures": {
-    "message": "Funciones Pro que perderás:",
-    "description": "Heading for list of Pro features lost after trial"
-  },
-  "trialValueProp": {
-    "message": "Actualiza a Pro y apoya el desarrollo independiente mientras disfrutas de todas las funciones. Tu suscripción mantiene BirdTab sin anuncios y en constante mejora.",
-    "description": "Value proposition text in trial expired modal"
-  },
-  "continueWithFree": {
-    "message": "Continuar con la versión gratuita",
-    "description": "Button text to dismiss trial expired modal and continue with free version"
-  },
-  "proWelcomeBadgeLifetime": {
-    "message": "Pro Vitalicio",
-    "description": "Badge text in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeBadgeYearly": {
-    "message": "Pro Anual",
-    "description": "Badge text in Pro welcome modal for yearly license"
-  },
-  "proWelcomeTitle": {
-    "message": "Bienvenido a BirdTab Pro",
-    "description": "Title in Pro welcome modal"
-  },
-  "proWelcomeSubtitleLifetime": {
-    "message": "Ahora tienes <strong>acceso de por vida</strong> a todas las funciones Pro. Cada nueva pestaña es una ventana al mundo natural.",
-    "description": "Subtitle in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeSubtitleYearly": {
-    "message": "Todas las funciones Pro están ahora <strong>desbloqueadas</strong>. Cada nueva pestaña es una ventana al mundo natural.",
-    "description": "Subtitle in Pro welcome modal for yearly license"
-  },
-  "proWelcomeThanks": {
-    "message": "Tu apoyo financia directamente el desarrollo de BirdTab: mejores datos, nuevas funciones y una experiencia sin anuncios. Gracias por ser parte de este viaje.",
-    "description": "Thank you message in Pro welcome modal"
-  },
-  "proWelcomeVideoTitle": {
-    "message": "Modo video",
-    "description": "Video feature title in Pro welcome modal"
-  },
-  "proWelcomeVideoDesc": {
-    "message": "Observa aves cobrar vida con impresionantes clips de video",
-    "description": "Video feature description in Pro welcome modal"
-  },
-  "proWelcomeHighResTitle": {
-    "message": "Fotos en alta resolución",
-    "description": "High-res feature title in Pro welcome modal"
-  },
-  "proWelcomeHighResDesc": {
-    "message": "Imágenes nítidas de 2400px con detalles sorprendentes",
-    "description": "High-res feature description in Pro welcome modal"
-  },
-  "proWelcomeRegionTitle": {
-    "message": "Regiones del mundo",
-    "description": "Region feature title in Pro welcome modal"
-  },
-  "proWelcomeRegionDesc": {
-    "message": "Descubre aves de cualquier país del mundo",
-    "description": "Region feature description in Pro welcome modal"
-  },
-  "proWelcomeClockTitle": {
-    "message": "Reloj y temporizador",
-    "description": "Clock feature title in Pro welcome modal"
-  },
-  "proWelcomeClockDesc": {
-    "message": "Controla el tiempo mientras disfrutas de la naturaleza",
-    "description": "Clock feature description in Pro welcome modal"
-  },
-  "pausedAlt": {
-    "message": "En pausa",
-    "description": "Alt text for pause indicator icon"
-  },
   "audioPlayingAlt": {
     "message": "Reproduciendo audio",
     "description": "Alt text for audio playing waveform icon"
@@ -1562,10 +1090,6 @@
   "audioPausedAlt": {
     "message": "Audio en pausa",
     "description": "Alt text for audio paused icon"
-  },
-  "conservationStatus": {
-    "message": "Estado de conservación:",
-    "description": "Label prefix for conservation status in bird info tooltip"
   },
   "conservationStatusTitle": {
     "message": "Estado de conservación",
@@ -1651,22 +1175,6 @@
     "message": "Microsoft Edge",
     "description": "Alt text for Microsoft Edge icon in search"
   },
-  "proBadgeLabel": {
-    "message": "Pro",
-    "description": "Short label for Pro badge in settings sidebar"
-  },
-  "onboardingStep1": {
-    "message": "Paso 1",
-    "description": "Aria label for onboarding progress dot 1"
-  },
-  "onboardingStep2": {
-    "message": "Paso 2",
-    "description": "Aria label for onboarding progress dot 2"
-  },
-  "onboardingStep3": {
-    "message": "Paso 3",
-    "description": "Aria label for onboarding progress dot 3"
-  },
   "lowDistractionToggle": {
     "message": "Ocultar detalles",
     "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
@@ -1690,5 +1198,79 @@
   "regionHighSeas": {
     "message": "Alta Mar",
     "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "preparingExperience": {
+    "message": "Preparando tu experiencia…",
+    "description": "Loading message shown during onboarding while manifest downloads"
+  },
+  "creditPhotoBy": {
+    "message": "Foto de",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "Audio de",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "Tipo de sonido",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "Ubicación de la foto",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "Ubicación de la grabación",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditViewOnMap": {
+    "message": "clic para ver en el mapa",
+    "description": "Suffix appended to location tooltip when location is clickable"
+  },
+  "creditDateTaken": {
+    "message": "Fecha de captura",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "Fecha de grabación",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "Redimensionada del original",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "La imagen fue redimensionada del original para su visualización",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "Convertido a $1",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "El audio fue convertido del formato original para su reproducción",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "Fuente",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "Licencia",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "Créditos y licencias de medios",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "Créditos y licencias",
+    "description": "Alt text for the credit info trigger icon"
   }
 }

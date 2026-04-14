@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "BirdTab - Обои с птицами, видео и звуки природы для новой вкладки",
+    "message": "BirdTab - Обои с птицами и звуки природы для новой вкладки",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "Преобразите новую вкладку обоями с птицами, видео о птицах и успокаивающими звуками природы",
+    "message": "Преобразите новую вкладку обоями с птицами и успокаивающими звуками природы",
     "description": "Description of the extension"
   },
   "pageTitle": {
@@ -14,10 +14,6 @@
   "infoTooltip": {
     "message": "Информация о птице",
     "description": "Tooltip for the info icon"
-  },
-  "infoAlt": {
-    "message": "Информация",
-    "description": "Alt text for info icon"
   },
   "cameraAlt": {
     "message": "Камера",
@@ -83,24 +79,20 @@
     "message": "Регион наблюдения за птицами",
     "description": "Label for region selection"
   },
-  "regionTooltip": {
-    "message": "Выберите регион, из которого вы хотите видеть птиц. Вы все равно будете видеть птиц со всего мира!",
-    "description": "Tooltip for region selection"
-  },
-  "regionHelpText": {
-    "message": "Это помогает нам показывать птиц, которых вы можете встретить в вашем районе.",
-    "description": "Help text for region selection"
+  "regionComingSoon": {
+    "message": "Discover birds from every corner of the globe. More regions coming soon!",
+    "description": "Message shown when region selection is disabled"
   },
   "autoPlayBirdCalls": {
     "message": "Автовоспроизведение медиа",
     "description": "Label for auto-play toggle"
   },
   "autoPlayHelpText": {
-    "message": "Автоматически воспроизводить голоса птиц в режиме фото или видео в режиме видео с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
+    "message": "Автоматически воспроизводить голоса птиц с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
     "description": "Help text for auto-play setting"
   },
   "autoPlayTooltip": {
-    "message": "Включить автоматическое воспроизведение голосов птиц или видео при открытии новой вкладки",
+    "message": "Включить автоматическое воспроизведение голосов птиц при открытии новой вкладки",
     "description": "Tooltip for auto-play toggle"
   },
   "quietHours": {
@@ -168,55 +160,11 @@
     "description": "Alt text for demo image"
   },
   "welcomeDescription1": {
-    "message": "Приготовьтесь к ежедневной дозе птичьих чудес! Каждая новая вкладка знакомит вас с потрясающими птичьими фотографиями и увлекательными фактами.",
+    "message": "Открывайте удивительных птиц с каждой новой вкладкой. Прекрасные фотографии, увлекательные факты и умиротворяющие звуки природы со всего мира.",
     "description": "First paragraph of welcome description"
   },
-  "welcomeDescription2": {
-    "message": "Это как иметь окно в мир птиц прямо в вашем браузере!",
-    "description": "Second paragraph of welcome description"
-  },
-  "nextButton": {
-    "message": "Далее",
-    "description": "Next button text for onboarding"
-  },
-  "chooseBirdingRegion": {
-    "message": "Выберите ваш регион наблюдения за птицами",
-    "description": "Header for region selection step"
-  },
-  "regionSelectionDescription": {
-    "message": "Выберите предпочитаемый регион, чтобы видеть птиц, обычно встречающихся в вашем районе. Не волнуйтесь, вы все равно сможете исследовать птиц со всего мира!",
-    "description": "Description for region selection"
-  },
-  "unitedStates": {
-    "message": "Соединенные Штаты",
-    "description": "Country name for United States"
-  },
-  "canada": {
-    "message": "Канада",
-    "description": "Country name for Canada"
-  },
-  "unitedKingdom": {
-    "message": "Великобритания",
-    "description": "Country name for United Kingdom"
-  },
-  "india": {
-    "message": "Индия",
-    "description": "Country name for India"
-  },
-  "regionSelectionHelpText": {
-    "message": "Это помогает нам показывать вам птиц, которых вы можете встретить в вашем местном районе. Вы можете изменить это в любое время в настройках.",
-    "description": "Help text for region selection in onboarding"
-  },
-  "birdCallsTitle": {
-    "message": "Птичьи голоса: музыка для ваших ушей?",
-    "description": "Title for bird calls onboarding step"
-  },
-  "birdCallsDescription": {
-    "message": "Хотите услышать чириканье и щебетание? Включите автовоспроизведение для погружающего опыта наблюдения за птицами!",
-    "description": "Description for bird calls setting"
-  },
   "autoPlayNote": {
-    "message": "Не волнуйтесь, вы всегда можете включить или выключить звуки для каждой птицы. Эта настройка просто определяет поведение по умолчанию, и вы можете изменить ее позже, если захотите.",
+    "message": "Слушайте пение птиц каждый раз при открытии новой вкладки. Вы можете изменить это в любое время в настройках.",
     "description": "Note about auto-play setting flexibility"
   },
   "startBirding": {
@@ -635,14 +583,6 @@
     "message": "Закрыть викторину",
     "description": "Aria label for close quiz button"
   },
-  "bingSearchAlt": {
-    "message": "Поиск Bing",
-    "description": "Alt text for Bing search icon"
-  },
-  "eBirdPageAlt": {
-    "message": "Страница eBird",
-    "description": "Alt text for eBird page icon"
-  },
   "quizAlt": {
     "message": "Викторина",
     "description": "Alt text for quiz icon"
@@ -723,53 +663,9 @@
     "message": "Посмотрите на эту прекрасную птицу {birdName}!",
     "description": "Default share text with bird name placeholder"
   },
-  "videoAlt": {
-    "message": "Видео",
-    "description": "Alt text for video icon"
-  },
-  "videoMode": {
-    "message": "Режим видео",
-    "description": "Label for video mode setting"
-  },
-  "videoModeHelpText": {
-    "message": "Показывать видео птиц вместо фотографий, когда доступно. Видео включает собственный звук из записи.",
-    "description": "Help text for video mode setting"
-  },
-  "videoModeTooltip": {
-    "message": "Включить, чтобы показывать видео птиц вместо фотографий, когда доступно",
-    "description": "Tooltip for video mode toggle"
-  },
-  "videoUnavailableAlt": {
-    "message": "Видео недоступно (медленное соединение)",
-    "description": "Alt text for video unavailable icon when connection is slow"
-  },
-  "videoUnavailableTooltip": {
-    "message": "Видео недоступно: Ваше соединение медленное (2G/3G) или включена экономия трафика. Показано фото для экономии данных.",
-    "description": "Tooltip explaining why video is unavailable due to slow connection"
-  },
-  "videoNotAvailableForBird": {
-    "message": "Видео для этой птицы недоступно",
-    "description": "Toast notification when user tries to switch to video mode but no video exists for the current bird species"
-  },
   "loadingAudio": {
     "message": "Загрузка аудио",
     "description": "Loading indicator text when fetching audio for photo mode"
-  },
-  "loadingVideo": {
-    "message": "Загрузка видео",
-    "description": "Loading indicator text when loading video"
-  },
-  "buffering": {
-    "message": "Буферизация",
-    "description": "Loading indicator text when video is buffering"
-  },
-  "viaText": {
-    "message": "через",
-    "description": "Text before Macaulay Library link in credits"
-  },
-  "macaulayLibrary": {
-    "message": "Библиотека Маколея",
-    "description": "Name of Macaulay Library attribution source"
   },
   "historyTitle": {
     "message": "История просмотров",
@@ -859,20 +755,12 @@
     "message": "Назад",
     "description": "Feature tour: back button text"
   },
-  "tourVideoToggleTitle": {
-    "message": "Режим видео",
-    "description": "Feature tour: video toggle title"
-  },
-  "tourVideoToggleDescription": {
-    "message": "Переключайтесь между фото и видео! Включите это, чтобы наблюдать за птицами в движении с красивыми видеоклипами.",
-    "description": "Feature tour: video toggle description"
-  },
   "tourVolumeTitle": {
     "message": "Регулировка Громкости",
     "description": "Feature tour: volume controls title"
   },
   "tourVolumeDescription": {
-    "message": "Настройте громкость по своему предпочтению. Управляйте звуком птичьих песен и видео для создания идеального опыта наблюдения за птицами.",
+    "message": "Настройте громкость по своему предпочтению. Управляйте звуком птичьих песен для создания идеального опыта наблюдения за птицами.",
     "description": "Feature tour: volume controls description"
   },
   "tourRefreshTitle": {
@@ -918,22 +806,6 @@
   "errorResettingTour": {
     "message": "Ошибка сброса тура по функциям",
     "description": "Error message when tour reset fails"
-  },
-  "proBadge": {
-    "message": "Pro",
-    "description": "Badge text for premium features"
-  },
-  "highResImages": {
-    "message": "Изображения Высокого Разрешения",
-    "description": "Label for high-resolution images feature"
-  },
-  "highResHelpText": {
-    "message": "Отображайте ультра высококачественные фотографии птиц для кристально четких деталей.",
-    "description": "Help text for high-resolution images setting"
-  },
-  "highResTooltip": {
-    "message": "Включить для отображения изображений высокого разрешения",
-    "description": "Tooltip for high-resolution images toggle"
   },
   "chromeTabTooltip": {
     "message": "Открыть стандартную страницу новой вкладки Chrome",
@@ -1195,6 +1067,14 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
+  "tourCreditsTitle": {
+    "message": "Авторство и лицензия",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "Здесь указаны фотограф и автор аудиозаписи каждой птицы. Нажмите на имя, чтобы узнать больше и посмотреть лицензию.",
+    "description": "Feature tour: credits line description"
+  },
   "tourOptionsMenuTitle": {
     "message": "Быстрое меню",
     "description": "Feature tour: options menu title"
@@ -1203,358 +1083,6 @@
     "message": "Доступ к настройкам, истории просмотра и викторине о птицах из этого меню. Нажмите, чтобы изучить опции!",
     "description": "Feature tour: options menu description"
   },
-  "alreadyHaveLicense": {
-    "message": "Уже есть лицензия?",
-    "description": "Divider text for license activation section"
-  },
-  "proFeatureVideoMode": {
-    "message": "Режим видео",
-    "description": "Pro feature: Video Mode title"
-  },
-  "proFeatureVideoModeDesc": {
-    "message": "Смотрите потрясающие видео с птицами вместо фото",
-    "description": "Pro feature: Video Mode description"
-  },
-  "proFeatureHighRes": {
-    "message": "Изображения высокого разрешения",
-    "description": "Pro feature: High-Res Images title"
-  },
-  "proFeatureHighResDesc": {
-    "message": "Кристально чёткая фотография птиц в 2400px",
-    "description": "Pro feature: High-Res Images description"
-  },
-  "proFeatureRegion": {
-    "message": "Международные регионы",
-    "description": "Pro feature: Region title"
-  },
-  "proFeatureRegionDesc": {
-    "message": "Откройте для себя птиц из любой страны мира",
-    "description": "Pro feature: Region description"
-  },
-  "proFeatureClock": {
-    "message": "Часы и таймер",
-    "description": "Pro feature: Clock/Timer title"
-  },
-  "proFeatureClockDesc": {
-    "message": "Отображайте время или таймер концентрации на новой вкладке",
-    "description": "Pro feature: Clock/Timer description"
-  },
-  "enterLicenseKey": {
-    "message": "Введите ключ лицензии",
-    "description": "Placeholder for license key input"
-  },
-  "activate": {
-    "message": "Активировать",
-    "description": "Button text for license activation"
-  },
-  "activating": {
-    "message": "Активация...",
-    "description": "Button text while activating license"
-  },
-  "enterValidKey": {
-    "message": "Пожалуйста, введите действительный ключ лицензии",
-    "description": "Error when no key entered"
-  },
-  "licenseActivated": {
-    "message": "Лицензия успешно активирована!",
-    "description": "Success message for license activation"
-  },
-  "activationFailed": {
-    "message": "Активация не удалась. Пожалуйста, проверьте ключ лицензии.",
-    "description": "Error message for failed activation"
-  },
-  "activationError": {
-    "message": "Произошла ошибка. Пожалуйста, попробуйте снова.",
-    "description": "Generic error for activation"
-  },
-  "birdtabPro": {
-    "message": "BirdTab Pro",
-    "description": "Product name"
-  },
-  "licenseActive": {
-    "message": "Активна",
-    "description": "License status: active"
-  },
-  "licenseGrace": {
-    "message": "Продлите скоро",
-    "description": "License status: subscription expired but within renewal window"
-  },
-  "licenseExpired": {
-    "message": "Истекла",
-    "description": "License status: expired"
-  },
-  "licenseLifetime": {
-    "message": "Пожизненная",
-    "description": "License type: lifetime"
-  },
-  "licenseYearly": {
-    "message": "Годовая",
-    "description": "License type: yearly subscription"
-  },
-  "licenseTrial": {
-    "message": "Пробная",
-    "description": "License type: trial"
-  },
-  "expired": {
-    "message": "Истекла",
-    "description": "Generic expired label"
-  },
-  "email": {
-    "message": "Эл. почта",
-    "description": "Label for email"
-  },
-  "licenseKey": {
-    "message": "Лицензия",
-    "description": "Label for license key"
-  },
-  "expires": {
-    "message": "Истекает",
-    "description": "Label for expiry date"
-  },
-  "deactivate": {
-    "message": "Деактивировать",
-    "description": "Button to deactivate license"
-  },
-  "confirmDeactivate": {
-    "message": "Вы уверены, что хотите деактивировать лицензию?",
-    "description": "Confirmation for license deactivation"
-  },
-  "deactivating": {
-    "message": "Деактивация…",
-    "description": "Button label while license deactivation is in progress"
-  },
-  "licenseDeactivated": {
-    "message": "Лицензия деактивирована. Перезагрузка…",
-    "description": "Toast shown after license is successfully deactivated"
-  },
-  "free": {
-    "message": "Бесплатно",
-    "description": "License status: free tier"
-  },
-  "upgradePrompt": {
-    "message": "Разблокируйте Режим видео, Изображения высокого разрешения, Международные регионы и Часы/Таймер.",
-    "description": "Prompt to upgrade to Pro"
-  },
-  "upgradeToPro": {
-    "message": "Перейти на Pro",
-    "description": "Button to upgrade"
-  },
-  "licenseStatusError": {
-    "message": "Не удалось загрузить статус лицензии",
-    "description": "Error loading license status"
-  },
-  "upgradeNow": {
-    "message": "Обновить сейчас",
-    "description": "Button to upgrade immediately"
-  },
-  "close": {
-    "message": "Закрыть",
-    "description": "Generic close button label"
-  },
-  "unlockProFeatures": {
-    "message": "Разблокировать функции Pro",
-    "description": "Prompt for free users to upgrade"
-  },
-  "manage": {
-    "message": "Управление",
-    "description": "Button to manage license details"
-  },
-  "manageSubscription": {
-    "message": "Подписка",
-    "description": "Button to manage subscription in customer portal"
-  },
-  "billingHistory": {
-    "message": "Оплата",
-    "description": "Button to view billing history and invoices in customer portal"
-  },
-  "renew": {
-    "message": "Продлить",
-    "description": "Button to renew subscription"
-  },
-  "refreshStatus": {
-    "message": "Обновить статус",
-    "description": "Button to refresh license status"
-  },
-  "trialDayLeft": {
-    "message": "Остался 1 день",
-    "description": "Trial period: single day remaining"
-  },
-  "trialDaysLeft": {
-    "message": "Осталось $1 дней",
-    "description": "Trial period: multiple days remaining",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "7"
-      }
-    }
-  },
-  "trialExpired": {
-    "message": "Ваш пробный период закончился",
-    "description": "Message when trial period has expired"
-  },
-  "licenseOffline": {
-    "message": "Офлайн",
-    "description": "Status label when license cannot be verified due to being offline"
-  },
-  "offlineGraceExpiredNotice": {
-    "message": "Подключитесь к интернету для проверки лицензии и восстановления функций Pro.",
-    "description": "Notice shown when offline grace period has expired and Pro features are disabled"
-  },
-  "unlockFeature": {
-    "message": "Разблокировать $1",
-    "description": "Title for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "Video Mode"
-      }
-    }
-  },
-  "unlockFullExperience": {
-    "message": "Разблокируйте полный доступ",
-    "description": "Title for upgrade modal when opened without a specific feature trigger"
-  },
-  "upgradeFeatureSubtitle": {
-    "message": "Эта функция входит в BirdTab Pro. Обновитесь, чтобы получить доступ к $1 и всем премиум-функциям.",
-    "description": "Subtitle for upgrade modal when triggered by a specific feature",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "video mode"
-      }
-    }
-  },
-  "proActivatedBody": {
-    "message": "Каждая новая вкладка теперь — окно в мир природы. Перезагрузка через мгновение…",
-    "description": "Body text shown after successful Pro license activation"
-  },
-  "deviceLimitTitle": {
-    "message": "Достигнут лимит устройств",
-    "description": "Title shown when license activation fails due to device limit"
-  },
-  "deviceLimitBody": {
-    "message": "Все слоты устройств вашей лицензии заняты. Чтобы активировать здесь, сначала освободите слот: перейдите в Настройки → Управление → Деактивировать на другом устройстве, где установлен BirdTab, или удалите устройство из вашей учётной записи.",
-    "description": "Body text explaining device limit and how to resolve it"
-  },
-  "manageDevices": {
-    "message": "Управление устройствами",
-    "description": "Button text to manage devices in customer portal"
-  },
-  "proTrialActive": {
-    "message": "Пробный период Pro активен",
-    "description": "Badge text shown during active Pro trial"
-  },
-  "trialWelcomeTitle": {
-    "message": "Добро пожаловать в BirdTab Pro",
-    "description": "Title for trial welcome modal"
-  },
-  "trialWelcomeSubtitle": {
-    "message": "Ваш бесплатный пробный период на $1 дней начался. Наслаждайтесь всеми функциями Pro и откройте для себя всю красоту птиц мира.",
-    "description": "Subtitle for trial welcome modal",
-    "placeholders": {
-      "1": {
-        "content": "$1",
-        "example": "14"
-      }
-    }
-  },
-  "today": {
-    "message": "Сегодня",
-    "description": "Label for today in trial timeline"
-  },
-  "startExploring": {
-    "message": "Начать исследование",
-    "description": "Button text to dismiss trial welcome modal"
-  },
-  "trialFooterNote": {
-    "message": "Кредитная карта не требуется. После пробного периода вы вернётесь к бесплатной версии.",
-    "description": "Footer note in trial welcome modal"
-  },
-  "trialEnded": {
-    "message": "Пробный период завершён",
-    "description": "Badge text shown when trial has expired"
-  },
-  "trialExpiredTitle": {
-    "message": "Ваш бесплатный пробный период завершён",
-    "description": "Title for trial expired modal"
-  },
-  "trialExpiredSubtitle": {
-    "message": "Спасибо за то, что попробовали BirdTab Pro! Вы можете продолжить использовать базовые функции бесплатно или обновиться, чтобы сохранить полный доступ.",
-    "description": "Subtitle for trial expired modal"
-  },
-  "trialLostFeatures": {
-    "message": "Функции Pro, которые вы потеряете:",
-    "description": "Heading for list of Pro features lost after trial"
-  },
-  "trialValueProp": {
-    "message": "Обновитесь до Pro и поддержите независимую разработку, наслаждаясь всеми функциями. Ваша подписка поддерживает BirdTab без рекламы и в постоянном развитии.",
-    "description": "Value proposition text in trial expired modal"
-  },
-  "continueWithFree": {
-    "message": "Продолжить с бесплатной версией",
-    "description": "Button text to dismiss trial expired modal and continue with free version"
-  },
-  "proWelcomeBadgeLifetime": {
-    "message": "Pro навсегда",
-    "description": "Badge text in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeBadgeYearly": {
-    "message": "Pro годовой",
-    "description": "Badge text in Pro welcome modal for yearly license"
-  },
-  "proWelcomeTitle": {
-    "message": "Добро пожаловать в BirdTab Pro",
-    "description": "Title in Pro welcome modal"
-  },
-  "proWelcomeSubtitleLifetime": {
-    "message": "Теперь у вас есть <strong>пожизненный доступ</strong> ко всем функциям Pro. Каждая новая вкладка — окно в мир природы.",
-    "description": "Subtitle in Pro welcome modal for lifetime license"
-  },
-  "proWelcomeSubtitleYearly": {
-    "message": "Все функции Pro теперь <strong>разблокированы</strong>. Каждая новая вкладка — окно в мир природы.",
-    "description": "Subtitle in Pro welcome modal for yearly license"
-  },
-  "proWelcomeThanks": {
-    "message": "Ваша поддержка напрямую финансирует разработку BirdTab — улучшенные данные, новые функции и отсутствие рекламы. Спасибо, что вы с нами.",
-    "description": "Thank you message in Pro welcome modal"
-  },
-  "proWelcomeVideoTitle": {
-    "message": "Режим видео",
-    "description": "Video feature title in Pro welcome modal"
-  },
-  "proWelcomeVideoDesc": {
-    "message": "Смотрите, как птицы оживают в потрясающих видеороликах",
-    "description": "Video feature description in Pro welcome modal"
-  },
-  "proWelcomeHighResTitle": {
-    "message": "Фото высокого разрешения",
-    "description": "High-res feature title in Pro welcome modal"
-  },
-  "proWelcomeHighResDesc": {
-    "message": "Кристально чёткие изображения 2400px с невероятной детализацией",
-    "description": "High-res feature description in Pro welcome modal"
-  },
-  "proWelcomeRegionTitle": {
-    "message": "Регионы мира",
-    "description": "Region feature title in Pro welcome modal"
-  },
-  "proWelcomeRegionDesc": {
-    "message": "Открывайте птиц из любой страны мира",
-    "description": "Region feature description in Pro welcome modal"
-  },
-  "proWelcomeClockTitle": {
-    "message": "Часы и таймер",
-    "description": "Clock feature title in Pro welcome modal"
-  },
-  "proWelcomeClockDesc": {
-    "message": "Следите за временем, наслаждаясь природой",
-    "description": "Clock feature description in Pro welcome modal"
-  },
-  "pausedAlt": {
-    "message": "Пауза",
-    "description": "Alt text for pause indicator icon"
-  },
   "audioPlayingAlt": {
     "message": "Воспроизведение аудио",
     "description": "Alt text for audio playing waveform icon"
@@ -1562,10 +1090,6 @@
   "audioPausedAlt": {
     "message": "Аудио приостановлено",
     "description": "Alt text for audio paused icon"
-  },
-  "conservationStatus": {
-    "message": "Охранный статус:",
-    "description": "Label prefix for conservation status in bird info tooltip"
   },
   "conservationStatusTitle": {
     "message": "Охранный статус",
@@ -1651,22 +1175,6 @@
     "message": "Microsoft Edge",
     "description": "Alt text for Microsoft Edge icon in search"
   },
-  "proBadgeLabel": {
-    "message": "Pro",
-    "description": "Short label for Pro badge in settings sidebar"
-  },
-  "onboardingStep1": {
-    "message": "Шаг 1",
-    "description": "Aria label for onboarding progress dot 1"
-  },
-  "onboardingStep2": {
-    "message": "Шаг 2",
-    "description": "Aria label for onboarding progress dot 2"
-  },
-  "onboardingStep3": {
-    "message": "Шаг 3",
-    "description": "Aria label for onboarding progress dot 3"
-  },
   "lowDistractionToggle": {
     "message": "Скрыть детали",
     "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
@@ -1690,5 +1198,79 @@
   "regionHighSeas": {
     "message": "Открытое море",
     "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "preparingExperience": {
+    "message": "Подготовка вашего опыта…",
+    "description": "Loading message shown during onboarding while manifest downloads"
+  },
+  "creditPhotoBy": {
+    "message": "Фото:",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "Аудио:",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "Тип звука",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "Место съёмки",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "Место записи",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditViewOnMap": {
+    "message": "нажмите, чтобы показать на карте",
+    "description": "Suffix appended to location tooltip when location is clickable"
+  },
+  "creditDateTaken": {
+    "message": "Дата съёмки",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "Дата записи",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "Масштабировано из оригинала",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "Изображение было масштабировано из оригинала для отображения",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "Конвертировано в $1",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "Аудио было конвертировано из оригинального формата для воспроизведения",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "Источник",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "Лицензия",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "Авторство и лицензии медиа",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "Авторство и лицензии",
+    "description": "Alt text for the credit info trigger icon"
   }
 }

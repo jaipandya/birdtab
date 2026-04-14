@@ -43,6 +43,10 @@
   animation: tourSpotlightPulse 2.5s ease-in-out infinite;
 }
 
+.tour-spotlight.pill {
+  border-radius: 14px;
+}
+
 .tour-spotlight.hidden {
   opacity: 0;
   box-shadow: 
@@ -72,6 +76,25 @@
       0 0 0 6px var(--primary),
       0 0 0 9999px var(--tour-backdrop-color),
       0 0 40px 15px var(--tour-spotlight-color);
+  }
+}
+
+.tour-spotlight.pill {
+  animation: tourSpotlightPulsePill 2.5s ease-in-out infinite;
+}
+
+@keyframes tourSpotlightPulsePill {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 4px var(--primary),
+      0 0 0 9999px var(--tour-backdrop-color),
+      0 0 20px 6px var(--tour-spotlight-color);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 6px var(--primary),
+      0 0 0 9999px var(--tour-backdrop-color),
+      0 0 28px 10px var(--tour-spotlight-color);
   }
 }
 

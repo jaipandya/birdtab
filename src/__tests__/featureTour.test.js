@@ -10,18 +10,11 @@
 
 describe('Feature Tour - Element Availability', () => {
   beforeEach(() => {
-    // Setup DOM with all tour target elements
+    // Setup DOM with all tour target elements (mirrors featureTour.js TOUR_STEPS)
     document.body.innerHTML = `
+      <svg class="chrome-tab-icon" width="48" height="48"></svg>
       <div id="content-container">
         <img class="background-image" src="test.jpg" alt="Test Bird">
-        <div class="credits">
-          <span class="credit-item media-toggle-container">
-            <label class="media-toggle">
-              <input type="checkbox" id="media-toggle-switch">
-              <span class="media-toggle-slider"></span>
-            </label>
-          </span>
-        </div>
         <div class="control-buttons">
           <button id="settings-button" class="icon-button">
             <img src="images/svg/settings.svg" alt="Settings">
@@ -45,6 +38,11 @@ describe('Feature Tour - Element Availability', () => {
           </button>
         </div>
       </div>
+      <div id="comma-selector-test-fixture" style="position:absolute;left:-9999px">
+        <div class="outer-step-target">
+          <button type="button" class="inner-step-target"></button>
+        </div>
+      </div>
     `;
   });
 
@@ -53,13 +51,8 @@ describe('Feature Tour - Element Availability', () => {
     document.body.innerHTML = '';
   });
 
-  describe('Tour Target Elements - Photo Mode', () => {
-    test('should have media-toggle-container present', () => {
-      const element = document.querySelector('.media-toggle-container, .media-toggle');
-      expect(element).toBeTruthy();
-    });
-
-    test('should have settings button present', () => {
+  describe('Tour Target Elements', () => {
+    test('should have settings (options menu) button present', () => {
       const element = document.querySelector('#settings-button');
       expect(element).toBeTruthy();
     });
@@ -89,60 +82,29 @@ describe('Feature Tour - Element Availability', () => {
       expect(element).toBeTruthy();
     });
 
+    test('should have chrome tab icon present', () => {
+      const element = document.querySelector('.chrome-tab-icon');
+      expect(element).toBeTruthy();
+    });
+
     test('should have all tour target elements present', () => {
       const tourSelectors = [
-        '.media-toggle-container, .media-toggle', // videoToggle step
         '#settings-button',
-        '#history-button',
-        '#quiz-button',
         '#refresh-button',
         '#volume-button',
-        '#play-button'
+        '#play-button',
+        '.chrome-tab-icon'
       ];
 
       tourSelectors.forEach(selector => {
-        const selectors = selector.split(',').map(s => s.trim());
-        const found = selectors.some(s => document.querySelector(s));
-        expect(found).toBe(true);
-      });
-    });
-  });
-
-  describe('Tour Target Elements - Video Mode (no play button)', () => {
-    beforeEach(() => {
-      // In video mode, play button is not shown
-      const playButton = document.querySelector('#play-button');
-      if (playButton) {
-        playButton.remove();
-      }
-    });
-
-    test('should not have play button in video mode', () => {
-      const element = document.querySelector('#play-button');
-      expect(element).toBeNull();
-    });
-
-    test('should still have other tour elements present', () => {
-      const requiredSelectors = [
-        '.media-toggle-container, .media-toggle',
-        '#settings-button',
-        '#history-button',
-        '#quiz-button',
-        '#refresh-button',
-        '#volume-button'
-      ];
-
-      requiredSelectors.forEach(selector => {
-        const selectors = selector.split(',').map(s => s.trim());
-        const found = selectors.some(s => document.querySelector(s));
-        expect(found).toBe(true);
+        expect(document.querySelector(selector)).toBeTruthy();
       });
     });
   });
 
   describe('Selector Matching Logic', () => {
     test('should find element with comma-separated selectors (first match)', () => {
-      const selector = '.media-toggle-container, .media-toggle';
+      const selector = '.outer-step-target, .inner-step-target';
       const selectors = selector.split(',').map(s => s.trim());
       let found = null;
       for (const s of selectors) {
@@ -153,15 +115,14 @@ describe('Feature Tour - Element Availability', () => {
         }
       }
       expect(found).toBeTruthy();
-      expect(found.classList.contains('media-toggle-container')).toBe(true);
+      expect(found.classList.contains('outer-step-target')).toBe(true);
     });
 
     test('should find element with comma-separated selectors (second match)', () => {
-      // Remove the first selector target
-      const container = document.querySelector('.media-toggle-container');
-      container.classList.remove('media-toggle-container');
+      const outer = document.querySelector('.outer-step-target');
+      outer.classList.remove('outer-step-target');
 
-      const selector = '.media-toggle-container, .media-toggle';
+      const selector = '.outer-step-target, .inner-step-target';
       const selectors = selector.split(',').map(s => s.trim());
       let found = null;
       for (const s of selectors) {
@@ -172,7 +133,7 @@ describe('Feature Tour - Element Availability', () => {
         }
       }
       expect(found).toBeTruthy();
-      expect(found.classList.contains('media-toggle')).toBe(true);
+      expect(found.classList.contains('inner-step-target')).toBe(true);
     });
   });
 });
@@ -210,8 +171,8 @@ describe('Feature Tour - Step Skipping', () => {
     expect(element).toBeNull();
   });
 
-  test('should detect missing media toggle', () => {
-    const element = document.querySelector('.media-toggle-container, .media-toggle');
+  test('should detect missing chrome tab icon', () => {
+    const element = document.querySelector('.chrome-tab-icon');
     expect(element).toBeNull();
   });
 
@@ -227,16 +188,14 @@ describe('Feature Tour - Step Skipping', () => {
 });
 
 describe('Feature Tour - Step Configuration', () => {
-  // These tests verify the tour step configuration
+  // These tests verify the tour step configuration (mirrors featureTour.js TOUR_STEPS)
   const EXPECTED_TOUR_STEPS = [
     { id: 'welcome', targetSelector: null },
-    { id: 'videoToggle', targetSelector: '.media-toggle-container, .media-toggle' },
-    { id: 'settings', targetSelector: '#settings-button' },
-    { id: 'history', targetSelector: '#history-button' },
-    { id: 'quiz', targetSelector: '#quiz-button' },
+    { id: 'optionsMenu', targetSelector: '#settings-button' },
     { id: 'refresh', targetSelector: '#refresh-button' },
     { id: 'volume', targetSelector: '#volume-button' },
     { id: 'playPause', targetSelector: '#play-button' },
+    { id: 'chromeTab', targetSelector: '.chrome-tab-icon' },
     { id: 'complete', targetSelector: null }
   ];
 
@@ -251,19 +210,19 @@ describe('Feature Tour - Step Configuration', () => {
     expect(lastStep.targetSelector).toBeNull();
   });
 
-  test('should have playPause step before complete step', () => {
-    const playPauseIndex = EXPECTED_TOUR_STEPS.findIndex(s => s.id === 'playPause');
+  test('should have chromeTab step before complete step', () => {
+    const chromeTabIndex = EXPECTED_TOUR_STEPS.findIndex(s => s.id === 'chromeTab');
     const completeIndex = EXPECTED_TOUR_STEPS.findIndex(s => s.id === 'complete');
-    expect(playPauseIndex).toBe(completeIndex - 1);
+    expect(chromeTabIndex).toBe(completeIndex - 1);
   });
 
-  test('should have 9 total steps', () => {
-    expect(EXPECTED_TOUR_STEPS.length).toBe(9);
+  test('should have 7 total steps', () => {
+    expect(EXPECTED_TOUR_STEPS.length).toBe(7);
   });
 
-  test('should have 7 feature steps (excluding welcome and complete)', () => {
+  test('should have 5 feature steps (excluding welcome and complete)', () => {
     const featureSteps = EXPECTED_TOUR_STEPS.filter(s => s.id !== 'welcome' && s.id !== 'complete');
-    expect(featureSteps.length).toBe(7);
+    expect(featureSteps.length).toBe(5);
   });
 });
 
@@ -285,49 +244,43 @@ describe('Feature Tour - Dynamic Last Step Detection', () => {
 
   const STEPS = [
     { id: 'welcome', targetSelector: null },
-    { id: 'videoToggle', targetSelector: '.media-toggle-container, .media-toggle' },
-    { id: 'settings', targetSelector: '#settings-button' },
-    { id: 'history', targetSelector: '#history-button' },
-    { id: 'quiz', targetSelector: '#quiz-button' },
+    { id: 'optionsMenu', targetSelector: '#settings-button' },
     { id: 'refresh', targetSelector: '#refresh-button' },
     { id: 'volume', targetSelector: '#volume-button' },
     { id: 'playPause', targetSelector: '#play-button' },
+    { id: 'chromeTab', targetSelector: '.chrome-tab-icon' },
     { id: 'complete', targetSelector: null }
   ];
 
-  test('should detect playPause as last step when all elements present', () => {
+  test('should detect chromeTab as last feature step when all elements present', () => {
     const presentElements = [
-      '.media-toggle-container', '#settings-button', '#history-button',
-      '#quiz-button', '#refresh-button', '#volume-button', '#play-button'
+      '#settings-button', '#refresh-button',
+      '#volume-button', '#play-button', '.chrome-tab-icon'
     ];
-    
-    // Volume step (index 6) should have more steps (playPause)
-    expect(hasMoreValidSteps(STEPS, 6, presentElements)).toBe(true);
-    
-    // PlayPause step (index 7) should have no more steps
-    expect(hasMoreValidSteps(STEPS, 7, presentElements)).toBe(false);
-  });
 
-  test('should detect volume as last step when play button is missing', () => {
-    const presentElements = [
-      '.media-toggle-container', '#settings-button', '#history-button',
-      '#quiz-button', '#refresh-button', '#volume-button'
-      // Note: #play-button is NOT present
-    ];
-    
-    // Volume step (index 6) should have no more steps (playPause is missing)
-    expect(hasMoreValidSteps(STEPS, 6, presentElements)).toBe(false);
-  });
+    // playPause (index 4) should have more steps (chromeTab)
+    expect(hasMoreValidSteps(STEPS, 4, presentElements)).toBe(true);
 
-  test('should detect refresh as last step when volume and play are missing', () => {
-    const presentElements = [
-      '.media-toggle-container', '#settings-button', '#history-button',
-      '#quiz-button', '#refresh-button'
-      // Note: #volume-button and #play-button are NOT present
-    ];
-    
-    // Refresh step (index 5) should have no more steps
+    // chromeTab (index 5) should have no more feature steps (only complete follows)
     expect(hasMoreValidSteps(STEPS, 5, presentElements)).toBe(false);
+  });
+
+  test('should detect volume as last step when play button and chrome tab are missing', () => {
+    const presentElements = [
+      '#settings-button', '#refresh-button', '#volume-button'
+    ];
+
+    // Volume (index 3): playPause and chromeTab targets absent
+    expect(hasMoreValidSteps(STEPS, 3, presentElements)).toBe(false);
+  });
+
+  test('should detect refresh as last step when volume, play, and chrome tab are missing', () => {
+    const presentElements = [
+      '#settings-button', '#refresh-button'
+    ];
+
+    // Refresh (index 2): no later targets present
+    expect(hasMoreValidSteps(STEPS, 2, presentElements)).toBe(false);
   });
 });
 
@@ -335,18 +288,18 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
   /**
    * Tests for the versioning system that handles showing feature spotlights
    * to existing users when new features are added.
-   * 
+   *
    * The key logic being tested:
    * - hasCompletedAnyTour(): Returns true if storedVersion > 0 (user has seen ANY tour)
    * - isTourCompleted(): Returns true if storedVersion >= TOUR_VERSION (user has seen CURRENT version)
    * - getUnseenFeatureSpotlights(): Returns features where minVersion > storedVersion
-   * 
+   *
    * Bug fix tested: When TOUR_VERSION is incremented, existing users should see
    * only the new feature spotlight, not the full tour again.
    */
 
-  // Simulate the version checking logic
-  const CURRENT_TOUR_VERSION = 2;
+  // Simulate the version checking logic (must match featureTour.js TOUR_VERSION)
+  const CURRENT_TOUR_VERSION = 3;
 
   // Feature spotlights configuration (mirrors featureTour.js)
   const FEATURE_SPOTLIGHTS = {
@@ -366,12 +319,12 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
   // Helper: Get unseen feature spotlights for a user
   function getUnseenFeatureSpotlights(storedVersion, seenFeatures = {}) {
     const unseenFeatures = [];
-    
+
     // If user hasn't completed any tour, they'll get the full tour
     if (storedVersion === 0) {
       return [];
     }
-    
+
     // Check each feature spotlight
     for (const [featureKey, config] of Object.entries(FEATURE_SPOTLIGHTS)) {
       // Only show if feature was added after user's last tour
@@ -381,7 +334,7 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
         }
       }
     }
-    
+
     return unseenFeatures;
   }
 
@@ -405,16 +358,16 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
     });
 
     test('should return false for users on older version', () => {
-      // User completed v1, current is v2
-      expect(isTourCompleted(1, CURRENT_TOUR_VERSION)).toBe(false);
+      // User completed v2, current is v3
+      expect(isTourCompleted(2, CURRENT_TOUR_VERSION)).toBe(false);
     });
 
     test('should return true for users on current version', () => {
-      expect(isTourCompleted(2, CURRENT_TOUR_VERSION)).toBe(true);
+      expect(isTourCompleted(3, CURRENT_TOUR_VERSION)).toBe(true);
     });
 
     test('should return true for users on newer version (edge case)', () => {
-      expect(isTourCompleted(3, CURRENT_TOUR_VERSION)).toBe(true);
+      expect(isTourCompleted(4, CURRENT_TOUR_VERSION)).toBe(true);
     });
   });
 
@@ -432,8 +385,8 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
     });
 
     test('should return empty array for users on current version', () => {
-      // User completed v2, no new features since then
-      const spotlights = getUnseenFeatureSpotlights(2);
+      // User completed v3, no new features since then
+      const spotlights = getUnseenFeatureSpotlights(3);
       expect(spotlights).toEqual([]);
     });
 
@@ -447,11 +400,11 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
   describe('Tour Decision Logic (Bug Fix Verification)', () => {
     /**
      * This tests the actual decision flow that was buggy:
-     * 
+     *
      * OLD (buggy) logic:
      *   if (!isTourCompleted()) { startFullTour() }
      *   else { checkFeatureSpotlights() }
-     * 
+     *
      * NEW (fixed) logic:
      *   if (!hasCompletedAnyTour()) { startFullTour() }
      *   else { checkFeatureSpotlights() }
@@ -460,7 +413,7 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
     function decideTourAction(storedVersion) {
       // This mirrors the fixed logic in script.js
       const completedAnyTour = hasCompletedAnyTour(storedVersion);
-      
+
       if (!completedAnyTour) {
         return 'SHOW_FULL_TOUR';
       } else {

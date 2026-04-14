@@ -229,8 +229,6 @@ export function closeShareMenu() {
  * Handle share button click - toggle share menu
  */
 export function handleShare() {
-  // Always show the custom share menu popup in the extension
-  // (Native share API is not used since this is a Chrome extension that always runs in a browser)
   if (showShareMenu) {
     closeShareMenu();
   } else {

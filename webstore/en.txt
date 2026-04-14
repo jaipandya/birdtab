@@ -1,6 +1,6 @@
 Turn every new tab into a calming nature escape with stunning bird wallpapers, soothing bird songs, and fascinating wildlife facts.
 
-BirdTab replaces your Chrome new tab page with breathtaking bird photography and videos from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
+BirdTab replaces your Chrome new tab page with breathtaking bird photography from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
 
 WHY USERS LOVE BIRDTAB
 
@@ -8,20 +8,21 @@ Unlike generic wallpaper extensions, BirdTab is a complete nature experience. Ea
 
 KEY FEATURES
 
-- New bird wallpaper with every new tab - stunning wildlife photography in your browser
-- HD bird videos - watch birds soar, sing, and forage in their natural habitats
+- New bird wallpaper with every new tab - stunning high-resolution wildlife photography
 - Authentic bird calls and nature sounds - with adjustable volume and quiet hours
 - Fascinating bird facts - learn about behavior, habitat, and conservation status
-- Global birding - explore birds from any region or country worldwide
+- Global birding - explore birds from around the world, with more regions on the way
 - Interactive bird identification quiz - test your knowledge and share results
 - Viewing history - track every bird you've discovered
-- Productivity tools built in - search box, custom shortcuts, clock, and focus timer
+- Clock and countdown timer - stay focused while enjoying nature
+- Productivity tools built in - search box, custom shortcuts, and more
 - Works offline - enjoy your birds even without internet
-- 100% privacy-focused - no personal data collected, no ads, no tracking
+- No ads, no sign-ups, no strings attached
+- 100% privacy-focused - no personal data collected, no tracking
 
-POWERED BY EBIRD
+THOUSANDS OF SPECIES
 
-All species data comes from eBird (Cornell Lab of Ornithology), the world's largest citizen science biodiversity project, ensuring every photo, call, and fact is accurate and up to date. There are thousands of bird species - from tropical parrots and hummingbirds to majestic eagles and owls.
+Discover thousands of bird species from every continent - from tropical parrots and hummingbirds to majestic eagles and owls. Every photo is high-resolution and carefully curated to bring you the most stunning and diverse birding experience possible.
 
 PERFECT FOR
 
@@ -32,20 +33,12 @@ PERFECT FOR
 - Students and educators learning about ornithology
 - Nature wallpaper and beautiful background lovers
 
-PRO FEATURES (optional upgrade)
-
-- Video Mode - watch birds come alive with stunning video clips
-- High-Resolution 2400px photos - crystal-clear detail on any screen
-- International regions - discover birds from any country in the world
-- Clock and countdown timer - stay focused while enjoying nature
-
 WHAT'S NEW
 
-1.3.9 - Bird info popover with eBird link, range map, and bird description. Distraction free mode.
-1.3.8 - Pro subscription plans: yearly and lifetime plans for video mode, high-resolution photos and more.
+2.0.0 - High-resolution photos, international regions, clock, countdown timer, much improved offline support, and a refreshed new tab experience.
+1.3.9 - Bird info popover with range map and bird description. Distraction free mode.
 1.3.7 - Google Apps shortcuts added to the interface.
 1.3.6 - New options menu with Google Apps, countdown timer, click-to-play, search engine selection, and playback fixes.
-1.3.5 - Video play/pause positioning fix, clock toggle in popup, improved analytics.
 1.3.4 - Clock display with format options, hide top sites toggle, and bug fixes.
 
 Full changelog: https://birdtab.app/changelog
