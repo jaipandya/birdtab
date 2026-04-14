@@ -52,6 +52,7 @@ import {
 import { setupInfoPopover } from './birdInfoPopover.js';
 import { setupCreditPopovers } from './creditPopover.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
+import { adaptSpeciesToBirdInfo } from './mediaClient.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -179,118 +180,77 @@ async function initClockDisplay() {
   log(`Clock display initialized with mode: ${mode}, effective: ${effectiveMode}`);
 }
 
-// Fetch bird information from background script
-// Note: No separate transaction here - this is captured as part of the page-load transaction
-// to reduce Sentry span usage (1000+ daily users × new tabs)
-const MAX_RETRIES = 1; // Reduced to 1 retry to minimize API load
-const IMAGE_MAX_RETRIES = 3; // More retries for image loading (transient network issues)
-const IMAGE_RETRY_DELAY = 2000; // 2 seconds between image retry attempts
+const IMAGE_MAX_RETRIES = 3;
+const IMAGE_RETRY_DELAY = 2000;
 
 /**
- * Schedule a retry for getBirdInfo after a delay.
- * Used for transient MV3 service worker issues.
- * @returns {boolean} true if retry was scheduled, false if max retries exceeded
+ * Load bird info entirely from chrome.storage.local.
+ * Reads in priority order:
+ *   1. preloadedBird — random bird pre-picked by the background service worker
+ *   2. media_manifest — pick a fresh random bird from the cached manifest
+ * Returns null only if no manifest has ever been cached (fresh install, before first fetch).
  */
-function scheduleRetry(resolve, reject, retryCount, reason) {
-  if (retryCount < MAX_RETRIES) {
-    log(`${reason}, retrying in 1 second...`);
-    setTimeout(async () => {
-      try {
-        const result = await getBirdInfo(retryCount + 1);
-        resolve(result);
-      } catch (retryError) {
-        reject(retryError);
+async function loadBirdFromStorage() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['preloadedBird', 'media_manifest', 'autoPlay'], (result) => {
+      const autoPlay = result.autoPlay || false;
+
+      // 1. Use preloaded bird from background (fastest path)
+      if (result.preloadedBird) {
+        const bird = result.preloadedBird;
+        bird.autoPlay = autoPlay;
+        chrome.storage.local.remove('preloadedBird');
+        log(`Using preloaded bird: ${bird.name}`);
+        resolve(bird);
+        return;
       }
-    }, 1000);
-    return true;
-  }
-  return false;
+
+      // 2. Pick a random bird from the cached manifest
+      const manifest = result.media_manifest;
+      if (manifest && manifest.species && manifest.regions) {
+        const codes = manifest.regions.WLD?.speciesCodes ?? [];
+        if (codes.length > 0) {
+          const speciesMap = new Map(manifest.species.map(s => [s.speciesCode, s]));
+          const randomCode = codes[Math.floor(Math.random() * codes.length)];
+          const entry = speciesMap.get(randomCode);
+          if (entry) {
+            const bird = adaptSpeciesToBirdInfo(entry);
+            if (bird) {
+              bird.location = 'WLD';
+              bird.autoPlay = autoPlay;
+              log(`Using random bird from manifest: ${bird.name}`);
+              resolve(bird);
+              return;
+            }
+          }
+        }
+      }
+
+      resolve(null);
+    });
+  });
 }
 
-async function getBirdInfo(retryCount = 0) {
-  log(`Requesting bird info (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`);
+/**
+ * Poll chrome.storage.local until the background script finishes fetching the
+ * manifest and preloading a bird. Used on fresh install / cache clear when
+ * loadBirdFromStorage() initially returns null.
+ */
+async function waitForBirdData(maxWaitMs = 15000) {
+  const POLL_INTERVAL = 500;
   const startTime = Date.now();
 
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const duration = Date.now() - startTime;
-      log(`Bird info request timed out after ${duration}ms`);
-      addBreadcrumb('Bird info request timed out', 'http', 'error', { duration, retryCount });
-      reject(new Error('Request timed out'));
-    }, 30000);
-
-    try {
-      chrome.runtime.sendMessage({ action: 'getBirdInfo' }, response => {
-        clearTimeout(timeout);
-        const duration = Date.now() - startTime;
-
-        // Check for message delivery failure
-        if (chrome.runtime.lastError) {
-          const errorMsg = chrome.runtime.lastError.message || 'Message delivery failed';
-          log(`Error sending message: ${errorMsg} (duration: ${duration}ms)`);
-          addBreadcrumb(`Message error: ${errorMsg}`, 'http', 'error', { duration, retryCount });
-
-          // Retry on service worker communication errors - these are transient MV3 issues
-          // "Receiving end does not exist" = service worker was terminated
-          // "message channel closed" = message port closed before response
-          const isServiceWorkerError = errorMsg.includes('Receiving end does not exist') ||
-            errorMsg.includes('message channel closed');
-
-          if (isServiceWorkerError && scheduleRetry(resolve, reject, retryCount, 'Service worker communication error')) {
-            return;
-          }
-
-          reject(new Error(errorMsg));
-          return;
-        }
-
-        // Check if response is undefined (background script unavailable or crashed)
-        // This can happen when service worker is cold-starting or terminated mid-execution
-        if (!response) {
-          log(`No response from background script (duration: ${duration}ms)`);
-          addBreadcrumb('No response from background script', 'http', 'error', { duration, retryCount });
-
-          if (scheduleRetry(resolve, reject, retryCount, 'Service worker may have crashed')) {
-            return;
-          }
-
-          // Only report to Sentry if retry also failed
-          const error = new Error('No response from background script');
-          captureException(error, {
-            tags: { operation: 'getBirdInfo', errorType: 'undefined-response' },
-            extra: { duration, retryCount }
-          });
-          reject(error);
-          return;
-        }
-
-        // Data errors (image not found, API errors, etc.) - don't retry
-        if (response.error) {
-          log(`Error getting bird info: ${response.error} (duration: ${duration}ms)`);
-          addBreadcrumb(`Bird info error: ${response.error}`, 'http', 'error', { duration, retryCount });
-          reject(new Error(response.error));
-        } else {
-          log(`Bird info received successfully (duration: ${duration}ms)`);
-          addBreadcrumb('Bird info received', 'http', 'info', {
-            duration,
-            speciesCode: response.speciesCode,
-            ebirdUrl: response.ebirdUrl,
-            region: response.location,
-            retryCount
-          });
-          resolve(response);
-        }
-      });
-    } catch (sendError) {
-      clearTimeout(timeout);
-      log(`Exception while sending message: ${sendError.message}`);
-      captureException(sendError, {
-        tags: { operation: 'getBirdInfo', phase: 'sendMessage' },
-        extra: { retryCount }
-      });
-      reject(sendError);
+  while (Date.now() - startTime < maxWaitMs) {
+    await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
+    const bird = await loadBirdFromStorage();
+    if (bird) {
+      log(`Bird data available after ${Date.now() - startTime}ms of polling`);
+      return bird;
     }
-  });
+  }
+
+  log(`Bird data not available after ${maxWaitMs}ms of polling`);
+  return null;
 }
 
 // Update play/pause button UI
@@ -493,7 +453,7 @@ function createAudioPlayer(mediaUrl) {
     return null;
   }
 
-  log(`Creating audio player with URL: ${mediaUrl}`);
+  log('Creating audio player');
   audio = createBirdAudio(mediaUrl);
   audio.muted = isMuted;
   audio.volume = volumeLevel;
@@ -579,8 +539,7 @@ async function playAudio() {
       return;
     }
 
-    // Other errors are unexpected and should be reported
-    console.error('Error playing audio:', error);
+    log(`Unexpected audio error: ${error.message}`);
     captureException(error, {
       tags: { operation: 'playAudio' },
       extra: {
@@ -608,9 +567,15 @@ function pauseAudio() {
 // Includes retry logic for transient network failures
 function setImageSource(imageUrl, retryCount = 0) {
   const img = document.querySelector('.background-image');
-  if (!img) return;
+  if (!img) {
+    log('setImageSource: .background-image element not found');
+    return;
+  }
+
+  log('Setting image source');
 
   img.onload = function () {
+    log('Image loaded successfully');
     img.classList.remove('hidden');
   };
 
@@ -633,16 +598,20 @@ function setImageSource(imageUrl, retryCount = 0) {
 async function initializePage() {
   incrementNewTabCount();
   await checkAndPrepareReviewPrompt();
-  log('Updating page');
+  log('Initializing page');
+  restoreNonEssentialUI();
   showLoadingIndicator();
+  document.body.classList.add('loaded');
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
-    // Check if there's a pending bird from history selection
+    // Load bird data entirely from chrome.storage.local.
+    // Priority: pendingBirdInfo (history selection) → preloadedBird → manifest → history
+    let usedHistoryFallback = false;
+
     const pendingBird = await new Promise((resolve) => {
       chrome.storage.local.get(['pendingBirdInfo'], (result) => {
         if (result.pendingBirdInfo) {
-          // Clear it immediately
           chrome.storage.local.remove(['pendingBirdInfo']);
           resolve(result.pendingBirdInfo);
         } else {
@@ -651,34 +620,44 @@ async function initializePage() {
       });
     });
 
-    // Try to get fresh bird info
-    let usedCachedFallback = false;
-    try {
-      if (pendingBird) {
-        birdInfo = pendingBird;
-        usedCachedFallback = true; // Don't re-add to history when loading from history
-      } else {
-        birdInfo = await getBirdInfo();
-      }
-    } catch (fetchError) {
-      log(`Failed to fetch bird: ${fetchError.message}`);
+    if (pendingBird) {
+      birdInfo = pendingBird;
+      usedHistoryFallback = true;
+      log(`Using pending bird from history: ${birdInfo.name}`);
+    } else {
+      birdInfo = await loadBirdFromStorage();
+    }
 
-      // Try to load from history as silent fallback (newest bird is at end of array)
+    // If no bird data yet, the background script may still be fetching the
+    // manifest (fresh install, cache clear, slow network). Poll storage
+    // until data appears or we time out.
+    if (!birdInfo) {
+      log('No bird data in storage, waiting for background to finish fetching...');
+      birdInfo = await waitForBirdData(15000);
+    }
+
+    if (!birdInfo) {
+      // Last resort: most recent bird from viewing history
       const history = await getHistory();
       if (history.length > 0) {
         birdInfo = history[history.length - 1];
-        usedCachedFallback = true;
+        usedHistoryFallback = true;
         log(`Using cached bird from history: ${birdInfo.name}`);
       } else {
-        // No cached birds available - re-throw to show error modal
-        throw fetchError;
+        throw new Error('NETWORK_ERROR_NO_CACHE');
       }
     }
 
-    // Add bird to viewing history (skip if we loaded from history)
-    if (!usedCachedFallback) {
+    if (!usedHistoryFallback) {
       await addToHistory(birdInfo);
     }
+
+    // Signal the background to preload the next bird
+    chrome.runtime.sendMessage({ action: 'preloadNext' }, () => {
+      if (chrome.runtime.lastError) {
+        log(`Preload signal failed: ${chrome.runtime.lastError.message}`);
+      }
+    });
 
     // initShareMenu(() => birdInfo);
 
@@ -689,10 +668,7 @@ async function initializePage() {
     clearInterval(loadingInterval);
     hideLoadingIndicator();
 
-    // add a class to the body to trigger the fade-in animation
-    document.body.classList.add('loaded');
-
-    log('Bird info received, updating page content');
+    log(`Displaying bird: ${birdInfo.name}`);
 
     // Track session start with user settings and bird info
     try {
@@ -888,7 +864,6 @@ async function initializePage() {
     setImageSource(birdInfo.imageUrl);
 
     if (birdInfo.mediaUrl) {
-      log(`Audio URL found: ${birdInfo.mediaUrl}`);
       const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
       if (audioPlayer) {
         document.querySelector('.control-buttons').appendChild(audioPlayer);
@@ -950,7 +925,7 @@ async function initializePage() {
     try {
       new SettingsSidebar();
     } catch (error) {
-      console.error('Failed to initialize settings modal:', error);
+      log(`Failed to initialize settings modal: ${error.message}`);
       captureException(error, {
         tags: { operation: 'initializeSettingsSidebar' }
       });
@@ -998,23 +973,23 @@ async function initializePage() {
         });
       }
     } catch (error) {
-      console.error('Failed to initialize control options menu:', error);
+      log(`Failed to initialize control options menu: ${error.message}`);
       captureException(error, {
         tags: { operation: 'initializeControlOptionsMenu' }
       });
     }
 
     await initializeAudio();
-
-    log('Page updated successfully');
+    log('Page ready');
   } catch (error) {
     clearInterval(loadingInterval);
     hideLoadingIndicator();
-    console.error('Error updating page:', error);
     log(`Error updating page: ${error.message}`);
     captureException(error, {
       tags: { operation: 'initializePage' }
     });
+    document.body.classList.add('loaded');
+    hideNonEssentialUI();
     showErrorModal(error.message);
   }
 }
@@ -1037,9 +1012,41 @@ function showErrorModal(errorMessage) {
   retryButton.addEventListener('click', retryHandler);
 }
 
+const NON_ESSENTIAL_UI_SELECTORS = [
+  '#search-container',
+  '#chrome-tab-link',
+  '.top-sites-container',
+  '.clock-container',
+  '.timer-container',
+];
+
+/**
+ * Hide non-essential UI elements (search, chrome tab, top sites, clock)
+ * so they don't overlap error states.
+ */
+function hideNonEssentialUI() {
+  NON_ESSENTIAL_UI_SELECTORS.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (el) el.style.display = 'none';
+  });
+}
+
+/**
+ * Restore non-essential UI elements hidden by hideNonEssentialUI().
+ * Called at the start of initializePage() so a retry from error state
+ * restores everything.
+ */
+function restoreNonEssentialUI() {
+  NON_ESSENTIAL_UI_SELECTORS.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (el) el.style.display = '';
+  });
+}
+
 // Show beautiful network error state when no cached birds are available
 function showNetworkErrorState() {
   document.body.classList.add('loaded');
+  hideNonEssentialUI();
 
   const contentContainer = document.getElementById('content-container');
   contentContainer.innerHTML = `
@@ -1235,7 +1242,7 @@ function saveVolumeState(immediate = false) {
     // Save immediately (for mute/unmute actions)
     chrome.storage.local.set({ isMuted, volumeLevel }, () => {
       if (chrome.runtime.lastError) {
-        console.warn('Failed to save volume state:', chrome.runtime.lastError);
+        log(`Failed to save volume state: ${chrome.runtime.lastError.message}`);
       } else {
         log(`Volume state saved - muted: ${isMuted}, level: ${volumeLevel}`);
       }
@@ -1245,7 +1252,7 @@ function saveVolumeState(immediate = false) {
     saveVolumeTimeout = setTimeout(() => {
       chrome.storage.local.set({ isMuted, volumeLevel }, () => {
         if (chrome.runtime.lastError) {
-          console.warn('Failed to save volume state:', chrome.runtime.lastError);
+          log(`Failed to save volume state: ${chrome.runtime.lastError.message}`);
         } else {
           log(`Volume state saved - muted: ${isMuted}, level: ${volumeLevel}`);
         }
@@ -1318,18 +1325,24 @@ function setupMediaClickHandler() {
   });
 }
 
-// Combined message listener to handle all background messages
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+// Combined message listener to handle all background messages.
+// IMPORTANT: This must NOT be async. An async listener returns a Promise,
+// which Chrome does not treat as `return true`. When multiple extension pages
+// (e.g. multiple new tab instances) each have an async onMessage listener,
+// Chrome may close the sendMessage channel prematurely, causing the background
+// script's response to be lost ("No response from background script").
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "refreshBird") {
     location.reload();
   } else if (request.action === "toggleMute") {
     toggleMute();
   } else if (request.action === "quietHoursChanged") {
     if (request.quietHoursEnabled) {
-      const isQuietHour = await isQuietHoursActive();
-      if (isQuietHour && isPlaying) {
-        pauseAudio();
-      }
+      isQuietHoursActive().then(isQuietHour => {
+        if (isQuietHour && isPlaying) {
+          pauseAudio();
+        }
+      });
     }
   } else if (request.action === "pauseAudio") {
     if (audio && !audio.paused) {
@@ -1550,7 +1563,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!IS_EDGE) {
     try {
       await initializeGoogleApps();
-      log('Google Apps initialized');
     } catch (error) {
       captureException(error, {
         tags: { operation: 'initializeGoogleApps' }
@@ -1569,7 +1581,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Start page update after UI elements are initialized
-  log('Starting page update');
   await initializePage();
 
   // Check if feature tour should be shown (for new users after onboarding)
@@ -1658,7 +1669,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         try {
           window.topSitesInstance.updateVisibility();
         } catch (error) {
-          console.error('Failed to update top sites:', error);
+          log(`Failed to update top sites: ${error.message}`);
           captureException(error, {
             tags: { operation: 'updateTopSites' }
           });

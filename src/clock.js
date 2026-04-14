@@ -256,7 +256,6 @@ export function showClock() {
   document.body.classList.add('quick-access-has-clock');
   startClockInterval();
   initOptionsMenu();
-  log('Clock shown');
 }
 
 /**
@@ -347,8 +346,6 @@ export async function initClock() {
       }
     };
     chrome.storage.onChanged.addListener(storageChangeListener);
-
-    log('Clock initialized');
   } catch (error) {
     log('Error initializing clock: ' + error.message);
   }

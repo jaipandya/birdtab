@@ -174,44 +174,20 @@ function isReviewPromptShowing() {
  * - Review prompt is not showing
  */
 export async function showChromeFooterNotification() {
-  // Check if this is Chrome browser
-  if (!isChromeBrowser()) {
-    log('Chrome footer notification: Not Chrome browser, skipping');
-    return false;
-  }
-  
-  // Check if already dismissed
+  if (!isChromeBrowser()) return false;
+
   const isDismissed = await isChromeFooterNotificationDismissed();
-  if (isDismissed) {
-    log('Chrome footer notification: Already dismissed, skipping');
-    return false;
-  }
-  
-  // Check if tour is completed
+  if (isDismissed) return false;
+
   const tourCompleted = await isTourCompleted();
-  if (!tourCompleted) {
-    log('Chrome footer notification: Tour not completed, skipping');
-    return false;
-  }
-  
-  // Check if tour is currently active
-  if (isTourActive()) {
-    log('Chrome footer notification: Tour is active, skipping');
-    return false;
-  }
-  
-  // Check if review prompt is showing (review prompt takes priority)
-  if (isReviewPromptShowing()) {
-    log('Chrome footer notification: Review prompt is showing, skipping');
-    return false;
-  }
-  
-  // Check if notification already exists
-  if (notificationElement) {
-    log('Chrome footer notification: Already showing');
-    return false;
-  }
-  
+  if (!tourCompleted) return false;
+
+  if (isTourActive()) return false;
+
+  if (isReviewPromptShowing()) return false;
+
+  if (notificationElement) return false;
+
   log('Showing Chrome footer notification');
   
   // Create and append notification

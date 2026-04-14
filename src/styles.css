@@ -411,7 +411,8 @@ body.loaded {
   justify-content: center;
   align-items: center;
   color: var(--text-primary);
-  z-index: 9999;
+  z-index: 200000;
+  transition: opacity 0.3s ease;
 }
 
 .spinner {

@@ -3,11 +3,14 @@
  * Manages page loading, media loading indicators, media play/pause indicators, and toast notifications
  */
 
-import { log } from './logger.js';
-
 // ===== Media Indicator State =====
 let mediaPlayIndicatorTimeout = null;
 let mediaPauseIndicatorTimeout = null;
+
+// ===== Loading Indicator State =====
+let loadingShowTimeout = null;
+let loadingCancelled = false;
+const LOADING_SHOW_DELAY_MS = 1000;
 
 // ===== Loading Messages =====
 
@@ -43,24 +46,48 @@ export function getRandomLoadingMessage() {
 // ===== Page Loading Indicator =====
 
 /**
- * Show page loading indicator with a random message
+ * Schedule the page loading indicator to appear after a delay.
+ * If hideLoadingIndicator() is called before the delay elapses,
+ * the indicator never appears — avoiding a distracting flash
+ * when content loads quickly.
  */
 export function showLoadingIndicator() {
-  const loadingDiv = document.createElement('div');
-  loadingDiv.id = 'loading';
-  loadingDiv.innerHTML = `
-    <div class="spinner"></div>
-    <p id="loading-message">${getRandomLoadingMessage()}</p>
-  `;
-  document.body.appendChild(loadingDiv);
+  loadingCancelled = false;
+
+  if (loadingShowTimeout) {
+    clearTimeout(loadingShowTimeout);
+  }
+
+  loadingShowTimeout = setTimeout(() => {
+    loadingShowTimeout = null;
+    if (loadingCancelled) return;
+
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'loading';
+    loadingDiv.innerHTML = `
+      <div class="spinner"></div>
+      <p id="loading-message">${getRandomLoadingMessage()}</p>
+    `;
+    document.body.appendChild(loadingDiv);
+  }, LOADING_SHOW_DELAY_MS);
 }
 
 /**
- * Hide page loading indicator
+ * Hide page loading indicator with a subtle fade-out.
+ * Also cancels a pending show if the delay hasn't elapsed yet.
  */
 export function hideLoadingIndicator() {
+  loadingCancelled = true;
+
+  if (loadingShowTimeout) {
+    clearTimeout(loadingShowTimeout);
+    loadingShowTimeout = null;
+  }
+
   const loadingDiv = document.getElementById('loading');
-  if (loadingDiv) loadingDiv.remove();
+  if (!loadingDiv) return;
+  loadingDiv.style.opacity = '0';
+  setTimeout(() => loadingDiv.remove(), 300);
 }
 
 /**
@@ -70,7 +97,6 @@ export function updateLoadingMessage() {
   const loadingMessage = document.getElementById('loading-message');
   if (loadingMessage) {
     loadingMessage.textContent = getRandomLoadingMessage();
-    log(`Updated loading message: ${loadingMessage.textContent}`);
   }
 }
 

@@ -2,6 +2,7 @@ import './tokens.css';
 import './onboarding.css';
 import { localizeHtml } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
+import { log } from './logger.js';
 import { initAnalytics, trackOnboardingCompleted } from './analytics.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const manifestPromise = new Promise(resolve => {
     chrome.runtime.sendMessage({ action: 'fetchManifest' }, (response) => {
       if (chrome.runtime.lastError) {
-        console.warn('Manifest prefetch message failed:', chrome.runtime.lastError.message);
+        log(`Manifest prefetch message failed: ${chrome.runtime.lastError.message}`);
       }
       manifestReady = response?.success === true;
       resolve(manifestReady);

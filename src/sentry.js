@@ -240,12 +240,10 @@ function addCustomIntegrations(integrations) {
       }));
   }
 
-  // Console capture (browser context only)
-  if (!isWorker && Sentry.captureConsoleIntegration) {
-      result.push(Sentry.captureConsoleIntegration({
-        levels: ['error', 'warn'],
-      }));
-  }
+  // captureConsoleIntegration intentionally NOT included.
+  // The codebase already calls captureException() explicitly at every error site,
+  // so capturing console.error/warn would create duplicate events, burning through
+  // Sentry quota twice as fast and accelerating 429 rate-limit errors.
 
   return result;
 }

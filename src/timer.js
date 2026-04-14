@@ -1409,8 +1409,6 @@ export async function initTimer() {
       }
     };
     chrome.storage.onChanged.addListener(storageChangeListener);
-
-    log('Timer initialized');
   } catch (error) {
     log('Error initializing timer: ' + error.message);
   }

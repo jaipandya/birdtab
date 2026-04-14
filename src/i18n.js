@@ -1,6 +1,5 @@
 // Shared i18n utility for Chrome extensions
 // This provides a more idiomatic way to handle localization
-import { log } from './logger.js';
 
 /**
  * Generic function to localize HTML elements using data-i18n attributes
@@ -75,14 +74,12 @@ export function localizeHtml() {
     const textDirection = chrome.i18n.getMessage('textDirection');
     if (textDirection && (textDirection === 'rtl' || textDirection === 'ltr')) {
       htmlElement.dir = textDirection;
-      log('Set text direction to: ' + textDirection + ' for locale: ' + currentLocale);
     } else {
       // Fallback: detect RTL languages
       const rtlLanguages = ['ar', 'he', 'fa', 'ur', 'yi'];
       const langCode = currentLocale ? currentLocale.split('-')[0] : 'en';
       const direction = rtlLanguages.includes(langCode) ? 'rtl' : 'ltr';
       htmlElement.dir = direction;
-      log('Fallback: Set text direction to: ' + direction + ' for language: ' + langCode);
     }
   }
 }

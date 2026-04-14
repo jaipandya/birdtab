@@ -6,157 +6,14 @@ import { isBrowserNewTabUrl } from './browserInfo.js';
 import { needsMigration, runMigration, initializeFreshInstall } from './storageMigration.js';
 import { getManifest, getRandomBird, clearManifestCache, fetchManifest } from './mediaClient.js';
 
-initSentry('background');
+// --- Event listeners registered FIRST ---
+// In MV3, Chrome only delivers pending events after module evaluation completes.
+// Registering listeners before heavy init (Sentry, etc.) ensures they are available
+// as early as possible when the service worker is woken from a cold start.
 
-log('Background script starting...');
-addBreadcrumb('Background script started', 'lifecycle', 'info');
-
-let preloadedBirdInfo = null;
 let preloadInProgress = false;
 let lastNewTabId = null;
 let serviceWorkerStartTime = Date.now();
-
-function isSlowConnection() {
-  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if (!connection) return false;
-  const slowTypes = ['slow-2g', '2g'];
-  const isSlowType = slowTypes.includes(connection.effectiveType);
-  const isSaveData = connection.saveData === true;
-  if (isSlowType || isSaveData) {
-    log(`Slow connection detected: effectiveType=${connection.effectiveType}, saveData=${connection.saveData}`);
-    return true;
-  }
-  return false;
-}
-
-log(`Service worker started at: ${new Date(serviceWorkerStartTime).toISOString()}`);
-
-self.addEventListener('unhandledrejection', (event) => {
-  log(`Unhandled promise rejection: ${event.reason}`);
-  captureException(event.reason, {
-    tags: { type: 'unhandledRejection' }
-  });
-});
-
-/**
- * Get a random bird info from the manifest.
- * Falls back to cached bird info on failure.
- */
-async function fetchBirdInfo(region) {
-  log(`Fetching bird info for region: ${region}`);
-  const startTime = Date.now();
-  addBreadcrumb(`Fetching bird info for region: ${region}`, 'http', 'info');
-
-  try {
-    const birdInfo = await getRandomBird(region);
-    if (!birdInfo) {
-      throw new Error('No bird found in manifest for region ' + region);
-    }
-
-    birdInfo.location = region;
-
-    log(`Bird info compiled: ${birdInfo.name} (${birdInfo.speciesCode})`);
-    const duration = Date.now() - startTime;
-    addBreadcrumb('Bird info fetched successfully', 'http', 'info', {
-      duration,
-      region,
-      speciesCode: birdInfo.speciesCode,
-    });
-
-    return birdInfo;
-  } catch (error) {
-    log(`Error in fetchBirdInfo: ${error.message}`);
-    const duration = Date.now() - startTime;
-    addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
-
-    // Try cached birdInfo from viewing history (stored by script.js)
-    const cachedBirdInfo = await getRandomCachedBirdInfo();
-    if (cachedBirdInfo) {
-      addBreadcrumb('Using cached bird info as fallback', 'fallback', 'warning');
-      log(`Falling back to cached bird: ${cachedBirdInfo.name}`);
-      return cachedBirdInfo;
-    }
-
-    captureException(error, {
-      tags: { operation: 'fetchBirdInfo' },
-      extra: { region, duration }
-    });
-
-    throw new Error('NETWORK_ERROR_NO_CACHE');
-  }
-}
-
-/**
- * Get a random previously-viewed bird from cache as offline fallback.
- * Reads from the viewHistory stored by script.js / historyModal.js.
- */
-async function getRandomCachedBirdInfo() {
-  return new Promise(resolve => {
-    chrome.storage.local.get('viewHistory', result => {
-      const history = result.viewHistory;
-      if (Array.isArray(history) && history.length > 0) {
-        const bird = history[Math.floor(Math.random() * history.length)];
-        if (bird && bird.name) {
-          log(`Found cached bird from history: ${bird.name}`);
-          resolve(bird);
-          return;
-        }
-      }
-      resolve(null);
-    });
-  });
-}
-
-async function preloadNextBird(region) {
-  try {
-    preloadedBirdInfo = await fetchBirdInfo(region);
-    log('Bird info fetched successfully for preloading');
-
-    const preloadPromises = [];
-
-    if (preloadedBirdInfo.imageUrl) {
-      preloadPromises.push(
-        fetch(preloadedBirdInfo.imageUrl, { mode: 'no-cors' })
-          .then(() => log('Image preloaded successfully'))
-          .catch(error => log(`Error preloading image: ${error.message}`))
-      );
-    }
-
-    if (preloadedBirdInfo.mediaUrl) {
-      preloadPromises.push(
-        fetch(preloadedBirdInfo.mediaUrl, { mode: 'no-cors' })
-          .then(() => log('Audio preloaded successfully'))
-          .catch(error => log(`Error preloading audio: ${error.message}`))
-      );
-    }
-
-    await Promise.all(preloadPromises);
-    log('Next bird preloaded');
-  } catch (error) {
-    log(`Error preloading next bird: ${error.message}`);
-    reportApiError(error, {
-      operation: 'preloadNextBird',
-      transientLevel: 'info',
-      extra: { region },
-    });
-  }
-}
-
-function clearLegacyCacheKeys() {
-  chrome.storage.local.get(null, items => {
-    const keysToRemove = Object.keys(items).filter(key =>
-      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('birds_')
-    );
-    if (keysToRemove.length > 0) {
-      chrome.storage.local.remove(keysToRemove, () => log(`Cleared ${keysToRemove.length} legacy cache keys`));
-    }
-  });
-}
-
-function clearCache() {
-  clearManifestCache().then(() => log('Manifest cache cleared'));
-  clearLegacyCacheKeys();
-}
 
 function handleNewTab(tab) {
   if (lastNewTabId && lastNewTabId !== tab.id) {
@@ -177,68 +34,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-// Message listener
+// Message listener — registered before initSentry() so it's available immediately
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'getBirdInfo') {
-    log(`Received request for bird info from tab ${sender.tab?.id || 'unknown'}`);
-
-    (async () => {
-      try {
-        const result = await chrome.storage.local.get(['autoPlay']);
-        const region = 'WLD';
-        const autoPlay = result.autoPlay || false;
-
-        log(`Using region: ${region}, auto-play: ${autoPlay}`);
-
-        let birdInfo;
-
-        if (preloadedBirdInfo) {
-          birdInfo = preloadedBirdInfo;
-          preloadedBirdInfo = null;
-          log('Using preloaded bird info');
-        } else {
-          birdInfo = await fetchBirdInfo(region);
-        }
-
-        birdInfo.autoPlay = autoPlay;
-
-        log(`Sending bird info response: ${birdInfo.name}`);
-
-        try {
-          sendResponse(birdInfo);
-        } catch (responseError) {
-          log(`Failed to send response: ${responseError.message}`);
-          captureException(responseError, {
-            tags: { operation: 'sendResponse', source: 'messageListener' },
-            extra: { birdName: birdInfo?.name }
-          });
-        }
-
-        if (!preloadInProgress) {
-          preloadInProgress = true;
-          preloadNextBird(region)
-            .catch(error => log(`Preload failed: ${error.message}`))
-            .finally(() => { preloadInProgress = false; });
-        }
-      } catch (error) {
-        log(`Error in getBirdInfo handler: ${error.message}`);
-        captureException(error, {
-          tags: { operation: 'getBirdInfo', source: 'messageListener' },
-          extra: { tabId: sender.tab?.id, url: sender.url }
-        });
-
-        try {
-          sendResponse({ error: error.message });
-        } catch (responseError) {
-          log(`Failed to send error response: ${responseError.message}`);
-        }
-      }
-    })();
-
+  if (request.action === 'preloadNext') {
+    if (!preloadInProgress) {
+      preloadInProgress = true;
+      preloadNextBird('WLD')
+        .catch(error => log(`Preload failed: ${error.message}`))
+        .finally(() => { preloadInProgress = false; });
+    }
+    sendResponse({ ok: true });
     return true;
   } else if (request.action === 'deleteCache') {
     clearCache();
-    preloadedBirdInfo = null;
+    chrome.storage.local.remove('preloadedBird');
+    // Re-run bootstrap to simulate service worker cold start
+    bootstrap({ forceRefresh: true });
     sendResponse({ message: 'Cache deleted' });
     return true;
   } else if (request.action === 'getBirdsByRegion') {
@@ -297,11 +108,142 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+// --- Heavy initialization (deferred after event listeners) ---
+
+initSentry('background');
+
+log('Background script starting...');
+addBreadcrumb('Background script started', 'lifecycle', 'info');
+log(`Service worker started at: ${new Date(serviceWorkerStartTime).toISOString()}`);
+
+self.addEventListener('unhandledrejection', (event) => {
+  log(`Unhandled promise rejection: ${event.reason}`);
+  captureException(event.reason, {
+    tags: { type: 'unhandledRejection' }
+  });
+});
+
+async function fetchBirdInfo(region) {
+  log(`Fetching bird info for region: ${region}`);
+  const startTime = Date.now();
+  addBreadcrumb(`Fetching bird info for region: ${region}`, 'http', 'info');
+
+  try {
+    const birdInfo = await getRandomBird(region);
+    if (!birdInfo) {
+      throw new Error('No bird found in manifest for region ' + region);
+    }
+
+    birdInfo.location = region;
+
+    log(`Bird info compiled: ${birdInfo.name} (${birdInfo.speciesCode})`);
+    const duration = Date.now() - startTime;
+    addBreadcrumb('Bird info fetched successfully', 'http', 'info', {
+      duration,
+      region,
+      speciesCode: birdInfo.speciesCode,
+    });
+
+    return birdInfo;
+  } catch (error) {
+    log(`Error in fetchBirdInfo: ${error.message}`);
+    const duration = Date.now() - startTime;
+    addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
+
+    const cachedBirdInfo = await getRandomCachedBirdInfo();
+    if (cachedBirdInfo) {
+      addBreadcrumb('Using cached bird info as fallback', 'fallback', 'warning');
+      log(`Falling back to cached bird: ${cachedBirdInfo.name}`);
+      return cachedBirdInfo;
+    }
+
+    captureException(error, {
+      tags: { operation: 'fetchBirdInfo' },
+      extra: { region, duration }
+    });
+
+    throw new Error('NETWORK_ERROR_NO_CACHE');
+  }
+}
+
+async function getRandomCachedBirdInfo() {
+  return new Promise(resolve => {
+    chrome.storage.local.get('viewHistory', result => {
+      const history = result.viewHistory;
+      if (Array.isArray(history) && history.length > 0) {
+        const bird = history[Math.floor(Math.random() * history.length)];
+        if (bird && bird.name) {
+          log(`Found cached bird from history: ${bird.name}`);
+          resolve(bird);
+          return;
+        }
+      }
+      resolve(null);
+    });
+  });
+}
+
+async function preloadNextBird(region) {
+  try {
+    const birdInfo = await fetchBirdInfo(region);
+    log('Bird info fetched successfully for preloading');
+
+    // Store preloaded bird in chrome.storage.local so the content script
+    // can read it directly without needing to message the service worker.
+    // This avoids MV3 service worker lifecycle issues entirely.
+    chrome.storage.local.set({ preloadedBird: birdInfo });
+
+    const preloadPromises = [];
+
+    if (birdInfo.imageUrl) {
+      preloadPromises.push(
+        fetch(birdInfo.imageUrl, { mode: 'no-cors' })
+          .then(() => log('Image preloaded successfully'))
+          .catch(error => log(`Error preloading image: ${error.message}`))
+      );
+    }
+
+    if (birdInfo.mediaUrl) {
+      preloadPromises.push(
+        fetch(birdInfo.mediaUrl, { mode: 'no-cors' })
+          .then(() => log('Audio preloaded successfully'))
+          .catch(error => log(`Error preloading audio: ${error.message}`))
+      );
+    }
+
+    await Promise.all(preloadPromises);
+    log('Next bird preloaded');
+  } catch (error) {
+    log(`Error preloading next bird: ${error.message}`);
+    reportApiError(error, {
+      operation: 'preloadNextBird',
+      transientLevel: 'info',
+      extra: { region },
+    });
+  }
+}
+
+function clearLegacyCacheKeys() {
+  chrome.storage.local.get(null, items => {
+    const keysToRemove = Object.keys(items).filter(key =>
+      key.startsWith('image_') || key.startsWith('audio_') || key.startsWith('birds_')
+    );
+    if (keysToRemove.length > 0) {
+      chrome.storage.local.remove(keysToRemove, () => log(`Cleared ${keysToRemove.length} legacy cache keys`));
+    }
+  });
+}
+
+function clearCache() {
+  clearManifestCache().then(() => log('Manifest cache cleared'));
+  clearLegacyCacheKeys();
+}
+
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'local' && changes.region) {
     log('Region changed, clearing cache');
     clearCache();
-    preloadedBirdInfo = null;
+    chrome.storage.local.remove('preloadedBird');
   }
 
   if (namespace === 'local' && changes.quietHours) {
@@ -320,16 +262,22 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 });
 
-// Eagerly fetch and cache the manifest + preload first bird on service worker start
-(async () => {
+/**
+ * Bootstrap sequence: fetch the manifest and preload a bird.
+ * Runs on service worker cold start and after cache clear.
+ */
+async function bootstrap({ forceRefresh = false } = {}) {
   try {
-    await getManifest();
+    await getManifest({ forceRefresh });
     log('Manifest ready');
   } catch (error) {
-    log(`Manifest pre-fetch failed: ${error.message}`);
+    log(`Manifest fetch failed: ${error.message}`);
   }
   preloadNextBird('WLD');
-})();
+}
+
+// Run bootstrap eagerly on service worker start
+bootstrap();
 
 function checkOnboarding() {
   chrome.storage.sync.get(['onboardingComplete'], function (result) {

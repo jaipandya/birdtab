@@ -129,7 +129,16 @@ export async function fetchManifest() {
   fetchInProgress = (async () => {
     try {
       log(`Fetching manifest from ${CONFIG.MANIFEST_URL}`);
-      const response = await fetch(CONFIG.MANIFEST_URL);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+      let response;
+      try {
+        response = await fetch(CONFIG.MANIFEST_URL, { signal: controller.signal });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
       if (!response.ok) {
         throw new Error(`Manifest fetch failed: HTTP ${response.status}`);
       }

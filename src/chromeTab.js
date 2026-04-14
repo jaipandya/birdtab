@@ -31,8 +31,6 @@ export async function updateChromeTabVisibility() {
   } else {
     chromeTabLink.classList.add('hidden');
   }
-  
-  log(`Chrome Tab visibility updated: ${isEnabled ? 'visible' : 'hidden'}`);
 }
 
 /**
