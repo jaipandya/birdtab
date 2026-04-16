@@ -5,26 +5,9 @@ import { trackQuizCompleted } from './analytics.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
 
 /*
- * IMAGE PRELOADING OPTIMIZATION STRATEGY
- * =====================================
- * 
- * ISSUE: Images were loading on-demand when user clicked "Next", causing visible delays
- * on slow networks (3G). The preloading was happening AFTER nextQuestion() was called,
- * which was too late.
- * 
- * SOLUTION: 
- * 1. Preload next image immediately AFTER user answers current question (in submitAnswer)
- * 2. This gives maximum time for next image to load while user reads feedback
- * 3. Use browser cache preloading (new Image()) for instant display
- * 4. Add comprehensive logging to track preloading status
- * 
- * SEQUENCE:
- * 1. User answers question → submitAnswer() → preloadNextQuestionImage()
- * 2. Next image loads in background while user sees feedback
- * 3. User clicks "Next" → nextQuestion() → displayQuestion() 
- * 4. Image should already be loaded and cached → instant display
- * 
- * The key insight: Preload AFTER answering, not AFTER clicking next.
+ * Keep the next quiz image warm in the browser cache once the current image
+ * has rendered. This mirrors the main extension flow where we start fetching
+ * the next asset as soon as the current one is ready.
  */
 
 // ==========================================
@@ -47,7 +30,7 @@ class QuizMode {
     this.quizContainer = null;
     this.imageLoadingQueue = [];
     this.isLoadingImages = false;
-    this.preloadedImages = new Map(); // Track preloaded images for cleanup
+    this.preloadedImages = new Map(); // Track preloaded image requests for cleanup/deduping
     this.abortController = null; // For cancelling pending requests
     this.eventListeners = []; // Track event listeners for cleanup
     this.onQuizStart = options.onQuizStart || null; // Callback when quiz starts
@@ -408,7 +391,7 @@ class QuizMode {
     this.updateQuestionImage(questionIndex, imageInfo);
     
     if (imageInfo?.imageUrl) {
-      this.preloadImageInBrowser(imageInfo.imageUrl);
+      this.warmImageInBrowser(imageInfo.imageUrl);
     }
     
     return imageInfo;
@@ -482,7 +465,7 @@ class QuizMode {
       }
 
       if (bird.imageUrl) {
-        this.preloadImageInBrowser(bird.imageUrl);
+        this.warmImageInBrowser(bird.imageUrl);
         this.incrementLoadingProgress();
         continue;
       }
@@ -513,7 +496,7 @@ class QuizMode {
         bird.photographer ?? null,
         bird.photographerUrl ?? null
       );
-      this.preloadImageInBrowser(imageInfo.imageUrl);
+      this.warmImageInBrowser(imageInfo.imageUrl);
       return imageInfo;
     }
     log(`No image URL found for ${speciesCode}`);
@@ -526,15 +509,40 @@ class QuizMode {
   }
 
   /**
-   * Preload image in browser cache for instant display
+   * Start warming an image in browser cache without blocking the current UI work.
    */
-  preloadImageInBrowser(imageUrl) {
-    if (!imageUrl || this.preloadedImages.has(imageUrl)) return;
+  warmImageInBrowser(imageUrl) {
+    if (!imageUrl) return;
+    void this.ensureImagePreloaded(imageUrl).catch(() => {});
+  }
+
+  /**
+   * Ensure an image is loaded into browser cache, reusing any in-flight preload.
+   */
+  ensureImagePreloaded(imageUrl) {
+    if (!imageUrl) {
+      return Promise.reject(new Error('Missing image URL'));
+    }
+
+    const existingPreload = this.preloadedImages.get(imageUrl);
+    if (existingPreload) {
+      return existingPreload.promise;
+    }
 
     const img = new Image();
-    img.onerror = () => this.preloadedImages.delete(imageUrl);
+    let rejectPreload = () => {};
+    const promise = new Promise((resolve, reject) => {
+      rejectPreload = reject;
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        this.preloadedImages.delete(imageUrl);
+        reject(new Error(`Failed to preload image: ${imageUrl}`));
+      };
+    });
+
+    this.preloadedImages.set(imageUrl, { img, promise, reject: rejectPreload });
     img.src = imageUrl;
-    this.preloadedImages.set(imageUrl, img);
+    return promise;
   }
 
   showQuizLoading() {
@@ -674,14 +682,11 @@ class QuizMode {
     elements['quiz-next'].textContent = chrome.i18n.getMessage(isLastQuestion ? 'quizShowResults' : 'quizNextQuestion');
     elements['quiz-next'].disabled = true;
 
-    // Preload next question's image
-    this.preloadNextQuestionImage();
-
     // Update photographer info
     this.updatePhotographerDisplay(question.bird);
 
     // Load and display image
-    await this.loadAndDisplayQuestionImage(question, elements['quiz-image-container']);
+    await this.loadAndDisplayQuestionImage(question, elements['quiz-image-container'], this.currentQuestion);
 
     // Display options
     this.displayQuestionOptions(question);
@@ -705,7 +710,7 @@ class QuizMode {
   /**
    * Load and display the question image with fallback
    */
-  async loadAndDisplayQuestionImage(question, container) {
+  async loadAndDisplayQuestionImage(question, container, questionIndex = this.currentQuestion) {
     container.classList.add('loading');
     container.innerHTML = '<div class="image-loading-overlay"><div class="spinner"></div></div>';
 
@@ -725,11 +730,14 @@ class QuizMode {
       img.src = url;
       img.alt = `${birdName} - Bird quiz image`;
       container.appendChild(img);
+
+      void this.preloadNextQuestionImage(questionIndex);
     };
 
-    const img = new Image();
-    img.onload = () => displayImage(imageUrl, question.bird.primaryComName);
-    img.onerror = async () => {
+    try {
+      await this.ensureImagePreloaded(imageUrl);
+      displayImage(imageUrl, question.bird.primaryComName);
+    } catch {
       if (!this.isActive) return;
 
       const imageInfo = await this.loadBirdImageFromCDN(question.bird.speciesCode);
@@ -740,8 +748,8 @@ class QuizMode {
         return;
       }
 
-      const retryImg = new Image();
-      retryImg.onload = () => {
+      try {
+        await this.ensureImagePreloaded(imageInfo.imageUrl);
         displayImage(imageInfo.imageUrl, question.bird.primaryComName);
         if (this.hasValidQuestion()) {
           question.bird = this.updateBirdWithImage(question.bird, imageInfo);
@@ -749,15 +757,12 @@ class QuizMode {
             this.updateImageMeta(question.bird);
           }
         }
-      };
-      retryImg.onerror = () => {
+      } catch {
         if (this.isActive && document.body.contains(container)) {
           this.showImageLoadError(container);
         }
-      };
-      retryImg.src = imageInfo.imageUrl;
-    };
-    img.src = imageUrl;
+      }
+    }
   }
 
   /**
@@ -898,16 +903,16 @@ class QuizMode {
     await this.displayQuestion();
   }
 
-  async preloadNextQuestionImage() {
+  async preloadNextQuestionImage(questionIndex = this.currentQuestion) {
     if (!this.isActive || !this.questions) return;
     
-    const nextIndex = this.currentQuestion + 1;
+    const nextIndex = questionIndex + 1;
     const nextBird = this.questions?.[nextIndex]?.bird;
     if (!nextBird) return;
 
     if (nextBird.imageUrl) {
       // Already loaded, just preload in browser cache
-      this.preloadImageInBrowser(nextBird.imageUrl);
+      this.warmImageInBrowser(nextBird.imageUrl);
       return;
     }
 
@@ -1157,7 +1162,8 @@ class QuizMode {
     this.isLoadingImages = false;
 
     // Clean up preloaded images
-    this.preloadedImages.forEach((img) => {
+    this.preloadedImages.forEach(({ img, reject }) => {
+      reject(new Error('Quiz cleanup'));
       img.src = '';
       img.onload = null;
       img.onerror = null;

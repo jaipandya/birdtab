@@ -6,7 +6,7 @@ import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
-import { initializeSearch, setupSearchKeyboardShortcut, setupSearchListeners } from './search.js';
+import { applySearchVisibility, initializeSearch, setupSearchKeyboardShortcut } from './search.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
@@ -1013,7 +1013,6 @@ function showErrorModal(errorMessage) {
 }
 
 const NON_ESSENTIAL_UI_SELECTORS = [
-  '#search-container',
   '#chrome-tab-link',
   '.top-sites-container',
   '.clock-container',
@@ -1023,12 +1022,16 @@ const NON_ESSENTIAL_UI_SELECTORS = [
 /**
  * Hide non-essential UI elements (search, chrome tab, top sites, clock)
  * so they don't overlap error states.
+ * Note: #search-container is excluded because its visibility is managed by
+ * applySearchVisibility() based on the quickAccessEnabled setting. Clearing
+ * its inline style here would revert it to the CSS default (display: none).
  */
 function hideNonEssentialUI() {
   NON_ESSENTIAL_UI_SELECTORS.forEach(selector => {
     const el = document.querySelector(selector);
     if (el) el.style.display = 'none';
   });
+  applySearchVisibility(false);
 }
 
 /**
@@ -1041,6 +1044,9 @@ function restoreNonEssentialUI() {
     const el = document.querySelector(selector);
     if (el) el.style.display = '';
   });
+  // Re-apply search visibility from settings instead of blindly clearing
+  // the inline style (which would revert to CSS display: none).
+  initializeSearch();
 }
 
 // Show beautiful network error state when no cached birds are available
@@ -1652,15 +1658,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'local') {
     // Handle quick access toggle
     if (changes.quickAccessEnabled) {
-      const searchContainer = document.getElementById('search-container');
-      searchContainer.style.display = changes.quickAccessEnabled.newValue ? 'block' : 'none';
-
-      if (changes.quickAccessEnabled.newValue) {
-        document.body.classList.add('quick-access-enabled');
-        setupSearchListeners();
-      } else {
-        document.body.classList.remove('quick-access-enabled');
-      }
+      applySearchVisibility(changes.quickAccessEnabled.newValue);
     }
 
     // Handle top sites and shortcuts toggle - update existing TopSites instance

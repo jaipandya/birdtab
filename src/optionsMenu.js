@@ -389,6 +389,14 @@ export function createOptionsMenu(config) {
     if (triggerElement && triggerElement.contains(e.target)) {
       return;
     }
+    // If a modal dialog (permission dialog, confirmation dialog, etc.) is open,
+    // close the menu but let the click propagate so the dialog's own handlers
+    // run normally. Without this, the capture-phase stopPropagation below
+    // would swallow clicks on dialog buttons.
+    if (e.target.closest('[role="dialog"], .confirmation-dialog-backdrop, .quiz-exit-modal')) {
+      close();
+      return;
+    }
     // Swallow the outside click before target handlers run so background UI
     // does not react to the same click that dismisses the menu.
     e.preventDefault();

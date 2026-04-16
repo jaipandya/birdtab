@@ -149,28 +149,29 @@ export function getSearchEngineChoices(currentValue) {
 }
 
 /**
+ * Apply search visibility based on the quick access setting.
+ */
+export function applySearchVisibility(isEnabled) {
+  const searchContainer = document.getElementById('search-container');
+  if (!searchContainer) return;
+
+  searchContainer.style.display = isEnabled ? 'block' : 'none';
+  document.body.classList.toggle('quick-access-enabled', isEnabled);
+
+  if (isEnabled) {
+    setupSearchListeners();
+  }
+}
+
+/**
  * Initialize the search functionality
  * Sets up the search container visibility and event listeners
  */
 export function initializeSearch() {
-  const searchContainer = document.getElementById('search-container');
-
-  // Check settings synchronously first to show/hide immediately
   // Default quickAccessEnabled to true for fresh installs where storage isn't set yet
   chrome.storage.local.get(['quickAccessEnabled'], (result) => {
     const quickAccessEnabled = result.quickAccessEnabled !== undefined ? result.quickAccessEnabled : true;
-    chrome.permissions.contains({
-      permissions: ['search']
-    }, (hasPermission) => {
-      if (hasPermission && quickAccessEnabled) {
-        searchContainer.style.display = 'block';
-        document.body.classList.add('quick-access-enabled');
-        setupSearchListeners();
-      } else {
-        searchContainer.style.display = 'none';
-        document.body.classList.remove('quick-access-enabled');
-      }
-    });
+    applySearchVisibility(quickAccessEnabled);
   });
 }
 

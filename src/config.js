@@ -1,5 +1,5 @@
 export const CONFIG = {
-  MANIFEST_URL: 'https://media.birdtab.app/m260408r01/manifests/manifest.json',
+  MANIFEST_URL: 'https://media.birdtab.app/m260416r01/manifests/manifest.json',
   DEV_TAB_COUNT: 5,  // Number of new tabs to open before showing the prompt in dev mode
   PROD_TAB_COUNT: 50,  // Number of new tabs to open before showing the prompt in production
   DEV_TIME_DELAY: 1 * 60 * 1000,  // 1 minute in milliseconds
