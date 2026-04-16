@@ -92,13 +92,17 @@ export function checkAndPrepareReviewPrompt() {
 export function getReviewPromptHTML() {
   return `
     <div id="review-prompt" class="review-prompt">
-      <div class="review-content">
-        <h2>${chrome.i18n.getMessage('reviewPromptTitle')}</h2>
-        <p>${chrome.i18n.getMessage('reviewPromptMessage')}</p>
-        <div class="review-buttons">
-          <button id="leave-review" class="review-btn primary">${chrome.i18n.getMessage('leaveReview')}</button>
-          <button id="maybe-later" class="review-btn secondary">${chrome.i18n.getMessage('maybeLater')}</button>
-          <button id="no-thanks" class="review-btn tertiary">${chrome.i18n.getMessage('noThanks')}</button>
+      <button class="review-close" id="review-close" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <h2 class="review-title">${chrome.i18n.getMessage('reviewPromptTitle')}</h2>
+      <p class="review-message">${chrome.i18n.getMessage('reviewPromptMessage')}</p>
+      <div class="review-actions">
+        <button id="leave-review" class="review-btn primary">${chrome.i18n.getMessage('leaveReview')}</button>
+        <div class="review-actions-secondary">
+          <button id="maybe-later" class="review-btn ghost">${chrome.i18n.getMessage('maybeLater')}</button>
+          <span class="review-separator">·</span>
+          <button id="no-thanks" class="review-btn ghost">${chrome.i18n.getMessage('noThanks')}</button>
         </div>
       </div>
     </div>
@@ -131,6 +135,12 @@ export function addReviewPromptListeners() {
   document.getElementById('no-thanks').addEventListener('click', () => {
     chrome.storage.local.set({ reviewDismissed: true });
     trackReviewPromptAction('dismissed', daysSinceInstall);
+    dismissPrompt();
+  });
+
+  document.getElementById('review-close').addEventListener('click', () => {
+    chrome.storage.local.set({ lastReviewPrompt: Date.now() });
+    trackReviewPromptAction('maybe_later', daysSinceInstall);
     dismissPrompt();
   });
 }

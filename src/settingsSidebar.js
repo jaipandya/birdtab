@@ -343,6 +343,7 @@ class SettingsSidebar {
                 </div>
                 <button id="sidebar-reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
                 <button id="sidebar-delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
+                <button id="sidebar-reset-review" class="debug-button">Reset Review Prompt</button>
               </div>
             </div>
           </div>
@@ -673,6 +674,21 @@ class SettingsSidebar {
           log('Error clearing cache: ' + error.message);
           alert(getMessage('errorClearingCache'));
         }
+      });
+    }
+
+    const resetReviewButton = document.getElementById('sidebar-reset-review');
+    if (resetReviewButton) {
+      resetReviewButton.addEventListener('click', () => {
+        chrome.storage.local.set({
+          installTime: Date.now() - 2 * 60 * 1000,
+          newTabCount: 10,
+          lastReviewPrompt: 0,
+          reviewDismissed: false,
+          reviewLeft: false
+        }, () => {
+          alert('Review prompt reset. Open a new tab to see it.');
+        });
       });
     }
 

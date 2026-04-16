@@ -621,7 +621,7 @@ html[dir="rtl"] .quiz-close-btn {
 
 .quiz-btn.share-action.copy {
   background: var(--white-95);
-  color: var(--review-text);
+  color: var(--error-text-dark);
   border: 1px solid var(--white-30);
 }
 
@@ -1006,7 +1006,7 @@ html[dir="rtl"] .quiz-close-btn {
   align-items: center;
   justify-content: center;
   padding: 32px 20px;
-  color: var(--review-text-muted);
+  color: var(--error-text-hint);
   text-align: center;
   background: linear-gradient(135deg, var(--error-surface-start) 0%, var(--error-surface-end) 100%);
   width: 100%;

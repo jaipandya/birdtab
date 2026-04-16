@@ -116,12 +116,6 @@
   /* ── Initial background (shown before image loads) ── */
   --bg-initial: #979797;
 
-  /* ── Review prompt (light popover on dark background) ── */
-  --review-text: #333333;
-  --review-text-muted: #666666;
-  --review-btn-bg: #f1f3f4;
-  --review-btn-hover-bg: #e8eaed;
-
   /* ── Liquid Glass ── */
   --glass-bg: rgba(255, 255, 255, 0.08);
   --glass-bg-focus: rgba(255, 255, 255, 0.12);
