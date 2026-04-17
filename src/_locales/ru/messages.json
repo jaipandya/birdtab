@@ -331,6 +331,10 @@
     "message": "Приостановить звук птицы",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Загрузка звука птицы\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Добавить новый пользовательский ярлык",
     "description": "Aria label for add shortcut button"

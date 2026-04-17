@@ -331,6 +331,10 @@
     "message": "Vogelgeräusch pausieren",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Vogelgeräusch wird geladen\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Neue benutzerdefinierte Verknüpfung hinzufügen",
     "description": "Aria label for add shortcut button"

@@ -331,6 +331,10 @@
     "message": "Pausar sonido de ave",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Cargando sonido de ave\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Agregar nuevo acceso directo personalizado",
     "description": "Aria label for add shortcut button"

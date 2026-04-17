@@ -335,6 +335,10 @@
     "message": "Pause bird sound",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Loading bird sound\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Add new custom shortcut",
     "description": "Aria label for add shortcut button"

@@ -331,6 +331,10 @@
     "message": "Pausar som de ave",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Carregando som de ave\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Adicionar novo atalho personalizado",
     "description": "Aria label for add shortcut button"

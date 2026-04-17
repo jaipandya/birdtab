@@ -331,6 +331,10 @@
     "message": "鳥の音を一時停止",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "鳥の音を読み込み中\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "新しいカスタムショートカットを追加",
     "description": "Aria label for add shortcut button"

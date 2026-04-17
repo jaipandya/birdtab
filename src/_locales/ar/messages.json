@@ -331,6 +331,10 @@
     "message": "إيقاف صوت الطائر مؤقتاً",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "جارٍ تحميل صوت الطائر\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "إضافة اختصار مخصص جديد",
     "description": "Aria label for add shortcut button"

@@ -331,6 +331,10 @@
     "message": "暂停鸟类声音",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "正在加载鸟类声音\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "添加新的自定义快捷方式",
     "description": "Aria label for add shortcut button"

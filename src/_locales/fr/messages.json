@@ -331,6 +331,10 @@
     "message": "Mettre en pause le son d'oiseau",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Chargement du son d\u2019oiseau\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Ajouter un nouveau raccourci personnalisé",
     "description": "Aria label for add shortcut button"

@@ -1519,10 +1519,34 @@ html[dir="rtl"] .credit-popover__ext-icon {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: auto;
-  /* Allow hover for tooltip */
 }
 
+/* Subtle breathing glow while audio is buffering */
+.play-button.audio-buffering {
+  animation: audio-buffering-pulse 1.8s ease-in-out infinite;
+}
 
+.play-button.audio-buffering-ready {
+  animation: audio-buffering-fade 0.4s ease-out forwards;
+}
+
+@keyframes audio-buffering-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--white-10);
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--white-15);
+  }
+}
+
+@keyframes audio-buffering-fade {
+  from {
+    box-shadow: 0 0 0 4px var(--white-15);
+  }
+  to {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
 
 .hidden {
   display: none;

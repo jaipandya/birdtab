@@ -260,13 +260,23 @@ const updatePlayPauseButton = () => {
     playButton.innerHTML = isPlaying ?
       `<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
       `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
-    playButton.title = isPlaying ?
-      chrome.i18n.getMessage('pauseTooltip') :
-      chrome.i18n.getMessage('playTooltip');
+    // Don't overwrite the buffering tooltip while audio is loading
+    if (!playButton.classList.contains('audio-buffering')) {
+      playButton.title = isPlaying ?
+        chrome.i18n.getMessage('pauseTooltip') :
+        chrome.i18n.getMessage('playTooltip');
+    }
   }
 };
 
 async function initializeAudio() {
+  // If the user already clicked play before the image loaded, audio is
+  // already active — don't interrupt it.
+  if (audio && !audio.paused) {
+    log('Audio already playing, skipping initializeAudio');
+    return;
+  }
+
   const isQuietHour = await isQuietHoursActive();
 
   if (isQuietHour) {
@@ -276,13 +286,64 @@ async function initializeAudio() {
     const shouldAutoPlay = await getAutoPlayState();
     if (birdInfo && birdInfo.mediaUrl) {
       showAudioControls();
+      if (!audio) {
+        setPlayButtonBuffering(true);
+      }
       if (shouldAutoPlay) {
         await playAudio();
-      } else {
+      } else if (!audio) {
         loadAudioWithoutPlaying();
       }
     }
   }
+}
+
+let _bufferingReadyTimeout = null;
+
+function setPlayButtonBuffering(buffering) {
+  const btn = document.getElementById('play-button');
+  if (!btn) return;
+
+  if (_bufferingReadyTimeout) {
+    clearTimeout(_bufferingReadyTimeout);
+    _bufferingReadyTimeout = null;
+  }
+
+  if (buffering) {
+    btn.classList.add('audio-buffering');
+    btn.classList.remove('audio-buffering-ready');
+    btn.title = chrome.i18n.getMessage('audioBufferingTooltip') || 'Loading bird sound…';
+  } else {
+    btn.classList.remove('audio-buffering');
+    btn.classList.add('audio-buffering-ready');
+    btn.title = isPlaying
+      ? chrome.i18n.getMessage('pauseTooltip')
+      : chrome.i18n.getMessage('playTooltip');
+    _bufferingReadyTimeout = setTimeout(() => {
+      _bufferingReadyTimeout = null;
+      btn.classList.remove('audio-buffering-ready');
+    }, 400);
+  }
+}
+
+// Named handlers so they can be removed when the audio element is replaced.
+function _onAudioWaiting() { setPlayButtonBuffering(true); }
+function _onAudioReady() { setPlayButtonBuffering(false); }
+
+function attachBufferingListeners(audioEl) {
+  audioEl.addEventListener('waiting', _onAudioWaiting);
+  audioEl.addEventListener('playing', _onAudioReady);
+  audioEl.addEventListener('canplay', _onAudioReady);
+  audioEl.addEventListener('error', _onAudioReady);
+  audioEl.addEventListener('ended', _onAudioReady);
+}
+
+function detachBufferingListeners(audioEl) {
+  audioEl.removeEventListener('waiting', _onAudioWaiting);
+  audioEl.removeEventListener('playing', _onAudioReady);
+  audioEl.removeEventListener('canplay', _onAudioReady);
+  audioEl.removeEventListener('error', _onAudioReady);
+  audioEl.removeEventListener('ended', _onAudioReady);
 }
 
 
@@ -300,7 +361,9 @@ function showAudioControls() {
     playButton.style.display = 'inline-flex';
     playButton.disabled = false;
     playButton.classList.remove('disabled');
-    playButton.title = chrome.i18n.getMessage('playTooltip');
+    if (!playButton.classList.contains('audio-buffering')) {
+      playButton.title = chrome.i18n.getMessage('playTooltip');
+    }
   }
   if (volumeControl) volumeControl.style.display = 'inline-flex';
 }
@@ -408,22 +471,30 @@ function createBirdAudio(url) {
       el.currentTime = AUDIO_SKIP_SECONDS;
     }
   }, { once: true });
+  attachBufferingListeners(el);
   return el;
 }
 
-// Load audio without playing it
+// Load audio without playing it (metadata-only preload)
 function loadAudioWithoutPlaying() {
   if (fadeAudioInterval) {
     clearInterval(fadeAudioInterval);
     fadeAudioInterval = null;
   }
   if (audio) {
+    detachBufferingListeners(audio);
     audio.pause();
     audio.src = '';
     audio = null;
   }
   audio = createBirdAudio(birdInfo.mediaUrl);
-  audio.preload = 'metadata'; // Only load metadata to save bandwidth
+  audio.preload = 'metadata';
+  audio.muted = isMuted;
+  audio.volume = volumeLevel;
+  audio.onended = () => {
+    isPlaying = false;
+    updatePlayPauseButton();
+  };
   updatePlayPauseButton();
 }
 
@@ -446,23 +517,17 @@ function createPlayButton(onClickHandler) {
   return playButton;
 }
 
-// Create audio player for bird calls (image mode)
+// Create audio player UI for bird calls (image mode).
+// Only builds the play button — does NOT attach an audio src or start
+// any network activity. The actual audio element is wired up later by
+// initializeAudio() which runs after the image has loaded.
 function createAudioPlayer(mediaUrl) {
   if (!mediaUrl) {
     log('No media URL provided, skipping audio player creation');
     return null;
   }
 
-  log('Creating audio player');
-  audio = createBirdAudio(mediaUrl);
-  audio.muted = isMuted;
-  audio.volume = volumeLevel;
-
-  audio.onended = () => {
-    isPlaying = false;
-    updatePlayPauseButton();
-  };
-
+  log('Creating audio player (UI only, no network)');
   return createPlayButton(togglePlay);
 }
 
@@ -493,13 +558,16 @@ async function playAudio() {
     audio = createBirdAudio(birdInfo.mediaUrl);
     audio.volume = volumeLevel;
     audio.muted = isMuted;
+    audio.onended = () => {
+      isPlaying = false;
+      updatePlayPauseButton();
+    };
   }
   try {
     await audio.play();
     isPlaying = true;
     updatePlayPauseButton();
 
-    // Track audio play (only track user-initiated plays, not auto-play)
     trackFeature('audio_play');
 
     // Fade in the audio gradually to the current volume level
@@ -529,17 +597,18 @@ async function playAudio() {
     // Don't log this as an error - it's normal behavior
     if (error.name === 'AbortError') {
       log('Audio playback interrupted (user opened another tab)');
+      setPlayButtonBuffering(false);
       return;
     }
 
-    // NotSupportedError occurs when audio source failed to load (network issue)
-    // This is expected on slow/unreliable connections - not a bug
     if (error.name === 'NotSupportedError') {
       log('Audio unavailable (network issue)');
+      setPlayButtonBuffering(false);
       return;
     }
 
     log(`Unexpected audio error: ${error.message}`);
+    setPlayButtonBuffering(false);
     captureException(error, {
       tags: { operation: 'playAudio' },
       extra: {
@@ -563,20 +632,54 @@ function pauseAudio() {
 }
 
 
+// Resolves when the current bird image has loaded (or failed/timed out).
+// Other modules use this to defer non-critical work until after first paint.
+let _imageLoadedResolve = null;
+let _imageLoaded = false;
+const imageLoadedPromise = new Promise((resolve) => {
+  _imageLoadedResolve = resolve;
+});
+
+function resolveImageLoaded() {
+  if (_imageLoaded) return;
+  _imageLoaded = true;
+  _imageLoadedResolve();
+}
+
+const IMAGE_LOAD_TIMEOUT_MS = 20000;
+let _imageLoadTimeoutId = null;
+
 // Set image source and show it when loaded
 // Includes retry logic for transient network failures
 function setImageSource(imageUrl, retryCount = 0) {
   const img = document.querySelector('.background-image');
   if (!img) {
     log('setImageSource: .background-image element not found');
+    resolveImageLoaded();
     return;
   }
 
   log('Setting image source');
 
+  // Only create the fallback timeout once (on the first call).
+  // Retries share the same timeout so it isn't stacked.
+  if (retryCount === 0) {
+    if (_imageLoadTimeoutId) clearTimeout(_imageLoadTimeoutId);
+    _imageLoadTimeoutId = setTimeout(() => {
+      _imageLoadTimeoutId = null;
+      log('Image load timed out, unblocking deferred work');
+      resolveImageLoaded();
+    }, IMAGE_LOAD_TIMEOUT_MS);
+  }
+
   img.onload = function () {
+    if (_imageLoadTimeoutId) {
+      clearTimeout(_imageLoadTimeoutId);
+      _imageLoadTimeoutId = null;
+    }
     log('Image loaded successfully');
     img.classList.remove('hidden');
+    resolveImageLoaded();
   };
 
   img.onerror = function () {
@@ -587,7 +690,12 @@ function setImageSource(imageUrl, retryCount = 0) {
         setImageSource(imageUrl, retryCount + 1);
       }, IMAGE_RETRY_DELAY);
     } else {
+      if (_imageLoadTimeoutId) {
+        clearTimeout(_imageLoadTimeoutId);
+        _imageLoadTimeoutId = null;
+      }
       log('Image failed to load after all retries');
+      resolveImageLoaded();
     }
   };
 
@@ -652,11 +760,17 @@ async function initializePage() {
       await addToHistory(birdInfo);
     }
 
-    // Signal the background to preload the next bird
-    chrome.runtime.sendMessage({ action: 'preloadNext' }, () => {
-      if (chrome.runtime.lastError) {
-        log(`Preload signal failed: ${chrome.runtime.lastError.message}`);
-      }
+    // Signal the background to preload the next bird, but only after the
+    // current image is visible so it doesn't compete for bandwidth.
+    imageLoadedPromise.then(() => {
+      const schedulePreload = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+      schedulePreload(() => {
+        chrome.runtime.sendMessage({ action: 'preloadNext' }, () => {
+          if (chrome.runtime.lastError) {
+            log(`Preload signal failed: ${chrome.runtime.lastError.message}`);
+          }
+        });
+      });
     });
 
     // initShareMenu(() => birdInfo);
@@ -794,7 +908,7 @@ async function initializePage() {
     };
 
     contentContainer.innerHTML = `
-      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image" decoding="async">
+      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image" decoding="async" fetchpriority="high">
       <div class="gradient-overlay"></div>
       <div class="info-panel">
         <div class="info-panel-header">
@@ -979,7 +1093,12 @@ async function initializePage() {
       });
     }
 
-    await initializeAudio();
+    // Defer audio initialization until the image is visible so audio
+    // downloads don't compete with the critical first-paint resource.
+    imageLoadedPromise.then(() => initializeAudio()).catch((err) => {
+      log(`Audio initialization failed: ${err.message}`);
+      captureException(err, { tags: { operation: 'initializeAudio' } });
+    });
     log('Page ready');
   } catch (error) {
     clearInterval(loadingInterval);
@@ -1640,11 +1759,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 window.addEventListener('beforeunload', () => {
+  if (_bufferingReadyTimeout) {
+    clearTimeout(_bufferingReadyTimeout);
+    _bufferingReadyTimeout = null;
+  }
+  if (_imageLoadTimeoutId) {
+    clearTimeout(_imageLoadTimeoutId);
+    _imageLoadTimeoutId = null;
+  }
   if (fadeAudioInterval) {
     clearInterval(fadeAudioInterval);
     fadeAudioInterval = null;
   }
   if (audio) {
+    detachBufferingListeners(audio);
     audio.pause();
     audio.src = '';
     audio = null;

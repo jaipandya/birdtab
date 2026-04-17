@@ -331,6 +331,10 @@
     "message": "Wstrzymaj odgłos ptaka",
     "description": "Tooltip for pause button"
   },
+  "audioBufferingTooltip": {
+    "message": "Ładowanie odgłosu ptaka\u2026",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
   "addNewShortcutAriaLabel": {
     "message": "Dodaj nowy niestandardowy skrót",
     "description": "Aria label for add shortcut button"

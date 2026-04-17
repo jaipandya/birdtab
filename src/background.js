@@ -193,25 +193,26 @@ async function preloadNextBird(region) {
     // This avoids MV3 service worker lifecycle issues entirely.
     chrome.storage.local.set({ preloadedBird: birdInfo });
 
-    const preloadPromises = [];
-
+    // Prefetch image first (critical), then audio (lower priority).
+    // Sequential to avoid bandwidth contention between the two.
     if (birdInfo.imageUrl) {
-      preloadPromises.push(
-        fetch(birdInfo.imageUrl, { mode: 'no-cors' })
-          .then(() => log('Image preloaded successfully'))
-          .catch(error => log(`Error preloading image: ${error.message}`))
-      );
+      try {
+        await fetch(birdInfo.imageUrl, { mode: 'no-cors' });
+        log('Next bird image preloaded');
+      } catch (error) {
+        log(`Error preloading image: ${error.message}`);
+      }
     }
 
     if (birdInfo.mediaUrl) {
-      preloadPromises.push(
-        fetch(birdInfo.mediaUrl, { mode: 'no-cors' })
-          .then(() => log('Audio preloaded successfully'))
-          .catch(error => log(`Error preloading audio: ${error.message}`))
-      );
+      try {
+        await fetch(birdInfo.mediaUrl, { mode: 'no-cors' });
+        log('Next bird audio preloaded');
+      } catch (error) {
+        log(`Error preloading audio: ${error.message}`);
+      }
     }
 
-    await Promise.all(preloadPromises);
     log('Next bird preloaded');
   } catch (error) {
     log(`Error preloading next bird: ${error.message}`);
