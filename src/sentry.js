@@ -26,6 +26,10 @@ const IGNORED_ERROR_PATTERNS = [
   'The message port closed',
   'message channel closed',
   'Receiving end does not exist',
+  'is not valid JSON',
+  'NETWORK_ERROR_NO_CACHE',
+  'Unable to create writable file',
+  'Failed to fetch',
 ];
 
 const SENSITIVE_KEYS = ['token', 'key', 'password', 'secret', 'auth', 'credential', 'cookie', 'session'];

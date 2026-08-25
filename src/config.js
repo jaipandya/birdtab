@@ -10,7 +10,7 @@ export const CONFIG = {
   SENTRY: {
     // DSN - Safe to include in production builds (Sentry DSN is designed to be public)
     // Replace with your actual Sentry DSN from your project settings
-    DSN: 'https://98781d8af4acd4e491de6bb3ae00bd39@o4509638513393664.ingest.us.sentry.io/4509638520012800',
+    DSN: 'https://7feee5a5cf4a7076d925889e94dac457@o4509638513393664.ingest.us.sentry.io/4509638520012800',
 
     // Environment detection - set by webpack based on build mode
     ENVIRONMENT: process.env.SENTRY_ENVIRONMENT || 'production',
