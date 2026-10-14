@@ -1,0 +1,64 @@
+BirdTab ist eine kostenlose Erweiterung für Microsoft Edge, die jeden neuen Tab in eine entspannende Naturauszeit verwandelt: ein atemberaubendes Vogel-Hintergrundbild, echte Vogelstimmen und Naturklänge sowie faszinierende Fakten über eine andere Vogelart bei jedem neuen Tab.
+
+BirdTab ersetzt deine Neuer-Tab-Seite in Microsoft Edge mit beeindruckender Vogelfotografie aus deinem eigenen Land oder aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
+
+WARUM NUTZER BIRDTAB LIEBEN
+
+Anders als gewöhnliche Hintergrundbild-Erweiterungen ist BirdTab ein vollständiges Naturerlebnis. Jeder neue Tab bringt einen Moment der Ruhe - ein wunderschönes Vogelfoto, einen entspannenden Vogelruf und etwas Neues zum Lernen. Die perfekte Mischung aus Achtsamkeit, Bildung und ästhetischer Schönheit.
+
+HAUPTFUNKTIONEN
+
+- Neues Vogel-Hintergrundbild mit jedem neuen Tab - hochauflösende Wildtierfotografie
+- Authentische Vogelrufe und Naturgeräusche - mit einstellbarer Lautstärke und Ruhezeiten
+- Faszinierende Vogelfakten - Verhalten, Lebensraum und Schutzstatus
+- Vögel aus deinem Land - wähle aus über 250 Ländern und Regionen oder den 500 häufigsten Vögeln der Welt
+- Interaktives Vogelbestimmungsquiz - teste dein Wissen und teile Ergebnisse
+- Beobachtungshistorie - verfolge jeden entdeckten Vogel
+- Uhr und Countdown-Timer - bleib fokussiert und genieße die Natur
+- Integrierte Produktivitätstools - Suchfeld, Verknüpfungen und mehr
+- Funktioniert offline - genieße deine Vögel auch ohne Internet
+- Keine Werbung, keine Registrierung, keine Verpflichtungen
+- 100% datenschutzfreundlich - keine persönlichen Daten, kein Tracking
+
+TAUSENDE VON ARTEN
+
+Entdecke Tausende von Vogelarten aus allen Kontinenten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen. Jedes Foto ist hochauflösend und sorgfältig ausgewählt, um dir das beeindruckendste und vielfältigste Vogelbeobachtungserlebnis zu bieten. Wähle in den Einstellungen dein Land, um die Vögel deiner Heimat zu sehen, oder wähle Welt für die 500 häufigsten Vögel der Erde.
+
+PERFEKT FÜR
+
+- Vogelbeobachter und Birding-Begeisterte
+- Naturliebhaber und Wildtierfotografen
+- Alle, die ein ruhiges, ästhetisches Neuer-Tab-Erlebnis suchen
+- Achtsamkeit, Meditation und Stressabbau
+- Schüler und Lehrkräfte mit Interesse an Ornithologie
+- Liebhaber von Natur-Hintergrundbildern
+
+HÄUFIGE FRAGEN
+
+Ist BirdTab kostenlos?
+Ja. BirdTab ist komplett kostenlos - keine Bezahlpläne, keine Werbung und kein Konto nötig.
+
+Welche Vögel sehe ich?
+Vögel aus dem Land deiner Wahl (über 250 Länder und Regionen) oder die 500 häufigsten Vögel der Welt. Zu jedem Vogel gibt es ein Foto, seinen Ruf, Fakten und einen Link zu seiner eBird-Seite.
+
+Funktioniert BirdTab offline?
+Ja. BirdTab hält Vögel auf deinem Gerät bereit, sodass auch ohne Internetverbindung ein neuer Vogel erscheint.
+
+Kann ich die Vogelstimmen ausschalten?
+Ja. Ton ist optional - schalte ihn stumm, passe die Lautstärke an oder lege Ruhezeiten fest.
+
+Sammelt BirdTab meine Daten?
+Nein. BirdTab sammelt keine persönlichen Daten und verfolgt dein Surfen nicht.
+
+Wie öffne ich den Standard-Tab von Microsoft Edge?
+Klicke auf das Microsoft Edge-Symbol in der oberen Ecke eines BirdTab-Tabs.
+
+NEUIGKEITEN
+
+2.1.0 - Vögel für jedes Land: wähle aus über 250 Ländern und Regionen oder den 500 häufigsten Vögeln der Welt. Dazu bessere Offline-Unterstützung, ein schnellerer erster Tab sowie Verbesserungen für Tastatur und Screenreader.
+2.0.0 - Hochauflösende Fotos, internationale Regionen, Uhr, Countdown-Timer, deutlich verbesserte Offline-Unterstützung und ein erfrischtes Neuer-Tab-Erlebnis.
+1.3.9 - Vogel-Info-Popover mit Verbreitungskarte und Vogelbeschreibung. Ablenkungsfreier Modus.
+1.3.6 - Neues Optionsmenü mit Countdown-Timer, Klick-zum-Abspielen, Suchmaschinenauswahl und Wiedergabekorrekturen.
+1.3.4 - Uhranzeige mit Formatoptionen, Häufig besuchte Seiten ausblenden und Fehlerbehebungen.
+
+Vollständiges Änderungsprotokoll: https://birdtab.app/changelog

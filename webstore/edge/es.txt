@@ -1,0 +1,64 @@
+BirdTab es una extensión gratuita para Microsoft Edge que convierte cada nueva pestaña en un relajante escape a la naturaleza: un impresionante fondo de pantalla de aves, cantos reales y sonidos de la naturaleza, y datos fascinantes sobre una especie distinta cada vez que abres una pestaña.
+
+BirdTab reemplaza tu nueva pestaña de Microsoft Edge con fotografía de aves espectacular de tu propio país o de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave - con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
+
+POR QUÉ LES ENCANTA BIRDTAB
+
+A diferencia de las extensiones de fondos de pantalla genéricas, BirdTab es una experiencia completa de naturaleza. Cada nueva pestaña trae un momento de calma - una hermosa fotografía de ave, un canto relajante y algo nuevo que aprender. La combinación perfecta de mindfulness, educación y belleza visual.
+
+CARACTERÍSTICAS PRINCIPALES
+
+- Nuevo fondo de pantalla de ave con cada nueva pestaña - fotografía de vida silvestre en alta resolución
+- Cantos de aves y sonidos de naturaleza auténticos - con volumen ajustable y horas de silencio
+- Datos fascinantes sobre aves - comportamiento, hábitat y estado de conservación
+- Aves de tu país - elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo
+- Quiz interactivo de identificación de aves - pon a prueba tus conocimientos y comparte resultados
+- Historial de observación - registra cada ave que has descubierto
+- Reloj y temporizador - mantén el enfoque mientras disfrutas de la naturaleza
+- Herramientas de productividad integradas - buscador, accesos directos y más
+- Funciona sin conexión - disfruta de tus aves incluso sin internet
+- Sin anuncios, sin registros, sin compromisos
+- 100% respetuoso con la privacidad - sin datos personales, sin rastreo
+
+MILES DE ESPECIES
+
+Descubre miles de especies de aves de todos los continentes - desde loros tropicales y colibríes hasta majestuosas águilas y búhos. Cada foto es de alta resolución y cuidadosamente seleccionada para brindarte la experiencia de observación de aves más impresionante y diversa posible. Elige tu país en Configuración para ver las aves de donde vives, o elige Mundo para las 500 aves más comunes del planeta.
+
+PERFECTO PARA
+
+- Observadores de aves y entusiastas del birding
+- Amantes de la naturaleza y la fotografía de vida silvestre
+- Quienes buscan una nueva pestaña estética y relajante
+- Mindfulness, meditación y alivio del estrés
+- Estudiantes y educadores interesados en ornitología
+- Amantes de fondos de pantalla de naturaleza
+
+PREGUNTAS FRECUENTES
+
+¿BirdTab es gratis?
+Sí. BirdTab es totalmente gratis: sin planes de pago, sin anuncios y sin necesidad de cuenta.
+
+¿Qué aves veré?
+Aves del país que elijas (más de 250 países y regiones) o las 500 aves más comunes del mundo. Cada ave incluye foto, canto, datos y un enlace a su página de eBird.
+
+¿BirdTab funciona sin conexión?
+Sí. BirdTab guarda aves en tu dispositivo, así que aparece un ave nueva incluso sin conexión a internet.
+
+¿Puedo desactivar los sonidos?
+Sí. El sonido es opcional: puedes silenciarlo, ajustar el volumen o configurar horas de silencio.
+
+¿BirdTab recopila mis datos?
+No. BirdTab no recopila datos personales ni rastrea tu navegación.
+
+¿Cómo abro la nueva pestaña predeterminada de Microsoft Edge?
+Haz clic en el icono de Microsoft Edge en la esquina superior de cualquier pestaña de BirdTab.
+
+NOVEDADES
+
+2.1.0 - Aves para cada país: elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo. Además, mejor soporte offline, una primera pestaña más rápida y mejoras para teclado y lectores de pantalla.
+2.0.0 - Fotos en alta resolución, regiones internacionales, reloj, temporizador, soporte offline mejorado y una experiencia renovada.
+1.3.9 - Popover de información del ave con mapa de distribución y descripción del ave. Modo sin distracciones.
+1.3.6 - Nuevo menú de opciones con temporizador, clic para reproducir, selección de motor de búsqueda y correcciones de reproducción.
+1.3.4 - Reloj con opciones de formato, ocultar sitios frecuentes y correcciones de errores.
+
+Historial completo: https://birdtab.app/changelog

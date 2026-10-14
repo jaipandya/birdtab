@@ -1,0 +1,64 @@
+BirdTab est une extension gratuite pour Microsoft Edge qui transforme chaque nouvel onglet en escapade nature apaisante : un superbe fond d'écran d'oiseau, de vrais chants d'oiseaux et sons de la nature, et des faits fascinants sur une espèce différente à chaque nouvel onglet.
+
+BirdTab remplace votre page de nouvel onglet Microsoft Edge par une photographie d'oiseaux époustouflante de votre propre pays ou du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
+
+POURQUOI LES UTILISATEURS ADORENT BIRDTAB
+
+Contrairement aux extensions de fonds d'écran classiques, BirdTab est une expérience nature complète. Chaque nouvel onglet apporte un moment de calme - une belle photographie d'oiseau, un chant apaisant et quelque chose de nouveau à apprendre. Le mélange parfait de pleine conscience, d'éducation et de beauté visuelle.
+
+FONCTIONNALITÉS PRINCIPALES
+
+- Nouveau fond d'écran d'oiseau à chaque nouvel onglet - photographie animalière haute résolution
+- Chants d'oiseaux et sons de la nature authentiques - volume réglable et heures calmes
+- Faits fascinants sur les oiseaux - comportement, habitat et statut de conservation
+- Les oiseaux de votre pays - choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde
+- Quiz interactif d'identification d'oiseaux - testez vos connaissances et partagez vos résultats
+- Historique d'observation - suivez chaque oiseau que vous avez découvert
+- Horloge et minuteur - restez concentré tout en profitant de la nature
+- Outils de productivité intégrés - barre de recherche, raccourcis et plus
+- Fonctionne hors ligne - profitez de vos oiseaux même sans internet
+- Sans publicité, sans inscription, sans engagement
+- 100% respectueux de la vie privée - aucune donnée personnelle, aucun pistage
+
+DES MILLIERS D'ESPÈCES
+
+Découvrez des milliers d'espèces d'oiseaux de tous les continents - des perroquets tropicaux et colibris aux majestueux aigles et hiboux. Chaque photo est en haute résolution et soigneusement sélectionnée pour vous offrir l'expérience ornithologique la plus époustouflante et diversifiée possible. Choisissez votre pays dans les Paramètres pour voir les oiseaux de chez vous, ou choisissez Monde pour les 500 oiseaux les plus communs de la planète.
+
+IDÉAL POUR
+
+- Ornithologues et passionnés d'observation d'oiseaux
+- Amoureux de la nature et photographes animaliers
+- Ceux qui recherchent un nouvel onglet esthétique et apaisant
+- Pleine conscience, méditation et gestion du stress
+- Étudiants et enseignants intéressés par l'ornithologie
+- Amateurs de fonds d'écran nature et de beaux arrière-plans
+
+QUESTIONS FRÉQUENTES
+
+BirdTab est-il gratuit ?
+Oui. BirdTab est entièrement gratuit : aucune offre payante, aucune publicité et aucun compte requis.
+
+Quels oiseaux vais-je voir ?
+Les oiseaux du pays de votre choix (plus de 250 pays et régions) ou les 500 oiseaux les plus communs du monde. Chaque oiseau est accompagné d'une photo, de son chant, de faits et d'un lien vers sa page eBird.
+
+BirdTab fonctionne-t-il hors ligne ?
+Oui. BirdTab garde des oiseaux prêts sur votre appareil, pour qu'un nouvel oiseau s'affiche même sans connexion internet.
+
+Puis-je couper les sons ?
+Oui. Le son est facultatif : coupez-le, réglez le volume ou définissez des heures calmes.
+
+BirdTab collecte-t-il mes données ?
+Non. BirdTab ne collecte aucune donnée personnelle et ne suit pas votre navigation.
+
+Comment ouvrir le nouvel onglet par défaut de Microsoft Edge ?
+Cliquez sur l'icône Microsoft Edge dans le coin supérieur de n'importe quel onglet BirdTab.
+
+NOUVEAUTÉS
+
+2.1.0 - Des oiseaux pour chaque pays : choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde. Et aussi : meilleur support hors ligne, premier onglet plus rapide, améliorations pour le clavier et les lecteurs d'écran.
+2.0.0 - Photos haute résolution, régions internationales, horloge, minuteur, support hors ligne amélioré et une expérience renouvelée.
+1.3.9 - Popover d'informations sur l'oiseau avec carte de répartition et description de l'oiseau. Mode sans distraction.
+1.3.6 - Nouveau menu d'options avec minuteur, lecture au clic, sélection du moteur de recherche et corrections de lecture.
+1.3.4 - Affichage de l'horloge avec options de format, masquer les sites fréquents et corrections de bugs.
+
+Journal complet des modifications : https://birdtab.app/changelog

@@ -1,0 +1,67 @@
+BirdTab is a free Microsoft Edge extension that turns every new tab into a calming nature escape: a stunning bird wallpaper, real bird songs and nature sounds, and fascinating facts about a different bird species every time you open a tab.
+
+BirdTab replaces your Microsoft Edge new tab page with breathtaking bird photography from your own country or from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
+
+WHY USERS LOVE BIRDTAB
+
+Unlike generic wallpaper extensions, BirdTab is a complete nature experience. Each new tab brings a moment of calm. A beautiful bird photograph, a relaxing bird call, and something new to learn. It's the perfect blend of mindfulness, education, and aesthetic beauty.
+
+KEY FEATURES
+
+- New bird wallpaper with every new tab - stunning high-resolution wildlife photography
+- Authentic bird calls and nature sounds - with adjustable volume and quiet hours
+- Fascinating bird facts - learn about behavior, habitat, and conservation status
+- Birds from your country - choose from 250+ countries and regions, or the World's 500 most common birds
+- Interactive bird identification quiz - test your knowledge and share results
+- Viewing history - track every bird you've discovered
+- Clock and countdown timer - stay focused while enjoying nature
+- Productivity tools built in - search box, custom shortcuts, and more
+- Works offline - enjoy your birds even without internet
+- No ads, no sign-ups, no strings attached
+- 100% privacy-focused - no personal data collected, no tracking
+
+THOUSANDS OF SPECIES
+
+Discover thousands of bird species from every continent - from tropical parrots and hummingbirds to majestic eagles and owls. Every photo is high-resolution and carefully curated to bring you the most stunning and diverse birding experience possible. Choose your country in Settings to see the birds found where you live, or pick World for the 500 most common birds on Earth.
+
+PERFECT FOR
+
+- Birdwatchers and birding enthusiasts
+- Nature lovers and wildlife photographers
+- Anyone seeking a calming, aesthetic new tab experience
+- Mindfulness, meditation, and stress relief
+- Students and educators learning about ornithology
+- Nature wallpaper and beautiful background lovers
+
+FREQUENTLY ASKED QUESTIONS
+
+Is BirdTab free?
+Yes. BirdTab is completely free - no paid plans, no ads, and no account needed.
+
+Which birds will I see?
+Birds from the country you choose (250+ countries and regions), or the World's 500 most common birds. Every bird comes with a photo, its call, facts, and a link to its eBird page.
+
+Does BirdTab work offline?
+Yes. BirdTab keeps birds ready on your device, so a new bird appears even without an internet connection.
+
+Can I turn off the bird sounds?
+Yes. Sound is optional - mute it, adjust the volume, or set quiet hours.
+
+Does BirdTab collect my data?
+No. BirdTab does not collect personal data or track your browsing.
+
+How do I open the default Microsoft Edge new tab?
+Click the Microsoft Edge icon in the top corner of any BirdTab tab.
+
+WHAT'S NEW
+
+2.1.0 - Birds for every country: choose from 250+ countries and regions, or the World's 500 most common birds. Plus better offline support, a faster first tab, and keyboard and screen reader improvements.
+2.0.3 - Minor fixes in error tracking
+2.0.2 - Faster image loading - bird photos now appear before audio starts downloading, so your new tab feels snappier.
+2.0.1 - More birds, improved stability of the extension, performance improvements
+2.0.0 - High-resolution photos, international regions, clock, countdown timer, much improved offline support, and a refreshed new tab experience.
+1.3.9 - Bird info popover with range map and bird description. Distraction free mode.
+1.3.6 - New options menu with countdown timer, click-to-play, search engine selection, and playback fixes.
+1.3.4 - Clock display with format options, hide top sites toggle, and bug fixes.
+
+Full changelog: https://birdtab.app/changelog
