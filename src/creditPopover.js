@@ -1,5 +1,6 @@
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
 import { getMessage } from './i18n.js';
+import { formatCreditDate } from './utils/credits.js';
 
 const SHOW_DELAY = 300;
 const HIDE_DELAY = 200;
@@ -42,16 +43,6 @@ function buildLocationUrl(lat, lon, locationText) {
     return `https://www.google.com/search?q=${encodeURIComponent(locationText)}`;
   }
   return '';
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  try {
-    const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch {
-    return dateStr;
-  }
 }
 
 function buildFieldRow(label, valueHtml) {
@@ -100,7 +91,7 @@ function buildSectionHtml(data, type) {
     }
   }
   if (data.date) {
-    const formatted = formatDate(data.date);
+    const formatted = formatCreditDate(data.date);
     if (formatted) {
       tagItems.push(`<span class="credit-popover__tag" title="${escapeHtml(isAudio ? getMessage('creditDateRecorded') : getMessage('creditDateTaken'))}"><span class="credit-popover__tag-icon">${CALENDAR_ICON}</span><span class="credit-popover__tag-text">${escapeHtml(formatted)}</span></span>`);
     }

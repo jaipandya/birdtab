@@ -24,7 +24,7 @@
         "location": null,
         "latitude": null,
         "longitude": null,
-        "capturedAt": "2025-06-08 14:18:24",
+        "capturedAt": "2025-06-08",
         "renditions": {
           "default": {
             "url": "images/bundled-birds/eubeat1.avif",
@@ -49,7 +49,7 @@
         "location": null,
         "latitude": null,
         "longitude": null,
-        "recordedAt": "None-None-None",
+        "recordedAt": null,
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/8cb080034a0fe39247051b0e3dd5d255c809ef49a65b9679278a7399440edf78.opus",
@@ -144,7 +144,7 @@
         "location": null,
         "latitude": null,
         "longitude": null,
-        "capturedAt": "2015-05-21 18:18:07",
+        "capturedAt": "2015-05-21",
         "renditions": {
           "default": {
             "url": "images/bundled-birds/bkwsti.avif",
@@ -229,7 +229,7 @@
         "location": null,
         "latitude": null,
         "longitude": null,
-        "recordedAt": "2015-10-29 17:27:21",
+        "recordedAt": "2015-10-29",
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/32bb9131dbe358ae27922da3940cc8333b627f9bb9e38ea286e3e396152612c9.opus",

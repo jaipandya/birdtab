@@ -487,6 +487,16 @@ describe('bundled birds', () => {
     }
   });
 
+  test('every bundled credit date is a real YYYY-MM-DD or null', () => {
+    const { formatCreditDate } = require('../utils/credits.js');
+    for (const entry of bundled) {
+      for (const date of [entry.image.capturedAt, entry.audio.recordedAt]) {
+        if (date !== null) expect(formatCreditDate(date)).not.toBe('');
+        if (date !== null) expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      }
+    }
+  });
+
   test('returns a World bird with a packaged photo, without touching storage or the network', () => {
     load({ storage: {}, routes: releaseRoutes(R1) });
 

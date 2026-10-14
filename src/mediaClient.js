@@ -22,6 +22,7 @@
 
 import { CONFIG } from './config.js';
 import { log } from './logger.js';
+import { cleanCreditName } from './utils/credits.js';
 import bundledBirds from './data/bundledBirds.json';
 
 const MEDIA = CONFIG.MEDIA;
@@ -1055,11 +1056,11 @@ export function adaptSpeciesToBirdInfo(entry) {
     ebirdUrl: entry.ebirdUrl,
 
     imageUrl: entry.image?.renditions?.default?.url ?? null,
-    photographer: entry.image?.creatorName ?? null,
+    photographer: cleanCreditName(entry.image?.creatorName) ?? null,
     photographerUrl: entry.image?.creatorUrl ?? null,
 
     mediaUrl: entry.audio?.renditions?.default?.url ?? null,
-    recordist: entry.audio?.creatorName ?? null,
+    recordist: cleanCreditName(entry.audio?.creatorName) ?? null,
     recordistUrl: entry.audio?.creatorUrl ?? null,
 
     imageSource: entry.image?.source ?? null,
