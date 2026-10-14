@@ -16,7 +16,7 @@ const MEDIA_BASE_URL = ((!IS_PRODUCTION_BUILD && process.env.MEDIA_BASE_URL) || 
 // build is made (e.g. 'm261020r01'). Used only when current.json can't be read
 // and nothing schema 2 is stored yet. While null, such users get the schema 1
 // World manifest below, exactly like 2.0.x.
-const PRODUCTION_FALLBACK_RELEASE = null;
+const PRODUCTION_FALLBACK_RELEASE = 'm261014r01';
 
 // Dev builds fall back to the local test release exported by the crawlers.
 const DEV_FALLBACK_RELEASE = 'm000000r01';
