@@ -11,7 +11,7 @@ GŁÓWNE FUNKCJE
 - Nowa tapeta z ptakiem w każdej nowej karcie - oszałamiająca fotografia dzikiej przyrody w wysokiej rozdzielczości
 - Autentyczne głosy ptaków i dźwięki natury - z regulacją głośności i cichymi godzinami
 - Fascynujące fakty o ptakach - zachowanie, siedlisko i status ochrony
-- Globalne obserwacje - odkrywaj ptaki z całego świata, kolejne regiony wkrótce
+- Ptaki z Twojego kraju - wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata
 - Interaktywny quiz identyfikacji ptaków - sprawdź swoją wiedzę i podziel się wynikami
 - Historia obserwacji - śledź każdego odkrytego ptaka
 - Zegar i minutnik - zachowaj skupienie, ciesząc się naturą
@@ -35,6 +35,7 @@ IDEALNE DLA
 
 CO NOWEGO
 
+2.1.0 - Ptaki dla każdego kraju: wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata. Do tego lepsza obsługa offline, szybsza pierwsza karta oraz ulepszenia dla klawiatury i czytników ekranu.
 2.0.0 - Zdjęcia w wysokiej rozdzielczości, międzynarodowe regiony, zegar, minutnik, znacznie ulepszona obsługa offline i odświeżone doświadczenie nowej karty.
 1.3.9 - Dymek informacyjny o ptaku z mapą zasięgu i opisem ptaka. Tryb bez rozpraszania.
 1.3.7 - Skróty Google Apps dodane do interfejsu.

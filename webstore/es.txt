@@ -11,7 +11,7 @@ CARACTERÍSTICAS PRINCIPALES
 - Nuevo fondo de pantalla de ave con cada nueva pestaña - fotografía de vida silvestre en alta resolución
 - Cantos de aves y sonidos de naturaleza auténticos - con volumen ajustable y horas de silencio
 - Datos fascinantes sobre aves - comportamiento, hábitat y estado de conservación
-- Aves del mundo entero - explora aves de todo el planeta, con más regiones en camino
+- Aves de tu país - elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo
 - Quiz interactivo de identificación de aves - pon a prueba tus conocimientos y comparte resultados
 - Historial de observación - registra cada ave que has descubierto
 - Reloj y temporizador - mantén el enfoque mientras disfrutas de la naturaleza
@@ -35,6 +35,7 @@ PERFECTO PARA
 
 NOVEDADES
 
+2.1.0 - Aves para cada país: elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo. Además, mejor soporte offline, una primera pestaña más rápida y mejoras para teclado y lectores de pantalla.
 2.0.0 - Fotos en alta resolución, regiones internacionales, reloj, temporizador, soporte offline mejorado y una experiencia renovada.
 1.3.9 - Popover de información del ave con mapa de distribución y descripción del ave. Modo sin distracciones.
 1.3.7 - Accesos directos de Google Apps añadidos a la interfaz.
