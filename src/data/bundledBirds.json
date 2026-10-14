@@ -25,6 +25,7 @@
         "latitude": null,
         "longitude": null,
         "capturedAt": "2025-06-08",
+        "capturedAtApprox": null,
         "renditions": {
           "default": {
             "url": "images/bundled-birds/eubeat1.avif",
@@ -50,6 +51,7 @@
         "latitude": null,
         "longitude": null,
         "recordedAt": null,
+        "recordedAtApprox": null,
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/8cb080034a0fe39247051b0e3dd5d255c809ef49a65b9679278a7399440edf78.opus",
@@ -85,6 +87,7 @@
         "latitude": null,
         "longitude": null,
         "capturedAt": null,
+        "capturedAtApprox": null,
         "renditions": {
           "default": {
             "url": "images/bundled-birds/norpin.avif",
@@ -110,6 +113,7 @@
         "latitude": 60.7269,
         "longitude": 27.0965,
         "recordedAt": "2021-05-22",
+        "recordedAtApprox": null,
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/0c90b191b4f1c8dd56dbef4fa40b295870ddf3b0c7cf9e76396a2902a88d3766.opus",
@@ -145,6 +149,7 @@
         "latitude": null,
         "longitude": null,
         "capturedAt": "2015-05-21",
+        "capturedAtApprox": null,
         "renditions": {
           "default": {
             "url": "images/bundled-birds/bkwsti.avif",
@@ -170,6 +175,7 @@
         "latitude": 50.1278,
         "longitude": 1.7553,
         "recordedAt": "2025-04-19",
+        "recordedAtApprox": null,
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/3cdfa252ef498fa61a07e49931323bc7e7b23114344325efdc29db41cbb5b7b2.opus",
@@ -205,6 +211,7 @@
         "latitude": null,
         "longitude": null,
         "capturedAt": null,
+        "capturedAtApprox": null,
         "renditions": {
           "default": {
             "url": "images/bundled-birds/osprey.avif",
@@ -229,7 +236,8 @@
         "location": null,
         "latitude": null,
         "longitude": null,
-        "recordedAt": "2015-10-29",
+        "recordedAt": null,
+        "recordedAtApprox": null,
         "renditions": {
           "default": {
             "url": "https://media.birdtab.app/assets/audio/32bb9131dbe358ae27922da3940cc8333b627f9bb9e38ea286e3e396152612c9.opus",

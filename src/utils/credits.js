@@ -20,26 +20,27 @@ export function cleanCreditName(name) {
 }
 
 /**
- * Format a credit date (YYYY-MM-DD, optionally followed by a time) as
- * "May 23, 2007". Returns '' for anything that isn't a real date, so the
- * caller can leave the date out instead of showing "Invalid Date".
+ * Format a credit date for display: "May 23, 2007" for YYYY-MM-DD
+ * (optionally followed by a time), "Mar 2022" for YYYY-MM and "2021" for
+ * YYYY, the last two from the release's *Approx fields. Returns '' for
+ * anything that isn't a real date, so the caller can leave the date out
+ * instead of showing "Invalid Date".
  * @param {string|null|undefined} value
  * @returns {string}
  */
 export function formatCreditDate(value) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})(?!\d)/.exec(String(value ?? '').trim());
+  const match = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?=$|[T\s])/.exec(String(value ?? '').trim());
   if (!match) return '';
   const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const date = new Date(year, month - 1, day);
-  if (
-    year < 1800 ||
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
+  const month = match[2] ? Number(match[2]) : null;
+  const day = match[3] ? Number(match[3]) : null;
+  if (year < 1800) return '';
+  if (month === null) return String(year);
+  const date = new Date(year, month - 1, day ?? 1);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || (day !== null && date.getDate() !== day)) {
     return '';
   }
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return day === null
+    ? date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }

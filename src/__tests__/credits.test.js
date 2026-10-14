@@ -12,6 +12,8 @@ describe('formatCreditDate', () => {
     ['2007-05-23 12:33:14', 'May 23, 2007'],
     ['2021-10-01T10:42:59Z', 'Oct 1, 2021'],
     ['2023-06-25T09:22:44+02:00', 'Jun 25, 2023'],
+    ['2022-03', 'Mar 2022'],
+    ['2021', '2021'],
   ])('%s -> %s', (input, expected) => {
     expect(formatCreditDate(input)).toBe(expected);
   });
@@ -19,10 +21,11 @@ describe('formatCreditDate', () => {
   test.each([
     '2005-07-00',
     '0000-00-00',
+    '0202-07',
+    '2007-13',
+    '20211',
     '0202-07-01',
     '2005-02-30',
-    '2007-05',
-    '2021',
     '23 May 2007 (original upload date)',
     'Unknown date',
     'None-None-None',
@@ -32,6 +35,29 @@ describe('formatCreditDate', () => {
     undefined,
   ])('%p -> empty, never "Invalid Date"', (input) => {
     expect(formatCreditDate(input)).toBe('');
+  });
+});
+
+describe('partial credit dates', () => {
+  test('a month- or year-only date from the release is shown when there is no full date', () => {
+    const bird = adaptSpeciesToBirdInfo({
+      speciesCode: 'blakit1',
+      primaryComName: 'Black Kite',
+      image: { capturedAt: null, capturedAtApprox: '2021' },
+      audio: { recordedAt: null, recordedAtApprox: '2022-03' },
+    });
+    expect(formatCreditDate(bird.audioDate)).toBe('Mar 2022');
+    expect(formatCreditDate(bird.imageDate)).toBe('2021');
+  });
+
+  test('a full date wins over the partial one', () => {
+    const bird = adaptSpeciesToBirdInfo({
+      speciesCode: 'x',
+      primaryComName: 'X',
+      image: {},
+      audio: { recordedAt: '2022-03-05', recordedAtApprox: '2022-03' },
+    });
+    expect(bird.audioDate).toBe('2022-03-05');
   });
 });
 

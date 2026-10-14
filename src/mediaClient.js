@@ -1073,7 +1073,7 @@ export function adaptSpeciesToBirdInfo(entry) {
     imageLocation: entry.image?.location ?? null,
     imageLatitude: entry.image?.latitude ?? null,
     imageLongitude: entry.image?.longitude ?? null,
-    imageDate: entry.image?.capturedAt ?? null,
+    imageDate: entry.image?.capturedAt ?? entry.image?.capturedAtApprox ?? null,
     imageResized: entry.image?.renditions?.default?.resized ?? false,
 
     audioSource: entry.audio?.source ?? null,
@@ -1086,7 +1086,7 @@ export function adaptSpeciesToBirdInfo(entry) {
     audioLocation: entry.audio?.location ?? null,
     audioLatitude: entry.audio?.latitude ?? null,
     audioLongitude: entry.audio?.longitude ?? null,
-    audioDate: entry.audio?.recordedAt ?? null,
+    audioDate: entry.audio?.recordedAt ?? entry.audio?.recordedAtApprox ?? null,
     audioConvertedFormat: entry.audio?.renditions?.default?.format ?? null,
     audioDurationSeconds: entry.audio?.renditions?.default?.durationSeconds ?? null,
     audioDurationFormatted: entry.audio?.renditions?.default?.durationFormatted ?? null,
