@@ -9,6 +9,7 @@ const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const { rimraf } = require('rimraf');
 const fs = require('fs');
 const Dotenv = require('dotenv-webpack');
+const { diffPermissions, PERMISSIONS_BASELINE } = require('./scripts/permissions_baseline');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -64,6 +65,23 @@ module.exports = (env, argv) => {
 
         if (!isProduction && manifest.externally_connectable?.matches) {
           manifest.externally_connectable.matches.push('https://birdtab.jaipandya.com/*');
+        }
+
+        // Dev builds only: allow a local media server (MEDIA_BASE_URL=http://localhost:8787)
+        if (!isProduction && Array.isArray(manifest.host_permissions)) {
+          manifest.host_permissions.push('http://localhost/*');
+        }
+
+        // Production builds must keep the 2.0.3 permissions so the update
+        // installs without a re-consent prompt.
+        if (isProduction) {
+          const differences = diffPermissions(manifest);
+          if (differences.length > 0) {
+            throw new Error(
+              `manifest.json permissions differ from ${PERMISSIONS_BASELINE.version} ` +
+              `(users would have to re-approve the extension):\n  ${differences.join('\n  ')}`
+            );
+          }
         }
 
         return JSON.stringify(manifest, null, 2) + '\n';
