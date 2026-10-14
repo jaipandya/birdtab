@@ -54,6 +54,7 @@
   --surface-elevated: rgba(42, 42, 42, 0.98);
   --surface-modal: #18181b;
   --surface-select: #2a2a2a;
+  --surface-onboarding: #0a0a0a; /* also inline in onboarding.html (pre-paint) */
 
   /* ── Dark gradient (quiz share preview) ── */
   --gradient-dark-start: #1a1a2e;

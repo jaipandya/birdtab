@@ -615,22 +615,6 @@
     "message": "Laden...",
     "description": "Loading text placeholder"
   },
-  "networkErrorTitle": {
-    "message": "Vögel nicht erreichbar",
-    "description": "Title for network error when no cached birds available"
-  },
-  "networkErrorMessage": {
-    "message": "Wir haben Probleme, eine Verbindung zu unserer Vogeldatenbank herzustellen. Dies könnte an Netzwerkproblemen auf Ihrer oder unserer Seite liegen.",
-    "description": "Message explaining the network error"
-  },
-  "networkErrorSuggestion": {
-    "message": "Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut. Wenn dies weiterhin passiert, würden wir gerne von Ihnen hören!",
-    "description": "Suggestion for resolving network error"
-  },
-  "contactSupport": {
-    "message": "Support kontaktieren",
-    "description": "Button text to contact support"
-  },
   "volumeTooltip": {
     "message": "Lautstärke anpassen",
     "description": "Tooltip for volume button"
@@ -1095,6 +1079,22 @@
     "message": "Hier findest du den Fotografen und Tonaufnahmekünstler für jeden Vogel. Tippe auf einen Namen, um mehr über die Person und die Lizenz zu erfahren.",
     "description": "Feature tour: credits line description"
   },
+  "tourBirdNameTitle": {
+    "message": "Lernen Sie den Vogel kennen",
+    "description": "Feature tour: bird name step title"
+  },
+  "tourBirdNameDescription": {
+    "message": "Klicken Sie auf den Namen des Vogels, um Fakten, seinen Schutzstatus und eine Karte seines Verbreitungsgebiets zu sehen.",
+    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
+  },
+  "imageLoadFailedMessage": {
+    "message": "Dieses Foto konnte nicht geladen werden.",
+    "description": "Shown in place of the bird photo when it fails to load"
+  },
+  "imageOfflineMessage": {
+    "message": "Sie sind offline. Das Foto erscheint, sobald Sie wieder online sind.",
+    "description": "Shown in place of the bird photo when the browser is offline"
+  },
   "tourOptionsMenuTitle": {
     "message": "Schnellmenü",
     "description": "Feature tour: options menu title"
@@ -1187,6 +1187,14 @@
     "message": "Verbreitungskarte wird geladen...",
     "description": "Loading text shown while the bird range map is loading"
   },
+  "rangeMapOffline": {
+    "message": "Die Verbreitungskarte benötigt eine Internetverbindung",
+    "description": "Shown in place of the range map when the browser is offline"
+  },
+  "rangeMapUnavailable": {
+    "message": "Die Verbreitungskarte konnte nicht geladen werden",
+    "description": "Shown in place of the range map when it takes too long to load"
+  },
   "closeHistoryAriaLabel": {
     "message": "Verlauf schließen",
     "description": "Aria label for close history button"
@@ -1218,10 +1226,6 @@
   "regionHighSeas": {
     "message": "Hohe See",
     "description": "Label for the High Seas (XX) region option in the region selector"
-  },
-  "preparingExperience": {
-    "message": "Ihre Erfahrung wird vorbereitet…",
-    "description": "Loading message shown during onboarding while manifest downloads"
   },
   "creditPhotoBy": {
     "message": "Foto von",

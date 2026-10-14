@@ -26,7 +26,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #0a0a0a;
+  background: var(--surface-onboarding);
   color: var(--white-90);
   position: relative;
   overflow: hidden;
@@ -401,15 +401,3 @@ input:focus + .slider {
   }
 }
 
-.start-btn.loading {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-.start-btn.loading span {
-  opacity: 0.8;
-}
-
-.start-btn:disabled {
-  pointer-events: none;
-}

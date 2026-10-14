@@ -141,6 +141,9 @@ export function createOptionsMenu(config) {
         option.choices.forEach((choice, choiceIndex) => {
           const choiceItem = document.createElement('div');
           choiceItem.className = 'options-menu-choice';
+          choiceItem.setAttribute('role', 'menuitemradio');
+          choiceItem.setAttribute('tabindex', '-1');
+          choiceItem.setAttribute('aria-checked', String(choice.value === option.value));
           if (choice.value === option.value) {
             choiceItem.classList.add('selected');
           }
@@ -184,8 +187,12 @@ export function createOptionsMenu(config) {
             radio.checked = true;
 
             // Update selected states
-            choicesContainer.querySelectorAll('.options-menu-choice').forEach(c => c.classList.remove('selected'));
+            choicesContainer.querySelectorAll('.options-menu-choice').forEach(c => {
+              c.classList.remove('selected');
+              c.setAttribute('aria-checked', 'false');
+            });
             choiceItem.classList.add('selected');
+            choiceItem.setAttribute('aria-checked', 'true');
 
             // Update displayed icon
             if (choice.icon) {
@@ -202,6 +209,10 @@ export function createOptionsMenu(config) {
 
             // Collapse after selection
             item.classList.remove('expanded');
+            item.setAttribute('aria-expanded', 'false');
+            if (choicesContainer.contains(document.activeElement)) {
+              item.focus();
+            }
           });
         });
 
@@ -211,8 +222,11 @@ export function createOptionsMenu(config) {
         header.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          item.classList.toggle('expanded');
+          const expanded = item.classList.toggle('expanded');
+          item.setAttribute('aria-expanded', String(expanded));
         });
+        item.setAttribute('aria-haspopup', 'true');
+        item.setAttribute('aria-expanded', 'false');
 
         // Store reference for updating
         option._selectedIcon = selectedIcon;
@@ -298,6 +312,10 @@ export function createOptionsMenu(config) {
     if (top + menuRect.height > window.innerHeight - padding) {
       top = window.innerHeight - menuRect.height - padding;
     }
+    if (top < padding && position === 'top') {
+      // No room above the anchor (controls in the top corner): open below it
+      top = Math.min(anchorRect.bottom + 10, window.innerHeight - menuRect.height - padding);
+    }
     if (top < padding) {
       top = padding;
     }
@@ -326,12 +344,16 @@ export function createOptionsMenu(config) {
 
     // Position after a frame to ensure dimensions are calculated
     requestAnimationFrame(() => {
+      if (!menuElement) return;
       positionMenu();
       menuElement.classList.add('options-menu-visible');
       menuElement.setAttribute('aria-hidden', 'false');
+      // Move focus into the menu so it can be used from the keyboard
+      getFocusableItems()[0]?.focus({ preventScroll: true });
     });
 
     isOpen = true;
+    triggerElement?.setAttribute('aria-expanded', 'true');
 
     // Close when clicking outside
     setTimeout(() => {
@@ -359,6 +381,7 @@ export function createOptionsMenu(config) {
     }, 150);
     
     isOpen = false;
+    triggerElement?.setAttribute('aria-expanded', 'false');
     
     document.removeEventListener('click', handleOutsideClick, true);
     document.removeEventListener('keydown', handleKeydown);
@@ -409,8 +432,48 @@ export function createOptionsMenu(config) {
    */
   function handleKeydown(e) {
     if (e.key === 'Escape') {
+      const focusWasInside = menuElement?.contains(document.activeElement);
       close();
+      if (focusWasInside) triggerElement?.focus();
+      return;
     }
+
+    if (!menuElement || !menuElement.contains(document.activeElement)) return;
+    const current = document.activeElement;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // A select item expands through its header; everything else handles click
+      const target = current.classList.contains('options-menu-select')
+        ? current.querySelector('.options-menu-select-header')
+        : current;
+      target?.click();
+      return;
+    }
+
+    const items = getFocusableItems();
+    const index = items.indexOf(current);
+    let next = null;
+    if (e.key === 'ArrowDown') next = items[(index + 1) % items.length];
+    else if (e.key === 'ArrowUp') next = items[(index - 1 + items.length) % items.length];
+    else if (e.key === 'Home') next = items[0];
+    else if (e.key === 'End') next = items[items.length - 1];
+
+    if (next) {
+      e.preventDefault();
+      next.focus();
+    }
+  }
+
+  /**
+   * Items reachable with the arrow keys: every row, plus the choices of an
+   * expanded select
+   */
+  function getFocusableItems() {
+    if (!menuElement) return [];
+    return Array.from(menuElement.querySelectorAll(
+      '.options-menu-item, .options-menu-select.expanded .options-menu-choice'
+    ));
   }
   
   /**
@@ -444,6 +507,9 @@ export function createOptionsMenu(config) {
   // Bind trigger click
   if (triggerElement) {
     triggerElement.addEventListener('click', handleTriggerClick);
+    triggerElement.setAttribute('aria-haspopup', 'menu');
+    triggerElement.setAttribute('aria-expanded', 'false');
+    triggerElement.setAttribute('aria-controls', menuId);
   }
   
   return {

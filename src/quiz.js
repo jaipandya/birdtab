@@ -4,6 +4,8 @@ import { log } from './logger.js';
 import CONFIG from './config.js';
 import { trackQuizCompleted } from './analytics.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
+import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
+import { resolveMediaUrl, isMediaCached } from './mediaCache.js';
 
 /*
  * Keep the next quiz image warm in the browser cache once the current image
@@ -232,10 +234,14 @@ class QuizMode {
       }
 
       if (e.key.toLowerCase() === 'q') {
-        e.preventDefault();
         if (!this.isActive) {
+          // Starting a quiz is a page-wide shortcut; leave "q" to the region
+          // select, menus, dialogs and the tour
+          if (shouldIgnoreGlobalShortcut(e)) return;
+          e.preventDefault();
           this.startQuiz();
         } else {
+          e.preventDefault();
           this.showExitConfirmation();
         }
       }
@@ -348,8 +354,18 @@ class QuizMode {
     this._birdsByCode = new Map(birds.map(b => [b.speciesCode, b]));
 
     const shuffledBirds = [...birds].sort(() => 0.5 - Math.random());
-    const questionCount = Math.min(QUIZ_TOTAL_QUESTIONS, shuffledBirds.length);
-    const selectedBirds = shuffledBirds.slice(0, questionCount);
+
+    // Offline, only birds with a cached photo can be shown (a shorter quiz
+    // beats broken images); answer options can still be any bird
+    let questionPool = shuffledBirds;
+    if (navigator.onLine === false) {
+      const isCached = await Promise.all(shuffledBirds.map(bird => isMediaCached(bird.imageUrl)));
+      const cached = shuffledBirds.filter((_, i) => isCached[i]);
+      if (cached.length > 0) questionPool = cached;
+    }
+
+    const questionCount = Math.min(QUIZ_TOTAL_QUESTIONS, questionPool.length);
+    const selectedBirds = questionPool.slice(0, questionCount);
 
     this.questions = selectedBirds.map(bird => {
       const distractors = shuffledBirds
@@ -741,8 +757,10 @@ class QuizMode {
     };
 
     try {
-      await this.ensureImagePreloaded(imageUrl);
-      displayImage(imageUrl, question.bird.primaryComName);
+      // The cached copy when there is one (works offline), else the network
+      const src = await resolveMediaUrl(imageUrl);
+      await this.ensureImagePreloaded(src);
+      displayImage(src, question.bird.primaryComName);
     } catch {
       if (!this.isActive) return;
 

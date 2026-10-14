@@ -27,7 +27,6 @@ const IGNORED_ERROR_PATTERNS = [
   'message channel closed',
   'Receiving end does not exist',
   'is not valid JSON',
-  'NETWORK_ERROR_NO_CACHE',
   'Unable to create writable file',
   'Failed to fetch',
 ];

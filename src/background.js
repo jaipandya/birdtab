@@ -17,6 +17,7 @@ import {
   RELEASE_KEY,
 } from './mediaClient.js';
 import { trackRegionSwitch } from './regionSwitchTracker.js';
+import { cacheBirdMedia, cacheMediaFile, pruneMediaCache, clearMediaCache } from './mediaCache.js';
 
 // --- Event listeners registered FIRST ---
 // In MV3, Chrome only delivers pending events after module evaluation completes.
@@ -53,8 +54,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'preloadNext') {
     if (!preloadInProgress) {
       preloadInProgress = true;
-      getSelectedRegion()
-        .then(region => preloadNextBird(region))
+      keepRecentMediaCached()
+        .then(() => getSelectedRegion())
+        .then(region => fillReadyQueue(region))
         .catch(error => log(`Preload failed: ${error.message}`))
         .finally(() => {
           preloadInProgress = false;
@@ -67,7 +69,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'deleteCache') {
     (async () => {
       await clearCache();
-      await chrome.storage.local.remove('preloadedBird');
+      await chrome.storage.local.remove(['preloadedBird', 'readyBirds']);
       // Re-run bootstrap to simulate service worker cold start
       bootstrap({ forceRefresh: true });
     })();
@@ -160,110 +162,117 @@ self.addEventListener('unhandledrejection', (event) => {
   });
 });
 
-async function fetchBirdInfo(region) {
-  log(`Fetching bird info for region: ${region}`);
-  const startTime = Date.now();
-  addBreadcrumb(`Fetching bird info for region: ${region}`, 'http', 'info');
+// Birds whose media is cached ahead of time, for the next new tabs
+const READY_QUEUE_SIZE = 3;
+// Recently shown birds whose photo stays cached, for tabs opened offline
+const RECENT_HISTORY_KEPT = 10;
+// Of those, how many keep their recording too. A recording is about 17 times
+// the size of a photo (medians 1.7 MB and 100 KB), so older birds keep only
+// the photo.
+const RECENT_AUDIO_KEPT = 3;
 
-  try {
-    const birdInfo = await getRandomBird(region);
-    if (!birdInfo) {
-      throw new Error('No bird found in manifest for region ' + region);
-    }
-
-    birdInfo.location = birdInfo.location || region;
-
-    log(`Bird info compiled: ${birdInfo.name} (${birdInfo.speciesCode})`);
-    const duration = Date.now() - startTime;
-    addBreadcrumb('Bird info fetched successfully', 'http', 'info', {
-      duration,
-      region,
-      speciesCode: birdInfo.speciesCode,
-    });
-
-    return birdInfo;
-  } catch (error) {
-    log(`Error in fetchBirdInfo: ${error.message}`);
-    const duration = Date.now() - startTime;
-    addBreadcrumb('Bird info fetch failed', 'http', 'error', { duration, region });
-
-    const cachedBirdInfo = await getRandomCachedBirdInfo();
-    if (cachedBirdInfo) {
-      addBreadcrumb('Using cached bird info as fallback', 'fallback', 'warning');
-      log(`Falling back to cached bird: ${cachedBirdInfo.name}`);
-      return cachedBirdInfo;
-    }
-
-    captureException(error, {
-      tags: { operation: 'fetchBirdInfo' },
-      extra: { region, duration }
-    });
-
-    throw new Error('NETWORK_ERROR_NO_CACHE');
-  }
+async function getRecentHistory(limit) {
+  const { viewHistory } = await chrome.storage.local.get('viewHistory');
+  const history = Array.isArray(viewHistory?.value) ? viewHistory.value : [];
+  return history.slice(-limit);
 }
 
-async function getRandomCachedBirdInfo() {
-  return new Promise(resolve => {
-    chrome.storage.local.get('viewHistory', result => {
-      const history = result.viewHistory;
-      if (Array.isArray(history) && history.length > 0) {
-        const bird = history[Math.floor(Math.random() * history.length)];
-        if (bird && bird.name) {
-          log(`Found cached bird from history: ${bird.name}`);
-          resolve(bird);
-          return;
-        }
-      }
-      resolve(null);
-    });
-  });
-}
-
-async function preloadNextBird(region) {
+/**
+ * Top up readyBirds to READY_QUEUE_SIZE birds with cached media, in the order
+ * the next tabs need it:
+ *   1. the next bird's photo and recording
+ *   2. the photos of the other queued birds (a bird joins the queue once its
+ *      photo is cached)
+ *   3. their recordings
+ * Stops at the first photo that can't be cached (offline or failing network);
+ * the next new tab tries again. A queued bird without a cached recording
+ * still plays it from the network when online.
+ */
+async function fillReadyQueue(region) {
   const generation = preloadGeneration;
+  const stale = () => generation !== preloadGeneration;
+  addBreadcrumb(`Filling ready queue for region: ${region}`, 'http', 'info');
+
   try {
-    const birdInfo = await fetchBirdInfo(region);
-    log('Bird info fetched successfully for preloading');
+    // The bird queued first is the next tab's: give it its recording right away
+    const { readyBirds: queued = [] } = await chrome.storage.local.get('readyBirds');
+    if (queued[0]?.mediaUrl) await cacheMediaFile(queued[0].mediaUrl);
 
-    if (generation !== preloadGeneration) {
-      log('Region changed during preload, discarding bird');
-      return;
-    }
+    for (let attempt = 0; attempt < READY_QUEUE_SIZE; attempt++) {
+      if (stale()) return;
+      const { readyBirds = [] } = await chrome.storage.local.get('readyBirds');
+      if (readyBirds.length >= READY_QUEUE_SIZE) break;
 
-    // Store preloaded bird in chrome.storage.local so the content script
-    // can read it directly without needing to message the service worker.
-    // This avoids MV3 service worker lifecycle issues entirely.
-    chrome.storage.local.set({ preloadedBird: birdInfo });
+      const recent = await getRecentHistory(RECENT_HISTORY_KEPT);
+      const exclude = new Set([...readyBirds, ...recent].map(b => b.speciesCode));
+      const birdInfo = await getRandomBird(region, exclude);
+      if (!birdInfo) throw new Error('No bird found in manifest for region ' + region);
+      birdInfo.location = birdInfo.location || region;
 
-    // Prefetch image first (critical), then audio (lower priority).
-    // Sequential to avoid bandwidth contention between the two.
-    if (birdInfo.imageUrl) {
-      try {
-        await fetch(birdInfo.imageUrl, { mode: 'no-cors' });
-        log('Next bird image preloaded');
-      } catch (error) {
-        log(`Error preloading image: ${error.message}`);
+      const imageCached = await cacheMediaFile(birdInfo.imageUrl);
+      if (stale()) {
+        log('Region changed while filling the ready queue, stopping');
+        return;
+      }
+      if (!imageCached) {
+        log(`Could not cache the photo of ${birdInfo.name}, stopping the ready queue fill`);
+        break;
+      }
+
+      const { readyBirds: latest = [] } = await chrome.storage.local.get('readyBirds');
+      if (!latest.some(b => b.speciesCode === birdInfo.speciesCode)) {
+        await chrome.storage.local.set({ readyBirds: [...latest, birdInfo] });
+        log(`Queued ${birdInfo.name} with its photo cached`);
+        if (latest.length === 0 && birdInfo.mediaUrl) await cacheMediaFile(birdInfo.mediaUrl);
       }
     }
 
-    if (birdInfo.mediaUrl) {
-      try {
-        await fetch(birdInfo.mediaUrl, { mode: 'no-cors' });
-        log('Next bird audio preloaded');
-      } catch (error) {
-        log(`Error preloading audio: ${error.message}`);
-      }
+    // Recordings of the rest of the queue, in the order they'll be shown
+    const { readyBirds: final = [] } = await chrome.storage.local.get('readyBirds');
+    for (const bird of final) {
+      if (stale()) return;
+      if (bird.mediaUrl && !(await cacheMediaFile(bird.mediaUrl))) break;
     }
-
-    log('Next bird preloaded');
   } catch (error) {
-    log(`Error preloading next bird: ${error.message}`);
+    log(`Error filling ready queue: ${error.message}`);
     reportApiError(error, {
-      operation: 'preloadNextBird',
+      operation: 'fillReadyQueue',
       transientLevel: 'info',
       extra: { region },
     });
+  }
+
+  await pruneCachedMedia();
+}
+
+/**
+ * Cache the media of the bird on screen, so it can be shown again offline.
+ * Usually a cheap HTTP cache hit, as the page just loaded it.
+ */
+async function keepRecentMediaCached() {
+  const [current] = await getRecentHistory(1);
+  if (current) await cacheBirdMedia(current);
+}
+
+/**
+ * Drop cached media no longer needed. Kept: everything of the ready queue and
+ * a legacy preloaded bird, photos of the last RECENT_HISTORY_KEPT birds shown,
+ * and recordings of the last RECENT_AUDIO_KEPT.
+ */
+async function pruneCachedMedia() {
+  try {
+    const { readyBirds = [], preloadedBird } = await chrome.storage.local.get(['readyBirds', 'preloadedBird']);
+    const recent = await getRecentHistory(RECENT_HISTORY_KEPT);
+    const upcoming = preloadedBird ? [...readyBirds, preloadedBird] : readyBirds;
+    const keep = [
+      ...upcoming.flatMap(b => [b.imageUrl, b.mediaUrl]),
+      ...recent.map(b => b.imageUrl),
+      ...recent.slice(-RECENT_AUDIO_KEPT).map(b => b.mediaUrl),
+    ];
+    const removed = await pruneMediaCache(keep);
+    if (removed > 0) log(`Removed ${removed} media files from the cache`);
+  } catch (error) {
+    log(`Pruning media cache failed: ${error.message}`);
   }
 }
 
@@ -281,7 +290,8 @@ function clearLegacyCacheKeys() {
 async function clearCache() {
   clearLegacyCacheKeys();
   await clearManifestCache();
-  log('Manifest cache cleared');
+  await clearMediaCache();
+  log('Manifest and media caches cleared');
 }
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -291,7 +301,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     const region = changes.region.newValue;
     log(`Region changed to ${region}, preloading the next bird from it`);
     preloadGeneration++;
-    chrome.storage.local.remove('preloadedBird', () => preloadNextBird(region));
+    chrome.storage.local.remove(['preloadedBird', 'readyBirds'], () => fillReadyQueue(region));
     updateUserContext({ region });
   }
 
@@ -330,11 +340,8 @@ async function bootstrap({ forceRefresh = false } = {}) {
   // preload; the next new tab or SW start tries again.
   if (!ready) return;
 
-  // Keep a 2.0.x preloaded bird (or one from this session) for the next tab
-  const { preloadedBird } = await chrome.storage.local.get('preloadedBird');
-  if (!preloadedBird) {
-    preloadNextBird(await getSelectedRegion());
-  }
+  // A preloaded bird left by 2.0.x is still shown first
+  fillReadyQueue(await getSelectedRegion());
 }
 
 // Run bootstrap eagerly on service worker start

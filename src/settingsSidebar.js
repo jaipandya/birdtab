@@ -8,6 +8,7 @@ import { IS_EDGE } from './browserInfo.js';
 import { RegionSelector } from './regionSelector.js';
 import CONFIG from './config.js';
 import { updateUserContext } from './sentry.js';
+import { announce } from './loadingIndicators.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -108,16 +109,15 @@ class SettingsSidebar {
                     <img src="images/svg/microphone.svg" alt="" width="18" height="18" class="setting-icon">
                     <span data-i18n="autoPlayBirdCalls">Auto-play media</span>
                   </span>
-                  <p class="help-text" data-i18n="autoPlayHelpText">Automatically play bird calls in photo mode or videos in video mode with each new tab. Quiet hours will override this when active.</p>
+                  <p class="help-text" data-i18n="autoPlayHelpText">Automatically play bird calls with each new tab. Quiet hours will override this when active.</p>
                 </div>
-                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls or videos when you open a new tab">
+                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
                   <input type="checkbox" id="modal-auto-play">
                   <span class="slider round"></span>
                 </label>
               </div>
             </div>
 
-            <!-- Video Mode and High-Res toggles removed -->
 
             <div class="setting">
               <div class="toggle-container">
@@ -860,6 +860,7 @@ class SettingsSidebar {
 
     // Add to document
     document.body.appendChild(notification);
+    announce(notification.textContent);
 
     // Show notification with animation after processing delay
     setTimeout(() => {

@@ -173,6 +173,20 @@ function closeInfoPopover({ returnFocus = false } = {}) {
   }, 150);
 }
 
+// How long the range map may take before it's reported as unavailable
+const RANGE_MAP_TIMEOUT_MS = 15000;
+
+/**
+ * Replace the range map's loading state with a static message.
+ */
+function showMapUnavailable(mapContainer, message) {
+  const loading = mapContainer.querySelector('.info-popover__map-loading');
+  if (!loading) return;
+  loading.classList.add('info-popover__map-loading--unavailable');
+  const text = loading.querySelector('.info-popover__map-loading-text');
+  if (text) text.textContent = message;
+}
+
 function openInfoPopover() {
   const trigger = infoPopoverTrigger;
   if (!trigger) return;
@@ -240,12 +254,13 @@ function openInfoPopover() {
               </svg>
               <span class="info-popover__map-loading-text">${chrome.i18n.getMessage('loadingRangeMap') || 'Loading range map...'}</span>
             </div>
+            ${navigator.onLine === false ? '' : `
             <iframe
               src="https://ebird.org/embedmap/${encodeURIComponent(speciesCode)}"
               class="info-popover__map"
               title="${chrome.i18n.getMessage('rangeMap') || 'Range map'}"
               referrerpolicy="no-referrer"
-            ></iframe>
+            ></iframe>`}
           </div>
         </div>
       ` : ''}
@@ -254,8 +269,15 @@ function openInfoPopover() {
 
   const iframe = popoverElement.querySelector('.info-popover__map');
   const mapContainer = popoverElement.querySelector('.info-popover__map-container');
-  if (iframe && mapContainer) {
+  if (mapContainer && !iframe) {
+    // Offline: the map is an eBird page, so say so instead of loading forever
+    showMapUnavailable(mapContainer, chrome.i18n.getMessage('rangeMapOffline') || 'The range map needs an internet connection');
+  } else if (iframe && mapContainer) {
+    const timeout = setTimeout(() => {
+      showMapUnavailable(mapContainer, chrome.i18n.getMessage('rangeMapUnavailable') || 'The range map couldn\'t be loaded');
+    }, RANGE_MAP_TIMEOUT_MS);
     iframe.addEventListener('load', () => {
+      clearTimeout(timeout);
       mapContainer.classList.add('info-popover__map-container--loaded');
     });
   }

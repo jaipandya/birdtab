@@ -1,0 +1,245 @@
+{
+  "release": "m261014r01",
+  "species": [
+    {
+      "speciesCode": "eubeat1",
+      "primaryComName": "European Bee-eater",
+      "primaryComName_fr": "Guêpier d'Europe",
+      "primaryComName_cn": "黄喉蜂虎",
+      "scientificName": "Merops apiaster",
+      "description": "Spectacularly colorful and unmistakable long-billed insect-eater with a bright yellow throat, gemstone-blue belly, and flame-colored back. Found in open and semiopen country, mainly in drier areas; nests colonially in burrows dug into sand banks, often river banks. Usually seen perched on wires or circling in swallowlike flight, often in small groups; feeds by catching insects (especially bees) on the wing. Quite vocal, often giving distinctive pipping calls.",
+      "conservationStatus": "LC Least Concern",
+      "ebirdUrl": "https://ebird.org/species/eubeat1",
+      "image": {
+        "sourceKey": "wikimedia",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:019_European_bee-eater_in_flight_in_in_Pfyn-Finges_Photo_by_Giles_Laurent.jpg",
+        "license": "CC-BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creatorName": "Giles Laurent",
+        "creatorUrl": "https://commons.wikimedia.org/wiki/User:Giles%20Laurent",
+        "title": "019 European bee-eater in flight in in Pfyn-Finges Photo by Giles Laurent.jpg",
+        "titleIsSynthetic": true,
+        "caption": "European bee-eater in flight in in Pfyn-Finges, Switzerland",
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "capturedAt": "2025-06-08 14:18:24",
+        "renditions": {
+          "default": {
+            "url": "images/bundled-birds/eubeat1.avif",
+            "width": 2400,
+            "height": 1600,
+            "format": "avif",
+            "resized": true
+          }
+        }
+      },
+      "audio": {
+        "sourceKey": "wikimedia-audio",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bijeneter_-_SoundCloud_-_Beeld_en_Geluid.ogg",
+        "license": "CC-BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "creatorName": "Beeld en Geluid",
+        "creatorUrl": "https://commons.wikimedia.org/wiki/User:MartsniezBot",
+        "title": "Bijeneter - SoundCloud - Beeld en Geluid.ogg",
+        "titleIsSynthetic": true,
+        "soundType": null,
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "recordedAt": "None-None-None",
+        "renditions": {
+          "default": {
+            "url": "https://media.birdtab.app/assets/audio/8cb080034a0fe39247051b0e3dd5d255c809ef49a65b9679278a7399440edf78.opus",
+            "format": "opus",
+            "durationSeconds": 46,
+            "durationFormatted": "0:46",
+            "converted": true
+          }
+        }
+      }
+    },
+    {
+      "speciesCode": "norpin",
+      "primaryComName": "Northern Pintail",
+      "primaryComName_fr": "Canard pilet",
+      "primaryComName_cn": "针尾鸭",
+      "scientificName": "Anas acuta",
+      "description": "Elegant, slender duck with long neck and tail. Males have a chocolate brown head with a white slash coming up the neck, white breast, and mostly gray body. Females are patterned light brown. Forages in wetlands and in fields on agricultural waste grains.",
+      "conservationStatus": "LC Least Concern",
+      "ebirdUrl": "https://ebird.org/species/norpin",
+      "image": {
+        "sourceKey": "wikimedia",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Male_northern_pintail_at_Llano_Seco.jpg",
+        "license": "CC-BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creatorName": "Frank Schulenburg",
+        "creatorUrl": null,
+        "title": null,
+        "titleIsSynthetic": false,
+        "caption": null,
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "capturedAt": null,
+        "renditions": {
+          "default": {
+            "url": "images/bundled-birds/norpin.avif",
+            "width": 2400,
+            "height": 1500,
+            "format": "avif",
+            "resized": true
+          }
+        }
+      },
+      "audio": {
+        "sourceKey": "xeno-canto",
+        "source": "Xeno-canto",
+        "sourceUrl": "https://xeno-canto.org/650943",
+        "license": "CC-BY-NC-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "creatorName": "Eetu Paljakka",
+        "creatorUrl": null,
+        "title": "XC650943-Default project.mp3",
+        "titleIsSynthetic": true,
+        "soundType": "alarm call, call",
+        "location": "Ruotila, Sippola, Kymenlaakso",
+        "latitude": 60.7269,
+        "longitude": 27.0965,
+        "recordedAt": "2021-05-22",
+        "renditions": {
+          "default": {
+            "url": "https://media.birdtab.app/assets/audio/0c90b191b4f1c8dd56dbef4fa40b295870ddf3b0c7cf9e76396a2902a88d3766.opus",
+            "format": "opus",
+            "durationSeconds": 64,
+            "durationFormatted": "1:04",
+            "converted": true
+          }
+        }
+      }
+    },
+    {
+      "speciesCode": "bkwsti",
+      "primaryComName": "Black-winged Stilt",
+      "primaryComName_fr": "Échasse blanche",
+      "primaryComName_cn": "黑翅长脚鹬",
+      "scientificName": "Himantopus himantopus",
+      "description": "Striking large black-and-white wader with a thin, straight bill and bright pink legs, found in wetlands with open shallow water throughout much of Africa and Eurasia, often in brackish habitats. Some populations are migratory, departing northerly breeding grounds for warmer southern regions. Often forms noisy colonies on bare ground near water. Essentially unmistakable throughout much of its range, but compare with Pied Stilt in parts of Southeast Asia. Feeds by wading in water, picking from the water surface with its needle-like bill. In flight, long pink legs stick out far beyond the tail. Calls loudly and stridently, especially when alarmed during the breeding season.",
+      "conservationStatus": null,
+      "ebirdUrl": "https://ebird.org/species/bkwsti",
+      "image": {
+        "sourceKey": "wikimedia",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Black-winged_stilt_courtship_behaviour.jpg",
+        "license": "CC-BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creatorName": "Ryzhkov Sergey",
+        "creatorUrl": "https://commons.wikimedia.org/wiki/User:Ryzhkov%20Sergey",
+        "title": "Black-winged stilt courtship behaviour.jpg",
+        "titleIsSynthetic": true,
+        "caption": "Black-winged stilt courtship behaviour ( Himantopus himantopus ). Kinburn Peninsula , Ukraine",
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "capturedAt": "2015-05-21 18:18:07",
+        "renditions": {
+          "default": {
+            "url": "images/bundled-birds/bkwsti.avif",
+            "width": 2400,
+            "height": 1600,
+            "format": "avif",
+            "resized": true
+          }
+        }
+      },
+      "audio": {
+        "sourceKey": "xeno-canto",
+        "source": "Xeno-canto",
+        "sourceUrl": "https://xeno-canto.org/990305",
+        "license": "CC-BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "creatorName": "Noé Ferrari",
+        "creatorUrl": null,
+        "title": "XC990305-Cambron-19.04.25.wav",
+        "titleIsSynthetic": true,
+        "soundType": "alarm call, call",
+        "location": "Arrondissement d'Abbeville (near  Cambron), Somme, Hauts-de-France",
+        "latitude": 50.1278,
+        "longitude": 1.7553,
+        "recordedAt": "2025-04-19",
+        "renditions": {
+          "default": {
+            "url": "https://media.birdtab.app/assets/audio/3cdfa252ef498fa61a07e49931323bc7e7b23114344325efdc29db41cbb5b7b2.opus",
+            "format": "opus",
+            "durationSeconds": 40,
+            "durationFormatted": "0:40",
+            "converted": true
+          }
+        }
+      }
+    },
+    {
+      "speciesCode": "osprey",
+      "primaryComName": "Osprey",
+      "primaryComName_fr": "Balbuzard pêcheur",
+      "primaryComName_cn": "鹗",
+      "scientificName": "Pandion haliaetus",
+      "description": "Large, mostly white raptor that cruises over lakes, rivers, and coastal waterways in search of fish. Impressively widespread: found on every continent except Antarctica. Mostly white head and underparts; dark brown back. In flight, holds wings with a kink in the wrist (shaped like an \"M\"). Stick nests are conspicuous on top of channel markers, utility poles and high platforms near water. Often seen plunging feet-first into water from high in the air to grab fish.",
+      "conservationStatus": "LC Least Concern",
+      "ebirdUrl": "https://ebird.org/species/osprey",
+      "image": {
+        "sourceKey": "wikimedia",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Osprey_Fish_Eye.png",
+        "license": "CC-BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creatorName": "Chuck Homler / Focus On Wildlife",
+        "creatorUrl": null,
+        "title": null,
+        "titleIsSynthetic": false,
+        "caption": null,
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "capturedAt": null,
+        "renditions": {
+          "default": {
+            "url": "images/bundled-birds/osprey.avif",
+            "width": 2400,
+            "height": 1602,
+            "format": "avif",
+            "resized": true
+          }
+        }
+      },
+      "audio": {
+        "sourceKey": "wikimedia-audio",
+        "source": "Wikimedia",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Osprey_(Pandion_haliaetus)_(W1CDR0001434_BD8).ogg",
+        "license": "CC-BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creatorName": "Ndalyrose",
+        "creatorUrl": "https://commons.wikimedia.org/wiki/User:Ndalyrose",
+        "title": "Osprey (Pandion haliaetus) (W1CDR0001434 BD8).ogg",
+        "titleIsSynthetic": true,
+        "soundType": null,
+        "location": null,
+        "latitude": null,
+        "longitude": null,
+        "recordedAt": "2015-10-29 17:27:21",
+        "renditions": {
+          "default": {
+            "url": "https://media.birdtab.app/assets/audio/32bb9131dbe358ae27922da3940cc8333b627f9bb9e38ea286e3e396152612c9.opus",
+            "format": "opus",
+            "durationSeconds": 49,
+            "durationFormatted": "0:49",
+            "converted": true
+          }
+        }
+      }
+    }
+  ]
+}

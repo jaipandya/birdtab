@@ -472,6 +472,68 @@ describe('region switch', () => {
   });
 });
 
+describe('bundled birds', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const bundled = require('../data/bundledBirds.json').species;
+
+  test('every bundled bird has its photo in the package and full credits', () => {
+    for (const entry of bundled) {
+      const imagePath = path.join(__dirname, '..', entry.image.renditions.default.url);
+      expect(fs.existsSync(imagePath)).toBe(true);
+      expect(entry.image.creatorName).toBeTruthy();
+      expect(entry.image.license).toBeTruthy();
+      expect(entry.audio.renditions.default.url).toMatch(/^https:\/\//);
+    }
+  });
+
+  test('returns a World bird with a packaged photo, without touching storage or the network', () => {
+    load({ storage: {}, routes: releaseRoutes(R1) });
+
+    const bird = client.getBundledBird();
+
+    expect(bundled.map(s => s.speciesCode)).toContain(bird.speciesCode);
+    expect(bird.imageUrl).toMatch(/^images\/bundled-birds\//);
+    expect(bird.location).toBe('WLD');
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test('skips recently shown bundled birds while others remain', () => {
+    load({ storage: {}, routes: releaseRoutes(R1) });
+    const [keep, ...seen] = bundled.map(s => s.speciesCode);
+
+    expect(client.getBundledBird(new Set(seen)).speciesCode).toBe(keep);
+    expect(bundled.map(s => s.speciesCode))
+      .toContain(client.getBundledBird(new Set([keep, ...seen])).speciesCode);
+  });
+});
+
+describe('ready queue', () => {
+  const queued = [
+    { speciesCode: 'queued1', name: 'Queued One' },
+    { speciesCode: 'queued2', name: 'Queued Two' },
+  ];
+
+  test('takes the first queued bird and leaves the rest', async () => {
+    load({ storage: { readyBirds: queued }, routes: releaseRoutes(R1) });
+
+    const bird = await client.takeStoredBird();
+
+    expect(bird).toEqual(queued[0]);
+    expect(mocks.data.readyBirds).toEqual([queued[1]]);
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test('shows a preloaded bird left by an older version before the queue', async () => {
+    const preloadedBird = { speciesCode: 'legacy', name: 'Legacy' };
+    load({ storage: { readyBirds: queued, preloadedBird }, routes: releaseRoutes(R1) });
+
+    expect(await client.takeStoredBird()).toEqual(preloadedBird);
+    expect(mocks.data.preloadedBird).toBeUndefined();
+    expect(mocks.data.readyBirds).toEqual(queued);
+  });
+});
+
 describe('upgrade from 2.0.x (schema 1 storage)', () => {
   test('shows the 2.0.x preloaded bird without touching the network', async () => {
     const state = schema1StorageState();

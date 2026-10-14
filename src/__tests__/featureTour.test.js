@@ -299,11 +299,12 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
    */
 
   // Simulate the version checking logic (must match featureTour.js TOUR_VERSION)
-  const CURRENT_TOUR_VERSION = 3;
+  const CURRENT_TOUR_VERSION = 4;
 
   // Feature spotlights configuration (mirrors featureTour.js)
   const FEATURE_SPOTLIGHTS = {
-    'chromeTab': { stepId: 'chromeTab', minVersion: 2 }
+    'chromeTab': { stepId: 'chromeTab', minVersion: 2 },
+    'birdName': { stepId: 'birdName', minVersion: 4 }
   };
 
   // Helper: Check if user has completed ANY tour (storedVersion > 0)
@@ -358,16 +359,16 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
     });
 
     test('should return false for users on older version', () => {
-      // User completed v2, current is v3
-      expect(isTourCompleted(2, CURRENT_TOUR_VERSION)).toBe(false);
+      // User completed v3, current is v4
+      expect(isTourCompleted(3, CURRENT_TOUR_VERSION)).toBe(false);
     });
 
     test('should return true for users on current version', () => {
-      expect(isTourCompleted(3, CURRENT_TOUR_VERSION)).toBe(true);
+      expect(isTourCompleted(4, CURRENT_TOUR_VERSION)).toBe(true);
     });
 
     test('should return true for users on newer version (edge case)', () => {
-      expect(isTourCompleted(4, CURRENT_TOUR_VERSION)).toBe(true);
+      expect(isTourCompleted(5, CURRENT_TOUR_VERSION)).toBe(true);
     });
   });
 
@@ -378,21 +379,25 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
     });
 
     test('should return new features for users on older version', () => {
-      // User completed v1, chromeTab was added in v2
+      // User completed v1: chromeTab (v2) and birdName (v4) are new
       const spotlights = getUnseenFeatureSpotlights(1);
-      expect(spotlights).toHaveLength(1);
-      expect(spotlights[0].featureKey).toBe('chromeTab');
+      expect(spotlights.map(s => s.featureKey)).toEqual(['chromeTab', 'birdName']);
+    });
+
+    test('should return only the bird name spotlight for users on v3', () => {
+      const spotlights = getUnseenFeatureSpotlights(3);
+      expect(spotlights).toEqual([{ featureKey: 'birdName', stepId: 'birdName' }]);
     });
 
     test('should return empty array for users on current version', () => {
-      // User completed v3, no new features since then
-      const spotlights = getUnseenFeatureSpotlights(3);
+      // User completed v4, no new features since then
+      const spotlights = getUnseenFeatureSpotlights(4);
       expect(spotlights).toEqual([]);
     });
 
     test('should not include already-seen features', () => {
-      // User completed v1 but already saw chromeTab spotlight
-      const spotlights = getUnseenFeatureSpotlights(1, { chromeTab: true });
+      // User completed v1 but already saw both spotlights
+      const spotlights = getUnseenFeatureSpotlights(1, { chromeTab: true, birdName: true });
       expect(spotlights).toEqual([]);
     });
   });
@@ -438,12 +443,17 @@ describe('Feature Tour - Version Upgrade Behavior', () => {
       const result = decideTourAction(1);
       expect(result).not.toBe('SHOW_FULL_TOUR');
       expect(result.action).toBe('SHOW_SPOTLIGHT');
-      expect(result.features).toHaveLength(1);
       expect(result.features[0].featureKey).toBe('chromeTab');
     });
 
-    test('user who completed v2 should see no tour', () => {
-      const result = decideTourAction(2);
+    test('user who completed v3 should see only the bird name spotlight', () => {
+      const result = decideTourAction(3);
+      expect(result.action).toBe('SHOW_SPOTLIGHT');
+      expect(result.features.map(f => f.featureKey)).toEqual(['birdName']);
+    });
+
+    test('user who completed v4 should see no tour', () => {
+      const result = decideTourAction(4);
       expect(result).toBe('NO_TOUR');
     });
   });

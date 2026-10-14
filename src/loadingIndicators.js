@@ -64,9 +64,11 @@ export function showLoadingIndicator() {
 
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'loading';
+    // Screen readers hear one static "Loading" instead of every rotating message
     loadingDiv.innerHTML = `
       <div class="spinner"></div>
-      <p id="loading-message">${getRandomLoadingMessage()}</p>
+      <p id="loading-message" aria-hidden="true">${getRandomLoadingMessage()}</p>
+      <span class="visually-hidden" role="status">${chrome.i18n.getMessage('loading') || 'Loading...'}</span>
     `;
     document.body.appendChild(loadingDiv);
   }, LOADING_SHOW_DELAY_MS);
@@ -98,6 +100,28 @@ export function updateLoadingMessage() {
   if (loadingMessage) {
     loadingMessage.textContent = getRandomLoadingMessage();
   }
+}
+
+// ===== Screen Reader Announcements =====
+
+/**
+ * Announce a short message to screen readers through a polite live region.
+ * The region is created once and kept, so its content changes are announced.
+ * @param {string} message
+ */
+export function announce(message) {
+  let region = document.getElementById('a11y-announcer');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'a11y-announcer';
+    region.className = 'visually-hidden';
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    document.body.appendChild(region);
+  }
+  // Clear first so repeating the same message is announced again
+  region.textContent = '';
+  setTimeout(() => { region.textContent = message; }, 100);
 }
 
 // ===== Audio Loading Indicator =====
@@ -232,6 +256,7 @@ export function showToast(message, type = 'info') {
 
   // Add to document
   document.body.appendChild(toast);
+  announce(message);
 
   // Show toast with animation after a brief delay
   setTimeout(() => {

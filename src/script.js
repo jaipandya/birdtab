@@ -12,7 +12,6 @@ import { initSentry, captureException, addBreadcrumb, startTransaction } from '.
 import { log } from './logger.js';
 import { IS_EDGE } from './browserInfo.js';
 import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
-import { showPermissionDialog } from './permissionDialog.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
 import { initClock, showClock, hideClock } from './clock.js';
@@ -50,9 +49,11 @@ import {
 // Share temporarily hidden — will return in a future version
 // import { initShareMenu, setupShareButton } from './shareMenu.js';
 import { setupInfoPopover } from './birdInfoPopover.js';
+import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
+import { resolveMediaUrl, revokeMediaUrls, isMediaCached } from './mediaCache.js';
 import { setupCreditPopovers } from './creditPopover.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
-import { takeStoredBird } from './mediaClient.js';
+import { takeStoredBird, getBundledBird } from './mediaClient.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -201,25 +202,31 @@ async function loadBirdFromStorage() {
 }
 
 /**
- * Poll chrome.storage.local until the background script finishes fetching the
- * manifest and preloading a bird. Used on fresh install / cache clear when
- * loadBirdFromStorage() initially returns null.
+ * A bird that ships with the extension, for when nothing is stored yet (first
+ * tab after install, or after the cache was cleared) so the tab never waits on
+ * the manifest download. Skips bundled birds seen recently.
  */
-async function waitForBirdData(maxWaitMs = 15000) {
-  const POLL_INTERVAL = 500;
-  const startTime = Date.now();
+async function loadBundledBird() {
+  const recentCodes = new Set((await getHistory()).slice(-10).map(b => b.speciesCode));
+  const bird = getBundledBird(recentCodes);
+  const { autoPlay = false } = await chrome.storage.local.get(['autoPlay']);
+  bird.autoPlay = autoPlay;
+  log(`Nothing stored yet, using bundled bird: ${bird.name}`);
+  return bird;
+}
 
-  while (Date.now() - startTime < maxWaitMs) {
-    await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
-    const bird = await loadBirdFromStorage();
-    if (bird) {
-      log(`Bird data available after ${Date.now() - startTime}ms of polling`);
-      return bird;
-    }
+/**
+ * A random bird from recent history whose photo is in the media cache, for
+ * tabs opened offline.
+ * @returns {Promise<Object|null>}
+ */
+async function findCachedHistoryBird() {
+  const recent = (await getHistory()).slice(-20);
+  const cached = [];
+  for (const entry of recent) {
+    if (entry?.imageUrl && await isMediaCached(entry.imageUrl)) cached.push(entry);
   }
-
-  log(`Bird data not available after ${maxWaitMs}ms of polling`);
-  return null;
+  return cached.length > 0 ? cached[Math.floor(Math.random() * cached.length)] : null;
 }
 
 // Update play/pause button UI
@@ -432,9 +439,14 @@ async function handleQuietHoursDisable(event) {
 // Skip duration to bypass recordist commentary at the start of bird call recordings
 const AUDIO_SKIP_SECONDS = 4;
 
+// Cached copy of the current bird's recording; resolvedAudioReady settles
+// once it's known whether there is one
+let resolvedAudio = { url: null, src: null };
+let resolvedAudioReady = Promise.resolve();
+
 // Create a new Audio element for a bird call, with the initial commentary skipped
 function createBirdAudio(url) {
-  const el = new Audio(url);
+  const el = new Audio(resolvedAudio.url === url ? resolvedAudio.src : url);
   el.addEventListener('loadedmetadata', () => {
     if (el.currentTime < AUDIO_SKIP_SECONDS) {
       el.currentTime = AUDIO_SKIP_SECONDS;
@@ -523,6 +535,9 @@ async function playAudio() {
     return;
   }
 
+  if (!audio) {
+    await resolvedAudioReady;
+  }
   if (!audio) {
     audio = createBirdAudio(birdInfo.mediaUrl);
     audio.volume = volumeLevel;
@@ -629,6 +644,10 @@ function setImageSource(imageUrl, retryCount = 0) {
   }
 
   log('Setting image source');
+  if (retryCount === 0) hideImageLoadError();
+  // Detach the previous attempt's handlers until the new source is set
+  img.onload = null;
+  img.onerror = null;
 
   // Only create the fallback timeout once (on the first call).
   // Retries share the same timeout so it isn't stacked.
@@ -641,18 +660,20 @@ function setImageSource(imageUrl, retryCount = 0) {
     }, IMAGE_LOAD_TIMEOUT_MS);
   }
 
-  img.onload = function () {
+  const onLoad = function () {
     if (_imageLoadTimeoutId) {
       clearTimeout(_imageLoadTimeoutId);
       _imageLoadTimeoutId = null;
     }
     log('Image loaded successfully');
+    hideImageLoadError();
     img.classList.remove('hidden');
     resolveImageLoaded();
   };
 
-  img.onerror = function () {
-    if (retryCount < IMAGE_MAX_RETRIES) {
+  const onError = function () {
+    // Retrying while offline only delays the offline notice
+    if (retryCount < IMAGE_MAX_RETRIES && navigator.onLine !== false) {
       log(`Image load failed, retrying (${retryCount + 1}/${IMAGE_MAX_RETRIES})...`);
       setTimeout(() => {
         img.src = '';
@@ -664,15 +685,72 @@ function setImageSource(imageUrl, retryCount = 0) {
         _imageLoadTimeoutId = null;
       }
       log('Image failed to load after all retries');
+      img.classList.add('hidden');
+      showImageLoadError(imageUrl);
       resolveImageLoaded();
     }
   };
 
-  img.src = imageUrl;
+  // The cached copy when there is one (works offline), else the network.
+  // Handlers are attached with the source, so an error from the template's
+  // empty src isn't taken for this image failing.
+  resolveMediaUrl(imageUrl).then(src => {
+    img.onload = onLoad;
+    img.onerror = onError;
+    img.src = src;
+  });
 }
+
+let _imageErrorOnlineHandler = null;
+
+/**
+ * Replace the missing photo with a notice and a way to try again. When the
+ * browser is offline the photo is retried automatically once it reconnects.
+ */
+function showImageLoadError(imageUrl) {
+  hideImageLoadError();
+  const container = document.getElementById('content-container') || document.body;
+  const offline = navigator.onLine === false;
+
+  const notice = document.createElement('div');
+  notice.className = 'image-load-error';
+  notice.setAttribute('role', 'status');
+  const message = document.createElement('p');
+  message.className = 'image-load-error-message';
+  message.textContent = offline
+    ? (chrome.i18n.getMessage('imageOfflineMessage') || 'You\'re offline. The photo will appear when you\'re back online.')
+    : (chrome.i18n.getMessage('imageLoadFailedMessage') || 'This photo couldn\'t be loaded.');
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.className = 'image-load-error-retry';
+  retry.textContent = chrome.i18n.getMessage('tryAgain') || 'Try Again';
+  retry.addEventListener('click', () => setImageSource(imageUrl));
+  notice.append(message, retry);
+  container.appendChild(notice);
+  document.body.classList.add('image-load-failed');
+
+  if (offline) {
+    _imageErrorOnlineHandler = () => setImageSource(imageUrl);
+    window.addEventListener('online', _imageErrorOnlineHandler, { once: true });
+  }
+}
+
+function hideImageLoadError() {
+  document.querySelector('.image-load-error')?.remove();
+  document.body.classList.remove('image-load-failed');
+  if (_imageErrorOnlineHandler) {
+    window.removeEventListener('online', _imageErrorOnlineHandler);
+    _imageErrorOnlineHandler = null;
+  }
+}
+
+// Set when initializePage lands on an error state, so the tour (whose
+// targets are hidden then) isn't started and marked complete.
+let pageInitFailed = false;
 
 // Main function to update the page with new bird information
 async function initializePage() {
+  pageInitFailed = false;
   incrementNewTabCount();
   await checkAndPrepareReviewPrompt();
   log('Initializing page');
@@ -682,9 +760,14 @@ async function initializePage() {
   const loadingInterval = setInterval(updateLoadingMessage, 2000);
 
   try {
-    // Load bird data entirely from chrome.storage.local.
-    // Priority: pendingBirdInfo (history selection) → preloadedBird → manifest → history
+    // Load bird data entirely from chrome.storage.local and the extension package.
+    // Priority: pendingBirdInfo (history selection) → ready queue → manifest
+    // → (offline) cached history bird → bundled bird
     let usedHistoryFallback = false;
+    const offline = navigator.onLine === false;
+    revokeMediaUrls();
+    resolvedAudio = { url: null, src: null };
+    resolvedAudioReady = Promise.resolve();
 
     const pendingBird = await new Promise((resolve) => {
       chrome.storage.local.get(['pendingBirdInfo'], (result) => {
@@ -705,28 +788,39 @@ async function initializePage() {
       birdInfo = await loadBirdFromStorage();
     }
 
-    // If no bird data yet, the background script may still be fetching the
-    // manifest (fresh install, cache clear, slow network). Poll storage
-    // until data appears or we time out.
-    if (!birdInfo) {
-      log('No bird data in storage, waiting for background to finish fetching...');
-      birdInfo = await waitForBirdData(15000);
+    // Offline, a bird whose photo isn't cached would leave an empty page:
+    // show a recently seen bird whose media is cached instead
+    if (offline && !pendingBird && !(birdInfo && await isMediaCached(birdInfo.imageUrl))) {
+      const cachedBird = await findCachedHistoryBird();
+      if (cachedBird) {
+        birdInfo = cachedBird;
+        usedHistoryFallback = true;
+        log(`Offline, using cached bird from history: ${birdInfo.name}`);
+      }
     }
 
+    // No manifest stored yet: the background is still downloading it (fresh
+    // install, cleared cache, slow network). Show a bundled bird instead of waiting.
     if (!birdInfo) {
-      // Last resort: most recent bird from viewing history
-      const history = await getHistory();
-      if (history.length > 0) {
-        birdInfo = history[history.length - 1];
-        usedHistoryFallback = true;
-        log(`Using cached bird from history: ${birdInfo.name}`);
-      } else {
-        throw new Error('NETWORK_ERROR_NO_CACHE');
-      }
+      birdInfo = await loadBundledBird();
     }
 
     if (!usedHistoryFallback) {
       await addToHistory(birdInfo);
+    }
+
+    // Offline without a cached recording: no audio controls that can't play
+    if (offline && birdInfo.mediaUrl && !(await isMediaCached(birdInfo.mediaUrl))) {
+      birdInfo = { ...birdInfo, mediaUrl: null };
+    }
+
+    // Look up the cached recording now, alongside the photo, so pressing play
+    // before the photo appears uses it too
+    if (birdInfo.mediaUrl) {
+      const mediaUrl = birdInfo.mediaUrl;
+      resolvedAudioReady = resolveMediaUrl(mediaUrl).then(src => {
+        resolvedAudio = { url: mediaUrl, src };
+      });
     }
 
     // Signal the background to preload the next bird, but only after the
@@ -760,15 +854,12 @@ async function initializePage() {
       });
       trackSessionStart({
         region: settings.region || CONFIG.STORAGE_DEFAULTS.region,
-        videoMode: false,
         autoPlay: settings.autoPlay || false,
         quietHours: settings.quietHours || false,
-        highResImages: false,
         quickAccessEnabled: settings.quickAccessEnabled || false,
         clockDisplayMode: settings.clockDisplayMode || 'off',
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
-        hasVideo: false,
       }, settings.installTime || null);
     } catch (analyticsError) {
       log(`Analytics error: ${analyticsError.message}`);
@@ -930,7 +1021,7 @@ async function initializePage() {
             <img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">
           </button>
           <div id="volume-slider-container" class="volume-slider-container">
-            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="80" orient="vertical">
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="55" orient="vertical">
           </div>
         </div>
         ` : ''}
@@ -1064,7 +1155,10 @@ async function initializePage() {
 
     // Defer audio initialization until the image is visible so audio
     // downloads don't compete with the critical first-paint resource.
-    imageLoadedPromise.then(() => initializeAudio()).catch((err) => {
+    imageLoadedPromise.then(async () => {
+      await resolvedAudioReady;
+      await initializeAudio();
+    }).catch((err) => {
       log(`Audio initialization failed: ${err.message}`);
       captureException(err, { tags: { operation: 'initializeAudio' } });
     });
@@ -1078,17 +1172,12 @@ async function initializePage() {
     });
     document.body.classList.add('loaded');
     hideNonEssentialUI();
+    pageInitFailed = true;
     showErrorModal(error.message);
   }
 }
 
 function showErrorModal(errorMessage) {
-  // Check if this is a network error with no cached birds
-  if (errorMessage === 'NETWORK_ERROR_NO_CACHE') {
-    showNetworkErrorState();
-    return;
-  }
-
   const errorModal = document.getElementById('error-modal');
   const errorDetails = errorModal.querySelector('.error-details');
   errorDetails.textContent = `${chrome.i18n.getMessage('errorDetails')}: ${errorMessage}`;
@@ -1138,45 +1227,6 @@ function restoreNonEssentialUI() {
 }
 
 // Show beautiful network error state when no cached birds are available
-function showNetworkErrorState() {
-  document.body.classList.add('loaded');
-  hideNonEssentialUI();
-
-  const contentContainer = document.getElementById('content-container');
-  contentContainer.innerHTML = `
-    <div class="network-error-container">
-      <div class="network-error-content">
-        <div class="network-error-icon">
-          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" opacity="0.3"/>
-            <path d="M40 20C40 20 25 28 25 40C25 52 40 60 40 60" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-            <path d="M40 20C40 20 55 28 55 40C55 52 40 60 40 60" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-            <circle cx="40" cy="35" r="4" fill="currentColor" opacity="0.8"/>
-            <path d="M32 45C32 45 35 50 40 50C45 50 48 45 48 45" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-          </svg>
-        </div>
-        <h1 class="network-error-title">${chrome.i18n.getMessage('networkErrorTitle')}</h1>
-        <p class="network-error-message">${chrome.i18n.getMessage('networkErrorMessage')}</p>
-        <p class="network-error-suggestion">${chrome.i18n.getMessage('networkErrorSuggestion')}</p>
-        <div class="network-error-actions">
-          <button id="network-retry-button" class="network-error-btn primary">
-            <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="18" height="18">
-            <span>${chrome.i18n.getMessage('tryAgain')}</span>
-          </button>
-          <a href="mailto:support@birdtab.app?subject=BirdTab%20Network%20Issue" class="network-error-btn secondary">
-            <span>${chrome.i18n.getMessage('contactSupport')}</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Add event listener for retry button
-  document.getElementById('network-retry-button').addEventListener('click', () => {
-    window.location.reload();
-  });
-}
-
 function retryHandler() {
   const errorModal = document.getElementById('error-modal');
   errorModal.classList.add('hidden');
@@ -1514,8 +1564,8 @@ function initLowDistractionMode() {
 // Volume keyboard shortcuts (Up/Down arrows)
 function setupVolumeKeyboardShortcuts() {
   document.addEventListener('keydown', (e) => {
-    // Volume controls (Up/Down arrows) - only when not in an input field
-    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    // Volume controls (Up/Down arrows) - only when nothing else uses the keys
+    if (!shouldIgnoreGlobalShortcut(e)) {
       if (e.key === 'ArrowUp') {
         e.preventDefault();
         const newVolume = Math.min(1, Math.round((volumeLevel + CONFIG.VOLUME_STEP) * 10) / 10);
@@ -1683,7 +1733,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // First check if user has completed ANY version of the tour
     const completedAnyTour = await hasCompletedAnyTour();
 
-    if (!completedAnyTour) {
+    if (pageInitFailed || navigator.onLine === false) {
+      // Tour targets are hidden on error and offline states; try next tab
+      log('Skipping feature tour: page is in an error or offline state');
+    } else if (!completedAnyTour) {
       // New user - show full tour
       // Set callback to show Chrome footer notification when tour ends
       setOnTourEndCallback(() => {

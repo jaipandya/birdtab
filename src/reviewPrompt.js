@@ -92,7 +92,7 @@ export function checkAndPrepareReviewPrompt() {
 export function getReviewPromptHTML() {
   return `
     <div id="review-prompt" class="review-prompt">
-      <button class="review-close" id="review-close" aria-label="Close">
+      <button class="review-close" id="review-close" aria-label="${chrome.i18n.getMessage('closeAlt') || 'Close'}">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
       <h2 class="review-title">${chrome.i18n.getMessage('reviewPromptTitle')}</h2>

@@ -615,22 +615,6 @@
     "message": "جاري التحميل...",
     "description": "Loading text placeholder"
   },
-  "networkErrorTitle": {
-    "message": "تعذر الوصول إلى الطيور",
-    "description": "Title for network error when no cached birds available"
-  },
-  "networkErrorMessage": {
-    "message": "نواجه مشكلة في الاتصال بقاعدة بيانات الطيور. قد يكون هذا بسبب مشاكل في الشبكة من جانبك أو من جانبنا.",
-    "description": "Message explaining the network error"
-  },
-  "networkErrorSuggestion": {
-    "message": "تحقق من اتصالك بالإنترنت وحاول مرة أخرى. إذا استمرت المشكلة، نود أن نسمع منك!",
-    "description": "Suggestion for resolving network error"
-  },
-  "contactSupport": {
-    "message": "اتصل بالدعم",
-    "description": "Button text to contact support"
-  },
   "volumeTooltip": {
     "message": "ضبط مستوى الصوت",
     "description": "Tooltip for volume button"
@@ -1095,6 +1079,22 @@
     "message": "ستجد هنا اسم المصوّر ومسجّل الصوت لكل طائر. اضغط على أي اسم لمعرفة المزيد والاطلاع على تفاصيل الترخيص.",
     "description": "Feature tour: credits line description"
   },
+  "tourBirdNameTitle": {
+    "message": "تعرّف على الطائر",
+    "description": "Feature tour: bird name step title"
+  },
+  "tourBirdNameDescription": {
+    "message": "انقر على اسم الطائر لمعرفة حقائق عنه وحالة الحفاظ عليه وخريطة لأماكن عيشه.",
+    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
+  },
+  "imageLoadFailedMessage": {
+    "message": "تعذّر تحميل هذه الصورة.",
+    "description": "Shown in place of the bird photo when it fails to load"
+  },
+  "imageOfflineMessage": {
+    "message": "أنت غير متصل بالإنترنت. ستظهر الصورة عند عودة الاتصال.",
+    "description": "Shown in place of the bird photo when the browser is offline"
+  },
   "tourOptionsMenuTitle": {
     "message": "القائمة السريعة",
     "description": "Feature tour: options menu title"
@@ -1187,6 +1187,14 @@
     "message": "جارٍ تحميل خريطة النطاق...",
     "description": "Loading text shown while the bird range map is loading"
   },
+  "rangeMapOffline": {
+    "message": "تحتاج خريطة النطاق إلى اتصال بالإنترنت",
+    "description": "Shown in place of the range map when the browser is offline"
+  },
+  "rangeMapUnavailable": {
+    "message": "تعذّر تحميل خريطة النطاق",
+    "description": "Shown in place of the range map when it takes too long to load"
+  },
   "closeHistoryAriaLabel": {
     "message": "إغلاق السجل",
     "description": "Aria label for close history button"
@@ -1218,10 +1226,6 @@
   "regionHighSeas": {
     "message": "أعالي البحار",
     "description": "Label for the High Seas (XX) region option in the region selector"
-  },
-  "preparingExperience": {
-    "message": "جاري تحضير تجربتك…",
-    "description": "Loading message shown during onboarding while manifest downloads"
   },
   "creditPhotoBy": {
     "message": "تصوير",

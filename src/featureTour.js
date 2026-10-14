@@ -32,14 +32,17 @@ import { trackTourCompleted } from './analytics.js';
 // 1 - Initial tour with Video Mode, Settings, History, Quiz, Refresh, Audio
 // 2 - Added Chrome Tab shortcut feature spotlight
 // 3 - Consolidated Settings, History, Quiz into options menu
-const TOUR_VERSION = 3;
+// 4 - Added bird name step (facts and range map)
+const TOUR_VERSION = 4;
 
 // Feature spotlights for existing users
 // When adding new features, add them here with minVersion set to current TOUR_VERSION
 // This allows existing users to see just the new feature without full tour
 const FEATURE_SPOTLIGHTS = {
   // Chrome Tab shortcut - shows existing users how to access default Chrome new tab
-  'chromeTab': { stepId: 'chromeTab', minVersion: 2 }
+  'chromeTab': { stepId: 'chromeTab', minVersion: 2 },
+  // Bird name - opens the info popover with facts and the range map
+  'birdName': { stepId: 'birdName', minVersion: 4 }
 };
 
 // Tour step configuration - ordered left to right as they appear in the UI
@@ -55,6 +58,17 @@ const TOUR_STEPS = [
     fallbackDescription: 'Let us show you around! This quick tour will help you discover all the features that make your birding experience special.',
     position: 'center',
     isWelcome: true
+  },
+  {
+    id: 'birdName',
+    targetSelector: '#bird-name',
+    icon: 'images/svg/location.svg',
+    titleKey: 'tourBirdNameTitle',
+    descriptionKey: 'tourBirdNameDescription',
+    fallbackTitle: 'Meet the Bird',
+    fallbackDescription: 'Click the bird\'s name for facts, its conservation status and a map of where it lives.',
+    position: 'top',
+    spotlightShape: 'pill'
   },
   {
     id: 'credits',
@@ -506,6 +520,13 @@ function positionTooltip(targetElement, position, shape) {
   // Gap from spotlight edge to arrow tip
   const offset = (position === 'top' || position === 'bottom' ? offsetY : offsetX) + 16;
   const edgeMargin = 16;
+
+  // Flip below the target when there's no room above it (on narrow screens
+  // the controls sit in the top-right corner)
+  const MIN_SPACE_ABOVE = 220;
+  if (position === 'top' && targetCenterY - offset < MIN_SPACE_ABOVE) {
+    position = 'bottom';
+  }
   
   // Position config based on direction
   const positionConfig = {
@@ -852,7 +873,8 @@ function findTargetElement(step) {
   
   for (const selector of step.targetSelector.split(',').map(s => s.trim())) {
     const el = document.querySelector(selector);
-    if (el) return el;
+    // Skip hidden targets (display:none, or an ancestor hidden at this width)
+    if (el && el.getClientRects().length > 0) return el;
   }
   return null;
 }

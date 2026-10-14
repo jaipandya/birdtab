@@ -22,6 +22,7 @@
 
 import { CONFIG } from './config.js';
 import { log } from './logger.js';
+import bundledBirds from './data/bundledBirds.json';
 
 const MEDIA = CONFIG.MEDIA;
 const WORLD = MEDIA.DEFAULT_REGION;
@@ -961,18 +962,27 @@ export async function getRegionBirds(region = WORLD) {
 
 /**
  * The bird for a new tab, from storage only (never the network):
- *   1. preloadedBird, picked by the background (removed once taken; a 2.0.x
- *      preloadedBird has the same shape and shows too)
- *   2. a random bird from the selected region's manifest, then World's,
+ *   1. preloadedBird, left by 2.0.x (same shape, removed once taken)
+ *   2. the first of readyBirds, whose media the background has cached
+ *      (removed once taken)
+ *   3. a random bird from the selected region's manifest, then World's,
  *      then the schema 1 manifest from 2.0.x
- * Manifests are read one key at a time and only when no preloaded bird waits.
+ * Manifests are read one key at a time and only when no queued bird waits.
  * @returns {Promise<Object|null>} birdInfo, or null when nothing is stored
  */
 export async function takeStoredBird() {
-  const { preloadedBird, region } = await storageGet(['preloadedBird', 'region']);
+  const { readyBirds, preloadedBird, region } = await storageGet(['readyBirds', 'preloadedBird', 'region']);
   if (preloadedBird) {
     chrome.storage.local.remove('preloadedBird');
     return preloadedBird;
+  }
+  if (Array.isArray(readyBirds) && readyBirds.length > 0) {
+    const [bird] = readyBirds;
+    // Filter by species rather than slicing: the background may have
+    // appended to the queue since it was read
+    const { readyBirds: latest = [] } = await storageGet(['readyBirds']);
+    await storageSet({ readyBirds: latest.filter(b => b.speciesCode !== bird.speciesCode) });
+    return bird;
   }
 
   const selectedRegion = region || WORLD;
@@ -984,6 +994,23 @@ export async function takeStoredBird() {
     if (bird) return bird;
   }
   return null;
+}
+
+/**
+ * A World bird that ships with the extension (data/bundledBirds.json, photo in
+ * images/bundled-birds/), for a first tab opened before any manifest is
+ * stored: a fresh install on a slow connection, or after the cache is cleared.
+ * Its recording still streams from the media CDN.
+ * @param {Set<string>} excludeCodes - Species to skip if possible (recently shown)
+ * @returns {Object} birdInfo
+ */
+export function getBundledBird(excludeCodes = null) {
+  const species = bundledBirds.species;
+  const unseen = excludeCodes ? species.filter(s => !excludeCodes.has(s.speciesCode)) : species;
+  const pool = unseen.length > 0 ? unseen : species;
+  const bird = adaptSpeciesToBirdInfo(pool[Math.floor(Math.random() * pool.length)]);
+  bird.location = WORLD;
+  return bird;
 }
 
 /**
