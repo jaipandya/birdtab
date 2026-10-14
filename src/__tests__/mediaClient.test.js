@@ -436,7 +436,7 @@ describe('region switch', () => {
     expect(mocks.fetchedUrls()).toContain(regionUrl(R2, 'IN'));
   });
 
-  test('a failed download after a release switch leaves everything unchanged', async () => {
+  test('a failed download writes nothing', async () => {
     await setup('WLD');
     mocks.routes[regionUrl(R1, 'IN')] = new TypeError('Failed to fetch');
     await expect(client.switchRegion('IN')).rejects.toThrow('Failed to fetch');

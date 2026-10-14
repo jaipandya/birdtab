@@ -44,6 +44,10 @@ export const CONFIG = {
     FETCH_MAX_DURATION_MS: 5 * 60 * 1000, // safety cap for a download that keeps receiving bytes
     FETCH_RETRIES: 2, // retries after the first attempt
     RETRY_BASE_DELAY_MS: 1000, // 1s, 2s, ... plus jitter
+    // chrome.storage.session key where the background mirrors a region switch
+    REGION_SWITCH_STATE_KEY: 'regionSwitchState',
+    // A 'loading' region switch not updated for this long has stopped (e.g. service worker ended)
+    REGION_SWITCH_STALE_MS: 30 * 1000,
   },
 
   DEV_TAB_COUNT: 5,  // Number of new tabs to open before showing the prompt in dev mode

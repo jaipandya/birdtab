@@ -20,9 +20,9 @@ import CONFIG from './config.js';
 import { getMessage, getUILanguage } from './i18n.js';
 import { log } from './logger.js';
 import { RELEASE_KEY } from './mediaClient.js';
-import { REGION_SWITCH_STATE_KEY, REGION_SWITCH_STALE_MS } from './regionSwitchTracker.js';
 
 const WORLD = CONFIG.MEDIA.DEFAULT_REGION;
+const { REGION_SWITCH_STATE_KEY, REGION_SWITCH_STALE_MS } = CONFIG.MEDIA;
 const HIGH_SEAS = 'XX';
 // Codes eBird uses that are not ISO 3166 countries (or mean something else
 // in CLDR, e.g. CS); show the index name for these.

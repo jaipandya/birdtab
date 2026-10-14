@@ -18,9 +18,7 @@ import { CONFIG } from './config.js';
 import { log } from './logger.js';
 import { switchRegion, getStoredIndex } from './mediaClient.js';
 
-export const REGION_SWITCH_STATE_KEY = 'regionSwitchState';
-// A 'loading' state not updated for this long means the switch stopped
-export const REGION_SWITCH_STALE_MS = 30 * 1000;
+export const { REGION_SWITCH_STATE_KEY, REGION_SWITCH_STALE_MS } = CONFIG.MEDIA;
 const PROGRESS_WRITE_INTERVAL_MS = 250;
 const HEARTBEAT_INTERVAL_MS = 10 * 1000;
 
@@ -75,27 +73,35 @@ export function trackRegionSwitch(code) {
     writeState(state);
   };
 
-  current.promise = (async () => {
-    if (code === WORLD) {
-      // Immediate; supersedes and clears whatever was loading
-      await clearState();
-    } else {
-      const index = await getStoredIndex().catch(() => null);
-      const bytes = index?.regions?.find(r => r.code === code)?.bytes;
-      state = { code, state: 'loading', received: 0, expected: bytes > 0 ? bytes : null };
-      write();
-      heartbeat = setInterval(write, HEARTBEAT_INTERVAL_MS);
-    }
+  const onProgress = (received, expected) => {
+    if (!state) return;
+    state = { ...state, received, expected: expected ?? state.expected };
+    // Throttled; a restarted attempt (received 0) always shows
+    if (received === 0 || Date.now() - lastWriteAt >= PROGRESS_WRITE_INTERVAL_MS) write();
+  };
 
-    const onProgress = (received, expected) => {
-      if (!state) return;
-      state = { ...state, received, expected: expected ?? state.expected };
-      // Throttled; a restarted attempt (received 0) always shows
-      if (received === 0 || Date.now() - lastWriteAt >= PROGRESS_WRITE_INTERVAL_MS) write();
-    };
+  if (code !== WORLD) {
+    state = { code, state: 'loading', received: 0, expected: null };
+    write();
+    heartbeat = setInterval(write, HEARTBEAT_INTERVAL_MS);
+    // The index size, until the download reports its own
+    getStoredIndex().then(index => {
+      const bytes = index?.regions?.find(r => r.code === code)?.bytes;
+      if (state && state.expected === null && bytes > 0) {
+        state = { ...state, expected: bytes };
+        write();
+      }
+    }).catch(() => {});
+  }
+  // Started synchronously, so switches reach mediaClient in the order they were asked for
+  const switching = switchRegion(code, { onProgress });
+
+  current.promise = (async () => {
+    // World is immediate; it supersedes and clears whatever was loading
+    if (code === WORLD) await clearState();
 
     try {
-      const result = await switchRegion(code, { onProgress });
+      const result = await switching;
       stopHeartbeat();
       if (result.superseded) {
         // The superseding switch owns the state now

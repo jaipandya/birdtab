@@ -58,6 +58,7 @@ test('writes loading progress against the index size, then clears it on success'
 
   const result = tracker.trackRegionSwitch('IN');
   await settle(() => downloads.IN);
+  await settle();
   expect(sessionState()).toMatchObject({ code: 'IN', state: 'loading', received: 0, expected: 1000 });
 
   const body = JSON.stringify(regionManifest(R1, 'IN'));
