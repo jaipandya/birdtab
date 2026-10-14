@@ -7325,6 +7325,9 @@ html[dir="rtl"] .share-menu-social {
    status replaces the help text in place instead of adding a line. */
 .settings-sidebar .region-message {
   display: grid;
+  /* Room for two lines (13px at 1.4 line height, plus the 8px top margin), so a status that wraps
+     ("Loading birds for United Kingdom… 42%") doesn't grow the slot. */
+  min-height: calc(8px + 2 * 13px * 1.4);
 }
 
 .settings-sidebar .region-message > .help-text {
