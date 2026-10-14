@@ -1,6 +1,6 @@
 Verwandle jeden neuen Tab in eine entspannende Naturauszeit mit atemberaubenden Vogel-Hintergrundbildern, beruhigenden Vogelstimmen und faszinierenden Fakten über die Tierwelt.
 
-BirdTab ersetzt deine Chrome-Neuer-Tab-Seite mit beeindruckender Vogelfotografie aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
+BirdTab ersetzt deine Chrome-Neuer-Tab-Seite mit beeindruckender Vogelfotografie aus deinem eigenen Land oder aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
 
 WARUM NUTZER BIRDTAB LIEBEN
 
@@ -22,7 +22,7 @@ HAUPTFUNKTIONEN
 
 TAUSENDE VON ARTEN
 
-Entdecke Tausende von Vogelarten aus allen Kontinenten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen. Jedes Foto ist hochauflösend und sorgfältig ausgewählt, um dir das beeindruckendste und vielfältigste Vogelbeobachtungserlebnis zu bieten.
+Entdecke Tausende von Vogelarten aus allen Kontinenten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen. Jedes Foto ist hochauflösend und sorgfältig ausgewählt, um dir das beeindruckendste und vielfältigste Vogelbeobachtungserlebnis zu bieten. Wähle in den Einstellungen dein Land, um die Vögel deiner Heimat zu sehen, oder wähle Welt für die 500 häufigsten Vögel der Erde.
 
 PERFEKT FÜR
 

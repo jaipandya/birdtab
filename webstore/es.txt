@@ -1,6 +1,6 @@
 Convierte cada nueva pestaña en un relajante escape a la naturaleza con impresionantes fondos de pantalla de aves, cantos relajantes y fascinantes datos sobre la vida silvestre.
 
-BirdTab reemplaza tu nueva pestaña de Chrome con fotografía de aves espectacular de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave - con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
+BirdTab reemplaza tu nueva pestaña de Chrome con fotografía de aves espectacular de tu propio país o de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave - con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
 
 POR QUÉ LES ENCANTA BIRDTAB
 
@@ -22,7 +22,7 @@ CARACTERÍSTICAS PRINCIPALES
 
 MILES DE ESPECIES
 
-Descubre miles de especies de aves de todos los continentes - desde loros tropicales y colibríes hasta majestuosas águilas y búhos. Cada foto es de alta resolución y cuidadosamente seleccionada para brindarte la experiencia de observación de aves más impresionante y diversa posible.
+Descubre miles de especies de aves de todos los continentes - desde loros tropicales y colibríes hasta majestuosas águilas y búhos. Cada foto es de alta resolución y cuidadosamente seleccionada para brindarte la experiencia de observación de aves más impresionante y diversa posible. Elige tu país en Configuración para ver las aves de donde vives, o elige Mundo para las 500 aves más comunes del planeta.
 
 PERFECTO PARA
 

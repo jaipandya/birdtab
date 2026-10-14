@@ -1,6 +1,6 @@
 Zamień każdą nową kartę w relaksującą ucieczkę do natury z oszałamiającymi tapetami z ptakami, kojącymi ptasimi głosami i fascynującymi faktami o dzikiej przyrodzie.
 
-BirdTab zastępuje stronę nowej karty Chrome zapierającą dech fotografią ptaków z całego świata. Za każdym razem, gdy otworzysz kartę, odkryjesz nowy gatunek ptaka - z autentycznymi głosami, dźwiękami natury i ciekawymi informacjami. To jak okno na świat przyrody prosto w Twojej przeglądarce.
+BirdTab zastępuje stronę nowej karty Chrome zapierającą dech fotografią ptaków z Twojego kraju lub z całego świata. Za każdym razem, gdy otworzysz kartę, odkryjesz nowy gatunek ptaka - z autentycznymi głosami, dźwiękami natury i ciekawymi informacjami. To jak okno na świat przyrody prosto w Twojej przeglądarce.
 
 DLACZEGO UŻYTKOWNICY KOCHAJĄ BIRDTAB
 
@@ -22,7 +22,7 @@ GŁÓWNE FUNKCJE
 
 TYSIĄCE GATUNKÓW
 
-Odkryj tysiące gatunków ptaków z każdego kontynentu - od tropikalnych papug i kolibrów po majestatyczne orły i sowy. Każde zdjęcie jest w wysokiej rozdzielczości i starannie wyselekcjonowane, by zapewnić Ci najbardziej imponujące i różnorodne doświadczenie obserwacji ptaków.
+Odkryj tysiące gatunków ptaków z każdego kontynentu - od tropikalnych papug i kolibrów po majestatyczne orły i sowy. Każde zdjęcie jest w wysokiej rozdzielczości i starannie wyselekcjonowane, by zapewnić Ci najbardziej imponujące i różnorodne doświadczenie obserwacji ptaków. Wybierz swój kraj w Ustawieniach, aby zobaczyć ptaki z Twojej okolicy, lub wybierz Świat, aby oglądać 500 najpopularniejszych ptaków na Ziemi.
 
 IDEALNE DLA
 

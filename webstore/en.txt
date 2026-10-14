@@ -1,6 +1,6 @@
 Turn every new tab into a calming nature escape with stunning bird wallpapers, soothing bird songs, and fascinating wildlife facts.
 
-BirdTab replaces your Chrome new tab page with breathtaking bird photography from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
+BirdTab replaces your Chrome new tab page with breathtaking bird photography from your own country or from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
 
 WHY USERS LOVE BIRDTAB
 
@@ -22,7 +22,7 @@ KEY FEATURES
 
 THOUSANDS OF SPECIES
 
-Discover thousands of bird species from every continent - from tropical parrots and hummingbirds to majestic eagles and owls. Every photo is high-resolution and carefully curated to bring you the most stunning and diverse birding experience possible.
+Discover thousands of bird species from every continent - from tropical parrots and hummingbirds to majestic eagles and owls. Every photo is high-resolution and carefully curated to bring you the most stunning and diverse birding experience possible. Choose your country in Settings to see the birds found where you live, or pick World for the 500 most common birds on Earth.
 
 PERFECT FOR
 
@@ -36,6 +36,9 @@ PERFECT FOR
 WHAT'S NEW
 
 2.1.0 - Birds for every country: choose from 250+ countries and regions, or the World's 500 most common birds. Plus better offline support, a faster first tab, and keyboard and screen reader improvements.
+2.0.3 - Minor fixes in error tracking
+2.0.2 - Faster image loading - bird photos now appear before audio starts downloading, so your new tab feels snappier.
+2.0.1 - More birds, improved stability of the extension, performance improvements
 2.0.0 - High-resolution photos, international regions, clock, countdown timer, much improved offline support, and a refreshed new tab experience.
 1.3.9 - Bird info popover with range map and bird description. Distraction free mode.
 1.3.7 - Google Apps shortcuts added to the interface.

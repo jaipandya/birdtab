@@ -1,6 +1,6 @@
 Transformez chaque nouvel onglet en une escapade nature apaisante avec de superbes fonds d'écran d'oiseaux, des chants d'oiseaux relaxants et des faits fascinants sur la faune.
 
-BirdTab remplace votre page de nouvel onglet Chrome par une photographie d'oiseaux époustouflante du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
+BirdTab remplace votre page de nouvel onglet Chrome par une photographie d'oiseaux époustouflante de votre propre pays ou du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
 
 POURQUOI LES UTILISATEURS ADORENT BIRDTAB
 
@@ -22,7 +22,7 @@ FONCTIONNALITÉS PRINCIPALES
 
 DES MILLIERS D'ESPÈCES
 
-Découvrez des milliers d'espèces d'oiseaux de tous les continents - des perroquets tropicaux et colibris aux majestueux aigles et hiboux. Chaque photo est en haute résolution et soigneusement sélectionnée pour vous offrir l'expérience ornithologique la plus époustouflante et diversifiée possible.
+Découvrez des milliers d'espèces d'oiseaux de tous les continents - des perroquets tropicaux et colibris aux majestueux aigles et hiboux. Chaque photo est en haute résolution et soigneusement sélectionnée pour vous offrir l'expérience ornithologique la plus époustouflante et diversifiée possible. Choisissez votre pays dans les Paramètres pour voir les oiseaux de chez vous, ou choisissez Monde pour les 500 oiseaux les plus communs de la planète.
 
 IDÉAL POUR
 
