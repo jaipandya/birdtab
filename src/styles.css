@@ -7312,3 +7312,40 @@ html[dir="rtl"] .share-menu-social {
   filter: brightness(0) invert(1);
   opacity: 0.7;
 }
+
+/* Region selector loading / failure text */
+.settings-sidebar .region-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.settings-sidebar .region-status[hidden] {
+  display: none;
+}
+
+.settings-sidebar .region-status.region-status-error {
+  color: var(--status-error);
+}
+
+.settings-sidebar .region-retry-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--modal-text-primary);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.settings-sidebar .region-retry-button:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.settings-sidebar select:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}

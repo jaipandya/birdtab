@@ -5,6 +5,9 @@ import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
 import { resetChromeFooterNotification } from './chromeFooterNotification.js';
 import { IS_EDGE } from './browserInfo.js';
+import { RegionSelector } from './regionSelector.js';
+import CONFIG from './config.js';
+import { updateUserContext } from './sentry.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -85,10 +88,11 @@ class SettingsSidebar {
                 <img src="images/svg/location.svg" alt="" width="18" height="18" class="setting-icon">
                 <span data-i18n="birdingRegion">Birding Region</span>
               </label>
-              <select id="modal-region" disabled title="Discover birds from every corner of the globe. More regions coming soon!">
+              <select id="modal-region" aria-describedby="modal-region-status modal-region-help">
                 <option value="WLD" selected data-i18n="regionWorld">World</option>
               </select>
-              <p class="help-text" data-i18n="regionComingSoon">Discover birds from every corner of the globe. More regions coming soon!</p>
+              <p id="modal-region-status" class="help-text region-status" role="status" aria-live="polite" hidden></p>
+              <p id="modal-region-help" class="help-text" data-i18n="regionHelpText">New tabs show birds from this region.</p>
             </div>
 
             <!-- Media & Playback Category -->
@@ -381,6 +385,17 @@ class SettingsSidebar {
     this.chromeTabCheckbox = document.getElementById('modal-chrome-tab');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
+    const regionSelect = document.getElementById('modal-region');
+    const regionStatus = document.getElementById('modal-region-status');
+    this.regionSelector = regionSelect && regionStatus ? new RegionSelector({
+      select: regionSelect,
+      status: regionStatus,
+      onRegionChanged: (region) => {
+        this.showSaveNotification();
+        updateUserContext({ region });
+      }
+    }) : null;
+
     // Update quiet hours text
     if (this.quietHoursTextElement) {
       this.quietHoursTextElement.textContent = `(${getQuietHoursText()})`;
@@ -601,7 +616,7 @@ class SettingsSidebar {
           // Set default values in local storage (device-specific settings)
           await new Promise((resolve, reject) => {
             chrome.storage.local.set({
-              region: 'WLD',
+              region: CONFIG.STORAGE_DEFAULTS.region,
               autoPlay: false,
               quietHours: false,
               clockDisplayMode: 'clock',
@@ -698,6 +713,10 @@ class SettingsSidebar {
     if (!this.sidebar) return;
 
     this.loadSettings(); // Refresh settings when opening
+    // The region list is read (and fetched if missing) only when settings open
+    if (this.regionSelector) {
+      this.regionSelector.load().catch(error => warn('Region list failed to load: ' + error.message));
+    }
     this.sidebar.classList.add('open');
     this.isOpen = true;
 
@@ -781,7 +800,6 @@ class SettingsSidebar {
     chrome.storage.local.get(['clockDisplayMode'], (currentSettings) => {
       const settings = {};
 
-      settings.region = 'WLD';
       if (this.autoPlayCheckbox) {
         settings.autoPlay = this.autoPlayCheckbox.checked;
       }
