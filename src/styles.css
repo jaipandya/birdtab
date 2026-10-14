@@ -7321,8 +7321,23 @@ html[dir="rtl"] .share-menu-social {
   gap: 4px 8px;
 }
 
+/* Status and help text overlap in one grid cell: the slot keeps the taller of the two, and a
+   status replaces the help text in place instead of adding a line. */
+.settings-sidebar .region-message {
+  display: grid;
+}
+
+.settings-sidebar .region-message > .help-text {
+  grid-area: 1 / 1;
+}
+
 .settings-sidebar .region-status[hidden] {
-  display: none;
+  display: flex;
+  visibility: hidden;
+}
+
+.settings-sidebar .region-message:has(.region-status:not([hidden])) #modal-region-help {
+  visibility: hidden;
 }
 
 .settings-sidebar .region-status.region-status-error {

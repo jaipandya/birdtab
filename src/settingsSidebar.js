@@ -91,8 +91,11 @@ class SettingsSidebar {
               <select id="modal-region" aria-describedby="modal-region-status modal-region-help">
                 <option value="WLD" selected data-i18n="regionWorld">World</option>
               </select>
-              <p id="modal-region-status" class="help-text region-status" role="status" aria-live="polite" hidden></p>
-              <p id="modal-region-help" class="help-text" data-i18n="regionHelpText">New tabs show birds from this region.</p>
+              <!-- Status and help share one slot, so loading/failure text never shifts the layout -->
+              <div class="region-message">
+                <p id="modal-region-status" class="help-text region-status" role="status" aria-live="polite" hidden></p>
+                <p id="modal-region-help" class="help-text" data-i18n="regionHelpText">New tabs show birds from this region.</p>
+              </div>
             </div>
 
             <!-- Media & Playback Category -->
