@@ -331,6 +331,10 @@ async function bootstrap({ forceRefresh = false } = {}) {
   const { ready, schema, release } = await ensureMedia({ force: forceRefresh });
   log(ready ? `Manifest ready (schema ${schema}${release ? `, release ${release}` : ''})` : 'No manifest available yet');
 
+  // Nothing stored or reachable: don't repeat the whole discovery through a
+  // preload; the next new tab or SW start tries again.
+  if (!ready) return;
+
   // Keep a 2.0.x preloaded bird (or one from this session) for the next tab
   const { preloadedBird } = await chrome.storage.local.get('preloadedBird');
   if (!preloadedBird) {
