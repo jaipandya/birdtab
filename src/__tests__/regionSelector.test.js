@@ -64,10 +64,10 @@ describe('region labels and order', () => {
     const options = buildRegionOptions(regions, 'en');
 
     expect(options.map(o => o.label)).toEqual([
-      'World · 500 most common birds',
-      'Germany · 1,234 birds',
-      'India · 243 birds',
-      'United States · 300 birds',
+      'World',
+      'Germany',
+      'India',
+      'United States',
     ]);
   });
 
@@ -82,15 +82,15 @@ describe('region labels and order', () => {
     expect(options.map(o => o.code)).toEqual(['WLD', 'DE', 'IN']);
     expect(options[1].name).toBe('Deutschland');
     expect(options[2].name).toBe('Indien');
-    expect(options[2].label).toBe('Indien · 243 birds');
+    expect(options[2].label).toBe('Indien');
   });
 
   test('non-ISO codes use the index name; High Seas uses i18n', () => {
     setup();
-    expect(getRegionLabel({ code: 'XX', name: 'High Seas', speciesCount: 2 }, 'en')).toBe('High Seas · 2 birds');
-    expect(getRegionLabel({ code: 'CS', name: 'Coral Sea Islands', speciesCount: 9 }, 'en')).toBe('Coral Sea Islands · 9 birds');
-    expect(getRegionLabel({ code: 'XK', name: 'Kosovo', speciesCount: 9 }, 'en')).toBe('Kosovo · 9 birds');
-    expect(getRegionLabel({ code: 'ZZZ', name: 'Somewhere', speciesCount: 1 }, 'en')).toBe('Somewhere · 1 birds');
+    expect(getRegionLabel({ code: 'XX', name: 'High Seas', speciesCount: 2 }, 'en')).toBe('High Seas');
+    expect(getRegionLabel({ code: 'CS', name: 'Coral Sea Islands', speciesCount: 9 }, 'en')).toBe('Coral Sea Islands');
+    expect(getRegionLabel({ code: 'XK', name: 'Kosovo', speciesCount: 9 }, 'en')).toBe('Kosovo');
+    expect(getRegionLabel({ code: 'ZZZ', name: 'Somewhere', speciesCount: 1 }, 'en')).toBe('Somewhere');
   });
 });
 
@@ -101,7 +101,7 @@ describe('RegionSelector', () => {
 
     await selector.load();
 
-    expect(optionLabels()).toEqual(['World · 6 most common birds', 'India · 6 birds', 'United States · 6 birds']);
+    expect(optionLabels()).toEqual(['World', 'India', 'United States']);
     expect(select.value).toBe('IN');
     expect(status.hidden).toBe(true);
     expect(chrome.runtime.sendMessage).not.toHaveBeenCalled();
@@ -154,7 +154,7 @@ describe('RegionSelector', () => {
     await flush();
     await flush();
 
-    expect(optionLabels()).toEqual(['World · 6 most common birds', 'United States · 6 birds']);
+    expect(optionLabels()).toEqual(['World', 'United States']);
     expect(status.hidden).toBe(true);
   });
 

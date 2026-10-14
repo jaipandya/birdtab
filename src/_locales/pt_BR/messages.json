@@ -83,14 +83,6 @@
     "message": "As novas abas mostram aves desta região.",
     "description": "Help text under the region selector in settings"
   },
-  "regionBirdCount": {
-    "message": "$1 aves",
-    "description": "Bird count after a country name in the region selector, e.g. 'India · 243 birds'. $1 is the number"
-  },
-  "regionWorldBirdCount": {
-    "message": "as $1 aves mais comuns",
-    "description": "Bird count after 'World' in the region selector, e.g. 'World · 500 most common birds'. $1 is the number"
-  },
   "regionLoadingList": {
     "message": "Carregando regiões…",
     "description": "Shown under the region selector while the list of regions loads"

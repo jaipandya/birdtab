@@ -83,14 +83,6 @@
     "message": "تعرض علامات التبويب الجديدة طيورًا من هذه المنطقة.",
     "description": "Help text under the region selector in settings"
   },
-  "regionBirdCount": {
-    "message": "عدد الطيور: $1",
-    "description": "Bird count after a country name in the region selector, e.g. 'India · 243 birds'. $1 is the number"
-  },
-  "regionWorldBirdCount": {
-    "message": "أكثر الطيور شيوعًا: $1",
-    "description": "Bird count after 'World' in the region selector, e.g. 'World · 500 most common birds'. $1 is the number"
-  },
   "regionLoadingList": {
     "message": "جارٍ تحميل المناطق…",
     "description": "Shown under the region selector while the list of regions loads"

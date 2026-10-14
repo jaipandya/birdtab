@@ -83,14 +83,6 @@
     "message": "New tabs show birds from this region.",
     "description": "Help text under the region selector in settings"
   },
-  "regionBirdCount": {
-    "message": "$1 birds",
-    "description": "Bird count after a country name in the region selector, e.g. 'India · 243 birds'. $1 is the number"
-  },
-  "regionWorldBirdCount": {
-    "message": "$1 most common birds",
-    "description": "Bird count after 'World' in the region selector, e.g. 'World · 500 most common birds'. $1 is the number"
-  },
   "regionLoadingList": {
     "message": "Loading regions…",
     "description": "Shown under the region selector while the list of regions loads"

@@ -83,14 +83,6 @@
     "message": "新しいタブには、この地域の鳥が表示されます。",
     "description": "Help text under the region selector in settings"
   },
-  "regionBirdCount": {
-    "message": "$1 種の鳥",
-    "description": "Bird count after a country name in the region selector, e.g. 'India · 243 birds'. $1 is the number"
-  },
-  "regionWorldBirdCount": {
-    "message": "よく見られる鳥 $1 種",
-    "description": "Bird count after 'World' in the region selector, e.g. 'World · 500 most common birds'. $1 is the number"
-  },
   "regionLoadingList": {
     "message": "地域を読み込み中…",
     "description": "Shown under the region selector while the list of regions loads"

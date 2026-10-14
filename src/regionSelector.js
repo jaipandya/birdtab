@@ -56,22 +56,10 @@ export function getRegionDisplayName(region, uiLanguage = safeUILanguage()) {
 }
 
 /**
- * Option label: "India · 243 birds", "World · 500 most common birds".
+ * Option label: the region's localized name.
  */
 export function getRegionLabel(region, uiLanguage = safeUILanguage()) {
-  const name = getRegionDisplayName(region, uiLanguage);
-  if (typeof region.speciesCount !== 'number') return name;
-
-  let count = String(region.speciesCount);
-  try {
-    count = new Intl.NumberFormat(uiLanguage).format(region.speciesCount);
-  } catch {
-    // Keep the plain number
-  }
-  const countText = region.code === WORLD
-    ? getMessage('regionWorldBirdCount', [count])
-    : getMessage('regionBirdCount', [count]);
-  return `${name} · ${countText}`;
+  return getRegionDisplayName(region, uiLanguage);
 }
 
 /**

@@ -83,14 +83,6 @@
     "message": "新标签页将显示该地区的鸟类。",
     "description": "Help text under the region selector in settings"
   },
-  "regionBirdCount": {
-    "message": "$1 种鸟",
-    "description": "Bird count after a country name in the region selector, e.g. 'India · 243 birds'. $1 is the number"
-  },
-  "regionWorldBirdCount": {
-    "message": "最常见的 $1 种鸟",
-    "description": "Bird count after 'World' in the region selector, e.g. 'World · 500 most common birds'. $1 is the number"
-  },
   "regionLoadingList": {
     "message": "正在加载地区…",
     "description": "Shown under the region selector while the list of regions loads"
