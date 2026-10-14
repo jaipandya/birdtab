@@ -552,7 +552,7 @@ async function runDiscovery({ force = false } = {}) {
   const selectedRegion = storedRegion || WORLD;
   const hasStoredData = !!(stored || legacyMeta);
 
-  // With something to show, check at most every 6 hours (sooner after a failed switch).
+  // With something to show, check at most once a day (sooner after a failed switch).
   if (!force && hasStoredData) {
     const checkedRecently = discovery.lastCheckedAt && now - discovery.lastCheckedAt < MEDIA.REFRESH_INTERVAL_MS;
     const failedRecently = discovery.lastFailureAt && now - discovery.lastFailureAt < MEDIA.FAILURE_BACKOFF_MS;
@@ -610,7 +610,7 @@ async function runDiscovery({ force = false } = {}) {
 }
 
 /**
- * Check current.json (at most every 6 hours unless forced) and switch to a
+ * Check current.json (at most once a day unless forced) and switch to a
  * newly published release in the background. Never throws.
  * @returns {Promise<{status: string, release: string|null}>}
  */

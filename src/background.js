@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .catch(error => log(`Preload failed: ${error.message}`))
         .finally(() => {
           preloadInProgress = false;
-          // Check for a new media release in the background (at most every 6 hours)
+          // Check for a new media release in the background (at most once a day)
           refreshRelease();
         });
     }
@@ -136,8 +136,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.runtime.onStartup.addListener(() => {
-  // Browser start: check for a new media release regardless of the 6-hour gate
-  refreshRelease({ force: true });
+  // Browser start: check for a new media release if the daily check is due
+  refreshRelease();
 });
 
 // --- Heavy initialization (deferred after event listeners) ---
@@ -355,7 +355,7 @@ chrome.runtime.onInstalled.addListener(async function (details) {
     }
     await ensureRegionSettingMigrated();
     clearLegacyCacheKeys();
-    // Move to the latest media release now rather than waiting 6 hours.
+    // Move to the latest media release now rather than waiting a day.
     // The schema 1 manifest from 2.0.x stays in use until this has stored World.
     refreshRelease({ force: true });
   }

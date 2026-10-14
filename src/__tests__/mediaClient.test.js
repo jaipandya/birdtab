@@ -147,7 +147,7 @@ describe('release discovery', () => {
     expect(reporter).toHaveBeenCalledWith(expect.any(Error), expect.objectContaining({ operation: 'fetchLegacyManifest' }));
   });
 
-  test('checks current.json at most every 6 hours unless forced', async () => {
+  test('checks current.json at most once a day unless forced', async () => {
     load({ routes: releaseRoutes(R1) });
     await client.ensureMedia();
     global.fetch.mockClear();
@@ -155,7 +155,11 @@ describe('release discovery', () => {
     await client.ensureMedia();
     expect(global.fetch).not.toHaveBeenCalled();
 
-    mocks.data.media_discovery.lastCheckedAt = Date.now() - 7 * HOUR;
+    mocks.data.media_discovery.lastCheckedAt = Date.now() - 23 * HOUR;
+    await client.ensureMedia();
+    expect(global.fetch).not.toHaveBeenCalled();
+
+    mocks.data.media_discovery.lastCheckedAt = Date.now() - 25 * HOUR;
     await client.ensureMedia();
     expect(mocks.fetchedUrls()).toEqual([CURRENT_URL]);
 
@@ -218,7 +222,7 @@ describe('release switch', () => {
     expect(mocks.fetchedUrls().filter(u => u === regionUrl(R2, 'IN'))).toHaveLength(3);
   });
 
-  test('retries a failed switch after the failure backoff, not 6 hours', async () => {
+  test('retries a failed switch after the failure backoff, not a day', async () => {
     await installR1();
     publishR2();
     mocks.routes[regionUrl(R2, 'WLD')] = 503;

@@ -37,7 +37,7 @@ export const CONFIG = {
     LEGACY_MANIFEST_URL: 'https://media.birdtab.app/m260416r01/manifests/manifest.json',
     SCHEMA_VERSION: 2,
     DEFAULT_REGION,
-    REFRESH_INTERVAL_MS: 6 * 60 * 60 * 1000, // current.json at most every 6 hours
+    REFRESH_INTERVAL_MS: 24 * 60 * 60 * 1000, // current.json at most once a day, browser starts included
     FAILURE_BACKOFF_MS: 15 * 60 * 1000, // after a failed check, wait before trying again
     FETCH_TIMEOUT_MS: 15000, // no response headers within this: the attempt fails
     FETCH_STALL_TIMEOUT_MS: 15000, // no body bytes for this long: the attempt fails
