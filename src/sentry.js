@@ -108,7 +108,7 @@ function shouldIgnoreError(errorMessage) {
  */
 function buildUserData(settings = {}) {
   return {
-    region: settings.region ?? 'WLD',
+    region: settings.region ?? CONFIG.STORAGE_DEFAULTS.region,
     onboarded: settings.onboardingComplete ?? false,
     autoPlay: settings.autoPlay ?? false,
     quietHours: settings.quietHours ?? false,
@@ -398,10 +398,12 @@ export function initSentry(component, additionalConfig = {}) {
       try {
         const visitorId = await getOrCreateVisitorId();
         const settings = await getUserSettings();
+        const userData = buildUserData(settings);
         Sentry.setUser({
           id: visitorId,
-          data: buildUserData(settings),
+          data: userData,
         });
+        Sentry.setTag('region', userData.region);
       } catch (error) {
         logError('Failed to set user context:', error);
       }
@@ -576,10 +578,12 @@ export async function updateUserContext(newSettings = {}) {
     const currentSettings = await getUserSettings();
     const mergedSettings = { ...currentSettings, ...newSettings };
 
+    const userData = buildUserData(mergedSettings);
     Sentry.setUser({
       id: visitorId,
-      data: buildUserData(mergedSettings),
+      data: userData,
     });
+    Sentry.setTag('region', userData.region);
   } catch (error) {
     logError('Failed to update user context:', error);
   }

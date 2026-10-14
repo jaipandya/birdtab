@@ -1,5 +1,9 @@
 module.exports = {
   testEnvironment: 'jsdom',
+  // Inline Babel options (no root babel config, so webpack's babel-loader is unaffected)
+  transform: {
+    '^.+\\.js$': ['babel-jest', { presets: [['@babel/preset-env', { targets: { node: 'current' } }]] }]
+  },
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.js'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/src/__tests__/__mocks__/styleMock.js',

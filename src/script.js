@@ -52,7 +52,7 @@ import {
 import { setupInfoPopover } from './birdInfoPopover.js';
 import { setupCreditPopovers } from './creditPopover.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
-import { adaptSpeciesToBirdInfo } from './mediaClient.js';
+import { takeStoredBird } from './mediaClient.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -184,51 +184,20 @@ const IMAGE_MAX_RETRIES = 3;
 const IMAGE_RETRY_DELAY = 2000;
 
 /**
- * Load bird info entirely from chrome.storage.local.
- * Reads in priority order:
- *   1. preloadedBird — random bird pre-picked by the background service worker
- *   2. media_manifest — pick a fresh random bird from the cached manifest
- * Returns null only if no manifest has ever been cached (fresh install, before first fetch).
+ * Load bird info entirely from chrome.storage.local (never the network):
+ * the bird preloaded by the background, else a random bird from the stored
+ * manifests (see takeStoredBird). Manifests are only read when no preloaded
+ * bird is waiting.
+ * Returns null only if no manifest is stored yet (fresh install, before first fetch).
  */
 async function loadBirdFromStorage() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['preloadedBird', 'media_manifest', 'autoPlay'], (result) => {
-      const autoPlay = result.autoPlay || false;
+  const bird = await takeStoredBird();
+  if (!bird) return null;
 
-      // 1. Use preloaded bird from background (fastest path)
-      if (result.preloadedBird) {
-        const bird = result.preloadedBird;
-        bird.autoPlay = autoPlay;
-        chrome.storage.local.remove('preloadedBird');
-        log(`Using preloaded bird: ${bird.name}`);
-        resolve(bird);
-        return;
-      }
-
-      // 2. Pick a random bird from the cached manifest
-      const manifest = result.media_manifest;
-      if (manifest && manifest.species && manifest.regions) {
-        const codes = manifest.regions.WLD?.speciesCodes ?? [];
-        if (codes.length > 0) {
-          const speciesMap = new Map(manifest.species.map(s => [s.speciesCode, s]));
-          const randomCode = codes[Math.floor(Math.random() * codes.length)];
-          const entry = speciesMap.get(randomCode);
-          if (entry) {
-            const bird = adaptSpeciesToBirdInfo(entry);
-            if (bird) {
-              bird.location = 'WLD';
-              bird.autoPlay = autoPlay;
-              log(`Using random bird from manifest: ${bird.name}`);
-              resolve(bird);
-              return;
-            }
-          }
-        }
-      }
-
-      resolve(null);
-    });
-  });
+  const { autoPlay = false } = await chrome.storage.local.get(['autoPlay']);
+  bird.autoPlay = autoPlay;
+  log(`Using stored bird: ${bird.name}`);
+  return bird;
 }
 
 /**
@@ -787,10 +756,10 @@ async function initializePage() {
     // Track session start with user settings and bird info
     try {
       const settings = await new Promise((resolve) => {
-        chrome.storage.local.get(['autoPlay', 'quietHours', 'quickAccessEnabled', 'clockDisplayMode', 'installTime'], resolve);
+        chrome.storage.local.get(['region', 'autoPlay', 'quietHours', 'quickAccessEnabled', 'clockDisplayMode', 'installTime'], resolve);
       });
       trackSessionStart({
-        region: 'WLD',
+        region: settings.region || CONFIG.STORAGE_DEFAULTS.region,
         videoMode: false,
         autoPlay: settings.autoPlay || false,
         quietHours: settings.quietHours || false,

@@ -1,6 +1,7 @@
 import { captureException } from './sentry.js';
 import './quiz.css';
 import { log } from './logger.js';
+import CONFIG from './config.js';
 import { trackQuizCompleted } from './analytics.js';
 import { escapeHtml, truncateName } from './utils/escapeHtml.js';
 
@@ -318,7 +319,12 @@ class QuizMode {
   }
 
   async getCurrentRegion() {
-    return 'WLD';
+    try {
+      const { region } = await chrome.storage.local.get(['region']);
+      return region || CONFIG.STORAGE_DEFAULTS.region;
+    } catch {
+      return CONFIG.STORAGE_DEFAULTS.region;
+    }
   }
 
   fetchBirdsForRegion(region) {

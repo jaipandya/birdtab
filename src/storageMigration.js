@@ -86,6 +86,9 @@ export async function runMigration() {
       }
     }
 
+    // Pre-2.0 regions came from a different bird list; everyone starts on World
+    localData.region = CONFIG.STORAGE_DEFAULTS.region;
+
     // Write to local storage
     await chrome.storage.local.set(localData);
     log('Storage migration: Data written to local storage');
@@ -111,6 +114,40 @@ export async function runMigration() {
   }
 }
 
+// Regions return in 2.1.0. Earlier versions could leave a pre-2.0 region
+// (e.g. 'US') in storage while showing World, so the first 2.1 run resets it.
+const REGION_SETTING_VERSION = 1;
+const REGION_SETTING_FLAG_KEY = 'regionSettingVersion';
+let regionMigrationPromise = null;
+
+/**
+ * Make sure users coming from an earlier version start on World.
+ * Runs once per install (onInstalled 'update' or the first service worker start).
+ *
+ * @returns {Promise<void>}
+ */
+export function ensureRegionSettingMigrated() {
+  if (!regionMigrationPromise) {
+    regionMigrationPromise = (async () => {
+      try {
+        const result = await chrome.storage.local.get([REGION_SETTING_FLAG_KEY, 'region']);
+        if (result[REGION_SETTING_FLAG_KEY] >= REGION_SETTING_VERSION) return;
+        const update = { [REGION_SETTING_FLAG_KEY]: REGION_SETTING_VERSION };
+        // Write region only when it differs, so a 2.0.x preloaded bird isn't replaced
+        if (result.region !== CONFIG.STORAGE_DEFAULTS.region) {
+          update.region = CONFIG.STORAGE_DEFAULTS.region;
+          log(`Storage migration: Region ${result.region} reset to ${CONFIG.STORAGE_DEFAULTS.region}`);
+        }
+        await chrome.storage.local.set(update);
+      } catch (error) {
+        log(`Storage migration: Region migration failed: ${error.message}`);
+        regionMigrationPromise = null;
+      }
+    })();
+  }
+  return regionMigrationPromise;
+}
+
 /**
  * Initialize local storage for a fresh install
  * Sets all defaults in local storage
@@ -124,7 +161,8 @@ export async function initializeFreshInstall() {
     // Set all defaults in local storage
     await chrome.storage.local.set({
       ...CONFIG.STORAGE_DEFAULTS,
-      [MIGRATION_FLAG_KEY]: MIGRATION_VERSION
+      [MIGRATION_FLAG_KEY]: MIGRATION_VERSION,
+      [REGION_SETTING_FLAG_KEY]: REGION_SETTING_VERSION
     });
 
     log('Storage migration: Fresh install initialized with defaults');

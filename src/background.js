@@ -1,10 +1,22 @@
 import { CONFIG } from './config.js';
-import { initSentry, captureException, addBreadcrumb, reportApiError } from './sentry.js';
+import { initSentry, captureException, addBreadcrumb, reportApiError, updateUserContext } from './sentry.js';
 import { log } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
 import { isBrowserNewTabUrl } from './browserInfo.js';
-import { needsMigration, runMigration, initializeFreshInstall } from './storageMigration.js';
-import { getManifest, getRandomBird, clearManifestCache, fetchManifest } from './mediaClient.js';
+import { needsMigration, runMigration, initializeFreshInstall, ensureRegionSettingMigrated } from './storageMigration.js';
+import {
+  ensureMedia,
+  refreshRelease,
+  getRandomBird,
+  getRegionBirds,
+  getSelectedRegion,
+  switchRegion,
+  isManifestCached,
+  clearManifestCache,
+  resetMemoryCache,
+  setErrorReporter,
+  RELEASE_KEY,
+} from './mediaClient.js';
 
 // --- Event listeners registered FIRST ---
 // In MV3, Chrome only delivers pending events after module evaluation completes.
@@ -12,6 +24,8 @@ import { getManifest, getRandomBird, clearManifestCache, fetchManifest } from '.
 // as early as possible when the service worker is woken from a cold start.
 
 let preloadInProgress = false;
+// Bumped on region change so a preload started for the old region is discarded
+let preloadGeneration = 0;
 let lastNewTabId = null;
 let serviceWorkerStartTime = Date.now();
 
@@ -39,41 +53,42 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'preloadNext') {
     if (!preloadInProgress) {
       preloadInProgress = true;
-      preloadNextBird('WLD')
+      getSelectedRegion()
+        .then(region => preloadNextBird(region))
         .catch(error => log(`Preload failed: ${error.message}`))
-        .finally(() => { preloadInProgress = false; });
+        .finally(() => {
+          preloadInProgress = false;
+          // Check for a new media release in the background (at most every 6 hours)
+          refreshRelease();
+        });
     }
     sendResponse({ ok: true });
     return true;
   } else if (request.action === 'deleteCache') {
-    clearCache();
-    chrome.storage.local.remove('preloadedBird');
-    // Re-run bootstrap to simulate service worker cold start
-    bootstrap({ forceRefresh: true });
+    (async () => {
+      await clearCache();
+      await chrome.storage.local.remove('preloadedBird');
+      // Re-run bootstrap to simulate service worker cold start
+      bootstrap({ forceRefresh: true });
+    })();
     sendResponse({ message: 'Cache deleted' });
     return true;
   } else if (request.action === 'getBirdsByRegion') {
     (async () => {
       try {
-        const manifest = await getManifest();
-        const codes = manifest.regions?.WLD?.speciesCodes ?? [];
-        const speciesByCode = new Map(manifest.species.map(s => [s.speciesCode, s]));
-        const birds = codes.map(code => {
-          const entry = speciesByCode.get(code);
-          if (!entry) return null;
-          return {
-            speciesCode: entry.speciesCode,
-            primaryComName: entry.primaryComName,
-            scientificName: entry.scientificName,
-            imageUrl: entry.image?.renditions?.default?.url ?? null,
-            photographer: entry.image?.creatorName ?? null,
-            photographerUrl: entry.image?.creatorUrl ?? null,
-            imageLicense: entry.image?.license ?? null,
-            imageLicenseUrl: entry.image?.licenseUrl ?? null,
-            imageSource: entry.image?.source ?? null,
-            imageSourceUrl: entry.image?.sourceUrl ?? null,
-          };
-        }).filter(Boolean);
+        const region = request.region || await getSelectedRegion();
+        const birds = (await getRegionBirds(region)).map(bird => ({
+          speciesCode: bird.speciesCode,
+          primaryComName: bird.primaryComName,
+          scientificName: bird.scientificName,
+          imageUrl: bird.imageUrl,
+          photographer: bird.photographer,
+          photographerUrl: bird.photographerUrl,
+          imageLicense: bird.imageLicense,
+          imageLicenseUrl: bird.imageLicenseUrl,
+          imageSource: bird.imageSource,
+          imageSourceUrl: bird.imageSourceUrl,
+        }));
         sendResponse({ success: true, birds });
       } catch (error) {
         captureException(error, {
@@ -86,26 +101,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   } else if (request.action === 'fetchManifest') {
     (async () => {
-      try {
-        await fetchManifest();
-        sendResponse({ success: true });
-      } catch (error) {
-        log(`Error fetching manifest: ${error.message}`);
-        sendResponse({ success: false, error: error.message });
+      const { ready } = await ensureMedia();
+      if (!ready) {
+        log('No bird manifest could be fetched');
       }
+      sendResponse({ success: ready });
     })();
     return true;
   } else if (request.action === 'isManifestReady') {
     (async () => {
       try {
-        const manifest = await getManifest();
-        sendResponse({ ready: !!manifest });
+        sendResponse({ ready: await isManifestCached() });
       } catch {
         sendResponse({ ready: false });
       }
     })();
     return true;
+  } else if (request.action === 'switchRegion') {
+    // Settings sidebar: fetch the region's manifest, then change the setting.
+    // The storage.onChanged listener below preloads the next bird from it.
+    (async () => {
+      try {
+        const result = await switchRegion(request.region);
+        sendResponse({ success: true, ...result });
+      } catch (error) {
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true;
+  } else if (request.action === 'loadRegionIndex') {
+    // Settings sidebar has no stored region list: discover the release now.
+    (async () => {
+      const result = await refreshRelease({ force: true });
+      const { [RELEASE_KEY]: stored } = await chrome.storage.local.get(RELEASE_KEY);
+      sendResponse({ success: !!stored?.index, status: result.status });
+    })();
+    return true;
   }
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  // Browser start: check for a new media release regardless of the 6-hour gate
+  refreshRelease({ force: true });
 });
 
 // --- Heavy initialization (deferred after event listeners) ---
@@ -115,6 +152,11 @@ initSentry('background');
 log('Background script starting...');
 addBreadcrumb('Background script started', 'lifecycle', 'info');
 log(`Service worker started at: ${new Date(serviceWorkerStartTime).toISOString()}`);
+
+// Media fetch failures go to Sentry (transient network issues at info level)
+setErrorReporter((error, { operation, extra }) => {
+  reportApiError(error, { operation, component: 'mediaClient', transientLevel: 'info', extra });
+});
 
 self.addEventListener('unhandledrejection', (event) => {
   log(`Unhandled promise rejection: ${event.reason}`);
@@ -134,7 +176,7 @@ async function fetchBirdInfo(region) {
       throw new Error('No bird found in manifest for region ' + region);
     }
 
-    birdInfo.location = region;
+    birdInfo.location = birdInfo.location || region;
 
     log(`Bird info compiled: ${birdInfo.name} (${birdInfo.speciesCode})`);
     const duration = Date.now() - startTime;
@@ -184,9 +226,15 @@ async function getRandomCachedBirdInfo() {
 }
 
 async function preloadNextBird(region) {
+  const generation = preloadGeneration;
   try {
     const birdInfo = await fetchBirdInfo(region);
     log('Bird info fetched successfully for preloading');
+
+    if (generation !== preloadGeneration) {
+      log('Region changed during preload, discarding bird');
+      return;
+    }
 
     // Store preloaded bird in chrome.storage.local so the content script
     // can read it directly without needing to message the service worker.
@@ -235,16 +283,27 @@ function clearLegacyCacheKeys() {
   });
 }
 
-function clearCache() {
-  clearManifestCache().then(() => log('Manifest cache cleared'));
+async function clearCache() {
   clearLegacyCacheKeys();
+  await clearManifestCache();
+  log('Manifest cache cleared');
 }
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === 'local' && changes.region) {
-    log('Region changed, clearing cache');
-    clearCache();
-    chrome.storage.local.remove('preloadedBird');
+  if (namespace === 'local' && changes.region && changes.region.newValue &&
+    changes.region.newValue !== changes.region.oldValue) {
+    // The bird on screen stays; the next new tab uses the new region.
+    const region = changes.region.newValue;
+    log(`Region changed to ${region}, preloading the next bird from it`);
+    preloadGeneration++;
+    chrome.storage.local.remove('preloadedBird', () => preloadNextBird(region));
+    updateUserContext({ region });
+  }
+
+  // Storage cleared elsewhere (settings reset): forget in-memory manifests
+  if (namespace === 'local' && Object.entries(changes).some(([key, change]) =>
+    key.startsWith('media_') && change.newValue === undefined)) {
+    resetMemoryCache();
   }
 
   if (namespace === 'local' && changes.quietHours) {
@@ -268,13 +327,15 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
  * Runs on service worker cold start and after cache clear.
  */
 async function bootstrap({ forceRefresh = false } = {}) {
-  try {
-    await getManifest({ forceRefresh });
-    log('Manifest ready');
-  } catch (error) {
-    log(`Manifest fetch failed: ${error.message}`);
+  await ensureRegionSettingMigrated();
+  const { ready, schema, release } = await ensureMedia({ force: forceRefresh });
+  log(ready ? `Manifest ready (schema ${schema}${release ? `, release ${release}` : ''})` : 'No manifest available yet');
+
+  // Keep a 2.0.x preloaded bird (or one from this session) for the next tab
+  const { preloadedBird } = await chrome.storage.local.get('preloadedBird');
+  if (!preloadedBird) {
+    preloadNextBird(await getSelectedRegion());
   }
-  preloadNextBird('WLD');
 }
 
 // Run bootstrap eagerly on service worker start
@@ -293,7 +354,11 @@ chrome.runtime.onInstalled.addListener(async function (details) {
     if (await needsMigration()) {
       await runMigration();
     }
+    await ensureRegionSettingMigrated();
     clearLegacyCacheKeys();
+    // Move to the latest media release now rather than waiting 6 hours.
+    // The schema 1 manifest from 2.0.x stays in use until this has stored World.
+    refreshRelease({ force: true });
   }
 
   if (details.reason === 'install') {

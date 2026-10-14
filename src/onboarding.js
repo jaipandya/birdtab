@@ -3,6 +3,7 @@ import './onboarding.css';
 import { localizeHtml } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
+import CONFIG from './config.js';
 import { initAnalytics, trackOnboardingCompleted } from './analytics.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -38,10 +39,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   finishButton.addEventListener('click', async () => {
     const autoPlayEnabled = document.getElementById('autoplay-toggle').checked;
+    const { region = CONFIG.STORAGE_DEFAULTS.region } = await chrome.storage.local.get(['region']);
 
-    addBreadcrumb('Onboarding completed', 'user', 'info', { 
-      region: 'WLD', 
-      autoPlay: autoPlayEnabled 
+    addBreadcrumb('Onboarding completed', 'user', 'info', {
+      region,
+      autoPlay: autoPlayEnabled
     });
 
     // If the manifest isn't ready yet, show a loading state briefly
@@ -64,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     chrome.storage.local.set({
-      region: 'WLD',
+      region,
       autoPlay: autoPlayEnabled
     }, () => {
       if (chrome.runtime.lastError) {
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        trackOnboardingCompleted('WLD', autoPlayEnabled);
+        trackOnboardingCompleted(region, autoPlayEnabled);
 
         if (transaction) {
           transaction.setStatus('ok');

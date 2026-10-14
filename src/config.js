@@ -1,5 +1,49 @@
+// ---------------------------------------------------------------------------
+// Media releases (schema 2). Format: crawlers/RELEASE_FORMAT.md
+// ---------------------------------------------------------------------------
+
+const IS_PRODUCTION_BUILD = process.env.NODE_ENV === 'production';
+
+// Production media host. Dev builds can point at a local media server by
+// setting MEDIA_BASE_URL in .env.local (e.g. MEDIA_BASE_URL=http://localhost:8787).
+// Production builds ignore MEDIA_BASE_URL so a stray env var can never ship.
+const PRODUCTION_MEDIA_BASE_URL = 'https://media.birdtab.app';
+const MEDIA_BASE_URL = ((!IS_PRODUCTION_BUILD && process.env.MEDIA_BASE_URL) || PRODUCTION_MEDIA_BASE_URL)
+  .replace(/\/+$/, '');
+
+// >>> RELEASE-TIME CONSTANT <<<
+// The schema 2 release that is live on media.birdtab.app when the production
+// build is made (e.g. 'm261020r01'). Used only when current.json can't be read
+// and nothing schema 2 is stored yet. While null, such users get the schema 1
+// World manifest below, exactly like 2.0.x.
+const PRODUCTION_FALLBACK_RELEASE = null;
+
+// Dev builds fall back to the local test release exported by the crawlers.
+const DEV_FALLBACK_RELEASE = 'm000000r01';
+
+const FALLBACK_RELEASE = IS_PRODUCTION_BUILD ? PRODUCTION_FALLBACK_RELEASE : DEV_FALLBACK_RELEASE;
+
+// Region setting default and the region every release has
+const DEFAULT_REGION = 'WLD';
+
 export const CONFIG = {
-  MANIFEST_URL: 'https://media.birdtab.app/m260416r01/manifests/manifest.json',
+  MEDIA: {
+    BASE_URL: MEDIA_BASE_URL,
+    // Pointer to the live release (short cache), read at most every REFRESH_INTERVAL_MS
+    CURRENT_URL: `${MEDIA_BASE_URL}/current.json`,
+    // Built-in index used when current.json is unreachable and nothing is stored
+    FALLBACK_INDEX_URL: FALLBACK_RELEASE ? `${MEDIA_BASE_URL}/releases/${FALLBACK_RELEASE}/index.json` : null,
+    // Schema 1 World manifest (what 2.0.x reads). Last resort when no schema 2 data is reachable.
+    LEGACY_MANIFEST_URL: 'https://media.birdtab.app/m260416r01/manifests/manifest.json',
+    SCHEMA_VERSION: 2,
+    DEFAULT_REGION,
+    REFRESH_INTERVAL_MS: 6 * 60 * 60 * 1000, // current.json at most every 6 hours
+    FAILURE_BACKOFF_MS: 15 * 60 * 1000, // after a failed check, wait before trying again
+    FETCH_TIMEOUT_MS: 15000,
+    FETCH_RETRIES: 2, // retries after the first attempt
+    RETRY_BASE_DELAY_MS: 1000, // 1s, 2s, ... plus jitter
+  },
+
   DEV_TAB_COUNT: 5,  // Number of new tabs to open before showing the prompt in dev mode
   PROD_TAB_COUNT: 50,  // Number of new tabs to open before showing the prompt in production
   DEV_TIME_DELAY: 1 * 60 * 1000,  // 1 minute in milliseconds
@@ -45,7 +89,7 @@ export const CONFIG = {
   // Default values for local storage settings
   // These are used for fresh installs and as fallbacks during migration
   STORAGE_DEFAULTS: {
-    region: 'WLD',
+    region: DEFAULT_REGION,
     autoPlay: false,
     quietHours: false,
     clockDisplayMode: 'clock',
