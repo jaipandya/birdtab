@@ -16,6 +16,7 @@ import {
   legacyManifest,
   schema1StorageState,
   installMocks,
+  streamingResponse,
 } from './fixtures/mediaRelease.js';
 
 const R1 = 'm261020r01';
@@ -34,6 +35,21 @@ function load({ storage, routes, version, fallbackRelease = null } = {}) {
   CONFIG.MEDIA.FALLBACK_INDEX_URL = fallbackRelease ? indexUrl(fallbackRelease) : null;
   client = require('../mediaClient.js');
   return mocks;
+}
+
+/** Let pending promise chains (storage mocks, fetch) run. */
+async function settle(until = () => false) {
+  for (let i = 0; i < 200 && !until(); i++) {
+    await Promise.resolve();
+  }
+}
+
+/** Route whose body the test streams by hand: downloads[name] is set when fetched. */
+function manualRoute(downloads, name, headers = {}) {
+  return init => {
+    downloads[name] = streamingResponse({ signal: init.signal, headers });
+    return downloads[name].response;
+  };
 }
 
 function storedKeys() {
@@ -316,6 +332,135 @@ describe('region switch', () => {
     expect(mocks.data.region).toBe('WLD');
   });
 
+  test('picking another region aborts the pending download; it resolves as superseded', async () => {
+    await setup('WLD');
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN');
+    const reporter = jest.fn();
+    client.setErrorReporter(reporter);
+
+    const toIndia = client.switchRegion('IN');
+    await settle(() => downloads.IN);
+    expect(client.getPendingRegionSwitch()).toBe('IN');
+    const toUs = client.switchRegion('US');
+
+    await expect(toIndia).resolves.toEqual({ superseded: true, region: 'IN' });
+    expect(downloads.IN.aborted).toBe(true);
+    await expect(toUs).resolves.toEqual({ region: 'US', previousRegion: 'WLD' });
+    expect(mocks.data.region).toBe('US');
+    expect(storedKeys()).toEqual(['media_discovery', 'media_region_US', 'media_region_WLD', 'media_release']);
+    expect(reporter).not.toHaveBeenCalled();
+    expect(client.getPendingRegionSwitch()).toBeNull();
+  });
+
+  test('picking the region already loading returns the same switch (one fetch)', async () => {
+    await setup('WLD');
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN');
+    global.fetch.mockClear();
+
+    const first = client.switchRegion('IN');
+    await settle(() => downloads.IN);
+    const second = client.switchRegion('IN');
+    expect(second).toBe(first);
+
+    downloads.IN.push(JSON.stringify(regionManifest(R1, 'IN')));
+    downloads.IN.end();
+    await expect(first).resolves.toEqual({ region: 'IN', previousRegion: 'WLD' });
+    expect(mocks.fetchedUrls()).toEqual([regionUrl(R1, 'IN')]);
+    expect(mocks.data.region).toBe('IN');
+  });
+
+  test('picking World is immediate and cancels the pending switch', async () => {
+    await setup('US');
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN');
+
+    const toIndia = client.switchRegion('IN');
+    await settle(() => downloads.IN);
+    const toWorld = client.switchRegion('WLD');
+
+    await expect(toWorld).resolves.toEqual({ region: 'WLD', previousRegion: 'US' });
+    await expect(toIndia).resolves.toMatchObject({ superseded: true });
+    expect(downloads.IN.aborted).toBe(true);
+    expect(mocks.data.region).toBe('WLD');
+    expect(storedKeys()).toEqual(['media_discovery', 'media_region_WLD', 'media_release']);
+  });
+
+  test('a download finished just before being superseded writes nothing', async () => {
+    await setup('WLD');
+    // Hold the lock so the finished IN download waits to write
+    let releaseLock;
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN');
+    mocks.data.media_discovery.lastCheckedAt = 0;
+    mocks.routes[CURRENT_URL] = () => new Promise(resolve => { releaseLock = () => resolve(currentJson(R1)); });
+
+    const refresh = client.refreshRelease();
+    await settle(() => releaseLock);
+    const toIndia = client.switchRegion('IN');
+    await settle(() => downloads.IN);
+    downloads.IN.push(JSON.stringify(regionManifest(R1, 'IN')));
+    downloads.IN.end();
+    await settle();
+    const toWorld = client.switchRegion('WLD');
+    releaseLock();
+    await refresh;
+
+    await expect(toIndia).resolves.toMatchObject({ superseded: true });
+    await toWorld;
+    expect(mocks.data.region).toBe('WLD');
+    expect(mocks.data.media_region_IN).toBeUndefined();
+    expect(mocks.local.set.mock.calls.some(([items]) => items.region === 'IN')).toBe(false);
+  });
+
+  test('a release switch during the download: the region is fetched again for the new release', async () => {
+    await setup('WLD');
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN');
+
+    const toIndia = client.switchRegion('IN');
+    await settle(() => downloads.IN);
+
+    // R2 is published and installed while IN (R1) downloads: not blocked by the switch
+    Object.assign(mocks.routes, releaseRoutes(R2));
+    mocks.data.media_discovery.lastCheckedAt = 0;
+    await expect(client.refreshRelease()).resolves.toEqual({ status: 'switched', release: R2 });
+
+    downloads.IN.push(JSON.stringify(regionManifest(R1, 'IN')));
+    downloads.IN.end();
+
+    await expect(toIndia).resolves.toEqual({ region: 'IN', previousRegion: 'WLD' });
+    expect(mocks.data.media_release.release).toBe(R2);
+    expect(mocks.data.media_region_IN.meta.release).toBe(R2);
+    expect(mocks.fetchedUrls()).toContain(regionUrl(R2, 'IN'));
+  });
+
+  test('a failed download after a release switch leaves everything unchanged', async () => {
+    await setup('WLD');
+    mocks.routes[regionUrl(R1, 'IN')] = new TypeError('Failed to fetch');
+    await expect(client.switchRegion('IN')).rejects.toThrow('Failed to fetch');
+    expect(mocks.data.region).toBe('WLD');
+    expect(mocks.local.set.mock.calls.some(([items]) => items.region === 'IN')).toBe(false);
+  });
+
+  test('reports progress against the index size', async () => {
+    await setup('WLD');
+    const downloads = {};
+    mocks.routes[regionUrl(R1, 'IN')] = manualRoute(downloads, 'IN', { 'content-encoding': 'gzip', 'content-length': '10' });
+    const onProgress = jest.fn();
+
+    const toIndia = client.switchRegion('IN', { onProgress });
+    await settle(() => downloads.IN);
+    const body = JSON.stringify(regionManifest(R1, 'IN'));
+    downloads.IN.push(body.slice(0, 400));
+    await settle();
+    expect(onProgress).toHaveBeenLastCalledWith(400, 1000);
+    downloads.IN.push(body.slice(400));
+    downloads.IN.end();
+    await toIndia;
+  });
+
   test('getRegionBirds returns the region list in order', async () => {
     await setup('IN');
     const birds = await client.getRegionBirds('IN');
@@ -453,6 +598,207 @@ describe('fetchJson', () => {
     await expect(client.fetchJson('https://x/a.json', { timeoutMs: 10, retries: 1, baseDelayMs: 0 }))
       .rejects.toMatchObject({ isTimeout: true, isNetworkError: true });
     expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  describe('streamed bodies', () => {
+    const URL = 'https://x/region.json';
+    let downloads;
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      downloads = {};
+      load({ routes: {} });
+    });
+    afterEach(() => jest.useRealTimers());
+
+    function route(headers) {
+      let n = 0;
+      mocks.routes[URL] = init => manualRoute(downloads, `attempt${++n}`, headers)(init);
+    }
+
+    test('a slow download that keeps receiving bytes is never cut off', async () => {
+      route();
+      const onProgress = jest.fn();
+      const result = client.fetchJson(URL, { onProgress, expectedBytes: 12 });
+      await settle(() => downloads.attempt1);
+
+      // 60 s in total, 10 s between chunks: past every 15 s timeout, never stalled
+      const body = '{"birds":42}';
+      for (const chunk of body.match(/.{1,2}/g)) {
+        await jest.advanceTimersByTimeAsync(10000);
+        downloads.attempt1.push(chunk);
+      }
+      downloads.attempt1.end();
+
+      await expect(result).resolves.toEqual({ birds: 42 });
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(onProgress).toHaveBeenLastCalledWith(12, 12);
+    });
+
+    test('a stalled download is aborted after the stall timeout and retried', async () => {
+      route();
+      const result = client.fetchJson(URL, { retries: 1, baseDelayMs: 0 });
+      await settle(() => downloads.attempt1);
+      downloads.attempt1.push('{"bir');
+
+      await jest.advanceTimersByTimeAsync(14999);
+      expect(downloads.attempt1.aborted).toBe(false);
+      await jest.advanceTimersByTimeAsync(1);
+      expect(downloads.attempt1.aborted).toBe(true);
+
+      await jest.advanceTimersByTimeAsync(10); // backoff
+      await settle(() => downloads.attempt2);
+      downloads.attempt2.push('{"birds":1}');
+      downloads.attempt2.end();
+      await expect(result).resolves.toEqual({ birds: 1 });
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    test('a stall that outlasts the retries fails as a timeout', async () => {
+      route();
+      const result = client.fetchJson(URL, { retries: 0 });
+      const assertion = expect(result).rejects.toMatchObject({ isTimeout: true, isNetworkError: true, isStall: true });
+      await settle(() => downloads.attempt1);
+      await jest.advanceTimersByTimeAsync(15000);
+      await assertion;
+    });
+
+    test('no response headers within the response timeout: retried', async () => {
+      let calls = 0;
+      mocks.routes[URL] = init => {
+        calls += 1;
+        if (calls === 1) {
+          return new Promise((resolve, reject) => init.signal.addEventListener('abort', () => {
+            const error = new Error('aborted');
+            error.name = 'AbortError';
+            reject(error);
+          }));
+        }
+        return { ok: 1 };
+      };
+      const result = client.fetchJson(URL, { retries: 1, baseDelayMs: 0 });
+      await jest.advanceTimersByTimeAsync(14999);
+      expect(calls).toBe(1);
+      await jest.advanceTimersByTimeAsync(1);
+      await jest.advanceTimersByTimeAsync(10); // backoff
+      await expect(result).resolves.toEqual({ ok: 1 });
+      expect(calls).toBe(2);
+    });
+
+    test('an external abort rejects as aborted and is not retried', async () => {
+      route();
+      const controller = new AbortController();
+      const result = client.fetchJson(URL, { signal: controller.signal, retries: 2, baseDelayMs: 0 });
+      await settle(() => downloads.attempt1);
+      downloads.attempt1.push('{"bi');
+
+      controller.abort();
+
+      await expect(result).rejects.toMatchObject({ isAborted: true });
+      expect(downloads.attempt1.aborted).toBe(true);
+      await jest.advanceTimersByTimeAsync(60000);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    test('an abort during the retry backoff stops at once', async () => {
+      mocks.routes[URL] = 503;
+      const controller = new AbortController();
+      const result = client.fetchJson(URL, { signal: controller.signal, retries: 2, baseDelayMs: 1000 });
+      const assertion = expect(result).rejects.toMatchObject({ isAborted: true });
+      await settle(() => global.fetch.mock.calls.length === 1);
+      controller.abort();
+      await assertion;
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    test('expected size: Content-Length only when the response is not content-encoded', async () => {
+      route({ 'content-length': '11' });
+      const plain = jest.fn();
+      const first = client.fetchJson(URL, { onProgress: plain });
+      await settle(() => downloads.attempt1);
+      downloads.attempt1.push('{"a":12345}');
+      downloads.attempt1.end();
+      await first;
+      expect(plain).toHaveBeenLastCalledWith(11, 11);
+
+      route({ 'content-length': '5', 'content-encoding': 'br' });
+      downloads = {};
+      const compressed = jest.fn();
+      const second = client.fetchJson(URL, { onProgress: compressed });
+      await settle(() => downloads.attempt1);
+      downloads.attempt1.push('{"a":12345}');
+      downloads.attempt1.end();
+      await second;
+      expect(compressed).toHaveBeenLastCalledWith(11, null);
+    });
+
+    test('a parse error is not retried', async () => {
+      route();
+      const result = client.fetchJson(URL, { retries: 2, baseDelayMs: 0 });
+      const assertion = expect(result).rejects.toThrow(SyntaxError);
+      await settle(() => downloads.attempt1);
+      downloads.attempt1.push('{"truncated');
+      downloads.attempt1.end();
+      await assertion;
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('shared in-flight fetches', () => {
+    const URL = 'https://x/region.json';
+    let downloads;
+
+    beforeEach(() => {
+      downloads = {};
+      load({ routes: {} });
+      mocks.routes[URL] = manualRoute(downloads, 'one');
+    });
+
+    test('concurrent fetches of one URL share a request and its progress', async () => {
+      const progressA = jest.fn();
+      const progressB = jest.fn();
+      const a = client.fetchJson(URL, { onProgress: progressA, expectedBytes: 10 });
+      await settle(() => downloads.one);
+      downloads.one.push('{"x":');
+      await settle(() => progressA.mock.calls.length === 2);
+      const b = client.fetchJson(URL, { onProgress: progressB, expectedBytes: 10 });
+      downloads.one.push('1}');
+      downloads.one.end();
+
+      await expect(a).resolves.toEqual({ x: 1 });
+      await expect(b).resolves.toEqual({ x: 1 });
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(progressA).toHaveBeenLastCalledWith(7, 10);
+      // joined late: told the progress so far, then the rest
+      expect(progressB.mock.calls[0]).toEqual([5, 10]);
+      expect(progressB).toHaveBeenLastCalledWith(7, 10);
+    });
+
+    test('one caller aborting leaves the request to the others; the last one cancels it', async () => {
+      const first = new AbortController();
+      const second = new AbortController();
+      const a = client.fetchJson(URL, { signal: first.signal });
+      const b = client.fetchJson(URL, { signal: second.signal });
+      const c = client.fetchJson(URL);
+      await settle(() => downloads.one);
+
+      first.abort();
+      await expect(a).rejects.toMatchObject({ isAborted: true });
+      expect(downloads.one.aborted).toBe(false);
+
+      downloads.one.push('{"x":2}');
+      downloads.one.end();
+      await expect(b).resolves.toEqual({ x: 2 });
+      await expect(c).resolves.toEqual({ x: 2 });
+
+      // A new fetch starts fresh; aborting its only caller cancels the request
+      const solo = new AbortController();
+      const d = client.fetchJson(URL, { signal: solo.signal });
+      await settle(() => global.fetch.mock.calls.length === 2);
+      solo.abort();
+      await expect(d).rejects.toMatchObject({ isAborted: true });
+      expect(downloads.one.aborted).toBe(true);
+    });
   });
 });
 

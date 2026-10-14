@@ -126,7 +126,7 @@ export function schema1StorageState() {
 
 /**
  * Install global chrome and fetch mocks.
- * routes: { url: json | number (HTTP status) | Error | (() => json|number|Error) }
+ * routes: { url: json | number (HTTP status) | Error | ((init) => json|number|Error|streamingResponse) }
  */
 export function installMocks({ storage = {}, routes = {}, version = '2.1.0' } = {}) {
   const data = JSON.parse(JSON.stringify(storage));
@@ -160,6 +160,37 @@ export function installMocks({ storage = {}, routes = {}, version = '2.1.0' } = 
     getKeys: jest.fn(() => Promise.resolve(Object.keys(data))),
   };
 
+  // chrome.storage.session: promise API, fires storage.onChanged('session')
+  const sessionData = {};
+  const emitChange = (changes, area) => changeListeners.slice().forEach(fn => fn(changes, area));
+  const session = {
+    data: sessionData,
+    get: jest.fn(keys => {
+      const list = keys === null || keys === undefined ? Object.keys(sessionData) : (typeof keys === 'string' ? [keys] : keys);
+      const out = {};
+      list.forEach(k => { if (sessionData[k] !== undefined) out[k] = JSON.parse(JSON.stringify(sessionData[k])); });
+      return Promise.resolve(out);
+    }),
+    set: jest.fn(items => {
+      const changes = {};
+      Object.entries(JSON.parse(JSON.stringify(items))).forEach(([k, v]) => {
+        changes[k] = { oldValue: sessionData[k], newValue: v };
+        sessionData[k] = v;
+      });
+      emitChange(changes, 'session');
+      return Promise.resolve();
+    }),
+    remove: jest.fn(keys => {
+      const changes = {};
+      (typeof keys === 'string' ? [keys] : keys).forEach(k => {
+        if (sessionData[k] !== undefined) changes[k] = { oldValue: sessionData[k], newValue: undefined };
+        delete sessionData[k];
+      });
+      if (Object.keys(changes).length) emitChange(changes, 'session');
+      return Promise.resolve();
+    }),
+  };
+
   global.chrome = {
     runtime: {
       lastError: undefined,
@@ -168,6 +199,7 @@ export function installMocks({ storage = {}, routes = {}, version = '2.1.0' } = 
     },
     storage: {
       local,
+      session,
       sync: { get: jest.fn(), set: jest.fn() },
       onChanged: { addListener: jest.fn(fn => changeListeners.push(fn)), removeListener: jest.fn() },
     },
@@ -178,9 +210,10 @@ export function installMocks({ storage = {}, routes = {}, version = '2.1.0' } = 
   };
 
   const liveRoutes = { ...routes };
-  global.fetch = jest.fn(async url => {
+  global.fetch = jest.fn(async (url, init = {}) => {
     let route = liveRoutes[url];
-    if (typeof route === 'function') route = route();
+    if (typeof route === 'function') route = await route(init);
+    if (route?.isMockResponse) return route;
     if (route === undefined) route = 404;
     if (route instanceof Error) throw route;
     if (typeof route === 'number') {
@@ -190,5 +223,60 @@ export function installMocks({ storage = {}, routes = {}, version = '2.1.0' } = 
     return { ok: true, status: 200, json: async () => body };
   });
 
-  return { data, local, routes: liveRoutes, fetchedUrls: () => global.fetch.mock.calls.map(c => c[0]) };
+  return {
+    data, local, session, emitChange, routes: liveRoutes,
+    fetchedUrls: () => global.fetch.mock.calls.map(c => c[0]),
+  };
+}
+
+/**
+ * A response whose body arrives when the test says so (streamed through
+ * body.getReader()). Aborting the request's signal fails the read.
+ *   const download = streamingResponse({ signal, headers: { 'content-length': '100' } });
+ *   download.push('{"a":'); download.push('1}'); download.end();
+ */
+export function streamingResponse({ signal = null, headers = {}, status = 200 } = {}) {
+  const queue = [];
+  const waiting = [];
+  let ended = false;
+  let failure = null;
+  const fail = error => {
+    failure = error;
+    waiting.splice(0).forEach(w => w.reject(error));
+  };
+  signal?.addEventListener('abort', () => {
+    const error = new Error('The operation was aborted');
+    error.name = 'AbortError';
+    fail(error);
+  });
+  const reader = {
+    read: () => new Promise((resolve, reject) => {
+      if (failure) reject(failure);
+      else if (queue.length) resolve({ done: false, value: queue.shift() });
+      else if (ended) resolve({ done: true, value: undefined });
+      else waiting.push({ resolve, reject });
+    }),
+  };
+  const lower = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
+  return {
+    response: {
+      isMockResponse: true,
+      ok: status >= 200 && status < 300,
+      status,
+      headers: { get: name => lower[name.toLowerCase()] ?? null },
+      body: { getReader: () => reader },
+    },
+    push(text) {
+      const value = new TextEncoder().encode(text);
+      const waiter = waiting.shift();
+      if (waiter) waiter.resolve({ done: false, value });
+      else queue.push(value);
+    },
+    end() {
+      ended = true;
+      waiting.splice(0).forEach(w => w.resolve({ done: true, value: undefined }));
+    },
+    fail,
+    get aborted() { return !!signal?.aborted; },
+  };
 }

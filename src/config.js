@@ -39,7 +39,9 @@ export const CONFIG = {
     DEFAULT_REGION,
     REFRESH_INTERVAL_MS: 6 * 60 * 60 * 1000, // current.json at most every 6 hours
     FAILURE_BACKOFF_MS: 15 * 60 * 1000, // after a failed check, wait before trying again
-    FETCH_TIMEOUT_MS: 15000,
+    FETCH_TIMEOUT_MS: 15000, // no response headers within this: the attempt fails
+    FETCH_STALL_TIMEOUT_MS: 15000, // no body bytes for this long: the attempt fails
+    FETCH_MAX_DURATION_MS: 5 * 60 * 1000, // safety cap for a download that keeps receiving bytes
     FETCH_RETRIES: 2, // retries after the first attempt
     RETRY_BASE_DELAY_MS: 1000, // 1s, 2s, ... plus jitter
   },

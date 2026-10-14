@@ -1,3 +1,8 @@
+// jsdom lacks TextDecoder/TextEncoder (used by mediaClient's streaming reader)
+const { TextDecoder, TextEncoder } = require('util');
+if (typeof global.TextDecoder === 'undefined') global.TextDecoder = TextDecoder;
+if (typeof global.TextEncoder === 'undefined') global.TextEncoder = TextEncoder;
+
 // Mock Chrome API
 global.chrome = {
   runtime: {

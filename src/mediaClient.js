@@ -167,66 +167,256 @@ function isValidLegacyManifest(manifest) {
 
 // --- Network ---------------------------------------------------------------
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function abortedError(url) {
+  const error = new Error(`Fetch aborted for ${url}`);
+  error.name = 'AbortError';
+  error.isAborted = true;
+  return error;
+}
+
+/** Wait ms, or reject with an isAborted error as soon as signal aborts. */
+function sleep(ms, signal = null, url = '') {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(abortedError(url));
+      return;
+    }
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(abortedError(url));
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
+function timeoutError(message, extra = {}) {
+  const error = new Error(message);
+  error.isNetworkError = true;
+  error.isTimeout = true;
+  return Object.assign(error, extra);
+}
+
+/** Expected body size: the caller's, else Content-Length of an uncompressed response. */
+function expectedSize(response, expectedBytes) {
+  if (expectedBytes > 0) return expectedBytes;
+  const headers = response.headers;
+  if (!headers?.get || headers.get('content-encoding')) return null;
+  const length = parseInt(headers.get('content-length'), 10);
+  return length > 0 ? length : null;
 }
 
 /**
- * Fetch JSON with a timeout per attempt and retries with exponential backoff.
- * 4xx responses other than 408/429 are not retried. Errors carry the flags
- * sentry.js classifyError() reads (statusCode, isNetworkError, isServerError, isTimeout).
+ * Read a response body chunk by chunk, calling onChunk(bytes) for each one.
+ * Responses without a readable body (test doubles) fall back to json().
  */
-export async function fetchJson(url, {
+async function readJsonBody(response, onChunk) {
+  const reader = response.body?.getReader?.();
+  if (!reader) return response.json();
+
+  const decoder = new TextDecoder();
+  let text = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value?.byteLength) {
+      text += decoder.decode(value, { stream: true });
+      onChunk(value.byteLength);
+    }
+  }
+  text += decoder.decode();
+  return JSON.parse(text);
+}
+
+/**
+ * One attempt. Aborts when no response headers arrive within timeoutMs, when
+ * no body bytes arrive for stallTimeoutMs, or after maxDurationMs in total;
+ * a download that keeps receiving bytes is otherwise never cut off.
+ */
+async function fetchJsonAttempt(url, { timeoutMs, stallTimeoutMs, maxDurationMs, signal, expectedBytes, onProgress }) {
+  const controller = new AbortController();
+  let reason = null;
+  let timer = null;
+  const abortWith = why => {
+    if (reason) return;
+    reason = why;
+    controller.abort();
+  };
+  const arm = (why, ms) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => abortWith(why), ms);
+  };
+  const onExternalAbort = () => abortWith('aborted');
+  signal?.addEventListener('abort', onExternalAbort, { once: true });
+  const capTimer = setTimeout(() => abortWith('cap'), maxDurationMs);
+
+  try {
+    arm('response', timeoutMs);
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) {
+      const error = new Error(`HTTP ${response.status} for ${url}`);
+      error.statusCode = response.status;
+      error.isServerError = response.status >= 500;
+      throw error;
+    }
+
+    const expected = expectedSize(response, expectedBytes);
+    let received = 0;
+    arm('stall', stallTimeoutMs);
+    onProgress?.(0, expected);
+    return await readJsonBody(response, bytes => {
+      received += bytes;
+      arm('stall', stallTimeoutMs);
+      onProgress?.(received, expected);
+    });
+  } catch (error) {
+    if (reason === 'aborted') throw abortedError(url);
+    if (reason === 'response') throw timeoutError(`No response within ${timeoutMs}ms for ${url}`);
+    if (reason === 'stall') throw timeoutError(`Download stalled for ${stallTimeoutMs}ms for ${url}`, { isStall: true });
+    if (reason === 'cap') throw timeoutError(`Download took over ${maxDurationMs}ms for ${url}`, { isOverCap: true });
+    if (!error.statusCode && error instanceof TypeError) {
+      error.isNetworkError = true;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+    clearTimeout(capTimer);
+    signal?.removeEventListener('abort', onExternalAbort);
+  }
+}
+
+/** Network errors (incl. stalls and response timeouts), 5xx, 408 and 429 are worth another try. */
+function isRetryable(error) {
+  if (error.isAborted || error.isOverCap) return false;
+  if (error.statusCode) {
+    return error.statusCode >= 500 || error.statusCode === 408 || error.statusCode === 429;
+  }
+  return !!error.isNetworkError;
+}
+
+async function fetchJsonWithRetries(url, {
   timeoutMs = MEDIA.FETCH_TIMEOUT_MS,
+  stallTimeoutMs = MEDIA.FETCH_STALL_TIMEOUT_MS,
+  maxDurationMs = MEDIA.FETCH_MAX_DURATION_MS,
   retries = MEDIA.FETCH_RETRIES,
   baseDelayMs = MEDIA.RETRY_BASE_DELAY_MS,
+  signal = null,
+  expectedBytes = null,
+  onProgress = null,
 } = {}) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt++) {
+    if (signal?.aborted) throw abortedError(url);
     if (attempt > 0) {
       const delay = baseDelayMs * 2 ** (attempt - 1);
-      await sleep(delay + Math.floor(Math.random() * baseDelayMs * 0.25));
+      await sleep(delay + Math.floor(Math.random() * baseDelayMs * 0.25), signal, url);
     }
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, { signal: controller.signal });
-      if (!response.ok) {
-        const error = new Error(`HTTP ${response.status} for ${url}`);
-        error.statusCode = response.status;
-        error.isServerError = response.status >= 500;
-        throw error;
-      }
-      return await response.json();
+      return await fetchJsonAttempt(url, { timeoutMs, stallTimeoutMs, maxDurationMs, signal, expectedBytes, onProgress });
     } catch (error) {
-      if (error.name === 'AbortError') {
-        lastError = new Error(`Timeout after ${timeoutMs}ms for ${url}`);
-        lastError.isNetworkError = true;
-        lastError.isTimeout = true;
-      } else {
-        lastError = error;
-        if (!error.statusCode && error instanceof TypeError) {
-          error.isNetworkError = true;
-        }
-      }
-      const status = lastError.statusCode;
-      const retryable = !status || status >= 500 || status === 408 || status === 429;
-      log(`Fetch attempt ${attempt + 1} failed for ${url}: ${lastError.message}`);
-      if (!retryable) break;
-    } finally {
-      clearTimeout(timeoutId);
+      lastError = error;
+      if (error.isAborted) throw error;
+      log(`Fetch attempt ${attempt + 1} failed for ${url}: ${error.message}`);
+      if (!isRetryable(error)) break;
     }
   }
   throw lastError;
 }
 
-async function fetchRegionManifest(index, code) {
+// url -> { promise, controller, consumers, listeners, lastProgress }
+const inflightFetches = new Map();
+
+/**
+ * Fetch JSON with retries and exponential backoff.
+ *
+ * Each attempt fails when no response headers arrive within timeoutMs, or no
+ * body bytes arrive for stallTimeoutMs; while bytes keep arriving there is no
+ * limit other than a generous maxDurationMs. Network errors, stalls,
+ * response timeouts, 5xx, 408 and 429 are retried. Errors carry the flags
+ * sentry.js classifyError() reads (statusCode, isNetworkError, isServerError,
+ * isTimeout); an abort through `signal` is not retried and rejects with an
+ * error marked isAborted.
+ *
+ * Concurrent fetches of the same URL share one request (with the first
+ * caller's timeouts); it is cancelled only when every caller has aborted.
+ *
+ * @param {string} url
+ * @param {Object} [options]
+ * @param {AbortSignal} [options.signal]
+ * @param {number} [options.expectedBytes] - body size for progress when known (e.g. the index's `bytes`)
+ * @param {(received: number, expected: number|null) => void} [options.onProgress]
+ */
+export function fetchJson(url, options = {}) {
+  const { signal = null, onProgress = null, expectedBytes = null } = options;
+  if (signal?.aborted) return Promise.reject(abortedError(url));
+
+  let entry = inflightFetches.get(url);
+  if (!entry) {
+    const controller = new AbortController();
+    entry = { controller, consumers: 0, listeners: new Set(), lastProgress: null };
+    const shared = entry;
+    entry.promise = fetchJsonWithRetries(url, {
+      ...options,
+      signal: controller.signal,
+      onProgress: (received, expected) => {
+        shared.lastProgress = [received, expected];
+        shared.listeners.forEach(listener => listener(received, expected));
+      },
+    }).finally(() => {
+      if (inflightFetches.get(url) === shared) inflightFetches.delete(url);
+    });
+    entry.promise.catch(() => {});
+    inflightFetches.set(url, entry);
+  }
+
+  const shared = entry;
+  shared.consumers += 1;
+  const listener = onProgress
+    ? (received, expected) => onProgress(received, expectedBytes > 0 ? expectedBytes : expected)
+    : null;
+  if (listener) {
+    shared.listeners.add(listener);
+    if (shared.lastProgress) listener(...shared.lastProgress);
+  }
+
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const leave = () => {
+      if (settled) return false;
+      settled = true;
+      if (listener) shared.listeners.delete(listener);
+      signal?.removeEventListener('abort', onAbort);
+      shared.consumers -= 1;
+      return true;
+    };
+    const onAbort = () => {
+      if (!leave()) return;
+      if (shared.consumers === 0) {
+        // Nobody else waits for it: cancel the request and let a new caller start fresh
+        if (inflightFetches.get(url) === shared) inflightFetches.delete(url);
+        shared.controller.abort();
+      }
+      reject(abortedError(url));
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    shared.promise.then(
+      value => { if (leave()) resolve(value); },
+      error => { if (leave()) reject(error); },
+    );
+  });
+}
+
+async function fetchRegionManifest(index, code, { signal = null, onProgress = null } = {}) {
   const entry = index.regions.find(r => r.code === code);
   if (!entry) {
     throw new Error(`Region ${code} is not in release ${index.release}`);
   }
-  const manifest = await fetchJson(entry.url);
+  // `bytes` is the uncompressed size, so progress is right for compressed responses too
+  const expectedBytes = Number.isFinite(entry.bytes) && entry.bytes > 0 ? entry.bytes : null;
+  const manifest = await fetchJson(entry.url, { signal, onProgress, expectedBytes });
   if (!isValidRegionManifest(manifest, code, index.release)) {
     throw new Error(`Invalid region manifest for ${code} in release ${index.release}`);
   }
@@ -514,47 +704,133 @@ export async function getStoredIndex() {
   return stored?.index ?? null;
 }
 
-/**
- * Switch the selected region: fetch its manifest for the current release,
- * store it together with the new `region` setting, and drop other non-World
- * region manifests. On failure nothing changes and the error is thrown.
- *
- * @param {string} code - Region code from the index
- * @returns {Promise<{region: string, previousRegion: string}>}
- */
-export function switchRegion(code) {
-  return exclusive(async () => {
-    const { [RELEASE_KEY]: stored, region: previous } = await storageGet([RELEASE_KEY, 'region']);
-    const previousRegion = previous || WORLD;
+// The non-World region switch in progress: { code, controller, promise, listeners }
+let pendingSwitch = null;
 
-    if (code === WORLD) {
-      await storageSet({ region: WORLD });
-      await pruneStorage([WORLD]);
-      return { region: WORLD, previousRegion };
+function cancelPendingSwitch() {
+  if (pendingSwitch) {
+    log(`Region switch to ${pendingSwitch.code} superseded`);
+    pendingSwitch.controller.abort();
+    pendingSwitch = null;
+  }
+}
+
+/** The region whose manifest is being downloaded for a switch, or null. */
+export function getPendingRegionSwitch() {
+  return pendingSwitch?.code ?? null;
+}
+
+async function storeRegionSwitch(code, release, manifest, signal) {
+  return exclusive(async () => {
+    // Superseded while waiting for the lock: write nothing
+    if (signal.aborted) return { superseded: true, region: code };
+
+    const { [RELEASE_KEY]: current, region: previous } = await storageGet([RELEASE_KEY, 'region']);
+    if (current?.release !== release) {
+      return { releaseChanged: current };
     }
 
+    const key = regionStorageKey(code);
+    const items = { region: code };
+    if (manifest) {
+      items[key] = manifest;
+    } else {
+      // Stored when the switch started; make sure it wasn't pruned meanwhile
+      const { [key]: existing } = await storageGet([key]);
+      if (!isValidRegionManifest(existing, code, release)) return { releaseChanged: current };
+    }
+
+    await storageSet(items);
+    memoryCache.delete(key);
+    await pruneStorage([WORLD, code]);
+    const previousRegion = previous || WORLD;
+    log(`Region switched from ${previousRegion} to ${code}`);
+    return { region: code, previousRegion };
+  });
+}
+
+async function runRegionSwitch(code, signal, notifyProgress) {
+  let { [RELEASE_KEY]: stored } = await storageGet([RELEASE_KEY]);
+  // One extra round if a release switch lands while the region downloads
+  for (let round = 0; round < 2; round++) {
+    if (signal.aborted) return { superseded: true, region: code };
     if (!stored?.index?.regions?.some(r => r.code === code)) {
       throw new Error(`Region ${code} is not in the stored release`);
     }
 
     const key = regionStorageKey(code);
     const { [key]: existing } = await storageGet([key]);
-    const items = { region: code };
+    let manifest = null;
     if (!isValidRegionManifest(existing, code, stored.release)) {
-      try {
-        items[key] = await fetchRegionManifest(stored.index, code);
-      } catch (error) {
-        reportError(error, 'switchRegion', { region: code, previousRegion, release: stored.release });
-        throw error;
-      }
+      // Downloaded outside the lock, so a slow download never blocks release checks
+      manifest = await fetchRegionManifest(stored.index, code, { signal, onProgress: notifyProgress });
     }
 
-    await storageSet(items);
-    memoryCache.delete(key);
-    await pruneStorage([WORLD, code]);
-    log(`Region switched from ${previousRegion} to ${code}`);
-    return { region: code, previousRegion };
-  });
+    const result = await storeRegionSwitch(code, stored.release, manifest, signal);
+    if (!('releaseChanged' in result)) return result;
+    log(`Release changed during the switch to ${code}; fetching it for ${result.releaseChanged?.release}`);
+    stored = result.releaseChanged;
+  }
+  throw new Error(`Release changed twice during the switch to ${code}`);
+}
+
+/**
+ * Switch the selected region: fetch its manifest for the current release,
+ * then store it together with the new `region` setting and drop other
+ * non-World region manifests. On failure nothing changes and the error is
+ * thrown.
+ *
+ * Only one switch downloads at a time: asking for the region already being
+ * downloaded returns that switch; asking for another region (World included)
+ * aborts it, and it resolves with `superseded: true`.
+ *
+ * @param {string} code - Region code from the index
+ * @param {Object} [options]
+ * @param {(received: number, expected: number|null) => void} [options.onProgress]
+ * @returns {Promise<{region: string, previousRegion?: string, superseded?: boolean}>}
+ */
+export function switchRegion(code, { onProgress = null } = {}) {
+  if (pendingSwitch && pendingSwitch.code === code) {
+    if (onProgress) pendingSwitch.listeners.add(onProgress);
+    return pendingSwitch.promise;
+  }
+  cancelPendingSwitch();
+
+  if (code === WORLD) {
+    // World is always stored: no download, just the setting
+    return exclusive(async () => {
+      const { region: previous } = await storageGet(['region']);
+      await storageSet({ region: WORLD });
+      await pruneStorage([WORLD]);
+      return { region: WORLD, previousRegion: previous || WORLD };
+    });
+  }
+
+  const controller = new AbortController();
+  const listeners = new Set(onProgress ? [onProgress] : []);
+  const notifyProgress = (received, expected) => {
+    listeners.forEach(listener => {
+      try {
+        listener(received, expected);
+      } catch {
+        // A progress listener must never break the switch
+      }
+    });
+  };
+
+  const current = { code, controller, listeners };
+  current.promise = runRegionSwitch(code, controller.signal, notifyProgress)
+    .catch(async error => {
+      if (controller.signal.aborted) return { superseded: true, region: code };
+      const { [RELEASE_KEY]: stored, region: previous } = await storageGet([RELEASE_KEY, 'region']);
+      reportError(error, 'switchRegion', { region: code, previousRegion: previous || WORLD, release: stored?.release ?? null });
+      throw error;
+    })
+    .finally(() => {
+      if (pendingSwitch === current) pendingSwitch = null;
+    });
+  pendingSwitch = current;
+  return current.promise;
 }
 
 // --- Reading manifests ------------------------------------------------------

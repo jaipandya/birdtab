@@ -10,13 +10,13 @@ import {
   getRandomBird,
   getRegionBirds,
   getSelectedRegion,
-  switchRegion,
   isManifestCached,
   clearManifestCache,
   resetMemoryCache,
   setErrorReporter,
   RELEASE_KEY,
 } from './mediaClient.js';
+import { trackRegionSwitch } from './regionSwitchTracker.js';
 
 // --- Event listeners registered FIRST ---
 // In MV3, Chrome only delivers pending events after module evaluation completes.
@@ -120,14 +120,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'switchRegion') {
     // Settings sidebar: fetch the region's manifest, then change the setting.
     // The storage.onChanged listener below preloads the next bird from it.
-    (async () => {
-      try {
-        const result = await switchRegion(request.region);
-        sendResponse({ success: true, ...result });
-      } catch (error) {
-        sendResponse({ success: false, error: error.message });
-      }
-    })();
+    // Progress and failures are mirrored in chrome.storage.session.
+    // A switch superseded by a later choice answers { superseded: true }.
+    trackRegionSwitch(request.region).then(sendResponse);
     return true;
   } else if (request.action === 'loadRegionIndex') {
     // Settings sidebar has no stored region list: discover the release now.
