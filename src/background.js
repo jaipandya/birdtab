@@ -177,6 +177,12 @@ async function getRecentHistory(limit) {
   return history.slice(-limit);
 }
 
+// Fills run one at a time: two at once would both see room in the queue and
+// both add a bird. A request made during a fill runs once it ends (with the
+// latest region asked for), so a region change still gets its own fill.
+let fillRunning = null;
+let fillPendingRegion = null;
+
 /**
  * Top up readyBirds to READY_QUEUE_SIZE birds with cached media, in the order
  * the next tabs need it:
@@ -188,7 +194,23 @@ async function getRecentHistory(limit) {
  * the next new tab tries again. A queued bird without a cached recording
  * still plays it from the network when online.
  */
-async function fillReadyQueue(region) {
+function fillReadyQueue(region) {
+  if (fillRunning) {
+    fillPendingRegion = region;
+    return fillRunning;
+  }
+  fillRunning = runReadyQueueFill(region).finally(() => {
+    fillRunning = null;
+    if (fillPendingRegion) {
+      const next = fillPendingRegion;
+      fillPendingRegion = null;
+      fillReadyQueue(next);
+    }
+  });
+  return fillRunning;
+}
+
+async function runReadyQueueFill(region) {
   const generation = preloadGeneration;
   const stale = () => generation !== preloadGeneration;
   addBreadcrumb(`Filling ready queue for region: ${region}`, 'http', 'info');
