@@ -9,7 +9,7 @@ const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const { rimraf } = require('rimraf');
 const fs = require('fs');
 const Dotenv = require('dotenv-webpack');
-const { diffPermissions, PERMISSIONS_BASELINE } = require('./scripts/permissions_baseline');
+const { diffPermissions, PERMISSIONS_BASELINES } = require('./scripts/permissions_baseline');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -67,18 +67,25 @@ module.exports = (env, argv) => {
           manifest.externally_connectable.matches.push('https://birdtab.jaipandya.com/*');
         }
 
+        // Edge keeps the hosts its 1.3.9 users already granted; media is read
+        // through the bucket's CORS policy (see scripts/permissions_baseline.js)
+        if (isEdge) {
+          manifest.host_permissions = [...PERMISSIONS_BASELINES.edge.host_permissions];
+        }
+
         // Dev builds only: allow a local media server (MEDIA_BASE_URL=http://localhost:8787)
         if (!isProduction && Array.isArray(manifest.host_permissions)) {
           manifest.host_permissions.push('http://localhost/*');
         }
 
-        // Production builds must keep the 2.0.3 permissions so the update
+        // Production builds must keep the published permissions so the update
         // installs without a re-consent prompt.
         if (isProduction) {
-          const differences = diffPermissions(manifest);
+          const browser = isEdge ? 'edge' : 'chrome';
+          const differences = diffPermissions(manifest, browser);
           if (differences.length > 0) {
             throw new Error(
-              `manifest.json permissions differ from ${PERMISSIONS_BASELINE.version} ` +
+              `manifest.json permissions differ from ${PERMISSIONS_BASELINES[browser].version} ` +
               `(users would have to re-approve the extension):\n  ${differences.join('\n  ')}`
             );
           }
