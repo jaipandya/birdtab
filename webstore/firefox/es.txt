@@ -1,49 +1,55 @@
-# Firefox Add-ons (AMO) listing, es. Categories, links and reviewer notes
-# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+# Firefox Add-ons (AMO) listing, es. Categories, tags, links and reviewer
+# notes are in en.txt. NAME is set for Firefox builds in webpack.config.js
+# from these files' values (AMO limit: 50 characters).
+# DESCRIPTION is Markdown (see en.txt): blank line before lists, no headings.
 
 NAME
-BirdTab - Fondos de Pantalla de Aves y Sonidos de Naturaleza
+BirdTab - Fondos de aves y cantos en nueva pestaña
 
 SUMMARY (250 characters max)
-Convierte cada nueva pestaña en un respiro natural: una nueva foto de un ave, su canto y datos curiosos cada vez, de tu país o de todo el mundo. Incluye un quiz, reloj, temporizador y búsqueda.
+Convierte la página de nueva pestaña de Firefox en un respiro natural: un nuevo fondo de pantalla de aves en cada pestaña, con su canto y datos de la especie. Aves de más de 250 países, quiz, reloj, temporizador y búsqueda.
+
+VERSION RELEASE NOTES
+BirdTab ya está disponible para Firefox: un nuevo fondo de pantalla de aves, su canto y datos de la especie en cada nueva pestaña.
 
 DESCRIPTION
-Convierte cada nueva pestaña en un relajante escape a la naturaleza con impresionantes fondos de pantalla de aves, cantos relajantes y fascinantes datos sobre la vida silvestre.
+Fondos de pantalla de aves, cantos de aves y datos de la naturaleza en cada nueva pestaña de Firefox.
 
-BirdTab reemplaza tu nueva pestaña de Firefox con fotografía de aves espectacular de tu propio país o de todo el mundo. Cada vez que abres una pestaña, descubrirás una nueva especie de ave - con cantos auténticos, sonidos de la naturaleza e información interesante. Es como tener una ventana al mundo natural en tu navegador.
+BirdTab reemplaza la página de nueva pestaña de Firefox con una foto de un ave en alta resolución. Cada vez que abres una pestaña, conoces un ave nueva: escucha su canto, lee sobre la especie y mira dónde vive en un mapa de distribución. Es un momento relajante de naturaleza en tu día y una forma fácil de aprender a reconocer las aves.
 
-POR QUÉ LES ENCANTA BIRDTAB
+**En cada nueva pestaña**
 
-A diferencia de las extensiones de fondos de pantalla genéricas, BirdTab es una experiencia completa de naturaleza. Cada nueva pestaña trae un momento de calma - una hermosa fotografía de ave, un canto relajante y algo nuevo que aprender. La combinación perfecta de mindfulness, educación y belleza visual.
+- Un nuevo fondo de pantalla de aves en alta resolución, desde colibríes y loros hasta águilas y búhos
+- El canto o llamado real del ave, con control de volumen y horas silenciosas (el sonido es opcional)
+- Datos de la especie: descripción, estado de conservación y mapa de distribución
+- Fotos con licencia abierta, cada una con el crédito de su fotógrafo
 
-CARACTERÍSTICAS PRINCIPALES
+**Aves de donde vives**
 
-- Nuevo fondo de pantalla de ave con cada nueva pestaña - fotografía de vida silvestre en alta resolución
-- Cantos de aves y sonidos de naturaleza auténticos - con volumen ajustable y horas de silencio
-- Datos fascinantes sobre aves - comportamiento, hábitat y estado de conservación
-- Aves de tu país - elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo
-- Quiz interactivo de identificación de aves - pon a prueba tus conocimientos y comparte resultados
-- Historial de observación - registra cada ave que has descubierto
-- Reloj y temporizador - mantén el enfoque mientras disfrutas de la naturaleza
-- Herramientas de productividad integradas - buscador, accesos directos y más
-- Funciona sin conexión - disfruta de tus aves incluso sin internet
-- Sin anuncios, sin registros, sin compromisos
-- Respetuoso con la privacidad - sin datos personales. Las estadísticas de uso anónimas y los informes de errores solo se envían si lo permites al instalar
+Elige entre más de 250 países y regiones para ver las aves que viven cerca de ti, o elige Mundo para ver las 500 aves más comunes del planeta.
 
-MILES DE ESPECIES
+**Más que un fondo de pantalla**
 
-Descubre miles de especies de aves de todos los continentes - desde loros tropicales y colibríes hasta majestuosas águilas y búhos. Cada foto es de alta resolución y cuidadosamente seleccionada para brindarte la experiencia de observación de aves más impresionante y diversa posible. Elige tu país en Configuración para ver las aves de donde vives, o elige Mundo para las 500 aves más comunes del planeta.
+- Quiz de identificación de aves: pon a prueba lo que sabes y comparte tus resultados
+- Historial de todas las aves que has visto
+- Reloj y temporizador de cuenta regresiva
+- Cuadro de búsqueda que usa tu buscador predeterminado o el que elijas
+- Accesos directos a tus sitios más visitados
+- Funciona sin conexión con las aves que viste recientemente
+- Disponible en 10 idiomas: inglés, español, portugués, alemán, francés, japonés, polaco, ruso, chino y árabe
 
-PERFECTO PARA
+**Privacidad**
 
-- Observadores de aves y entusiastas del birding
-- Amantes de la naturaleza y la fotografía de vida silvestre
-- Quienes buscan una nueva pestaña estética y relajante
-- Mindfulness, meditación y alivio del estrés
-- Estudiantes y educadores interesados en ornitología
-- Amantes de fondos de pantalla de naturaleza
+- Sin anuncios, sin cuenta, sin registro
+- No se recopilan datos personales. Las estadísticas de uso anónimas y los informes de errores solo se envían si lo permites al instalar
 
-NOVEDADES
+**Ideal para**
+
+- Observadores de aves, desde principiantes hasta expertos
+- Amantes de la naturaleza que quieren una nueva pestaña tranquila y bonita
+- Estudiantes, docentes y cualquier persona con curiosidad por la vida silvestre
+
+**Novedades**
 
 2.1.1 - BirdTab ya está disponible para Firefox.
 

@@ -1,49 +1,55 @@
-# Firefox Add-ons (AMO) listing, pl. Categories, links and reviewer notes
-# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+# Firefox Add-ons (AMO) listing, pl. Categories, tags, links and reviewer
+# notes are in en.txt. NAME is set for Firefox builds in webpack.config.js
+# from these files' values (AMO limit: 50 characters).
+# DESCRIPTION is Markdown (see en.txt): blank line before lists, no headings.
 
 NAME
-BirdTab - Tapety z Ptakami i Dźwięki Natury na Nowej Karcie
+BirdTab - Tapety i śpiew ptaków na nowej karcie
 
 SUMMARY (250 characters max)
-Zamień każdą nową kartę w chwilę wytchnienia z naturą: za każdym razem nowe zdjęcie ptaka, jego śpiew i ciekawostki, z Twojego kraju lub z całego świata. Z quizem, zegarem, minutnikiem i wyszukiwarką.
+Zmień stronę nowej karty w Firefoksie w chwilę z naturą: na każdej karcie nowa tapeta z ptakiem, jego śpiew i ciekawostki o gatunku. Ptaki z ponad 250 krajów, a do tego quiz o ptakach, zegar, minutnik i wyszukiwarka.
+
+VERSION RELEASE NOTES
+BirdTab jest już dostępny dla Firefoksa: na każdej nowej karcie nowa tapeta z ptakiem, jego śpiew i ciekawostki o gatunku.
 
 DESCRIPTION
-Zamień każdą nową kartę w relaksującą ucieczkę do natury z oszałamiającymi tapetami z ptakami, kojącymi ptasimi głosami i fascynującymi faktami o dzikiej przyrodzie.
+Tapety z ptakami, śpiew ptaków i ciekawostki o przyrodzie na każdej nowej karcie w Firefoksie.
 
-BirdTab zastępuje stronę nowej karty Firefox zapierającą dech fotografią ptaków z Twojego kraju lub z całego świata. Za każdym razem, gdy otworzysz kartę, odkryjesz nowy gatunek ptaka - z autentycznymi głosami, dźwiękami natury i ciekawymi informacjami. To jak okno na świat przyrody prosto w Twojej przeglądarce.
+BirdTab zastępuje stronę nowej karty w Firefoksie zdjęciem ptaka w wysokiej rozdzielczości. Za każdym razem, gdy otwierasz kartę, poznajesz nowego ptaka: posłuchaj jego głosu, przeczytaj o gatunku i zobacz na mapie zasięgu, gdzie żyje. To relaksująca chwila z naturą w ciągu dnia i łatwy sposób, by poznawać ptaki.
 
-DLACZEGO UŻYTKOWNICY KOCHAJĄ BIRDTAB
+**Na każdej nowej karcie**
 
-W przeciwieństwie do zwykłych rozszerzeń z tapetami, BirdTab to pełne doświadczenie natury. Każda nowa karta przynosi chwilę spokoju - piękne zdjęcie ptaka, relaksujący głos i coś nowego do nauczenia się. Idealne połączenie uważności, edukacji i estetycznego piękna.
+- Nowa tapeta z ptakiem w wysokiej rozdzielczości, od kolibrów i papug po orły i sowy
+- Prawdziwy śpiew lub głos ptaka, z regulacją głośności i cichymi godzinami (dźwięk jest opcjonalny)
+- Informacje o gatunku: opis, status ochrony i mapa zasięgu
+- Zdjęcia na otwartych licencjach, każde z podpisem autora
 
-GŁÓWNE FUNKCJE
+**Ptaki z Twojej okolicy**
 
-- Nowa tapeta z ptakiem w każdej nowej karcie - oszałamiająca fotografia dzikiej przyrody w wysokiej rozdzielczości
-- Autentyczne głosy ptaków i dźwięki natury - z regulacją głośności i cichymi godzinami
-- Fascynujące fakty o ptakach - zachowanie, siedlisko i status ochrony
-- Ptaki z Twojego kraju - wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata
-- Interaktywny quiz identyfikacji ptaków - sprawdź swoją wiedzę i podziel się wynikami
-- Historia obserwacji - śledź każdego odkrytego ptaka
-- Zegar i minutnik - zachowaj skupienie, ciesząc się naturą
-- Wbudowane narzędzia produktywności - wyszukiwarka, skróty i więcej
-- Działa offline - ciesz się ptakami nawet bez internetu
-- Bez reklam, bez rejestracji, bez zobowiązań
-- Szacunek dla prywatności - bez danych osobowych. Anonimowe statystyki użycia i raporty błędów są wysyłane tylko wtedy, gdy zezwolisz na to podczas instalacji
+Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w pobliżu, albo wybierz Świat, aby zobaczyć 500 najpospolitszych ptaków na Ziemi.
 
-TYSIĄCE GATUNKÓW
+**Więcej niż tapeta**
 
-Odkryj tysiące gatunków ptaków z każdego kontynentu - od tropikalnych papug i kolibrów po majestatyczne orły i sowy. Każde zdjęcie jest w wysokiej rozdzielczości i starannie wyselekcjonowane, by zapewnić Ci najbardziej imponujące i różnorodne doświadczenie obserwacji ptaków. Wybierz swój kraj w Ustawieniach, aby zobaczyć ptaki z Twojej okolicy, lub wybierz Świat, aby oglądać 500 najpopularniejszych ptaków na Ziemi.
+- Quiz z rozpoznawania ptaków: sprawdź swoją wiedzę i udostępnij wyniki
+- Historia wszystkich obejrzanych ptaków
+- Zegar i minutnik
+- Pole wyszukiwania, które korzysta z Twojej domyślnej wyszukiwarki lub wybranej przez Ciebie
+- Skróty do najczęściej odwiedzanych stron
+- Działa offline z ostatnio oglądanymi ptakami
+- Dostępny w 10 językach: angielskim, hiszpańskim, portugalskim, niemieckim, francuskim, japońskim, polskim, rosyjskim, chińskim i arabskim
 
-IDEALNE DLA
+**Prywatność**
 
-- Miłośników ptaków i obserwatorów
-- Pasjonatów przyrody i fotografów dzikiej natury
-- Szukających spokojnej, estetycznej nowej karty
-- Uważności, medytacji i redukcji stresu
-- Studentów i nauczycieli zainteresowanych ornitologią
-- Miłośników tapet z naturą i pięknych teł
+- Bez reklam, bez konta, bez rejestracji
+- Nie zbieramy danych osobowych. Anonimowe statystyki użycia i raporty błędów są wysyłane tylko wtedy, gdy zezwolisz na to podczas instalacji
 
-CO NOWEGO
+**Dla kogo**
+
+- Dla obserwatorów ptaków, od początkujących po doświadczonych
+- Dla miłośników przyrody, którzy chcą spokojnej i pięknej nowej karty
+- Dla uczniów, nauczycieli i wszystkich ciekawych dzikiej przyrody
+
+**Co nowego**
 
 2.1.1 - BirdTab jest już dostępny dla Firefoksa.
 

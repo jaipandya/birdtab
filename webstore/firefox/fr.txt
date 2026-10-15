@@ -1,49 +1,55 @@
-# Firefox Add-ons (AMO) listing, fr. Categories, links and reviewer notes
-# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+# Firefox Add-ons (AMO) listing, fr. Categories, tags, links and reviewer
+# notes are in en.txt. NAME is set for Firefox builds in webpack.config.js
+# from these files' values (AMO limit: 50 characters).
+# DESCRIPTION is Markdown (see en.txt): blank line before lists, no headings.
 
 NAME
-BirdTab - Fonds d'Écran Oiseaux et Sons de Nature en Nouvel Onglet
+BirdTab - Fonds d'écran d'oiseaux en nouvel onglet
 
 SUMMARY (250 characters max)
-Faites de chaque nouvel onglet une pause nature apaisante : une nouvelle photo d'oiseau, son chant et des anecdotes à chaque fois, de votre pays ou du monde entier. Avec quiz, horloge, minuteur et recherche.
+Faites de la page Nouvel onglet de Firefox une pause nature : un nouveau fond d'écran d'oiseau à chaque onglet, avec son chant et des infos sur l'espèce. Oiseaux de plus de 250 pays, quiz, horloge, minuteur et recherche.
+
+VERSION RELEASE NOTES
+BirdTab est désormais disponible sur Firefox : un nouveau fond d'écran d'oiseau, son chant et des infos sur l'espèce à chaque nouvel onglet.
 
 DESCRIPTION
-Transformez chaque nouvel onglet en une escapade nature apaisante avec de superbes fonds d'écran d'oiseaux, des chants d'oiseaux relaxants et des faits fascinants sur la faune.
+Fonds d'écran d'oiseaux, chants d'oiseaux et infos nature à chaque nouvel onglet de Firefox.
 
-BirdTab remplace votre page de nouvel onglet Firefox par une photographie d'oiseaux époustouflante de votre propre pays ou du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
+BirdTab remplace la page Nouvel onglet de Firefox par une photo d'oiseau en haute résolution. À chaque onglet ouvert, vous découvrez un nouvel oiseau : écoutez son chant, découvrez l'espèce et voyez où elle vit sur une carte de répartition. Un moment de nature apaisant dans votre journée, et une façon simple d'apprendre à connaître les oiseaux.
 
-POURQUOI LES UTILISATEURS ADORENT BIRDTAB
+**À chaque nouvel onglet**
 
-Contrairement aux extensions de fonds d'écran classiques, BirdTab est une expérience nature complète. Chaque nouvel onglet apporte un moment de calme - une belle photographie d'oiseau, un chant apaisant et quelque chose de nouveau à apprendre. Le mélange parfait de pleine conscience, d'éducation et de beauté visuelle.
+- Un nouveau fond d'écran d'oiseau en haute résolution, des colibris et perroquets aux aigles et hiboux
+- Le vrai chant ou cri de l'oiseau, avec réglage du volume et heures silencieuses (le son est facultatif)
+- Des infos sur l'espèce : description, statut de conservation et carte de répartition
+- Des photos sous licence libre, chacune créditée à son photographe
 
-FONCTIONNALITÉS PRINCIPALES
+**Les oiseaux de chez vous**
 
-- Nouveau fond d'écran d'oiseau à chaque nouvel onglet - photographie animalière haute résolution
-- Chants d'oiseaux et sons de la nature authentiques - volume réglable et heures calmes
-- Faits fascinants sur les oiseaux - comportement, habitat et statut de conservation
-- Les oiseaux de votre pays - choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde
-- Quiz interactif d'identification d'oiseaux - testez vos connaissances et partagez vos résultats
-- Historique d'observation - suivez chaque oiseau que vous avez découvert
-- Horloge et minuteur - restez concentré tout en profitant de la nature
-- Outils de productivité intégrés - barre de recherche, raccourcis et plus
-- Fonctionne hors ligne - profitez de vos oiseaux même sans internet
-- Sans publicité, sans inscription, sans engagement
-- Respectueux de la vie privée - aucune donnée personnelle. Les statistiques d'utilisation anonymes et les rapports d'erreurs ne sont envoyés que si vous l'autorisez lors de l'installation
+Choisissez parmi plus de 250 pays et régions pour voir les oiseaux près de chez vous, ou choisissez Monde pour les 500 oiseaux les plus courants de la planète.
 
-DES MILLIERS D'ESPÈCES
+**Bien plus qu'un fond d'écran**
 
-Découvrez des milliers d'espèces d'oiseaux de tous les continents - des perroquets tropicaux et colibris aux majestueux aigles et hiboux. Chaque photo est en haute résolution et soigneusement sélectionnée pour vous offrir l'expérience ornithologique la plus époustouflante et diversifiée possible. Choisissez votre pays dans les Paramètres pour voir les oiseaux de chez vous, ou choisissez Monde pour les 500 oiseaux les plus communs de la planète.
+- Quiz d'identification des oiseaux : testez vos connaissances et partagez vos résultats
+- Historique de tous les oiseaux que vous avez vus
+- Horloge et minuteur
+- Barre de recherche qui utilise votre moteur de recherche par défaut ou celui de votre choix
+- Raccourcis vers vos sites les plus visités
+- Fonctionne hors ligne avec les oiseaux vus récemment
+- Disponible en 10 langues : anglais, espagnol, portugais, allemand, français, japonais, polonais, russe, chinois et arabe
 
-IDÉAL POUR
+**Confidentialité**
 
-- Ornithologues et passionnés d'observation d'oiseaux
-- Amoureux de la nature et photographes animaliers
-- Ceux qui recherchent un nouvel onglet esthétique et apaisant
-- Pleine conscience, méditation et gestion du stress
-- Étudiants et enseignants intéressés par l'ornithologie
-- Amateurs de fonds d'écran nature et de beaux arrière-plans
+- Sans publicité, sans compte, sans inscription
+- Aucune donnée personnelle collectée. Les statistiques d'utilisation anonymes et les rapports d'erreurs ne sont envoyés que si vous l'autorisez lors de l'installation
 
-NOUVEAUTÉS
+**Idéal pour**
+
+- Les observateurs d'oiseaux, débutants comme confirmés
+- Les amoureux de la nature qui veulent un nouvel onglet calme et beau
+- Les élèves, les enseignants et tous les curieux de la faune sauvage
+
+**Nouveautés**
 
 2.1.1 - BirdTab est désormais disponible sur Firefox.
 

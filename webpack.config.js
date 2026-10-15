@@ -14,6 +14,21 @@ const { diffPermissions, PERMISSIONS_BASELINES } = require('./scripts/permission
 // Never change: AMO ties the listing, updates and users' synced settings to it
 const FIREFOX_ADDON_ID = 'birdtab@birdtab.app';
 
+// Firefox Add-ons cuts names at 50 characters, so Firefox builds get their own
+// (same as NAME in webstore/firefox/<lang>.txt). Chrome and Edge keep extensionName.
+const FIREFOX_EXTENSION_NAMES = {
+  en: "BirdTab - Bird Wallpapers & Sounds for New Tab",
+  es: "BirdTab - Fondos de aves y cantos en nueva pestaña",
+  "pt_BR": "BirdTab - Papéis de parede de aves na nova aba",
+  de: "BirdTab - Vogelbilder & Vogelstimmen im neuen Tab",
+  fr: "BirdTab - Fonds d'écran d'oiseaux en nouvel onglet",
+  ja: "BirdTab - 鳥の壁紙と鳴き声で彩る新しいタブ",
+  pl: "BirdTab - Tapety i śpiew ptaków na nowej karcie",
+  ru: "BirdTab - Обои и голоса птиц в новой вкладке",
+  "zh_CN": "BirdTab - 鸟类壁纸与鸟鸣声新标签页",
+  ar: "BirdTab - خلفيات وأصوات الطيور لعلامة تبويب جديدة",
+};
+
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   const browser = ['edge', 'firefox'].includes(env.BROWSER) ? env.BROWSER : 'chrome';
@@ -143,6 +158,10 @@ module.exports = (env, argv) => {
           };
 
           const replaceForBrowser = isEdge ? replaceForEdge : replaceForFirefox;
+          const locale = path.split(/[\\/]/).slice(-2, -1)[0];
+          if (isFirefox && localeData.extensionName && FIREFOX_EXTENSION_NAMES[locale]) {
+            localeData.extensionName.message = FIREFOX_EXTENSION_NAMES[locale];
+          }
 
           Object.values(localeData).forEach((entry) => {
             if (entry && typeof entry.message === 'string') {
