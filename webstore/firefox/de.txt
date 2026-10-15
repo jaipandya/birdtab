@@ -1,0 +1,50 @@
+# Firefox Add-ons (AMO) listing, de. Categories, links and reviewer notes
+# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+
+NAME
+BirdTab - Vogel-Hintergrundbilder und Naturklänge im Neuen Tab
+
+SUMMARY (250 characters max)
+Mach jeden neuen Tab zu einer ruhigen Auszeit in der Natur: jedes Mal ein neues Vogelfoto mit Gesang und spannenden Fakten, aus deinem Land oder aus aller Welt. Mit Quiz, Uhr, Timer und Suche.
+
+DESCRIPTION
+Verwandle jeden neuen Tab in eine entspannende Naturauszeit mit atemberaubenden Vogel-Hintergrundbildern, beruhigenden Vogelstimmen und faszinierenden Fakten über die Tierwelt.
+
+BirdTab ersetzt deine Firefox-Neuer-Tab-Seite mit beeindruckender Vogelfotografie aus deinem eigenen Land oder aus aller Welt. Jedes Mal, wenn du einen Tab öffnest, entdeckst du eine neue Vogelart - mit authentischen Vogelrufen, Naturgeräuschen und interessanten Fakten. Wie ein Fenster zur Natur direkt in deinem Browser.
+
+WARUM NUTZER BIRDTAB LIEBEN
+
+Anders als gewöhnliche Hintergrundbild-Erweiterungen ist BirdTab ein vollständiges Naturerlebnis. Jeder neue Tab bringt einen Moment der Ruhe - ein wunderschönes Vogelfoto, einen entspannenden Vogelruf und etwas Neues zum Lernen. Die perfekte Mischung aus Achtsamkeit, Bildung und ästhetischer Schönheit.
+
+HAUPTFUNKTIONEN
+
+- Neues Vogel-Hintergrundbild mit jedem neuen Tab - hochauflösende Wildtierfotografie
+- Authentische Vogelrufe und Naturgeräusche - mit einstellbarer Lautstärke und Ruhezeiten
+- Faszinierende Vogelfakten - Verhalten, Lebensraum und Schutzstatus
+- Vögel aus deinem Land - wähle aus über 250 Ländern und Regionen oder den 500 häufigsten Vögeln der Welt
+- Interaktives Vogelbestimmungsquiz - teste dein Wissen und teile Ergebnisse
+- Beobachtungshistorie - verfolge jeden entdeckten Vogel
+- Uhr und Countdown-Timer - bleib fokussiert und genieße die Natur
+- Integrierte Produktivitätstools - Suchfeld, Verknüpfungen und mehr
+- Funktioniert offline - genieße deine Vögel auch ohne Internet
+- Keine Werbung, keine Registrierung, keine Verpflichtungen
+- Datenschutzfreundlich - keine persönlichen Daten. Anonyme Nutzungsstatistiken und Fehlerberichte werden nur gesendet, wenn du es bei der Installation erlaubst
+
+TAUSENDE VON ARTEN
+
+Entdecke Tausende von Vogelarten aus allen Kontinenten - von tropischen Papageien und Kolibris bis hin zu majestätischen Adlern und Eulen. Jedes Foto ist hochauflösend und sorgfältig ausgewählt, um dir das beeindruckendste und vielfältigste Vogelbeobachtungserlebnis zu bieten. Wähle in den Einstellungen dein Land, um die Vögel deiner Heimat zu sehen, oder wähle Welt für die 500 häufigsten Vögel der Erde.
+
+PERFEKT FÜR
+
+- Vogelbeobachter und Birding-Begeisterte
+- Naturliebhaber und Wildtierfotografen
+- Alle, die ein ruhiges, ästhetisches Neuer-Tab-Erlebnis suchen
+- Achtsamkeit, Meditation und Stressabbau
+- Schüler und Lehrkräfte mit Interesse an Ornithologie
+- Liebhaber von Natur-Hintergrundbildern
+
+NEUIGKEITEN
+
+2.1.1 - BirdTab gibt es jetzt für Firefox.
+
+Vollständiges Änderungsprotokoll: https://birdtab.app/changelog

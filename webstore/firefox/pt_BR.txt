@@ -1,0 +1,50 @@
+# Firefox Add-ons (AMO) listing, pt_BR. Categories, links and reviewer notes
+# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+
+NAME
+BirdTab - Papéis de Parede de Aves e Sons da Natureza na Nova Aba
+
+SUMMARY (250 characters max)
+Transforme cada nova aba em um refúgio tranquilo na natureza: uma nova foto de ave, seu canto e curiosidades a cada vez, do seu país ou do mundo todo. Com quiz, relógio, timer e busca.
+
+DESCRIPTION
+Transforme cada nova aba em um refúgio relaxante na natureza com belos papéis de parede de aves, cantos de pássaros relaxantes e fatos fascinantes sobre a vida selvagem.
+
+BirdTab substitui sua página de nova aba do Firefox com fotografia de aves de tirar o fôlego do seu próprio país ou de todo o mundo. Toda vez que você abre uma aba, descobre uma nova espécie de ave - com cantos autênticos, sons da natureza e informações interessantes. É como ter uma janela para o mundo natural direto no seu navegador.
+
+POR QUE OS USUÁRIOS AMAM O BIRDTAB
+
+Diferente das extensões genéricas de papel de parede, BirdTab é uma experiência completa de natureza. Cada nova aba traz um momento de calma - uma bela fotografia de ave, um canto relaxante e algo novo para aprender. A combinação perfeita de mindfulness, educação e beleza visual.
+
+RECURSOS PRINCIPAIS
+
+- Novo papel de parede de ave em cada nova aba - fotografia de vida selvagem em alta resolução
+- Cantos de aves e sons da natureza autênticos - com volume ajustável e horários silenciosos
+- Fatos fascinantes sobre aves - comportamento, habitat e status de conservação
+- Aves do seu país - escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo
+- Quiz interativo de identificação de aves - teste seus conhecimentos e compartilhe resultados
+- Histórico de observação - acompanhe cada ave que você descobriu
+- Relógio e temporizador - mantenha o foco enquanto aprecia a natureza
+- Ferramentas de produtividade integradas - busca, atalhos e mais
+- Funciona offline - aproveite suas aves mesmo sem internet
+- Sem anúncios, sem cadastro, sem compromissos
+- Focado em privacidade - sem dados pessoais. Estatísticas de uso anônimas e relatórios de erros só são enviados se você permitir ao instalar
+
+MILHARES DE ESPÉCIES
+
+Descubra milhares de espécies de aves de todos os continentes - de araras tropicais e beija-flores a majestosas águias e corujas. Cada foto é de alta resolução e cuidadosamente selecionada para oferecer a experiência de observação de aves mais impressionante e diversa possível. Escolha seu país nas Configurações para ver as aves de onde você mora, ou escolha Mundo para as 500 aves mais comuns do planeta.
+
+PERFEITO PARA
+
+- Observadores de aves e entusiastas de birdwatching
+- Amantes da natureza e fotógrafos de vida selvagem
+- Quem busca uma nova aba estética e relaxante
+- Mindfulness, meditação e alívio do estresse
+- Estudantes e educadores interessados em ornitologia
+- Amantes de papéis de parede de natureza
+
+NOVIDADES
+
+2.1.1 - O BirdTab agora está disponível para Firefox.
+
+Registro completo de alterações: https://birdtab.app/changelog

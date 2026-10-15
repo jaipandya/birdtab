@@ -1,0 +1,65 @@
+# Firefox Add-ons (AMO) listing, English.
+# Paste each field into the matching box on the AMO developer hub. Lines
+# starting with # are notes, not listing text. AMO takes NAME from the
+# manifest (localized from src/_locales); it's here for reference.
+# Other languages: webstore/firefox/<lang>.txt (NAME, SUMMARY, DESCRIPTION).
+
+NAME
+BirdTab - Bird Wallpapers and Nature Sounds for New Tab Page
+
+SUMMARY (250 characters max)
+Turn every new tab into a calming nature escape: a new bird photo, its song and fun facts each time, from your own country or around the world. Includes a quiz, clock, timer and search.
+
+CATEGORIES
+Tabs; Appearance
+
+SUPPORT WEBSITE
+https://birdtab.app
+
+PRIVACY POLICY
+https://birdtab.app/privacy
+
+NOTES TO REVIEWER
+Built with webpack; the source code and build steps are in the source zip (BUILD-FIREFOX.md). Analytics (PostHog) and error reports (Sentry) only run when the user allows technical and interaction data; see hasDataCollectionConsent() in src/browserInfo.js. No account or credentials are needed to test: install, open a new tab and finish the one-screen welcome page.
+
+DESCRIPTION
+Turn every new tab into a calming nature escape with stunning bird wallpapers, soothing bird songs, and fascinating wildlife facts.
+
+BirdTab replaces your Firefox new tab page with breathtaking bird photography from your own country or from around the world. Every time you open a tab, you'll discover a new bird species - complete with authentic bird calls, nature sounds, and interesting facts. It's like having a window to the natural world right in your browser.
+
+WHY USERS LOVE BIRDTAB
+
+Unlike generic wallpaper extensions, BirdTab is a complete nature experience. Each new tab brings a moment of calm. A beautiful bird photograph, a relaxing bird call, and something new to learn. It's the perfect blend of mindfulness, education, and aesthetic beauty.
+
+KEY FEATURES
+
+- New bird wallpaper with every new tab - stunning high-resolution wildlife photography
+- Authentic bird calls and nature sounds - with adjustable volume and quiet hours
+- Fascinating bird facts - learn about behavior, habitat, and conservation status
+- Birds from your country - choose from 250+ countries and regions, or the World's 500 most common birds
+- Interactive bird identification quiz - test your knowledge and share results
+- Viewing history - track every bird you've discovered
+- Clock and countdown timer - stay focused while enjoying nature
+- Productivity tools built in - search box, custom shortcuts, and more
+- Works offline - enjoy your birds even without internet
+- No ads, no sign-ups, no strings attached
+- Privacy-focused - no personal data collected. Anonymous usage statistics and error reports are sent only if you allow them when installing
+
+THOUSANDS OF SPECIES
+
+Discover thousands of bird species from every continent - from tropical parrots and hummingbirds to majestic eagles and owls. Every photo is high-resolution and carefully curated to bring you the most stunning and diverse birding experience possible. Choose your country in Settings to see the birds found where you live, or pick World for the 500 most common birds on Earth.
+
+PERFECT FOR
+
+- Birdwatchers and birding enthusiasts
+- Nature lovers and wildlife photographers
+- Anyone seeking a calming, aesthetic new tab experience
+- Mindfulness, meditation, and stress relief
+- Students and educators learning about ornithology
+- Nature wallpaper and beautiful background lovers
+
+WHAT'S NEW
+
+2.1.1 - BirdTab is now available for Firefox.
+
+Full changelog: https://birdtab.app/changelog

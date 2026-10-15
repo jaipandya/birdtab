@@ -1,0 +1,50 @@
+# Firefox Add-ons (AMO) listing, fr. Categories, links and reviewer notes
+# are in en.txt. AMO takes NAME from the manifest; it's here for reference.
+
+NAME
+BirdTab - Fonds d'Écran Oiseaux et Sons de Nature en Nouvel Onglet
+
+SUMMARY (250 characters max)
+Faites de chaque nouvel onglet une pause nature apaisante : une nouvelle photo d'oiseau, son chant et des anecdotes à chaque fois, de votre pays ou du monde entier. Avec quiz, horloge, minuteur et recherche.
+
+DESCRIPTION
+Transformez chaque nouvel onglet en une escapade nature apaisante avec de superbes fonds d'écran d'oiseaux, des chants d'oiseaux relaxants et des faits fascinants sur la faune.
+
+BirdTab remplace votre page de nouvel onglet Firefox par une photographie d'oiseaux époustouflante de votre propre pays ou du monde entier. Chaque fois que vous ouvrez un onglet, vous découvrez une nouvelle espèce d'oiseau - avec des chants authentiques, des sons de la nature et des informations intéressantes. C'est comme avoir une fenêtre sur le monde naturel directement dans votre navigateur.
+
+POURQUOI LES UTILISATEURS ADORENT BIRDTAB
+
+Contrairement aux extensions de fonds d'écran classiques, BirdTab est une expérience nature complète. Chaque nouvel onglet apporte un moment de calme - une belle photographie d'oiseau, un chant apaisant et quelque chose de nouveau à apprendre. Le mélange parfait de pleine conscience, d'éducation et de beauté visuelle.
+
+FONCTIONNALITÉS PRINCIPALES
+
+- Nouveau fond d'écran d'oiseau à chaque nouvel onglet - photographie animalière haute résolution
+- Chants d'oiseaux et sons de la nature authentiques - volume réglable et heures calmes
+- Faits fascinants sur les oiseaux - comportement, habitat et statut de conservation
+- Les oiseaux de votre pays - choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde
+- Quiz interactif d'identification d'oiseaux - testez vos connaissances et partagez vos résultats
+- Historique d'observation - suivez chaque oiseau que vous avez découvert
+- Horloge et minuteur - restez concentré tout en profitant de la nature
+- Outils de productivité intégrés - barre de recherche, raccourcis et plus
+- Fonctionne hors ligne - profitez de vos oiseaux même sans internet
+- Sans publicité, sans inscription, sans engagement
+- Respectueux de la vie privée - aucune donnée personnelle. Les statistiques d'utilisation anonymes et les rapports d'erreurs ne sont envoyés que si vous l'autorisez lors de l'installation
+
+DES MILLIERS D'ESPÈCES
+
+Découvrez des milliers d'espèces d'oiseaux de tous les continents - des perroquets tropicaux et colibris aux majestueux aigles et hiboux. Chaque photo est en haute résolution et soigneusement sélectionnée pour vous offrir l'expérience ornithologique la plus époustouflante et diversifiée possible. Choisissez votre pays dans les Paramètres pour voir les oiseaux de chez vous, ou choisissez Monde pour les 500 oiseaux les plus communs de la planète.
+
+IDÉAL POUR
+
+- Ornithologues et passionnés d'observation d'oiseaux
+- Amoureux de la nature et photographes animaliers
+- Ceux qui recherchent un nouvel onglet esthétique et apaisant
+- Pleine conscience, méditation et gestion du stress
+- Étudiants et enseignants intéressés par l'ornithologie
+- Amateurs de fonds d'écran nature et de beaux arrière-plans
+
+NOUVEAUTÉS
+
+2.1.1 - BirdTab est désormais disponible sur Firefox.
+
+Journal complet des modifications : https://birdtab.app/changelog
