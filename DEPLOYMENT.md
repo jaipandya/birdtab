@@ -157,6 +157,7 @@ The add-on ID is `birdtab@birdtab.app` (set in `webpack.config.js`). Never chang
 3. "Do you need to submit source code?" → **Yes** → upload `releases/birdtab-firefox-vX.Y.Z-<commit>-source.zip`. Build steps are in `BUILD-FIREFOX.md`, inside the zip.
 4. Listing: copy the fields from `webstore/firefox/en.txt` (summary, description, categories, support site, privacy policy, notes to reviewer), then for each other language the summary and description from `webstore/firefox/<lang>.txt`. The name comes from the manifest, already translated. Add the screenshots `screenshots/firefox/1.png` to `5.png` (1280×800). Request the `birdtab` slug so the review link in `src/reviewPrompt.js` works: `https://addons.mozilla.org/firefox/addon/birdtab/`.
 5. Submit. Automated validation runs right away; a human review can follow.
+6. Once the listing is approved and public, publish the website's Firefox page: in `backend/lib/firefox.js` set `FIREFOX_ADDON_LIVE = true` (check `FIREFOX_ADDON_URL` matches the listing), and add the page to `backend/public/llms.txt`. That indexes `/birdtab-for-firefox`, adds it to the sitemap and footer, turns its "coming soon" button into an install link, and sends Firefox visitors to AMO from the header's Install button.
 
 **Updates**: **Manage My Submissions** → BirdTab → **Upload New Version**, then the same package and source zips. Paste the updated descriptions from `webstore/firefox/*.txt`.
 
