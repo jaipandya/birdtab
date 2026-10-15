@@ -35,6 +35,7 @@ PERFECTO PARA
 
 NOVEDADES
 
+2.1.1 - Los créditos de fotos y sonidos ahora muestran siempre correctamente el nombre del autor y la fecha.
 2.1.0 - Aves para cada país: elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo. Además, mejor soporte offline, una primera pestaña más rápida y mejoras para teclado y lectores de pantalla.
 2.0.0 - Fotos en alta resolución, regiones internacionales, reloj, temporizador, soporte offline mejorado y una experiencia renovada.
 1.3.9 - Popover de información del ave con mapa de distribución y descripción del ave. Modo sin distracciones.

@@ -35,6 +35,7 @@ IDEALNE DLA
 
 CO NOWEGO
 
+2.1.1 - Informacje o autorach zdjęć i nagrań zawsze poprawnie pokazują teraz nazwisko autora i datę.
 2.1.0 - Ptaki dla każdego kraju: wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata. Do tego lepsza obsługa offline, szybsza pierwsza karta oraz ulepszenia dla klawiatury i czytników ekranu.
 2.0.0 - Zdjęcia w wysokiej rozdzielczości, międzynarodowe regiony, zegar, minutnik, znacznie ulepszona obsługa offline i odświeżone doświadczenie nowej karty.
 1.3.9 - Dymek informacyjny o ptaku z mapą zasięgu i opisem ptaka. Tryb bez rozpraszania.

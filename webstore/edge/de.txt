@@ -55,6 +55,7 @@ Klicke auf das Microsoft Edge-Symbol in der oberen Ecke eines BirdTab-Tabs.
 
 NEUIGKEITEN
 
+2.1.1 - Bild- und Tonnachweise zeigen jetzt immer den Namen des Fotografen und das Datum korrekt an.
 2.1.0 - Vögel für jedes Land: wähle aus über 250 Ländern und Regionen oder den 500 häufigsten Vögeln der Welt. Dazu bessere Offline-Unterstützung, ein schnellerer erster Tab sowie Verbesserungen für Tastatur und Screenreader.
 2.0.0 - Hochauflösende Fotos, internationale Regionen, Uhr, Countdown-Timer, deutlich verbesserte Offline-Unterstützung und ein erfrischtes Neuer-Tab-Erlebnis.
 1.3.9 - Vogel-Info-Popover mit Verbreitungskarte und Vogelbeschreibung. Ablenkungsfreier Modus.

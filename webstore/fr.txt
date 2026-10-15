@@ -35,6 +35,7 @@ IDÉAL POUR
 
 NOUVEAUTÉS
 
+2.1.1 - Les crédits des photos et des sons affichent désormais toujours correctement le nom de l'auteur et la date.
 2.1.0 - Des oiseaux pour chaque pays : choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde. Et aussi : meilleur support hors ligne, premier onglet plus rapide, améliorations pour le clavier et les lecteurs d'écran.
 2.0.0 - Photos haute résolution, régions internationales, horloge, minuteur, support hors ligne amélioré et une expérience renouvelée.
 1.3.9 - Popover d'informations sur l'oiseau avec carte de répartition et description de l'oiseau. Mode sans distraction.
