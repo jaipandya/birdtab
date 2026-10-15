@@ -69,6 +69,12 @@ describe('cleanCreditName', () => {
     ).toBe('Joelr31');
   });
 
+  test('decodes HTML entities in names', () => {
+    expect(cleanCreditName('U.S. Fish &amp; Wildlife Service')).toBe('U.S. Fish & Wildlife Service');
+    expect(cleanCreditName('Ryan P. O&#039;Donnell')).toBe("Ryan P. O'Donnell");
+    expect(cleanCreditName('A &lt;b&gt; &#x41; &unknown;')).toBe('A <b> A &unknown;');
+  });
+
   test('leaves real names alone', () => {
     expect(cleanCreditName('Giles Laurent')).toBe('Giles Laurent');
     expect(cleanCreditName(null)).toBeNull();

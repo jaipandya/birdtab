@@ -6,14 +6,32 @@
 const ASSUMED_AUTHOR =
   /^No machine-readable author provided\.\s*(.+?)\s+assumed\s+\(based on copyright claims\)\.?$/i;
 
+const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+
 /**
- * Reduce a credit name to the person. Returns the input unchanged when it
- * isn't the Commons placeholder.
+ * Some creator names arrive HTML-encoded from their source ("U.S. Fish &amp;
+ * Wildlife Service", "O&#039;Donnell"). Credits are inserted as text, so
+ * decode them back. Regex only: this runs in the background script too.
+ * @param {string} text
+ * @returns {string}
+ */
+function decodeHtmlEntities(text) {
+  return text.replace(/&(?:(amp|lt|gt|quot|apos)|#(\d+)|#x([0-9a-f]+));/gi, (entity, named, dec, hex) => {
+    if (named) return NAMED_ENTITIES[named.toLowerCase()];
+    const code = dec ? Number(dec) : parseInt(hex, 16);
+    return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;
+  });
+}
+
+/**
+ * Reduce a credit name to the person, as plain text: decodes HTML entities
+ * and unwraps the Commons placeholder.
  * @param {string|null|undefined} name
  * @returns {string|null|undefined}
  */
 export function cleanCreditName(name) {
   if (typeof name !== 'string') return name;
+  name = decodeHtmlEntities(name);
   const match = name.trim().match(ASSUMED_AUTHOR);
   if (!match) return name;
   return match[1].replace(/~commonswiki$/i, '').trim() || null;
