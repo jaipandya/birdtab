@@ -1,4 +1,5 @@
 import { getMessage } from './i18n.js';
+import { html, setHtml } from './utils/html.js';
 
 /**
  * Permission Dialog - A reusable full-screen dialog for requesting permissions
@@ -67,17 +68,17 @@ export function showPermissionDialog(options = {}) {
       const linkText = getMessage(privacyLinkText) || 'Privacy Policy';
 
       if (privacyLinkUrl) {
-        privacyHTML = `
+        privacyHTML = html`
           <p class="permission-dialog-privacy">
             ${privacyMessage} <a href="${privacyLinkUrl}" target="_blank" rel="noopener noreferrer">${linkText}</a>
           </p>
         `;
       } else {
-        privacyHTML = `<p class="permission-dialog-privacy">${privacyMessage}</p>`;
+        privacyHTML = html`<p class="permission-dialog-privacy">${privacyMessage}</p>`;
       }
     }
 
-    dialog.innerHTML = `
+    setHtml(dialog, html`
       <div class="permission-dialog-backdrop"></div>
       <div class="permission-dialog-content">
         <h1 id="permission-dialog-title" class="permission-dialog-title">
@@ -96,7 +97,7 @@ export function showPermissionDialog(options = {}) {
           </button>
         </div>
       </div>
-    `;
+    `);
 
     // Add to DOM
     document.body.appendChild(dialog);

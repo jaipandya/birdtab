@@ -5,6 +5,7 @@
 
 import CONFIG from './config.js';
 import { trackReviewPromptAction, trackReviewPromptShown } from './analytics.js';
+import { html, insertHtml } from './utils/html.js';
 
 // Module state
 let shouldShowReviewPrompt = false;
@@ -90,7 +91,7 @@ export function checkAndPrepareReviewPrompt() {
  * @returns {string} HTML string for review prompt
  */
 export function getReviewPromptHTML() {
-  return `
+  return html`
     <div id="review-prompt" class="review-prompt">
       <button class="review-close" id="review-close" aria-label="${chrome.i18n.getMessage('closeAlt') || 'Close'}">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -164,7 +165,7 @@ export function dismissPrompt() {
  */
 export function showReviewPromptIfNeeded(container) {
   if (shouldShowReviewPrompt && container) {
-    container.insertAdjacentHTML('beforeend', getReviewPromptHTML());
+    insertHtml(container, 'beforeend', getReviewPromptHTML());
     addReviewPromptListeners();
     
     // Track that prompt was shown

@@ -13,6 +13,7 @@
 
 import { log } from './logger.js';
 import { isTourCompleted, isTourActive } from './featureTour.js';
+import { html, setHtml } from './utils/html.js';
 
 // Storage key for dismissed state
 const STORAGE_KEY = 'chromeFooterNotificationDismissed';
@@ -105,7 +106,7 @@ function createNotificationElement() {
   const learnMore = getMessage('chromeFooterLearnMore', 'Learn more');
   const closeLabel = getMessage('chromeFooterClose', 'Close notification');
   
-  notification.innerHTML = `
+  setHtml(notification, html`
     <button class="chrome-footer-notification-close" aria-label="${closeLabel}">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -130,7 +131,7 @@ function createNotificationElement() {
         </div>
       </div>
     </div>
-  `;
+  `);
   
   return notification;
 }

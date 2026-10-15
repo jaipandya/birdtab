@@ -6,6 +6,7 @@
 import { localizeHtml } from './i18n.js';
 import { log } from './logger.js';
 import { trackFeature } from './analytics.js';
+import { html, insertHtml, setHtml } from './utils/html.js';
 
 // Google Apps data organized in two sections
 const GOOGLE_APPS = {
@@ -300,7 +301,7 @@ function createAppItemHTML(app, section, index, total) {
   const ariaLabel = chrome.i18n.getMessage('googleAppPosition', [app.name, String(index + 1), String(total)]) ||
     `${app.name}. Position ${index + 1} of ${total}. Use Ctrl+Arrow to move.`;
 
-  return `
+  return html`
     <a href="${app.url}"
        class="google-app-item"
        title="${app.name}"
@@ -327,16 +328,16 @@ function createPanelHTML() {
 
   const primaryAppsHtml = primaryApps.map((app, idx) =>
     createAppItemHTML(app, 'primary', idx, primaryApps.length)
-  ).join('');
+  );
 
   const secondaryAppsHtml = secondaryApps.map((app, idx) =>
     createAppItemHTML(app, 'secondary', idx, secondaryApps.length)
-  ).join('');
+  );
 
   const resetButtonHidden = hasCustomOrder() ? '' : 'hidden';
   const resetButtonText = chrome.i18n.getMessage('resetGoogleAppsOrder') || 'Reset order';
 
-  return `
+  return html`
     <div id="google-apps-panel" class="settings-sidebar" role="dialog" aria-modal="true" aria-labelledby="google-apps-title">
       <div class="settings-content google-apps-content">
         <div class="settings-header">
@@ -371,7 +372,7 @@ function createPanelHTML() {
  * @returns {string} SVG icon for the trigger button
  */
 function getTriggerIconSvg() {
-  return `
+  return html`
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <circle cx="5" cy="5" r="2.5"/>
       <circle cx="12" cy="5" r="2.5"/>
@@ -396,7 +397,7 @@ export async function openGoogleApps() {
   await loadCustomOrder();
 
   if (!panel) {
-    document.body.insertAdjacentHTML('beforeend', createPanelHTML());
+    insertHtml(document.body, 'beforeend', createPanelHTML());
     panel = document.getElementById('google-apps-panel');
     localizeHtml();
     bindPanelEvents();
@@ -516,13 +517,13 @@ function rerenderGrids() {
     const primaryApps = getOrderedApps('primary');
     const secondaryApps = getOrderedApps('secondary');
 
-    primaryGrid.innerHTML = primaryApps.map((app, idx) =>
+    setHtml(primaryGrid, primaryApps.map((app, idx) =>
       createAppItemHTML(app, 'primary', idx, primaryApps.length)
-    ).join('');
+    ));
 
-    secondaryGrid.innerHTML = secondaryApps.map((app, idx) =>
+    setHtml(secondaryGrid, secondaryApps.map((app, idx) =>
       createAppItemHTML(app, 'secondary', idx, secondaryApps.length)
-    ).join('');
+    ));
   }
 }
 
@@ -1043,7 +1044,7 @@ function createTriggerButton() {
   triggerButton.className = 'google-apps-trigger hidden';
   triggerButton.setAttribute('aria-label', chrome.i18n.getMessage('googleAppsTriggerAriaLabel') || 'Open Google Apps');
   triggerButton.setAttribute('title', chrome.i18n.getMessage('googleAppsTriggerTooltip') || 'Google Apps');
-  triggerButton.innerHTML = getTriggerIconSvg();
+  setHtml(triggerButton, getTriggerIconSvg());
 
   // Add click handler
   triggerButton.addEventListener('click', (e) => {

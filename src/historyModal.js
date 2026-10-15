@@ -5,7 +5,7 @@
 
 import { log } from './logger.js';
 import { localizeHtml } from './i18n.js';
-import { escapeHtml } from './utils/escapeHtml.js';
+import { html, insertHtml, setHtml } from './utils/html.js';
 
 // Module state
 let historySidebar = null;
@@ -102,10 +102,6 @@ export function getRelativeTimeString(timestamp) {
   }
 }
 
-// ===== Utility Functions =====
-
-// escapeHtml is now imported from utils/escapeHtml.js
-
 // ===== History Modal UI Functions =====
 
 /**
@@ -115,7 +111,7 @@ function createHistoryModal() {
   const existingSidebar = document.getElementById('history-sidebar');
   if (existingSidebar) existingSidebar.remove();
 
-  const modalHTML = `
+  const modalHTML = html`
     <div id="history-sidebar" class="settings-sidebar" role="dialog" aria-modal="true">
       <div class="settings-content history-content">
         <div class="settings-header">
@@ -145,7 +141,7 @@ function createHistoryModal() {
     </div>
   `;
 
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  insertHtml(document.body, 'beforeend', modalHTML);
   localizeHtml();
   return document.getElementById('history-sidebar');
 }
@@ -181,16 +177,16 @@ export async function populateHistoryList() {
 
   // Use escaped HTML to prevent XSS
   // Store index to retrieve full birdInfo when clicked
-  historyList.innerHTML = reversedHistory.map((entry, index) => `
+  setHtml(historyList, reversedHistory.map((entry, index) => html`
     <button class="history-item" data-history-index="${index}">
-      <img src="${escapeHtml(entry.imageUrl)}" alt="${escapeHtml(entry.name)}" class="history-item-image" loading="lazy">
+      <img src="${entry.imageUrl}" alt="${entry.name}" class="history-item-image" loading="lazy">
       <div class="history-item-info">
-        <div class="history-item-name">${escapeHtml(entry.name)}</div>
-        <div class="history-item-scientific">${escapeHtml(entry.scientificName)}</div>
-        <div class="history-item-time">${escapeHtml(getRelativeTimeString(entry.timestamp))}</div>
+        <div class="history-item-name">${entry.name}</div>
+        <div class="history-item-scientific">${entry.scientificName}</div>
+        <div class="history-item-time">${getRelativeTimeString(entry.timestamp)}</div>
       </div>
     </button>
-  `).join('');
+  `));
 
   // Store history reference for click handler
   historyList.dataset.historyData = JSON.stringify(reversedHistory);

@@ -5,7 +5,7 @@ import { getOptionsTriggerSvg } from './optionsTrigger.js';
 import { getCloseTriggerSvg } from './closeTrigger.js';
 import { showConfirmationDialog } from './confirmationDialog.js';
 import { SEARCH_ENGINES, getSearchEngine, setSearchEngine } from './search.js';
-import { escapeHtml } from './utils/escapeHtml.js';
+import { html, setHtml } from './utils/html.js';
 
 /**
  * Top Sites module for displaying most visited websites
@@ -70,11 +70,11 @@ class TopSites {
     this.container = document.createElement('div');
     this.container.id = 'top-sites-container';
     this.container.className = 'top-sites-container hidden';
-    this.container.innerHTML = `
+    setHtml(this.container, html`
       <div class="top-sites-grid" role="grid" aria-label="${chrome.i18n.getMessage('mostVisitedSitesAriaLabel')}">
         <!-- Top sites will be populated here -->
       </div>
-    `;
+    `);
 
     // Insert after search container and wrap both in a quick-access wrapper
     const searchContainer = document.getElementById('search-container');
@@ -91,7 +91,7 @@ class TopSites {
         // Clock is positioned above search box for simpler logic
         // The quick-access-options-trigger is positioned relative to the search-and-sites area
         // Timer display is inside clock-wrapper, hidden by default (user can switch between clock/timer)
-        quickAccessWrapper.innerHTML = `
+        setHtml(quickAccessWrapper, html`
           <div id="clock-container" class="clock-container hidden">
             <div class="clock-wrapper">
               <button id="clock-close-trigger" class="clock-close-trigger" aria-label="${chrome.i18n.getMessage('clockCloseAriaLabel') || 'Hide clock'}">
@@ -112,7 +112,7 @@ class TopSites {
               ${getOptionsTriggerSvg()}
             </button>
           </div>
-        `;
+        `);
         
         // Insert wrapper before search container
         searchContainer.parentNode.insertBefore(quickAccessWrapper, searchContainer);
@@ -334,12 +334,12 @@ class TopSites {
       img.alt = '';
       img.onerror = () => {
         // Fallback to default icon if favicon fails to load
-        favicon.innerHTML = this.getDefaultIcon();
+        setHtml(favicon, this.getDefaultIcon());
         favicon.classList.add('has-fallback-icon');
       };
       favicon.appendChild(img);
     } else {
-      favicon.innerHTML = this.getDefaultIcon();
+      setHtml(favicon, this.getDefaultIcon());
       favicon.classList.add('has-fallback-icon');
     }
 
@@ -395,7 +395,7 @@ class TopSites {
    * Get default icon SVG for sites without favicons
    */
   getDefaultIcon() {
-    return `
+    return html`
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -775,10 +775,10 @@ class TopSites {
     const buttonElement = document.createElement('button');
     buttonElement.className = 'add-shortcut-btn';
     buttonElement.setAttribute('aria-label', chrome.i18n.getMessage('addNewShortcutAriaLabel'));
-    buttonElement.innerHTML = `
+    setHtml(buttonElement, html`
       <div class="plus-icon">+</div>
       <div class="add-text">${chrome.i18n.getMessage('addShortcutButtonText')}</div>
-    `;
+    `);
 
     buttonElement.addEventListener('click', () => {
       this.showAddShortcutDialog();
@@ -800,10 +800,10 @@ class TopSites {
 
     const contextMenu = document.createElement('div');
     contextMenu.className = 'top-site-context-menu';
-    contextMenu.innerHTML = `
+    setHtml(contextMenu, html`
       <div class="context-menu-item" data-action="edit">${chrome.i18n.getMessage('editShortcutContextMenu')}</div>
       <div class="context-menu-item" data-action="remove">${chrome.i18n.getMessage('removeShortcutContextMenu')}</div>
-    `;
+    `);
 
     // Position the menu
     contextMenu.style.left = event.pageX + 'px';
@@ -868,7 +868,7 @@ class TopSites {
 
     const modal = document.createElement('div');
     modal.className = 'shortcut-modal';
-    modal.innerHTML = `
+    setHtml(modal, html`
       <div class="shortcut-modal-content">
         <div class="shortcut-modal-header">
           <h3>${title}</h3>
@@ -877,12 +877,12 @@ class TopSites {
         <div class="shortcut-modal-body">
           <div class="input-group">
             <label for="shortcut-name">${chrome.i18n.getMessage('shortcutNameLabel')}</label>
-            <input type="text" id="shortcut-name" value="${escapeHtml(initialName)}" placeholder="${chrome.i18n.getMessage('shortcutNamePlaceholder')}" maxlength="20">
+            <input type="text" id="shortcut-name" value="${initialName}" placeholder="${chrome.i18n.getMessage('shortcutNamePlaceholder')}" maxlength="20">
             <div class="error-message" id="name-error"></div>
           </div>
           <div class="input-group">
             <label for="shortcut-url">${chrome.i18n.getMessage('shortcutUrlLabel')}</label>
-            <input type="text" id="shortcut-url" value="${escapeHtml(initialUrl)}" placeholder="${chrome.i18n.getMessage('shortcutUrlPlaceholder')}">
+            <input type="text" id="shortcut-url" value="${initialUrl}" placeholder="${chrome.i18n.getMessage('shortcutUrlPlaceholder')}">
             <div class="error-message" id="url-error"></div>
           </div>
         </div>
@@ -891,7 +891,7 @@ class TopSites {
           <button class="shortcut-btn primary" id="shortcut-ok">${chrome.i18n.getMessage('shortcutOkButton')}</button>
         </div>
       </div>
-    `;
+    `);
 
     document.body.appendChild(modal);
 

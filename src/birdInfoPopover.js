@@ -1,4 +1,4 @@
-import { escapeHtml } from './utils/escapeHtml.js';
+import { html, setHtml } from './utils/html.js';
 
 const CONSERVATION_COLORS = {
   'LC': '#4ade80',
@@ -215,26 +215,26 @@ function openInfoPopover() {
   popoverElement.setAttribute('aria-modal', 'true');
   popoverElement.setAttribute('aria-label', chrome.i18n.getMessage('infoTooltip') || 'Bird information');
   popoverElement.tabIndex = -1;
-  popoverElement.innerHTML = `
+  setHtml(popoverElement, html`
     <div class="info-popover__content">
       <div class="info-popover__body">
-        ${scientificName ? `<p class="info-popover__scientific-name">${escapeHtml(scientificName)}</p>` : ''}
-        ${description ? `
+        ${scientificName ? html`<p class="info-popover__scientific-name">${scientificName}</p>` : ''}
+        ${description ? html`
           <p class="info-popover__section-label">${chrome.i18n.getMessage('aboutThisBird') || 'About'}</p>
-          <p class="info-popover__description">${escapeHtml(description)}</p>
+          <p class="info-popover__description">${description}</p>
         ` : ''}
-        ${conservationDetails ? `
+        ${conservationDetails ? html`
           <div class="info-popover__conservation">
             <p class="info-popover__section-label">${chrome.i18n.getMessage('conservationStatusTitle') || 'Conservation status'}</p>
             <div class="info-popover__conservation-row">
               <span class="info-popover__conservation-dot" style="background:${conservationDetails.color}"></span>
-              <span class="info-popover__conservation-label">${escapeHtml(conservationDetails.label)}</span>
+              <span class="info-popover__conservation-label">${conservationDetails.label}</span>
             </div>
-            ${conservationDetails.help ? `<p class="info-popover__conservation-help">${escapeHtml(conservationDetails.help)}</p>` : ''}
+            ${conservationDetails.help ? html`<p class="info-popover__conservation-help">${conservationDetails.help}</p>` : ''}
           </div>
         ` : ''}
-        ${ebirdUrl ? `
-          <a href="${escapeHtml(ebirdUrl)}" target="_blank" rel="noopener noreferrer" class="info-popover__ebird-link">
+        ${ebirdUrl ? html`
+          <a href="${ebirdUrl}" target="_blank" rel="noopener noreferrer" class="info-popover__ebird-link">
             <img class="info-popover__ebird-icon" src="images/svg/ebird.svg" alt="" width="14" height="14">
             <span>${chrome.i18n.getMessage('viewOnEbird') || 'View on eBird'}</span>
             <svg class="info-popover__external-icon" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
@@ -243,7 +243,7 @@ function openInfoPopover() {
           </a>
         ` : ''}
       </div>
-      ${speciesCode ? `
+      ${speciesCode ? html`
         <div class="info-popover__map-side">
           <p class="info-popover__section-label">${chrome.i18n.getMessage('rangeMap') || 'Range Map'}</p>
           <div class="info-popover__map-container">
@@ -254,7 +254,7 @@ function openInfoPopover() {
               </svg>
               <span class="info-popover__map-loading-text">${chrome.i18n.getMessage('loadingRangeMap') || 'Loading range map...'}</span>
             </div>
-            ${navigator.onLine === false ? '' : `
+            ${navigator.onLine === false ? '' : html`
             <iframe
               src="https://ebird.org/embedmap/${encodeURIComponent(speciesCode)}"
               class="info-popover__map"
@@ -265,7 +265,7 @@ function openInfoPopover() {
         </div>
       ` : ''}
     </div>
-  `;
+  `);
 
   const iframe = popoverElement.querySelector('.info-popover__map');
   const mapContainer = popoverElement.querySelector('.info-popover__map-container');

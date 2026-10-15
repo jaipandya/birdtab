@@ -52,8 +52,9 @@ import { setupInfoPopover } from './birdInfoPopover.js';
 import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
 import { resolveMediaUrl, revokeMediaUrls, isMediaCached } from './mediaCache.js';
 import { setupCreditPopovers } from './creditPopover.js';
-import { escapeHtml, truncateName } from './utils/escapeHtml.js';
+import { truncateName } from './utils/escapeHtml.js';
 import { takeStoredBird, getBundledBird } from './mediaClient.js';
+import { html, setHtml } from './utils/html.js';
 
 // Initialize Sentry for content script
 initSentry('content-script');
@@ -233,9 +234,9 @@ async function findCachedHistoryBird() {
 const updatePlayPauseButton = () => {
   const playButton = document.getElementById('play-button');
   if (playButton) {
-    playButton.innerHTML = isPlaying ?
-      `<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
-      `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+    setHtml(playButton, isPlaying ?
+      html`<img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('pauseAlt')}" width="24" height="24">` :
+      html`<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`);
     // Don't overwrite the buffering tooltip while audio is loading
     if (!playButton.classList.contains('audio-buffering')) {
       playButton.title = isPlaying ?
@@ -388,7 +389,7 @@ function showQuietHoursPill() {
   const tooltipExplanation = chrome.i18n.getMessage('quietHoursTooltipExplanation') || 'Audio playback is paused during quiet hours.';
   const closeAlt = chrome.i18n.getMessage('closeAlt') || 'Close';
 
-  pill.innerHTML = `
+  setHtml(pill, html`
     <img src="images/svg/moon.svg" class="quiet-hours-pill-icon" alt="${chrome.i18n.getMessage('quietHoursAlt') || 'Quiet Hours'}" width="16" height="16">
     <span class="quiet-hours-pill-text">${quietHoursLabel}</span>
     <button class="quiet-hours-pill-close" aria-label="${closeAlt}" title="${chrome.i18n.getMessage('quietHoursDisabled') || 'Disable quiet hours'}">
@@ -399,7 +400,7 @@ function showQuietHoursPill() {
       <div class="quiet-hours-pill-tooltip-time">${quietHoursTime}</div>
       <div class="quiet-hours-pill-tooltip-desc">${tooltipExplanation}</div>
     </div>
-  `;
+  `);
 
   // Setup close button click handler
   const closeBtn = pill.querySelector('.quiet-hours-pill-close');
@@ -484,7 +485,7 @@ function createPlayButton(onClickHandler) {
   const playButton = document.createElement('button');
   playButton.id = 'play-button';
   playButton.classList.add('icon-button', 'play-button');
-  playButton.innerHTML = `<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`;
+  setHtml(playButton, html`<img src="images/svg/play.svg" alt="${chrome.i18n.getMessage('playAlt')}" width="16" height="16">`);
   playButton.title = chrome.i18n.getMessage('playTooltip');
   playButton.setAttribute('aria-label', chrome.i18n.getMessage('playTooltip') || 'Play');
   playButton.tabIndex = 0;
@@ -891,43 +892,43 @@ async function initializePage() {
     const audDate = birdInfo.audioDate || '';
     const audConvertedFormat = birdInfo.audioConvertedFormat || '';
 
-    const creditsHtml = `
+    const creditsHtml = html`
       <span class="credit-item"
         data-credit-type="photo"
-        data-credit-name="${escapeHtml(birdInfo.photographer)}"
-        data-credit-url="${escapeHtml(birdInfo.photographerUrl)}"
-        data-credit-source="${escapeHtml(imgSource)}"
-        data-credit-source-url="${escapeHtml(imgSourceUrl)}"
-        data-credit-license="${escapeHtml(imgLicense)}"
-        data-credit-license-url="${escapeHtml(imgLicenseUrl)}"
-        data-credit-title="${escapeHtml(imgTitle)}"
-        data-credit-caption="${escapeHtml(imgCaption)}"
-        data-credit-location="${escapeHtml(imgLocation)}"
-        data-credit-lat="${escapeHtml(imgLat)}"
-        data-credit-lon="${escapeHtml(imgLon)}"
-        data-credit-date="${escapeHtml(imgDate)}"
+        data-credit-name="${birdInfo.photographer}"
+        data-credit-url="${birdInfo.photographerUrl}"
+        data-credit-source="${imgSource}"
+        data-credit-source-url="${imgSourceUrl}"
+        data-credit-license="${imgLicense}"
+        data-credit-license-url="${imgLicenseUrl}"
+        data-credit-title="${imgTitle}"
+        data-credit-caption="${imgCaption}"
+        data-credit-location="${imgLocation}"
+        data-credit-lat="${imgLat}"
+        data-credit-lon="${imgLon}"
+        data-credit-date="${imgDate}"
         data-credit-resized="${imgResized}">
         <img src="images/svg/camera.svg" alt="${chrome.i18n.getMessage('cameraAlt')}" width="16" height="16">
-        <a href="${escapeHtml(birdInfo.photographerUrl)}" target="_blank">${escapeHtml(truncateName(birdInfo.photographer))}</a>
+        <a href="${birdInfo.photographerUrl}" target="_blank">${truncateName(birdInfo.photographer)}</a>
       </span>
-      ${birdInfo.mediaUrl ? `
+      ${birdInfo.mediaUrl ? html`
       <span class="credit-item"
         data-credit-type="audio"
-        data-credit-name="${escapeHtml(birdInfo.recordist)}"
-        data-credit-url="${escapeHtml(birdInfo.recordistUrl)}"
-        data-credit-source="${escapeHtml(audSource)}"
-        data-credit-source-url="${escapeHtml(audSourceUrl)}"
-        data-credit-license="${escapeHtml(audLicense)}"
-        data-credit-license-url="${escapeHtml(audLicenseUrl)}"
-        data-credit-title="${escapeHtml(audTitle)}"
-        data-credit-sound-type="${escapeHtml(audSoundType)}"
-        data-credit-location="${escapeHtml(audLocation)}"
-        data-credit-lat="${escapeHtml(audLat)}"
-        data-credit-lon="${escapeHtml(audLon)}"
-        data-credit-date="${escapeHtml(audDate)}"
-        data-credit-converted-format="${escapeHtml(audConvertedFormat)}">
+        data-credit-name="${birdInfo.recordist}"
+        data-credit-url="${birdInfo.recordistUrl}"
+        data-credit-source="${audSource}"
+        data-credit-source-url="${audSourceUrl}"
+        data-credit-license="${audLicense}"
+        data-credit-license-url="${audLicenseUrl}"
+        data-credit-title="${audTitle}"
+        data-credit-sound-type="${audSoundType}"
+        data-credit-location="${audLocation}"
+        data-credit-lat="${audLat}"
+        data-credit-lon="${audLon}"
+        data-credit-date="${audDate}"
+        data-credit-converted-format="${audConvertedFormat}">
         <img src="images/svg/microphone.svg" alt="${chrome.i18n.getMessage('audioAlt')}" width="16" height="16">
-        <a href="${escapeHtml(birdInfo.recordistUrl)}" target="_blank">${escapeHtml(truncateName(birdInfo.recordist))}</a>
+        <a href="${birdInfo.recordistUrl}" target="_blank">${truncateName(birdInfo.recordist)}</a>
       </span>
       ` : ''}
     `;
@@ -967,18 +968,18 @@ async function initializePage() {
       } : {}),
     };
 
-    contentContainer.innerHTML = `
-      <img src="" alt="${escapeHtml(birdInfo.name)}" class="background-image" decoding="async" fetchpriority="high">
+    setHtml(contentContainer, html`
+      <img src="" alt="${birdInfo.name}" class="background-image" decoding="async" fetchpriority="high">
       <div class="gradient-overlay"></div>
       <div class="info-panel">
         <div class="info-panel-header">
           <div class="bird-name-row">
             <button class="info-popover-trigger" id="bird-name" aria-expanded="false" aria-haspopup="dialog"
-              data-scientific-name="${escapeHtml(birdInfo.scientificName)}"
-              data-description="${escapeHtml(birdInfo.description)}"
-              data-conservation="${escapeHtml(birdInfo.conservationStatus)}"
-              data-species-code="${escapeHtml(birdInfo.speciesCode)}"
-              data-ebird-url="${escapeHtml(birdInfo.ebirdUrl)}">
+              data-scientific-name="${birdInfo.scientificName}"
+              data-description="${birdInfo.description}"
+              data-conservation="${birdInfo.conservationStatus}"
+              data-species-code="${birdInfo.speciesCode}"
+              data-ebird-url="${birdInfo.ebirdUrl}">
             </button>
             <button class="low-distraction-toggle" id="low-distraction-toggle"
               title="${chrome.i18n.getMessage('lowDistractionToggle') || 'Hide details'}"
@@ -1015,7 +1016,7 @@ async function initializePage() {
         <button id="refresh-button" class="icon-button" title="${chrome.i18n.getMessage('refreshTooltip')}">
           <img src="images/svg/refresh.svg" alt="${chrome.i18n.getMessage('refreshAlt')}" width="24" height="24">
         </button>
-        ${birdInfo.mediaUrl ? `
+        ${birdInfo.mediaUrl ? html`
         <div id="volume-control" class="volume-control">
           <button id="volume-button" class="icon-button" title="${chrome.i18n.getMessage('volumeTooltip')}">
             <img src="images/svg/sound-on.svg" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">
@@ -1033,7 +1034,7 @@ async function initializePage() {
           <path d="M4 10l4-4 4 4"/>
         </svg>
       </button>
-    `;
+    `);
 
     setImageSource(birdInfo.imageUrl);
 
@@ -1240,7 +1241,7 @@ function updateVolumeControl() {
 
   if (volumeButton) {
     const iconSrc = (isMuted || volumeLevel === 0) ? 'sound-off.svg' : 'sound-on.svg';
-    volumeButton.innerHTML = `<img src="images/svg/${iconSrc}" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">`;
+    setHtml(volumeButton, html`<img src="images/svg/${iconSrc}" alt="${chrome.i18n.getMessage('volumeAlt')}" width="24" height="24">`);
     volumeButton.title = chrome.i18n.getMessage('volumeTooltip');
   }
 

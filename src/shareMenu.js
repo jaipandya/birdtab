@@ -4,6 +4,7 @@
  */
 
 import { trackFeature } from './analytics.js';
+import { html, insertHtml } from './utils/html.js';
 
 // Module state
 let showShareMenu = false;
@@ -128,7 +129,7 @@ function shareToWhatsApp() {
  */
 function createShareMenuHTML() {
   const shareUrl = getShareUrl();
-  return `
+  return html`
     <div class="share-menu">
       <div class="share-menu-section">
         <p class="share-menu-label">${chrome.i18n.getMessage('shareLink') || 'Share link'}</p>
@@ -192,7 +193,7 @@ export function openShareMenu() {
   if (!shareContainer || showShareMenu) return;
 
   showShareMenu = true;
-  shareContainer.insertAdjacentHTML('beforeend', createShareMenuHTML());
+  insertHtml(shareContainer, 'beforeend', createShareMenuHTML());
 
   // Add event listeners to share menu buttons
   const copyBtn = shareContainer.querySelector('.share-menu-copy-btn');

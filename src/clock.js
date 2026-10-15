@@ -6,6 +6,7 @@
 import { log } from './logger.js';
 import { getMessage } from './i18n.js';
 import { createOptionsMenu } from './optionsMenu.js';
+import { html, setHtml } from './utils/html.js';
 
 // Module state
 let clockInterval = null;
@@ -82,8 +83,7 @@ function updateClock() {
   if (secondsStr) {
     // Render with seconds: HH:MM<span class="clock-seconds">SS</span>
     // Note: No colon between main time and seconds as per requirements
-    // Using innerHTML is safe here as the content is generated from numbers
-    timeElement.innerHTML = `<span class="clock-main">${mainTime}</span><span class="clock-seconds">${secondsStr}</span>`;
+    setHtml(timeElement, html`<span class="clock-main">${mainTime}</span><span class="clock-seconds">${secondsStr}</span>`);
   } else {
     // Render just HH:MM
     timeElement.textContent = mainTime;

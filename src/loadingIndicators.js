@@ -3,6 +3,8 @@
  * Manages page loading, media loading indicators, media play/pause indicators, and toast notifications
  */
 
+import { html, setHtml } from './utils/html.js';
+
 // ===== Media Indicator State =====
 let mediaPlayIndicatorTimeout = null;
 let mediaPauseIndicatorTimeout = null;
@@ -65,11 +67,11 @@ export function showLoadingIndicator() {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'loading';
     // Screen readers hear one static "Loading" instead of every rotating message
-    loadingDiv.innerHTML = `
+    setHtml(loadingDiv, html`
       <div class="spinner"></div>
       <p id="loading-message" aria-hidden="true">${getRandomLoadingMessage()}</p>
       <span class="visually-hidden" role="status">${chrome.i18n.getMessage('loading') || 'Loading...'}</span>
-    `;
+    `);
     document.body.appendChild(loadingDiv);
   }, LOADING_SHOW_DELAY_MS);
 }
@@ -136,10 +138,10 @@ export function showAudioLoadingIndicator() {
 
   const indicator = document.createElement('div');
   indicator.className = 'video-loading-indicator audio-loading-indicator'; // Reuse video loading styles
-  indicator.innerHTML = `
+  setHtml(indicator, html`
     <div class="loading-spinner"></div>
     <span class="loading-text">${chrome.i18n.getMessage('loadingAudio') || 'Loading audio'}</span>
-  `;
+  `);
 
   const contentContainer = document.getElementById('content-container');
   if (contentContainer) {
@@ -178,11 +180,11 @@ export function showMediaPlayIndicator() {
   // Use waveform icon to represent audio playing
   const indicator = document.createElement('div');
   indicator.className = 'video-play-indicator';
-  indicator.innerHTML = `
+  setHtml(indicator, html`
     <div class="play-icon-container">
       <img src="images/svg/waveform.svg" alt="${chrome.i18n.getMessage('audioPlayingAlt') || 'Audio Playing'}" width="56" height="56">
     </div>
-  `;
+  `);
 
   const contentContainer = document.getElementById('content-container');
   if (contentContainer) {
@@ -216,11 +218,11 @@ export function showMediaPauseIndicator() {
   // Use pause icon for audio paused
   const indicator = document.createElement('div');
   indicator.className = 'video-pause-indicator';
-  indicator.innerHTML = `
+  setHtml(indicator, html`
     <div class="pause-icon-container">
       <img src="images/svg/pause.svg" alt="${chrome.i18n.getMessage('audioPausedAlt') || 'Audio Paused'}" width="56" height="56">
     </div>
-  `;
+  `);
 
   const contentContainer = document.getElementById('content-container');
   if (contentContainer) {

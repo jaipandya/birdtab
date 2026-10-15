@@ -3,9 +3,10 @@ import './quiz.css';
 import { log } from './logger.js';
 import CONFIG from './config.js';
 import { trackQuizCompleted } from './analytics.js';
-import { escapeHtml, truncateName } from './utils/escapeHtml.js';
+import { truncateName } from './utils/escapeHtml.js';
 import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
 import { resolveMediaUrl, isMediaCached } from './mediaCache.js';
+import { html, setHtml, trustedHtml } from './utils/html.js';
 
 /*
  * Keep the next quiz image warm in the browser cache once the current image
@@ -150,10 +151,25 @@ class QuizMode {
   // ==========================================
 
   /**
+   * "Question {currentQuestion} of {totalQuestions}", with the numbers in
+   * spans that updateProgress() rewrites
+   */
+  progressLabelHtml() {
+    const total = this.questions.length || QUIZ_TOTAL_QUESTIONS;
+    return chrome.i18n.getMessage('quizProgress')
+      .split(/(\{currentQuestion\}|\{totalQuestions\})/)
+      .map((part) => {
+        if (part === '{currentQuestion}') return html`<span id="quiz-current">1</span>`;
+        if (part === '{totalQuestions}') return html`<span id="quiz-total">${total}</span>`;
+        return part;
+      });
+  }
+
+  /**
    * Generate quiz UI HTML template
    */
   generateQuizHTML() {
-    return `
+    return html`
       <button class="quiz-close-btn" id="quiz-close" aria-label="${chrome.i18n.getMessage('closeQuiz')}">
         <img src="images/svg/close.svg" alt="${chrome.i18n.getMessage('closeAlt')}" width="20" height="20">
       </button>
@@ -163,7 +179,7 @@ class QuizMode {
             <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 10%"></div>
           </div>
           <div class="quiz-meta">
-            <span>${chrome.i18n.getMessage('quizProgress').replace('{currentQuestion}', '<span id="quiz-current">1</span>').replace('{totalQuestions}', `<span id="quiz-total">${this.questions.length || QUIZ_TOTAL_QUESTIONS}</span>`)}</span>
+            <span>${this.progressLabelHtml()}</span>
           </div>
         </div>
         
@@ -212,7 +228,7 @@ class QuizMode {
 
     const modal = document.createElement('div');
     modal.className = className;
-    modal.innerHTML = content;
+    setHtml(modal, content);
     document.body.appendChild(modal);
     return modal;
   }
@@ -570,13 +586,13 @@ class QuizMode {
   showQuizLoading() {
     const questionText = this.getElement('quiz-question-text');
     if (questionText) {
-      questionText.innerHTML = `<span class="loading-text">${chrome.i18n.getMessage('quizLoadingQuestions')}</span>`;
+      setHtml(questionText, html`<span class="loading-text">${chrome.i18n.getMessage('quizLoadingQuestions')}</span>`);
     }
 
     const imageContainer = this.getElement('quiz-image-container');
     if (imageContainer) {
       imageContainer.classList.add('loading');
-      imageContainer.innerHTML = '<div class="skeleton skeleton-image"></div>';
+      setHtml(imageContainer, trustedHtml('<div class="skeleton skeleton-image"></div>'));
     }
 
     const imageMeta = this.getElement('quiz-image-meta');
@@ -586,7 +602,7 @@ class QuizMode {
 
     const optionsContainer = this.getElement('quiz-options');
     if (optionsContainer) {
-      optionsContainer.innerHTML = Array(4).fill('<div class="skeleton skeleton-option"></div>').join('');
+      setHtml(optionsContainer, Array(4).fill(trustedHtml('<div class="skeleton skeleton-option"></div>')));
     }
 
     const nextButton = this.getElement('quiz-next');
@@ -620,7 +636,7 @@ class QuizMode {
   showQuizUI() {
     this.quizContainer = document.createElement('div');
     this.quizContainer.className = 'quiz-mode';
-    this.quizContainer.innerHTML = this.generateQuizHTML();
+    setHtml(this.quizContainer, this.generateQuizHTML());
     document.body.appendChild(this.quizContainer);
     this.setupQuizEventListeners();
   }
@@ -725,7 +741,7 @@ class QuizMode {
       this.updateImageMeta(bird);
     } else {
       imageMeta.style.visibility = 'visible';
-      imageMeta.innerHTML = `${chrome.i18n.getMessage('photoBy')} <a href="#" id="quiz-photographer" target="_blank">${chrome.i18n.getMessage('loading')}</a>`;
+      setHtml(imageMeta, html`${chrome.i18n.getMessage('photoBy')} <a href="#" id="quiz-photographer" target="_blank">${chrome.i18n.getMessage('loading')}</a>`);
     }
   }
 
@@ -734,7 +750,7 @@ class QuizMode {
    */
   async loadAndDisplayQuestionImage(question, container, questionIndex = this.currentQuestion) {
     container.classList.add('loading');
-    container.innerHTML = '<div class="image-loading-overlay"><div class="spinner"></div></div>';
+    setHtml(container, trustedHtml('<div class="image-loading-overlay"><div class="spinner"></div></div>'));
 
     const imageUrl = question.bird.imageUrl;
     if (!imageUrl) {
@@ -824,22 +840,22 @@ class QuizMode {
     imageMeta.style.visibility = 'visible';
 
     const photographerHtml = bird.photographer
-      ? `<a href="${escapeHtml(bird.photographerUrl || '#')}" id="quiz-photographer" target="_blank">${escapeHtml(truncateName(bird.photographer))}</a>`
+      ? html`<a href="${bird.photographerUrl || '#'}" id="quiz-photographer" target="_blank">${truncateName(bird.photographer)}</a>`
       : '';
 
     const licenseHtml = bird.imageLicense
-      ? `<a href="${bird.imageLicenseUrl || '#'}" target="_blank" class="quiz-license-link">${bird.imageLicense}</a>`
+      ? html`<a href="${bird.imageLicenseUrl || '#'}" target="_blank" class="quiz-license-link">${bird.imageLicense}</a>`
       : '';
 
     const parts = [];
-    if (photographerHtml) parts.push(`${chrome.i18n.getMessage('photoBy')} ${photographerHtml}`);
+    if (photographerHtml) parts.push(html`${chrome.i18n.getMessage('photoBy')} ${photographerHtml}`);
     if (licenseHtml) parts.push(licenseHtml);
 
-    imageMeta.innerHTML = parts.join(' · ');
+    setHtml(imageMeta, parts.flatMap((part, i) => (i ? [' · ', part] : [part])));
   }
 
   // Error icon SVG for image load failures
-  static ERROR_BIRD_SVG = `
+  static ERROR_BIRD_SVG = trustedHtml(`
     <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" opacity="0.3"/>
       <path d="M32 18C32 18 22 24 22 32C22 40 32 46 32 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
@@ -847,17 +863,17 @@ class QuizMode {
       <circle cx="32" cy="28" r="3" fill="currentColor" opacity="0.8"/>
       <path d="M26 38C26 38 28 42 32 42C36 42 38 38 38 38" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
     </svg>
-  `;
+  `);
 
   showImageLoadError(container) {
     container.classList.remove('loading');
-    container.innerHTML = `
+    setHtml(container, html`
       <div class="quiz-image-error">
         ${QuizMode.ERROR_BIRD_SVG}
         <p class="quiz-image-error-text">${chrome.i18n.getMessage('quizImageUnavailable') || 'Image unavailable'}</p>
         <p class="quiz-image-error-hint">${chrome.i18n.getMessage('quizImageUnavailableHint') || 'Can you identify this bird?'}</p>
       </div>
-    `;
+    `);
     
     const imageMeta = this.getElement('quiz-image-meta');
     if (imageMeta) {
@@ -1001,21 +1017,21 @@ class QuizMode {
       const statusClass = answer.isCorrect ? 'correct' : 'incorrect';
       const badge = answer.isCorrect ? '✓' : '✗';
       const incorrectHint = answer.isCorrect ? '' : 
-        `<div class="quiz-result-your-answer">${chrome.i18n.getMessage('yourAnswer', [answer.selectedAnswer])}</div>`;
+        html`<div class="quiz-result-your-answer">${chrome.i18n.getMessage('yourAnswer', [answer.selectedAnswer])}</div>`;
 
       const creditParts = [];
-      if (bird.photographer) creditParts.push(escapeHtml(truncateName(bird.photographer)));
+      if (bird.photographer) creditParts.push(truncateName(bird.photographer));
       if (bird.imageLicense) {
         const licenseText = bird.imageLicenseUrl
-          ? `<a href="${bird.imageLicenseUrl}" target="_blank">${bird.imageLicense}</a>`
+          ? html`<a href="${bird.imageLicenseUrl}" target="_blank">${bird.imageLicense}</a>`
           : bird.imageLicense;
         creditParts.push(licenseText);
       }
       const creditHtml = creditParts.length
-        ? `<div class="quiz-result-credit">${creditParts.join(' · ')}</div>`
+        ? html`<div class="quiz-result-credit">${creditParts.flatMap((part, i) => (i ? [' · ', part] : [part]))}</div>`
         : '';
 
-      return `
+      return html`
         <div class="quiz-result-item ${statusClass}">
           <div class="quiz-result-thumbnail-wrapper">
             <img src="${bird.imageUrl}" alt="${bird.primaryComName}" class="quiz-result-thumbnail" />
@@ -1028,9 +1044,9 @@ class QuizMode {
           </div>
         </div>
       `;
-    }).join('');
+    });
 
-    return `
+    return html`
       <button class="quiz-close-btn" id="quiz-results-close" aria-label="${chrome.i18n.getMessage('closeQuiz')}">
         <img src="images/svg/close.svg" alt="${chrome.i18n.getMessage('closeAlt')}" width="20" height="20">
       </button>
@@ -1076,7 +1092,7 @@ class QuizMode {
       : 0;
     trackQuizCompleted(this.score, this.questions.length, durationSec);
     
-    this.quizContainer.innerHTML = this.generateResultsHTML();
+    setHtml(this.quizContainer, this.generateResultsHTML());
     this.setupResultsEventListeners();
   }
 
@@ -1106,7 +1122,7 @@ class QuizMode {
       ? chrome.i18n.getMessage('quizExitConfirmMessageResults') || 'Are you sure you want to close?'
       : chrome.i18n.getMessage('quizExitConfirmMessage');
 
-    const modalContent = `
+    const modalContent = html`
       <div class="quiz-exit-content">
         <h3>${title}</h3>
         <p>${message}</p>
@@ -1246,7 +1262,7 @@ class QuizMode {
 
   updateQuizUIForNewQuiz() {
     this.cleanupNonPersistentListeners();
-    this.quizContainer.innerHTML = this.generateQuizHTML();
+    setHtml(this.quizContainer, this.generateQuizHTML());
     this.setupQuizEventListeners();
   }
 
@@ -1317,7 +1333,7 @@ class QuizMode {
   }
 
   showError(message) {
-    const modalContent = `
+    const modalContent = html`
       <div class="quiz-exit-content">
         <h3>${chrome.i18n.getMessage('quizErrorTitle')}</h3>
         <p>${message}</p>
@@ -1680,18 +1696,18 @@ class QuizMode {
    */
   async shareCollage() {
     const shareBtn = this.getElement('quiz-share-results');
-    const originalContent = shareBtn?.innerHTML;
+    const originalContent = shareBtn ? [...shareBtn.childNodes] : [];
     
     if (shareBtn) {
       shareBtn.disabled = true;
-      shareBtn.innerHTML = `<span class="quiz-share-spinner"></span> ${chrome.i18n.getMessage('quizShareGenerating') || 'Generating...'}`;
+      setHtml(shareBtn, html`<span class="quiz-share-spinner"></span> ${chrome.i18n.getMessage('quizShareGenerating') || 'Generating...'}`);
     }
 
     try {
       const dataUrl = await this.generateShareableCollage();
       
       if (shareBtn) {
-        shareBtn.innerHTML = originalContent;
+        shareBtn.replaceChildren(...originalContent);
         shareBtn.disabled = false;
       }
       
@@ -1701,9 +1717,9 @@ class QuizMode {
       captureException(error, { tags: { operation: 'shareCollage', component: 'QuizMode' } });
       
       if (shareBtn) {
-        shareBtn.innerHTML = chrome.i18n.getMessage('quizShareError') || 'Failed to generate';
+        setHtml(shareBtn, chrome.i18n.getMessage('quizShareError') || 'Failed to generate');
         setTimeout(() => {
-          shareBtn.innerHTML = originalContent;
+          shareBtn.replaceChildren(...originalContent);
           shareBtn.disabled = false;
         }, BUTTON_FEEDBACK_DELAY);
       }
@@ -1715,9 +1731,9 @@ class QuizMode {
    * @param {string} dataUrl - Data URL of the generated image
    */
   showSharePreview(dataUrl) {
-    const resultsHTML = this.quizContainer.innerHTML;
+    const resultsNodes = [...this.quizContainer.childNodes].map((node) => node.cloneNode(true));
     
-    this.quizContainer.innerHTML = `
+    setHtml(this.quizContainer, html`
       <button class="quiz-close-btn" id="quiz-share-close" aria-label="${chrome.i18n.getMessage('closeQuiz') || 'Close'}">
         <img src="images/svg/close.svg" alt="${chrome.i18n.getMessage('closeAlt') || 'Close'}" width="20" height="20">
       </button>
@@ -1752,11 +1768,11 @@ class QuizMode {
           </div>
         </div>
       </div>
-    `;
+    `);
 
-    // Store dataUrl and resultsHTML for later use
+    // Store dataUrl and the results page for later use
     this._shareDataUrl = dataUrl;
-    this._resultsHTML = resultsHTML;
+    this._resultsNodes = resultsNodes;
 
     // Setup event listeners
     this.setupSharePreviewListeners();
@@ -1764,18 +1780,18 @@ class QuizMode {
 
   // SVG icon templates
   static ICONS = {
-    checkmark: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-    download: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
-    copy: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`,
-    error: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`
+    checkmark: trustedHtml(`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`),
+    download: trustedHtml(`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`),
+    copy: trustedHtml(`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`),
+    error: trustedHtml(`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`)
   };
 
   /**
    * Show temporary button feedback
    */
   showButtonFeedback(button, icon, text, originalContent, delay = BUTTON_FEEDBACK_DELAY) {
-    button.innerHTML = `${icon} ${text}`;
-    setTimeout(() => { button.innerHTML = originalContent; }, delay);
+    setHtml(button, html`${icon} ${text}`);
+    setTimeout(() => { setHtml(button, originalContent); }, delay);
   }
 
   /**
@@ -1792,7 +1808,7 @@ class QuizMode {
     }
 
     if (downloadBtn) {
-      const originalContent = `${QuizMode.ICONS.download} ${chrome.i18n.getMessage('quizShareDownload') || 'Download Image'}`;
+      const originalContent = html`${QuizMode.ICONS.download} ${chrome.i18n.getMessage('quizShareDownload') || 'Download Image'}`;
       this.addTrackedListener(downloadBtn, 'click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -1807,7 +1823,7 @@ class QuizMode {
     }
 
     if (copyBtn) {
-      const originalContent = `${QuizMode.ICONS.copy} ${chrome.i18n.getMessage('quizShareCopyImage') || 'Copy to Clipboard'}`;
+      const originalContent = html`${QuizMode.ICONS.copy} ${chrome.i18n.getMessage('quizShareCopyImage') || 'Copy to Clipboard'}`;
       this.addTrackedListener(copyBtn, 'click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -1842,14 +1858,14 @@ class QuizMode {
    * Return to the results page from share preview
    */
   returnToResults() {
-    if (!this._resultsHTML) return;
+    if (!this._resultsNodes) return;
     
     this.cleanupNonPersistentListeners();
-    this.quizContainer.innerHTML = this._resultsHTML;
+    this.quizContainer.replaceChildren(...this._resultsNodes);
     this.setupResultsEventListeners();
     
     delete this._shareDataUrl;
-    delete this._resultsHTML;
+    delete this._resultsNodes;
   }
 
   /**

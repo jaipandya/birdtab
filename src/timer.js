@@ -7,6 +7,7 @@ import { log } from './logger.js';
 import { getMessage } from './i18n.js';
 import { createOptionsMenu } from './optionsMenu.js';
 import { trackFeature } from './analytics.js';
+import { html, setHtml } from './utils/html.js';
 
 // Timer states
 const TIMER_STATE = {
@@ -190,7 +191,7 @@ function renderTimeHTML(totalSeconds) {
   
   if (timeDisplay.hasHours && timeDisplay.seconds) {
     // Clock-style rendering: main time with subscript seconds
-    return `<span class="timer-time-main">${timeDisplay.main}</span><span class="timer-time-seconds">${timeDisplay.seconds}</span>`;
+    return html`<span class="timer-time-main">${timeDisplay.main}</span><span class="timer-time-seconds">${timeDisplay.seconds}</span>`;
   }
   
   return timeDisplay.main;
@@ -204,7 +205,7 @@ function createSetupHTML() {
   const totalSeconds = hmsToSeconds(setupHours, setupMinutes, setupSeconds);
   const isDisabled = totalSeconds === 0;
   
-  return `
+  return html`
     <div class="timer-setup">
       <div class="timer-input-row">
         <div class="timer-digit-group" data-group="hours" tabindex="0">
@@ -246,7 +247,7 @@ function createRunningHTML() {
   const isPaused = timerState === TIMER_STATE.PAUSED;
   const isFinished = timerState === TIMER_STATE.FINISHED;
   
-  return `
+  return html`
     <div class="timer-running ${isFinished ? 'timer-finished' : ''}">
       <div class="timer-progress-container">
         <svg class="timer-progress-ring" viewBox="0 0 260 260">
@@ -262,14 +263,14 @@ function createRunningHTML() {
         <div class="timer-time ${isFinished ? 'timer-time-finished' : ''}">${renderTimeHTML(remainingTime)}</div>
       </div>
       <div class="timer-controls">
-        ${!isFinished ? `
+        ${!isFinished ? html`
           <button class="timer-control-btn timer-pause-btn" data-action="${isPaused ? 'resume' : 'pause'}">
-            ${isPaused ? `
+            ${isPaused ? html`
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z"/>
               </svg>
               ${getMessage('timerResume') || 'Resume'}
-            ` : `
+            ` : html`
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
               </svg>
@@ -296,10 +297,10 @@ function renderTimer() {
   if (!display) return;
   
   if (timerState === TIMER_STATE.SETUP) {
-    display.innerHTML = createSetupHTML();
+    setHtml(display, createSetupHTML());
     attachSetupListeners();
   } else {
-    display.innerHTML = createRunningHTML();
+    setHtml(display, createRunningHTML());
     attachRunningListeners();
   }
 }
@@ -784,8 +785,8 @@ function updateRunningDisplay() {
   
   const timeElement = display.querySelector('.timer-time');
   if (timeElement) {
-    // Use innerHTML to support the clock-style subscript seconds
-    timeElement.innerHTML = renderTimeHTML(remainingTime);
+    // Markup for the clock-style subscript seconds
+    setHtml(timeElement, renderTimeHTML(remainingTime));
   }
   
   // Update progress ring

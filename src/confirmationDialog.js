@@ -1,4 +1,5 @@
 import { getMessage } from './i18n.js';
+import { html, setHtml } from './utils/html.js';
 
 /**
  * Confirmation Dialog - A subtle confirmation modal styled like the feature tour
@@ -50,7 +51,7 @@ export function showConfirmationDialog(options = {}) {
     dialog.setAttribute('aria-labelledby', 'confirmation-dialog-title');
     dialog.setAttribute('aria-describedby', 'confirmation-dialog-subtitle');
 
-    dialog.innerHTML = `
+    setHtml(dialog, html`
       <h3 id="confirmation-dialog-title" class="confirmation-dialog-title">
         ${getMessage(title) || 'Confirm'}
       </h3>
@@ -65,7 +66,7 @@ export function showConfirmationDialog(options = {}) {
           ${getMessage(confirmText) || 'OK'}
         </button>
       </div>
-    `;
+    `);
 
     // Add to DOM
     document.body.appendChild(backdrop);

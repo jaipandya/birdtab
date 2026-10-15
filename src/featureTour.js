@@ -26,6 +26,7 @@
 import './featureTour.css';
 import { log } from './logger.js';
 import { trackTourCompleted } from './analytics.js';
+import { html, setHtml } from './utils/html.js';
 
 // Tour version - increment when adding new features to show tour again
 // Version history:
@@ -345,7 +346,7 @@ export async function showFeatureSpotlight(featureKey) {
   const title = getMessage(step.titleKey, step.fallbackTitle);
   const description = getMessage(step.descriptionKey, step.fallbackDescription);
   
-  const headerHtml = `
+  const headerHtml = html`
     <div class="tour-tooltip-header">
       <div class="tour-tooltip-icon">
         <img src="${step.icon}" alt="" width="24" height="24">
@@ -354,17 +355,17 @@ export async function showFeatureSpotlight(featureKey) {
     </div>
   `;
   
-  const newBadge = `<span class="tour-new-badge">${getMessage('tourNewFeature', 'New!')}</span>`;
+  const newBadge = html`<span class="tour-new-badge">${getMessage('tourNewFeature', 'New!')}</span>`;
   const gotItText = getMessage('tourGotIt', 'Got it!');
   
-  tooltip.innerHTML = `
+  setHtml(tooltip, html`
     ${headerHtml}
     ${newBadge}
     <p class="tour-tooltip-description">${description}</p>
     <div class="tour-actions tour-actions-centered">
       <button class="tour-btn primary" id="tour-next-btn">${gotItText}</button>
     </div>
-  `;
+  `);
   
   tooltip.setAttribute('aria-labelledby', 'tour-tooltip-title');
   
@@ -649,11 +650,11 @@ function renderStep(stepIndex) {
   
   let progressHtml = '';
   if (!isWelcome && !isComplete) {
-    progressHtml = `
+    progressHtml = html`
       <div class="tour-progress">
-        ${visibleFeatureSteps.map((_, i) => `
+        ${visibleFeatureSteps.map((_, i) => html`
           <span class="tour-progress-dot ${i === currentVisibleIndex ? 'active' : ''} ${i < currentVisibleIndex ? 'completed' : ''}"></span>
-        `).join('')}
+        `)}
       </div>
     `;
   }
@@ -661,19 +662,19 @@ function renderStep(stepIndex) {
   // Build header
   let headerHtml = '';
   if (isWelcome) {
-    headerHtml = `
+    headerHtml = html`
       <div class="tour-welcome-icon">
         <img src="icons/icon128.png" alt="${chrome.i18n.getMessage('pageTitle') || 'BirdTab'}" width="64" height="64">
       </div>
       <h3 class="tour-tooltip-title tour-welcome-title">${title}</h3>
     `;
   } else if (isComplete) {
-    headerHtml = `
+    headerHtml = html`
       <div class="tour-complete-icon">🎉</div>
       <h3 class="tour-tooltip-title tour-complete-title">${title}</h3>
     `;
   } else {
-    headerHtml = `
+    headerHtml = html`
       <div class="tour-tooltip-header">
         <div class="tour-tooltip-icon">
           <img src="${step.icon}" alt="" width="24" height="24">
@@ -688,7 +689,7 @@ function renderStep(stepIndex) {
   if (isWelcome) {
     const startButtonText = getMessage('tourStartButton', 'Let\'s Go!');
     const skipButtonText = getMessage('tourSkipButton', 'Skip tour');
-    actionsHtml = `
+    actionsHtml = html`
       <div class="tour-actions tour-actions-centered">
         <button class="tour-btn primary tour-btn-large" id="tour-next-btn">${startButtonText}</button>
       </div>
@@ -696,7 +697,7 @@ function renderStep(stepIndex) {
     `;
   } else if (isComplete) {
     const doneButtonText = getMessage('tourDoneButton', 'Start Exploring!');
-    actionsHtml = `
+    actionsHtml = html`
       <div class="tour-actions tour-actions-centered">
         <button class="tour-btn primary tour-btn-large" id="tour-next-btn">${doneButtonText}</button>
       </div>
@@ -708,9 +709,9 @@ function renderStep(stepIndex) {
     const backButtonText = getMessage('tourBackButton', 'Back');
     const skipButtonText = getMessage('tourSkipButton', 'Skip');
     
-    actionsHtml = `
+    actionsHtml = html`
       <div class="tour-actions">
-        ${!isFirstFeatureStep ? `<button class="tour-btn secondary" id="tour-back-btn">${backButtonText}</button>` : ''}
+        ${!isFirstFeatureStep ? html`<button class="tour-btn secondary" id="tour-back-btn">${backButtonText}</button>` : ''}
         <div class="tour-actions-right">
           <button class="tour-link-btn" id="tour-skip-btn">${skipButtonText}</button>
           <button class="tour-btn primary" id="tour-next-btn">${nextButtonText}</button>
@@ -728,12 +729,12 @@ function renderStep(stepIndex) {
     tooltip.classList.remove('tour-welcome', 'tour-complete');
   }
   
-  tooltip.innerHTML = `
+  setHtml(tooltip, html`
     ${headerHtml}
     <p class="tour-tooltip-description">${description}</p>
     ${progressHtml}
     ${actionsHtml}
-  `;
+  `);
   
   tooltip.setAttribute('aria-labelledby', 'tour-tooltip-title');
   

@@ -9,6 +9,7 @@ import { RegionSelector } from './regionSelector.js';
 import CONFIG from './config.js';
 import { updateUserContext } from './sentry.js';
 import { announce } from './loadingIndicators.js';
+import { html, insertHtml } from './utils/html.js';
 
 // Module-level singleton instance
 let instance = null;
@@ -67,7 +68,7 @@ class SettingsSidebar {
     }
 
     // Create sidebar HTML dynamically with i18n data attributes
-    const sidebarHTML = `
+    const sidebarHTML = html`
       <div 
         id="settings-sidebar" 
         class="settings-sidebar"
@@ -207,7 +208,7 @@ class SettingsSidebar {
             <img src="images/svg/message.svg" alt="" width="16" height="16" class="feedback-icon">
             <span data-i18n="sendFeedback">Send Feedback</span>
           </a>
-          ${process.env.NODE_ENV === 'development' ? `
+          ${process.env.NODE_ENV === 'development' ? html`
           <style>
             .settings-debug-section {
               --debug-accent: #f44336;
@@ -360,7 +361,7 @@ class SettingsSidebar {
     `;
 
     // Add sidebar to body
-    document.body.insertAdjacentHTML('beforeend', sidebarHTML);
+    insertHtml(document.body, 'beforeend', sidebarHTML);
 
     // Get references to the created elements
     this.sidebar = document.getElementById('settings-sidebar');
