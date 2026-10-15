@@ -22,7 +22,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
+  "private": true,
   "description": "",
   "devDependencies": {
     "@babel/core": "^7.29.0",
