@@ -11,10 +11,15 @@ const fs = require('fs');
 const Dotenv = require('dotenv-webpack');
 const { diffPermissions, PERMISSIONS_BASELINES } = require('./scripts/permissions_baseline');
 
+// Never change: AMO ties the listing, updates and users' synced settings to it
+const FIREFOX_ADDON_ID = 'birdtab@birdtab.app';
+
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  const isEdge = env.BROWSER === 'edge';
-  const outputDir = isProduction ? (isEdge ? 'dist-edge' : 'dist-chrome') : (isEdge ? 'dev-edge' : 'dev-chrome');
+  const browser = ['edge', 'firefox'].includes(env.BROWSER) ? env.BROWSER : 'chrome';
+  const isEdge = browser === 'edge';
+  const isFirefox = browser === 'firefox';
+  const outputDir = `${isProduction ? 'dist' : 'dev'}-${browser}`;
 
   // Load environment-specific .env file
   // Production: .env.production, Development: .env.local, Fallback: .env
@@ -54,7 +59,6 @@ module.exports = (env, argv) => {
       from: 'src/manifest.json',
       to: 'manifest.json',
       transform(content, path) {
-        const isEdge = outputDir.includes('edge');
         const manifest = JSON.parse(content.toString());
 
         if (Array.isArray(manifest.optional_permissions)) {
@@ -73,6 +77,27 @@ module.exports = (env, argv) => {
           manifest.host_permissions = [...PERMISSIONS_BASELINES.edge.host_permissions];
         }
 
+        // Firefox MV3 runs the background as an event page, has no
+        // externally_connectable, and needs a fixed add-on ID (storage.sync
+        // and AMO signing depend on it). Analytics and error reports are
+        // technicalAndInteraction data, which Firefox makes opt-in; see
+        // hasDataCollectionConsent() in browserInfo.js.
+        if (isFirefox) {
+          manifest.background = { scripts: ['background.js'] };
+          delete manifest.externally_connectable;
+          manifest.host_permissions = [...PERMISSIONS_BASELINES.firefox.host_permissions];
+          manifest.browser_specific_settings = {
+            gecko: {
+              id: FIREFOX_ADDON_ID,
+              strict_min_version: '140.0',
+              data_collection_permissions: {
+                required: ['none'],
+                optional: ['technicalAndInteraction'],
+              },
+            },
+          };
+        }
+
         // Dev builds only: allow a local media server (MEDIA_BASE_URL=http://localhost:8787)
         if (!isProduction && Array.isArray(manifest.host_permissions)) {
           manifest.host_permissions.push('http://localhost/*');
@@ -81,7 +106,6 @@ module.exports = (env, argv) => {
         // Production builds must keep the published permissions so the update
         // installs without a re-consent prompt.
         if (isProduction) {
-          const browser = isEdge ? 'edge' : 'chrome';
           const differences = diffPermissions(manifest, browser);
           if (differences.length > 0) {
             throw new Error(
@@ -101,12 +125,12 @@ module.exports = (env, argv) => {
       from: 'src/_locales',
       to: '_locales',
       transform(content, path) {
-        const isEdge = outputDir.includes('edge');
-        if (!isEdge) {
+        if (!isEdge && !isFirefox) {
           return content;
         }
         try {
           const localeData = JSON.parse(content.toString());
+          const replaceForFirefox = (value) => value.replace(/Chrome/g, 'Firefox');
           const replaceForEdge = (value) => {
             let updated = value.replace(/Chrome/g, 'Microsoft Edge');
             updated = updated
@@ -118,12 +142,14 @@ module.exports = (env, argv) => {
             return updated;
           };
 
+          const replaceForBrowser = isEdge ? replaceForEdge : replaceForFirefox;
+
           Object.values(localeData).forEach((entry) => {
             if (entry && typeof entry.message === 'string') {
-              entry.message = replaceForEdge(entry.message);
+              entry.message = replaceForBrowser(entry.message);
             }
             if (entry && typeof entry.description === 'string') {
-              entry.description = replaceForEdge(entry.description);
+              entry.description = replaceForBrowser(entry.description);
             }
           });
           return JSON.stringify(localeData, null, 2) + '\n';
@@ -138,6 +164,47 @@ module.exports = (env, argv) => {
     copyPatterns.push({ from: 'src/edge-assets', to: 'images/edge' });
   }
 
+  if (isFirefox) {
+    copyPatterns.push({ from: 'src/firefox-assets', to: 'images/firefox' });
+  }
+
+  // Firefox production builds always get Sentry's debug IDs, which are hashed
+  // from the code, so AMO reviewers rebuilding without our token get the same
+  // files. Release injection (the git commit) is off for Firefox for the same
+  // reason; the release comes from sentry.js at runtime.
+  const sentryPlugins = () => {
+    const wantsUpload = isProduction && process.env.UPLOAD_SOURCEMAPS === 'true';
+    const canUpload = wantsUpload && Boolean(process.env.SENTRY_AUTH_TOKEN);
+
+    if (wantsUpload && !canUpload) {
+      console.log('\n⚠️  SENTRY_AUTH_TOKEN not found - source maps will NOT be uploaded to Sentry.');
+      console.log('   To enable source map uploads, set SENTRY_AUTH_TOKEN in your .env file.\n');
+    }
+    if (!canUpload && !(isFirefox && isProduction)) {
+      return [];
+    }
+    if (canUpload) {
+      console.log('\n📤 Sentry source map upload enabled (UPLOAD_SOURCEMAPS=true, SENTRY_AUTH_TOKEN found)');
+      console.log(`   Organization: ${process.env.SENTRY_ORG || "birdtab"}`);
+      console.log(`   Project: ${process.env.SENTRY_PROJECT || "birdtab-extension"}\n`);
+    }
+    return [
+      sentryWebpackPlugin({
+        authToken: canUpload ? process.env.SENTRY_AUTH_TOKEN : undefined,
+        org: process.env.SENTRY_ORG || "birdtab",
+        project: process.env.SENTRY_PROJECT || "birdtab-extension",
+        telemetry: false,
+        sourcemaps: {
+          assets: outputDir + "/**",
+          ...(!canUpload && { disable: 'disable-upload' }),
+        },
+        ...(isFirefox && { release: { inject: false, create: false } }),
+        // Silent mode off so we can see upload output
+        silent: !canUpload,
+      }),
+    ];
+  };
+
   return {
     mode: isProduction ? 'production' : 'development',
     entry: {
@@ -151,6 +218,9 @@ module.exports = (env, argv) => {
       filename: '[name].js',
       path: path.resolve(__dirname, outputDir),
       clean: true,
+      // Firefox 140 has globalThis: skips webpack's new Function('return this')
+      // fallback, which AMO review flags as eval
+      ...(isFirefox && { environment: { globalThis: true } }),
     },
     // Use source-map in production for Sentry, but we'll delete them after
     devtool: isProduction ? 'source-map' : 'inline-source-map',
@@ -194,7 +264,7 @@ module.exports = (env, argv) => {
         filename: '[name].css',
       }),
       new DefinePlugin({
-        'process.env.BROWSER': JSON.stringify(isEdge ? 'edge' : 'chrome'),
+        'process.env.BROWSER': JSON.stringify(browser),
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
         'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
       }),
@@ -215,35 +285,16 @@ module.exports = (env, argv) => {
         filename: 'index.html',
         chunks: ['vendor', 'script'],
         isEdge,
+        isFirefox,
       }),
       new HtmlWebpackPlugin({
         template: './src/onboarding.html',
         filename: 'onboarding.html',
         chunks: ['vendor', 'onboarding'],
+        isFirefox,
       }),
-      // Sentry plugin - only when UPLOAD_SOURCEMAPS is set (during deploy) and token is present
-      ...(isProduction && process.env.UPLOAD_SOURCEMAPS === 'true' && process.env.SENTRY_AUTH_TOKEN ? (() => {
-        console.log('\n📤 Sentry source map upload enabled (UPLOAD_SOURCEMAPS=true, SENTRY_AUTH_TOKEN found)');
-        console.log(`   Organization: ${process.env.SENTRY_ORG || "birdtab"}`);
-        console.log(`   Project: ${process.env.SENTRY_PROJECT || "birdtab-extension"}\n`);
-        return [
-          sentryWebpackPlugin({
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-            org: process.env.SENTRY_ORG || "birdtab",
-            project: process.env.SENTRY_PROJECT || "birdtab-extension",
-            telemetry: false,
-            sourcemaps: {
-              assets: outputDir + "/**",
-            },
-            // Silent mode off so we can see upload output
-            silent: false,
-          }),
-        ];
-      })() : (isProduction && process.env.UPLOAD_SOURCEMAPS === 'true' && !process.env.SENTRY_AUTH_TOKEN ? (() => {
-        console.log('\n⚠️  SENTRY_AUTH_TOKEN not found - source maps will NOT be uploaded to Sentry.');
-        console.log('   To enable source map uploads, set SENTRY_AUTH_TOKEN in your .env file.\n');
-        return [];
-      })() : [])),
+      // Sentry plugin - uploads source maps when UPLOAD_SOURCEMAPS is set (during deploy) and token is present
+      ...sentryPlugins(),
       DeleteSourceMapsPlugin // Add our custom plugin to delete maps
     ],
     module: {
@@ -256,8 +307,8 @@ module.exports = (env, argv) => {
             options: {
               presets: [
                 ['@babel/preset-env', {
-                  // Chrome 88+ required for MV3, target modern browsers only
-                  targets: { chrome: '88' },
+                  // Chrome 88+ required for MV3; Firefox matches strict_min_version
+                  targets: isFirefox ? { firefox: '140' } : { chrome: '88' },
                   // Only include polyfills that are actually used
                   useBuiltIns: false,
                   // Use modern module syntax

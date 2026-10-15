@@ -2,7 +2,7 @@ import { CONFIG } from './config.js';
 import { initSentry, captureException, addBreadcrumb, reportApiError, updateUserContext } from './sentry.js';
 import { log } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
-import { isBrowserNewTabUrl } from './browserInfo.js';
+import { IS_FIREFOX, isBrowserNewTabUrl } from './browserInfo.js';
 import { needsMigration, runMigration, initializeFreshInstall, ensureRegionSettingMigrated } from './storageMigration.js';
 import {
   ensureMedia,
@@ -30,13 +30,24 @@ let preloadGeneration = 0;
 let lastNewTabId = null;
 let serviceWorkerStartTime = Date.now();
 
-function handleNewTab(tab) {
-  if (lastNewTabId && lastNewTabId !== tab.id) {
-    chrome.tabs.sendMessage(lastNewTabId, { action: "pauseAudio" }, () => {
+// Firefox doesn't deliver tabs.sendMessage to extension pages, so there the
+// message goes to every BirdTab page and only the one in tabId acts on it.
+function sendToNewTab(tabId, message) {
+  const logFailure = (error) => log(`Error sending ${message.action} to tab ${tabId}: ${error.message}`);
+  if (IS_FIREFOX) {
+    chrome.runtime.sendMessage({ ...message, targetTabId: tabId }).catch(logFailure);
+  } else {
+    chrome.tabs.sendMessage(tabId, message, () => {
       if (chrome.runtime.lastError) {
-        log(`Error sending message to tab ${lastNewTabId}: ${chrome.runtime.lastError.message}`);
+        logFailure(chrome.runtime.lastError);
       }
     });
+  }
+}
+
+function handleNewTab(tab) {
+  if (lastNewTabId && lastNewTabId !== tab.id) {
+    sendToNewTab(lastNewTabId, { action: "pauseAudio" });
   }
   lastNewTabId = tab.id;
 }
@@ -336,13 +347,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'local' && changes.quietHours) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs[0]) {
-        chrome.tabs.sendMessage(tabs[0].id, {
+        sendToNewTab(tabs[0].id, {
           action: "quietHoursChanged",
           quietHoursEnabled: changes.quietHours.newValue
-        }, () => {
-          if (chrome.runtime.lastError) {
-            log(`Error sending quietHoursChanged: ${chrome.runtime.lastError.message}`);
-          }
         });
       }
     });

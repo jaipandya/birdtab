@@ -42,6 +42,8 @@
 </head>
 
 <body>
+  <%/* Firefox doesn't let extensions open its own new tab page */%>
+  <% if (!htmlWebpackPlugin.options.isFirefox) { %>
   <a href="#" id="chrome-tab-link" class="chrome-tab-link" data-i18n-title="chromeTabTooltip" title="Open default Chrome new tab page">
     <% if (htmlWebpackPlugin.options.isEdge) { %>
       <img class="chrome-tab-icon" src="images/edge/microsoft-edge.svg" data-i18n-alt="microsoftEdgeAlt" alt="Microsoft Edge" width="48" height="48">
@@ -56,6 +58,7 @@
     <% } %>
     <span class="chrome-tab-text" data-i18n="chromeTabText">Chrome Tab</span>
   </a>
+  <% } %>
   <div id="content-container">
     <a href="#" class="bird-link">
       <img src="" alt="" class="background-image hidden">

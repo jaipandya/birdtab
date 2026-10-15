@@ -495,23 +495,19 @@ class TopSites {
   async requestTopSitesPermission() {
     const { showPermissionDialog } = await import('./permissionDialog.js');
 
-    const userConfirmed = await showPermissionDialog({
-      title: 'permissionDialogTitle',
-      subtitle: 'permissionDialogSubtitle',
-      privacyText: 'permissionDialogPrivacy',
-      privacyLinkText: 'privacyPolicy',
-      privacyLinkUrl: 'https://birdtab.app/privacy',
-      cancelText: 'goBack',
-      confirmText: 'continue'
-    });
-
-    if (!userConfirmed) {
-      return false;
-    }
-
     try {
-      return await chrome.permissions.request({
-        permissions: ['topSites']
+      // Resolves false on Go back, else with the browser's permission answer
+      return await showPermissionDialog({
+        title: 'permissionDialogTitle',
+        subtitle: 'permissionDialogSubtitle',
+        privacyText: 'permissionDialogPrivacy',
+        privacyLinkText: 'privacyPolicy',
+        privacyLinkUrl: 'https://birdtab.app/privacy',
+        cancelText: 'goBack',
+        confirmText: 'continue',
+        onConfirm: () => chrome.permissions.request({
+          permissions: ['topSites']
+        })
       });
     } catch (error) {
       warn('Error requesting topSites permission:', error);

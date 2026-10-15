@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * BirdTab Chrome Extension Deployment Script
+ * BirdTab Extension Deployment Script
  * Cross-platform Node.js version
  *
  * This script:
- * 1. Builds the production extension
+ * 1. Builds the production extension (--browser=chrome|edge|firefox)
  * 2. Creates a deployment-ready zip file
- * 3. Provides deployment instructions including git tagging
+ * 3. For Firefox, lints the build and creates the source zip AMO review needs
+ * 4. Provides deployment instructions including git tagging
  */
 
 const { execSync } = require('child_process');
@@ -40,7 +41,7 @@ function getBrowserTarget(args) {
   }
 
   const value = browserArg.split('=')[1];
-  if (value === 'chrome' || value === 'edge') {
+  if (value === 'chrome' || value === 'edge' || value === 'firefox') {
     return value;
   }
 
@@ -53,8 +54,13 @@ async function main() {
 
   const browserTarget = getBrowserTarget(process.argv.slice(2));
   const isEdge = browserTarget === 'edge';
-  const browserSlug = isEdge ? 'edge' : 'chrome';
-  const browserLabel = isEdge ? 'Microsoft Edge Add-ons' : 'Chrome Web Store';
+  const isFirefox = browserTarget === 'firefox';
+  const browserSlug = browserTarget;
+  const browserLabel = {
+    chrome: 'Chrome Web Store',
+    edge: 'Microsoft Edge Add-ons',
+    firefox: 'Firefox Add-ons (AMO)',
+  }[browserTarget];
 
   // Read version from manifest.json
   const manifestPath = path.join(__dirname, '../src/manifest.json');
@@ -86,8 +92,10 @@ async function main() {
     // No tags found or git error
   }
 
-  // Auto-bump version if it matches last deployed version
-  if (lastDeployedVersion && version === lastDeployedVersion) {
+  // Auto-bump version if it matches last deployed version. deployed-v* tags
+  // mark Chrome Web Store submissions; Edge and Firefox ship the same version
+  // from the same commit, so they never bump.
+  if (browserSlug === 'chrome' && lastDeployedVersion && version === lastDeployedVersion) {
     log(`\n⚠️  Version ${version} was already deployed!`, colors.yellow);
 
     // Auto-bump patch version
@@ -139,8 +147,7 @@ async function main() {
 
   // Build using pnpm with UPLOAD_SOURCEMAPS enabled
   try {
-    const buildCommand = isEdge ? 'pnpm run build:edge' : 'pnpm run build:chrome';
-    exec(buildCommand, {
+    exec(`pnpm run build:${browserSlug}`, {
       env: { ...process.env, UPLOAD_SOURCEMAPS: 'true' }
     });
   } catch (error) {
@@ -155,9 +162,9 @@ async function main() {
   }
 
   // Create zip filename
-  const filename = isEdge
-    ? `birdtab-${browserSlug}-v${version}-${commit}.zip`
-    : `birdtab-v${version}-${commit}.zip`;
+  const filename = browserSlug === 'chrome'
+    ? `birdtab-v${version}-${commit}.zip`
+    : `birdtab-${browserSlug}-v${version}-${commit}.zip`;
   const filepath = path.join(releasesDir, filename);
 
   log(`\n📦 Creating zip file: ${filename}\n`, colors.blue);
@@ -168,7 +175,7 @@ async function main() {
   }
 
   // Create zip using built-in zip command or 7z on Windows
-  const distDir = path.join(__dirname, isEdge ? '../dist-edge' : '../dist-chrome');
+  const distDir = path.join(__dirname, `../dist-${browserSlug}`);
 
   try {
     if (process.platform === 'win32') {
@@ -184,6 +191,20 @@ async function main() {
     process.exit(1);
   }
 
+  // Firefox: run AMO's linter, then package the source code reviewers build from
+  let sourceFilename = null;
+  if (isFirefox) {
+    log('\n🔍 Linting with web-ext (same checks as AMO)...\n', colors.blue);
+    try {
+      exec('pnpm run lint:firefox');
+    } catch (error) {
+      log('\n❌ web-ext lint found errors. Fix them before uploading.', colors.red);
+      process.exit(1);
+    }
+    sourceFilename = `birdtab-firefox-v${version}-${commit}-source.zip`;
+    createAmoSourceZip(path.join(releasesDir, sourceFilename));
+  }
+
   // Get file size
   const stats = fs.statSync(filepath);
   const sizeMB = (stats.size / 1024 / 1024).toFixed(2);
@@ -191,16 +212,53 @@ async function main() {
   log(`\n✅ Build complete!\n`, colors.green);
   log(`📁 Package: releases/${filename}`, colors.green);
   log(`📊 Size: ${sizeMB} MB`, colors.green);
+  if (sourceFilename) {
+    log(`📁 Source for AMO review: releases/${sourceFilename}`, colors.green);
+  }
   log(`\n📋 Next steps:`, colors.yellow);
-  log(`   1. Test the extension locally from ${isEdge ? 'dist-edge' : 'dist-chrome'}/`);
+  log(`   1. Test the extension locally from dist-${browserSlug}/`);
   log(`   2. Upload ${filename} to ${browserLabel}`);
+  if (sourceFilename) {
+    log(`      When AMO asks for source code, upload ${sourceFilename}`);
+  }
   log(`   3. After deployment, tag this commit:`, colors.yellow);
   log(`      git tag -a deployed-v${version} -m "Deployed v${version} to ${browserLabel}"`, colors.blue);
   log(`      git push origin deployed-v${version}`, colors.blue);
   log('');
 }
 
-main().catch((error) => {
-  log(`\n❌ Error: ${error.message}`, colors.red);
-  process.exit(1);
-});
+/**
+ * Zip the committed source (HEAD) for AMO review, without store assets.
+ * The build reads POSTHOG_API_KEY and UNINSTALL_SECRET from .env.production;
+ * both end up in the shipped bundle anyway, so the zip carries just those two
+ * (never SENTRY_AUTH_TOKEN) so reviewers' builds match the upload.
+ */
+function createAmoSourceZip(sourceZipPath, treeish = 'HEAD') {
+  const extensionDir = path.join(__dirname, '..');
+  const BUNDLED_ENV_KEYS = ['POSTHOG_API_KEY', 'UNINSTALL_SECRET'];
+  const env = require('dotenv').parse(fs.readFileSync(path.join(extensionDir, '.env.production')));
+  const stagingDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'birdtab-amo-'));
+  const envPath = path.join(stagingDir, '.env.production');
+  fs.writeFileSync(envPath, BUNDLED_ENV_KEYS.map((key) => `${key}=${env[key] || ''}`).join('\n') + '\n');
+
+  if (fs.existsSync(sourceZipPath)) {
+    fs.unlinkSync(sourceZipPath);
+  }
+  // Top-level PNGs are store and marketing images; the extension's are in src/
+  const excluded = ['screenshots', 'webstore', '*.png', '.claude*', '.claude*/**', '.vscode']
+    .map((pattern) => `':(top,exclude,glob)${pattern}'`)
+    .join(' ');
+  exec(`git archive --format=zip --add-file="${envPath}" -o "${sourceZipPath}" ${treeish} -- . ${excluded}`, {
+    cwd: extensionDir,
+  });
+  fs.rmSync(stagingDir, { recursive: true, force: true });
+}
+
+if (require.main === module) {
+  main().catch((error) => {
+    log(`\n❌ Error: ${error.message}`, colors.red);
+    process.exit(1);
+  });
+}
+
+module.exports = { createAmoSourceZip };

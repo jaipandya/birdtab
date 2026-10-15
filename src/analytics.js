@@ -31,6 +31,7 @@ import PostHog from 'posthog-js-lite';
 import { CONFIG } from './config.js';
 import { log, error as logError } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
+import { hasDataCollectionConsent, onDataCollectionConsentChanged } from './browserInfo.js';
 
 // PostHog instance
 let posthog = null;
@@ -115,6 +116,21 @@ export async function initAnalytics(component = 'unknown') {
   }
 
   analyticsInitializing = true;
+
+  // Firefox: analytics only with the user's data collection consent
+  if (!(await hasDataCollectionConsent())) {
+    analyticsInitializing = false;
+    log('Analytics disabled - no data collection consent');
+    return;
+  }
+  onDataCollectionConsentChanged((granted) => {
+    if (!granted && posthog) {
+      posthog.optOut();
+      posthog = null;
+      analyticsInitialized = false;
+      log('Analytics stopped - data collection consent withdrawn');
+    }
+  });
 
   try {
     // Get visitor ID for consistent user tracking

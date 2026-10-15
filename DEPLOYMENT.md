@@ -1,6 +1,6 @@
 # BirdTab Deployment Guide
 
-This guide explains how to build, package, and submit BirdTab to the Chrome Web Store and Microsoft Edge Add-ons.
+This guide explains how to build, package, and submit BirdTab to the Chrome Web Store, Microsoft Edge Add-ons and Firefox Add-ons (AMO).
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@ This guide explains how to build, package, and submit BirdTab to the Chrome Web 
 - [Deployment Workflow](#deployment-workflow)
 - [Submitting to the Chrome Web Store](#submitting-to-the-chrome-web-store)
 - [Submitting to Edge Add-ons](#submitting-to-edge-add-ons)
+- [Submitting to Firefox Add-ons](#submitting-to-firefox-add-ons)
 - [Submitting with Claude](#submitting-with-claude)
 - [Available Scripts](#available-scripts)
 - [Versioning](#versioning)
@@ -19,9 +20,9 @@ This guide explains how to build, package, and submit BirdTab to the Chrome Web 
 
 Every release, minor ones included:
 
-1. Bump `version` in `src/manifest.json` above the version live in **both** stores, and commit it (`Bump to X.Y.Z`).
-2. Add an `X.Y.Z - ...` line at the top of WHAT'S NEW in all 20 listing files: `webstore/*.txt` (Chrome) and `webstore/edge/*.txt` (Edge), ten languages each.
-3. Build and zip each browser from the same commit (`pnpm run deploy` and `pnpm run deploy -- --browser=edge`).
+1. Bump `version` in `src/manifest.json` above the version live in **every** store, and commit it (`Bump to X.Y.Z`).
+2. Add an `X.Y.Z - ...` line at the top of WHAT'S NEW in all 30 listing files: `webstore/*.txt` (Chrome), `webstore/edge/*.txt` (Edge) and `webstore/firefox/*.txt` (Firefox), ten languages each.
+3. Build and zip each browser from the same commit (`pnpm run deploy`, `pnpm run deploy -- --browser=edge` and `pnpm run deploy -- --browser=firefox`).
 4. Upload and submit to each store whose previous submission has finished review. A store with a version still in review has to wait; submit there once it clears, from the same commit if possible, so both stores ship the same code under the same version.
 5. Paste the updated WHAT'S NEW into each store's listing description when you submit (Chrome: Store listing tab; Edge: Store listings).
 6. Tag the commit you submitted to the Chrome Web Store: `deployed-vX.Y.Z` (see [Step 6](#step-6-tag-the-deployment)), and push the tag.
@@ -62,16 +63,19 @@ git add src/manifest.json
 git commit -m "Bump to 1.2.13"
 ```
 
-If you skip this, `pnpm run deploy` bumps the patch version itself (when the manifest matches the last `deployed-v*` tag) and commits the bump.
+If you skip this, `pnpm run deploy` (Chrome only) bumps the patch version itself (when the manifest matches the last `deployed-v*` tag) and commits the bump. Edge and Firefox deploys never bump: they ship the version Chrome shipped.
 
 ### Step 3: Build and Package
 
 Run the deployment script:
 
 ```bash
-pnpm run deploy                      # Chrome
-pnpm run deploy -- --browser=edge    # Edge
+pnpm run deploy                         # Chrome
+pnpm run deploy -- --browser=edge       # Edge
+pnpm run deploy -- --browser=firefox    # Firefox
 ```
+
+Firefox deploys also run `web-ext lint` and write the source zip AMO asks for: `releases/birdtab-firefox-vX.Y.Z-<commit>-source.zip`. It's built from the committed `HEAD`, so commit before deploying. AMO reviewers rebuild the add-on from it and compare with the upload, so Firefox builds stay reproducible: Sentry's debug IDs are always injected (they're hashed from the code, no token needed) and the git-commit release isn't.
 
 This will:
 - ✅ Build production bundle with Webpack (fails if permissions drift from `scripts/permissions_baseline.js`)
@@ -84,8 +88,6 @@ The zip filename includes:
 - Git commit hash (for traceability)
 
 Then run `pnpm run check:chrome-build` for the Chrome build.
-
-If pnpm fails with `packages field missing or empty`, see [Troubleshooting](#pnpm-packages-field-missing-or-empty).
 
 ### Step 4: Test Locally
 
@@ -142,6 +144,32 @@ Dashboard: https://partner.microsoft.com/en-us/dashboard/microsoftedge/4745a19a-
    - With **No** selected, the "Notes for certification" box is greyed out and not required.
 5. **Publish**. The overview should show "UPDATE ... Version X.Y.Z — In review" above the live version. Microsoft quotes up to 7 business days.
 
+## Submitting to Firefox Add-ons
+
+Developer hub: https://addons.mozilla.org/developers/
+
+The add-on ID is `birdtab@birdtab.app` (set in `webpack.config.js`). Never change it: AMO, updates and users' synced settings are tied to it.
+
+**First submission** (once):
+
+1. Sign in with the Mozilla account that should own the listing, then **Submit a New Add-on** → **On this site** (listed).
+2. Upload `releases/birdtab-firefox-vX.Y.Z-<commit>.zip`. Compatibility: **Firefox** only. Firefox for Android doesn't let extensions replace the new tab page.
+3. "Do you need to submit source code?" → **Yes** → upload `releases/birdtab-firefox-vX.Y.Z-<commit>-source.zip`. Build steps are in `BUILD-FIREFOX.md`, inside the zip.
+4. Listing: copy the fields from `webstore/firefox/en.txt` (summary, description, categories, support site, privacy policy, notes to reviewer), then for each other language the summary and description from `webstore/firefox/<lang>.txt`. The name comes from the manifest, already translated. Add the screenshots `screenshots/firefox/1.png` to `5.png` (1280×800). Request the `birdtab` slug so the review link in `src/reviewPrompt.js` works: `https://addons.mozilla.org/firefox/addon/birdtab/`.
+5. Submit. Automated validation runs right away; a human review can follow.
+
+**Updates**: **Manage My Submissions** → BirdTab → **Upload New Version**, then the same package and source zips. Paste the updated descriptions from `webstore/firefox/*.txt`.
+
+**From the command line** (optional): with API keys from https://addons.mozilla.org/developers/addon/api/key/,
+
+```bash
+./node_modules/.bin/web-ext sign --channel listed --source-dir dist-firefox \
+  --upload-source-code releases/birdtab-firefox-vX.Y.Z-<commit>-source.zip \
+  --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+```
+
+**Data collection consent**: the manifest declares `technicalAndInteraction` as optional data collection. Firefox asks users about it at install (they can change it later in `about:addons`), and PostHog and Sentry only run when it's granted. Firefox users who decline send nothing, so expect lower analytics numbers from Firefox than from Chrome.
+
 ## Submitting with Claude
 
 Claude can run the whole release from Claude Code. What works:
@@ -162,6 +190,8 @@ Prompt that worked: "Build <browser> prod for the latest changes and submit it o
 ```bash
 pnpm run build:chrome    # Build for Chrome
 pnpm run build:edge      # Build for Edge
+pnpm run build:firefox   # Build for Firefox
+pnpm run lint:firefox    # Run AMO's linter (web-ext lint) on dist-firefox
 ```
 
 ### Development
@@ -169,6 +199,8 @@ pnpm run build:edge      # Build for Edge
 ```bash
 pnpm run dev:chrome      # Watch mode for Chrome
 pnpm run dev:edge        # Watch mode for Edge
+pnpm run dev:firefox     # Watch mode for Firefox
+pnpm run run:firefox     # Launch Firefox with dev-firefox loaded (reloads on rebuild)
 ```
 
 ### Deployment
@@ -176,6 +208,7 @@ pnpm run dev:edge        # Watch mode for Edge
 ```bash
 pnpm run deploy                      # Build and create the Chrome zip
 pnpm run deploy -- --browser=edge    # Build and create the Edge zip
+pnpm run deploy -- --browser=firefox # Build the Firefox zip and the AMO source zip
 pnpm run tag-deployment              # Tag current version as deployed
 ```
 
@@ -266,21 +299,6 @@ releases/
 ```
 
 ## Troubleshooting
-
-### pnpm: packages field missing or empty
-
-**Problem**: `pnpm run deploy` (or any `pnpm run`) fails with `ERROR  packages field missing or empty`.
-
-**Cause**: pnpm 9 treats `pnpm-workspace.yaml` as a workspace file and requires a `packages` list; ours only sets `onlyBuiltDependencies`.
-
-**Workaround**: run the build the deploy script runs, then zip it the same way:
-
-```bash
-UPLOAD_SOURCEMAPS=true ./node_modules/.bin/webpack --mode production --env BROWSER=edge   # or chrome
-cd dist-edge && zip -r ../releases/birdtab-edge-v1.2.13-abc1234.zip . -x "*.map"
-```
-
-Chrome zips are named `birdtab-v<version>-<commit>.zip`. For the permanent fix, add `packages: ['.']` to `pnpm-workspace.yaml` or upgrade to pnpm 10.
 
 ### Source Maps Not Uploaded to Sentry
 

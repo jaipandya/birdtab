@@ -26,6 +26,15 @@ const PERMISSIONS_BASELINES = {
     optional_permissions: ['topSites'],
     host_permissions: ['https://*.ingest.us.sentry.io/*'],
   },
+  // Firefox Add-ons (AMO) first release. No host permissions: Firefox MV3
+  // leaves them ungranted until the user opts in, and nothing needs them
+  // (media.birdtab.app, PostHog and Sentry ingest all answer CORS requests).
+  firefox: {
+    version: '2.1.1 (Firefox Add-ons)',
+    permissions: ['storage', 'unlimitedStorage', 'search'],
+    optional_permissions: ['topSites'],
+    host_permissions: [],
+  },
 };
 
 const PERMISSIONS_BASELINE = PERMISSIONS_BASELINES.chrome;

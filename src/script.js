@@ -10,7 +10,7 @@ import { applySearchVisibility, initializeSearch, setupSearchKeyboardShortcut } 
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
-import { IS_EDGE } from './browserInfo.js';
+import { IS_EDGE, IS_FIREFOX } from './browserInfo.js';
 import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
 import { initChromeFooterNotification } from './chromeFooterNotification.js';
 import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
@@ -1475,7 +1475,17 @@ function setupMediaClickHandler() {
 // (e.g. multiple new tab instances) each have an async onMessage listener,
 // Chrome may close the sendMessage channel prematurely, causing the background
 // script's response to be lost ("No response from background script").
+// Firefox: background messages for one tab reach every BirdTab page (see
+// sendToNewTab in background.js), so each page needs to know its own tab
+let currentTabId = null;
+if (IS_FIREFOX) {
+  chrome.tabs.getCurrent().then(tab => { currentTabId = tab?.id ?? null; });
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.targetTabId !== undefined && request.targetTabId !== currentTabId) {
+    return;
+  }
   if (request.action === "refreshBird") {
     location.reload();
   } else if (request.action === "toggleMute") {
@@ -1492,6 +1502,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (audio && !audio.paused) {
       pauseAudio();
     }
+  }
+  // Answer targeted messages so the sender's promise settles (Firefox)
+  if (request.targetTabId !== undefined) {
+    sendResponse({ ok: true });
   }
 });
 

@@ -118,6 +118,8 @@ export function addReviewPromptListeners() {
   document.getElementById('leave-review').addEventListener('click', () => {
     if (process.env.BROWSER === 'edge') {
       chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
+    } else if (process.env.BROWSER === 'firefox') {
+      chrome.tabs.create({ url: 'https://addons.mozilla.org/firefox/addon/birdtab/reviews/' });
     } else {
       chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn' });
     }

@@ -12,6 +12,7 @@ import { getMessage } from './i18n.js';
  *     privacyLinkUrl: 'https://...',            // URL (optional)
  *     cancelText: 'goBack',                     // i18n key (optional, defaults to 'goBack')
  *     confirmText: 'continue',                  // i18n key (optional, defaults to 'continue')
+ *     onConfirm: () => chrome.permissions.request(...), // optional, see below
  *   });
  *
  *   if (result) {
@@ -19,6 +20,11 @@ import { getMessage } from './i18n.js';
  *   } else {
  *     // User clicked Go back
  *   }
+ *
+ * onConfirm runs inside the Continue click handler and the dialog resolves
+ * with its result. Request permissions there: Firefox only allows
+ * permissions.request() while handling user input, which is over by the
+ * time code awaiting the dialog runs.
  */
 
 let activeDialog = null;
@@ -26,10 +32,10 @@ let activeDialog = null;
 /**
  * Show a permission dialog and return a promise that resolves to true (continue) or false (go back)
  * @param {Object} options - Dialog configuration
- * @returns {Promise<boolean>} - Resolves to true if user clicks Continue, false if Go back
+ * @returns {Promise<boolean>} - Resolves to true (or onConfirm's result) if user clicks Continue, false if Go back
  */
 export function showPermissionDialog(options = {}) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     // Close any existing dialog
     if (activeDialog) {
       activeDialog.remove();
@@ -43,7 +49,8 @@ export function showPermissionDialog(options = {}) {
       privacyLinkText = 'privacyPolicy',
       privacyLinkUrl = 'https://birdtab.app/privacy',
       cancelText = 'goBack',
-      confirmText = 'continue'
+      confirmText = 'continue',
+      onConfirm = null
     } = options;
 
     // Create dialog element
@@ -111,7 +118,11 @@ export function showPermissionDialog(options = {}) {
     // Handle confirm
     const handleConfirm = () => {
       cleanup();
-      resolve(true);
+      try {
+        resolve(onConfirm ? onConfirm() : true);
+      } catch (error) {
+        reject(error);
+      }
     };
 
     // Handle escape key

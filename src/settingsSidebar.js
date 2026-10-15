@@ -4,7 +4,7 @@ import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
 import { resetChromeFooterNotification } from './chromeFooterNotification.js';
-import { IS_EDGE } from './browserInfo.js';
+import { IS_EDGE, canOpenBrowserNewTab } from './browserInfo.js';
 import { RegionSelector } from './regionSelector.js';
 import CONFIG from './config.js';
 import { updateUserContext } from './sentry.js';
@@ -372,6 +372,10 @@ class SettingsSidebar {
       if (googleAppsSetting) {
         googleAppsSetting.remove();
       }
+    }
+
+    if (!canOpenBrowserNewTab() && this.sidebar) {
+      this.sidebar.querySelector('#modal-chrome-tab')?.closest('.setting')?.remove();
     }
 
     // Localize the newly created sidebar

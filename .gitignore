@@ -12,6 +12,10 @@ dev-edge.log
 dev-chrome/
 dev-chrome/*
 dev-chrome.log
+dist-firefox/
+dev-firefox/
+web-ext-artifacts/
+.web-ext-profile/
 .DS_Store
 *.crx
 *.pem

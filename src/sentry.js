@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/browser';
 import { CONFIG } from './config.js';
 import { log, error as logError, warn as logWarn } from './logger.js';
 import { getOrCreateVisitorId } from './shared.js';
+import { IS_FIREFOX, isStoreInstall, hasDataCollectionConsent, onDataCollectionConsentChanged } from './browserInfo.js';
 
 // Track if Sentry is initialized
 let sentryInitialized = false;
@@ -354,6 +355,52 @@ const SENTRY_CONFIG = {
  * @returns {void}
  */
 export function initSentry(component, additionalConfig = {}) {
+  if (IS_FIREFOX) {
+    initFirefoxSentry(component, additionalConfig);
+    return;
+  }
+  // Extensions from Chrome Web Store have update_url, unpacked extensions don't
+  if (!chrome.runtime.getManifest().update_url) {
+    log('Sentry initialization skipped - extension loaded unpacked (development mode)');
+    return;
+  }
+  startSentry(component, additionalConfig);
+}
+
+/**
+ * Firefox: AMO installs have no update_url to tell them from development
+ * loads, and error reports need the user's data collection consent.
+ * Both checks are async, so Sentry starts a moment later than in Chrome.
+ */
+function initFirefoxSentry(component, additionalConfig) {
+  startFirefoxSentryIfAllowed(component, additionalConfig);
+
+  onDataCollectionConsentChanged((granted) => {
+    if (granted) {
+      startFirefoxSentryIfAllowed(component, additionalConfig);
+    } else if (sentryInitialized) {
+      sentryInitialized = false;
+      Sentry.close();
+      log('Sentry stopped - data collection consent withdrawn');
+    }
+  });
+}
+
+function startFirefoxSentryIfAllowed(component, additionalConfig) {
+  Promise.all([isStoreInstall(), hasDataCollectionConsent()])
+    .then(([storeInstall, consent]) => {
+      if (!storeInstall) {
+        log('Sentry initialization skipped - temporary or development install');
+      } else if (!consent) {
+        log('Sentry initialization skipped - no data collection consent');
+      } else {
+        startSentry(component, additionalConfig);
+      }
+    })
+    .catch((error) => logError('Failed to check Sentry preconditions:', error));
+}
+
+function startSentry(component, additionalConfig) {
   try {
     // Prevent double initialization
     if (sentryInitialized) {
@@ -361,15 +408,7 @@ export function initSentry(component, additionalConfig = {}) {
       return;
     }
 
-    // Get manifest once and reuse
     const manifest = chrome.runtime.getManifest();
-
-    // Skip Sentry in development mode (loaded unpacked)
-    // Extensions from Chrome Web Store have update_url, unpacked extensions don't
-    if (!manifest.update_url) {
-      log('Sentry initialization skipped - extension loaded unpacked (development mode)');
-      return;
-    }
 
     if (!SENTRY_CONFIG.dsn || SENTRY_CONFIG.dsn === '' || SENTRY_CONFIG.dsn.includes('YOUR_SENTRY_DSN')) {
       log('Sentry initialization skipped - DSN not configured');

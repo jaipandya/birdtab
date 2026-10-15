@@ -39,7 +39,8 @@
             </div>
 
             <div class="preview-section">
-                <img src="images/birdtab-demo.jpg" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image" width="400" height="225">
+                <%/* Firefox: the same screenshot without Chrome's toolbar */%>
+                <img src="<%= htmlWebpackPlugin.options.isFirefox ? 'images/firefox/birdtab-demo.jpg' : 'images/birdtab-demo.jpg' %>" data-i18n-alt="demoImageAlt" alt="BirdTab demo" class="demo-image" width="400" height="225">
             </div>
 
             <div class="setting-section">
