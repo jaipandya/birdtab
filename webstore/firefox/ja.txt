@@ -51,6 +51,6 @@ BirdTabは、Firefoxの新しいタブページを高解像度の鳥の写真に
 
 **更新履歴**
 
-2.1.1 - BirdTabがFirefoxでも使えるようになりました。
+2.1.2 - BirdTabがFirefoxでも使えるようになりました。
 
 完全な変更履歴: https://birdtab.app/changelog

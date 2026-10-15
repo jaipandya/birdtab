@@ -51,6 +51,6 @@ Wähle aus über 250 Ländern und Regionen, um die Vögel in deiner Nähe zu seh
 
 **Neuigkeiten**
 
-2.1.1 - BirdTab gibt es jetzt für Firefox.
+2.1.2 - BirdTab gibt es jetzt für Firefox.
 
 Vollständiges Änderungsprotokoll: https://birdtab.app/changelog

@@ -51,6 +51,6 @@ BirdTab заменяет страницу новой вкладки Firefox фо
 
 **Что нового**
 
-2.1.1 - BirdTab теперь доступен для Firefox.
+2.1.2 - BirdTab теперь доступен для Firefox.
 
 Полный журнал изменений: https://birdtab.app/changelog

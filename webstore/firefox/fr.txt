@@ -51,6 +51,6 @@ Choisissez parmi plus de 250 pays et régions pour voir les oiseaux près de che
 
 **Nouveautés**
 
-2.1.1 - BirdTab est désormais disponible sur Firefox.
+2.1.2 - BirdTab est désormais disponible sur Firefox.
 
 Journal complet des modifications : https://birdtab.app/changelog

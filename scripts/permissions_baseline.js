@@ -30,7 +30,7 @@ const PERMISSIONS_BASELINES = {
   // leaves them ungranted until the user opts in, and nothing needs them
   // (media.birdtab.app, PostHog and Sentry ingest all answer CORS requests).
   firefox: {
-    version: '2.1.1 (Firefox Add-ons)',
+    version: '2.1.2 (Firefox Add-ons)',
     permissions: ['storage', 'unlimitedStorage', 'search'],
     optional_permissions: ['topSites'],
     host_permissions: [],
