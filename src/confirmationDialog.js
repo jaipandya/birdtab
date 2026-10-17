@@ -36,7 +36,9 @@ export function showConfirmationDialog(options = {}) {
       title = 'confirm',
       subtitle = '',
       cancelText = 'cancel',
-      confirmText = 'ok'
+      confirmText = 'ok',
+      // The confirm button clears or deletes something (destructive style, buttons.css)
+      danger = false
     } = options;
 
     // Create backdrop
@@ -62,7 +64,7 @@ export function showConfirmationDialog(options = {}) {
         <button type="button" class="confirmation-dialog-btn secondary" id="confirm-cancel">
           ${getMessage(cancelText) || 'Cancel'}
         </button>
-        <button type="button" class="confirmation-dialog-btn primary" id="confirm-ok">
+        <button type="button" class="confirmation-dialog-btn primary${danger ? ' danger' : ''}" id="confirm-ok">
           ${getMessage(confirmText) || 'OK'}
         </button>
       </div>

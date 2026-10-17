@@ -1296,5 +1296,273 @@
   "creditInfoAlt": {
     "message": "Créditos e licenças",
     "description": "Alt text for the credit info trigger icon"
+  },
+  "settingsCategoryNewTab": {
+    "message": "Nova aba",
+    "description": "Settings category for how new tabs behave"
+  },
+  "newTabModeLabel": {
+    "message": "Abrir o BirdTab",
+    "description": "Setting: when BirdTab opens instead of Chrome's own new tab page"
+  },
+  "newTabModeEvery": {
+    "message": "Cada aba",
+    "description": "Open BirdTab choice (short): on every new tab"
+  },
+  "newTabModeHourly": {
+    "message": "De vez em quando",
+    "description": "Open BirdTab choice (short): the first new tab after an hour away"
+  },
+  "newTabModeButton": {
+    "message": "Quando eu pedir",
+    "description": "Open BirdTab choice (short): only from the toolbar button"
+  },
+  "newTabModeEveryHelp": {
+    "message": "Uma ave em cada nova aba.",
+    "description": "One-line caption for Open BirdTab: every tab"
+  },
+  "newTabModeHourlyHelp": {
+    "message": "Uma ave depois de uma hora fora. A página do Chrome no resto do tempo.",
+    "description": "One-line caption for Open BirdTab: now and then"
+  },
+  "newTabModeButtonHelp": {
+    "message": "A página do Chrome nas novas abas. Clique no botão do BirdTab para ver uma ave.",
+    "description": "One-line caption for Open BirdTab: when I ask"
+  },
+  "newTabModePinned": {
+    "message": "Fixado na sua barra de ferramentas",
+    "description": "Status: BirdTab's toolbar button is pinned"
+  },
+  "newTabModeNotPinned": {
+    "message": "Ainda não fixado",
+    "description": "Status: BirdTab's toolbar button isn't pinned"
+  },
+  "newTabModeKeyword": {
+    "message": "Ou digite $1, um espaço e o nome de uma ave na barra de endereço",
+    "description": "Tip; $1 is the keyword 'bird' shown as a key"
+  },
+  "stepAsideOfferTitle": {
+    "message": "Prefere a página de nova aba do Chrome?",
+    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
+  },
+  "stepAsideOfferText": {
+    "message": "O BirdTab pode sair do caminho e abrir só quando você quiser ver uma ave.",
+    "description": "Body of the card offering to step aside for Chrome's new tab page"
+  },
+  "birdRotationLabel": {
+    "message": "Nova ave",
+    "description": "Setting: how often the bird changes"
+  },
+  "birdRotationEvery": {
+    "message": "Cada aba",
+    "description": "New bird option (short): every new tab"
+  },
+  "birdRotationHourly": {
+    "message": "A cada hora",
+    "description": "New bird option (short): every hour"
+  },
+  "birdRotationDaily": {
+    "message": "Diariamente",
+    "description": "New bird option (short): once a day"
+  },
+  "birdRotationHelp": {
+    "message": "O botão de atualizar sempre traz uma nova ave.",
+    "description": "Help text for Change the bird"
+  },
+  "quickGuessLabel": {
+    "message": "Adivinhe a ave",
+    "description": "Setting: hide the bird's name until clicked"
+  },
+  "quickGuessHelp": {
+    "message": "Esconde o nome da ave até você clicar nele, para que cada nova aba seja um pequeno quiz.",
+    "description": "Help text for Guess the Bird"
+  },
+  "quickGuessPrompt": {
+    "message": "Que ave é esta?",
+    "description": "Shown in place of the bird's name in Guess the Bird mode"
+  },
+  "quickGuessReveal": {
+    "message": "Mostrar o nome da ave",
+    "description": "Accessible label for revealing the hidden bird name"
+  },
+  "favoriteAdd": {
+    "message": "Adicionar aos favoritos",
+    "description": "Heart button: add the bird to favorites"
+  },
+  "favoriteRemove": {
+    "message": "Remover dos favoritos",
+    "description": "Heart button: remove the bird from favorites"
+  },
+  "favoritesTitle": {
+    "message": "Favoritos",
+    "description": "Favorites tab and menu item"
+  },
+  "yourBirdsTitle": {
+    "message": "Suas aves",
+    "description": "Title of the sidebar with History, Favorites and Life List"
+  },
+  "emptyFavoritesTitle": {
+    "message": "Nenhum favorito ainda",
+    "description": "Empty state title for favorites"
+  },
+  "emptyFavoritesSubtitle": {
+    "message": "Toque no coração abaixo do nome de uma ave, ou em qualquer ave aqui.",
+    "description": "Empty Favorites: how to add one"
+  },
+  "omniboxSuggestion": {
+    "message": "BirdTab: digite o nome de uma ave, ou qualquer coisa para uma nova ave",
+    "description": "Address bar suggestion after typing the 'bird' keyword"
+  },
+  "settingsGroupBirds": {
+    "message": "Aves",
+    "description": "Settings group: region, how often the bird changes, guess mode"
+  },
+  "settingsGroupSound": {
+    "message": "Som",
+    "description": "Settings group: auto-play and quiet hours"
+  },
+  "settingsGroupPage": {
+    "message": "Na página",
+    "description": "Settings group: clock, search, Google apps"
+  },
+  "quickGuessShort": {
+    "message": "Esconde o nome até você clicar",
+    "description": "One-line hint under Guess the Bird"
+  },
+  "pinShowMe": {
+    "message": "Mostrar como",
+    "description": "Button that opens the pinning guide"
+  },
+  "pinCoachEyebrow": {
+    "message": "Um passo rápido",
+    "description": "Small heading above the pinning guide"
+  },
+  "pinCoachTitle": {
+    "message": "Fixe o BirdTab na sua barra de ferramentas",
+    "description": "Pinning guide title"
+  },
+  "pinCoachExtensions": {
+    "message": "Extensões",
+    "description": "Title of Chrome's extensions menu, as Chrome shows it in this language"
+  },
+  "pinCoachStep1": {
+    "message": "Clique na peça de quebra-cabeça ao lado da barra de endereço",
+    "description": "Pinning guide step 1"
+  },
+  "pinCoachStep2": {
+    "message": "Clique no alfinete ao lado do BirdTab",
+    "description": "Pinning guide step 2"
+  },
+  "pinCoachWaiting": {
+    "message": "Aguardando você fixar…",
+    "description": "Pinning guide: waiting for the user to pin"
+  },
+  "pinCoachLater": {
+    "message": "Mais tarde",
+    "description": "Pinning guide: close without pinning"
+  },
+  "pinCoachDoneTitle": {
+    "message": "Fixado!",
+    "description": "Pinning guide: success title"
+  },
+  "pinCoachDoneText": {
+    "message": "Clique no botão do BirdTab sempre que quiser ver uma ave.",
+    "description": "Pinning guide: success text"
+  },
+  "pinCoachDone": {
+    "message": "Pronto",
+    "description": "Pinning guide: close after success"
+  },
+  "yourBirdsCountLabel": {
+    "message": "aves diferentes vistas",
+    "description": "Label under the number of different birds seen (stat label; the number is shown separately above it)"
+  },
+  "yourBirdsSearch": {
+    "message": "Encontrar uma ave",
+    "description": "Search box placeholder in Your Birds"
+  },
+  "yourBirdsFilterAll": {
+    "message": "Todas",
+    "description": "Your Birds filter: every bird seen"
+  },
+  "yourBirdsShowingNow": {
+    "message": "Na tela agora",
+    "description": "On the card of the bird currently on the page"
+  },
+  "yourBirdsShowAgain": {
+    "message": "Mostrar $1 de novo",
+    "description": "Accessible label: show this bird ($1) on the page again"
+  },
+  "yourBirdsShowAgainHint": {
+    "message": "Mostrar esta ave de novo",
+    "description": "Tooltip on a bird card"
+  },
+  "favoriteAddNamed": {
+    "message": "Adicionar $1 aos favoritos",
+    "description": "Accessible label: add $1 to favorites"
+  },
+  "favoriteRemoveNamed": {
+    "message": "Remover $1 dos favoritos",
+    "description": "Accessible label: remove $1 from favorites"
+  },
+  "yourBirdsEmptyTitle": {
+    "message": "Nenhuma ave ainda",
+    "description": "Empty Your Birds list: title"
+  },
+  "yourBirdsEmptyText": {
+    "message": "Cada ave que você vê em uma nova aba fica guardada aqui.",
+    "description": "Empty Your Birds list: text"
+  },
+  "yourBirdsNoMatch": {
+    "message": "Nenhuma ave corresponde a “$1”",
+    "description": "Search found nothing; $1 is the search text"
+  },
+  "yourBirdsClear": {
+    "message": "Limpar aves vistas",
+    "description": "Button: clear the list of birds seen"
+  },
+  "yourBirdsClearTitle": {
+    "message": "Limpar as aves que você viu?",
+    "description": "Confirmation title for clearing the birds seen"
+  },
+  "yourBirdsClearText": {
+    "message": "Elas serão removidas desta lista e a contagem recomeça. Seus favoritos ficam.",
+    "description": "Confirmation text for clearing the birds seen"
+  },
+  "yourBirdsClearConfirm": {
+    "message": "Limpar",
+    "description": "Confirmation button for clearing the birds seen"
+  },
+  "yourBirdsMilestone": {
+    "message": "$1 aves diferentes vistas!",
+    "description": "Note when the number of different birds seen ($1) reaches a round number"
+  },
+  "tourOptionsMenuDescriptionYourBirds": {
+    "message": "Configurações, suas aves e o quiz de aves estão neste menu.",
+    "description": "Feature tour: what the options menu holds"
+  },
+  "yourBirdsQuiz": {
+    "message": "Quiz com estas aves",
+    "description": "Button in Your Birds: start a quiz on the birds listed"
+  },
+  "yourBirdsQuizNeedsMore": {
+    "message": "São necessárias pelo menos $1 aves",
+    "description": "Tooltip when there are too few birds for a quiz; $1 is the minimum"
+  },
+  "favoritesClear": {
+    "message": "Limpar favoritos",
+    "description": "Button: remove every favorite"
+  },
+  "favoritesClearTitle": {
+    "message": "Limpar todos os favoritos?",
+    "description": "Confirmation title for clearing favorites"
+  },
+  "favoritesClearText": {
+    "message": "Eles serão removidos em todos os seus computadores. As aves que você viu ficam.",
+    "description": "Confirmation text for clearing favorites (they sync across computers)"
+  },
+  "pinCoachStep2Edge": {
+    "message": "Clique no olho ao lado do BirdTab para mostrá-lo na barra de ferramentas",
+    "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
   }
 }

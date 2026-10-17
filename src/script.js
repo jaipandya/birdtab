@@ -1,4 +1,5 @@
 import './tokens.css';
+import 'birdtab-fonts.css';
 import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState, getQuietHoursText } from './quietHours.js';
@@ -55,9 +56,30 @@ import { setupCreditPopovers } from './creditPopover.js';
 import { truncateName } from './utils/escapeHtml.js';
 import { takeStoredBird, getBundledBird } from './mediaClient.js';
 import { html, setHtml } from './utils/html.js';
+import { hasSteppedAside, initNewTabMode, maybeOfferToStepAside } from './newTabMode.js';
+import { getHeldBird, rememberShownBird } from './birdRotation.js';
+import { isFavorite, toggleFavorite } from './favorites.js';
+import { recordSighting, showSeenMilestone } from './seenBirds.js';
+import { openYourBirds, hasPendingReopen, reopenYourBirdsIfPending } from './yourBirds.js';
+import { isQuickGuessOn, applyQuickGuess } from './quickGuess.js';
+import { applyPhotoTone } from './photoTone.js';
+// Last, so one button style settles the classes that grew up separately
+import './buttons.css';
 
 // Initialize Sentry for content script
 initSentry('content-script');
+
+// A bird shown again from Your Birds reloads the page: keep it hidden until the
+// panel is back, so only the bird behind the panel seems to change
+if (CONFIG.FEATURES.yourBirds && hasPendingReopen()) {
+  document.documentElement.classList.add('reopen-your-birds');
+  setTimeout(() => document.documentElement.classList.remove('reopen-your-birds'), 4000);
+}
+
+// "Quiz me on these" in Your Birds
+function startQuizOnBirds(birds) {
+  if (quizMode && !quizMode.isActive) quizMode.startQuiz({ questionBirds: birds });
+}
 
 // Clock display mode constants
 const CLOCK_DISPLAY_MODES = {
@@ -750,6 +772,36 @@ function hideImageLoadError() {
 let pageInitFailed = false;
 
 // Main function to update the page with new bird information
+/**
+ * The heart in the credits row: add the bird to favourites, or take it off.
+ */
+async function setupFavoriteButton(bird) {
+  const button = document.getElementById('favorite-button');
+  if (!button) return;
+  const render = (favorite) => {
+    const label = favorite
+      ? (chrome.i18n.getMessage('favoriteRemove') || 'Remove from favorites')
+      : (chrome.i18n.getMessage('favoriteAdd') || 'Add to favorites');
+    button.setAttribute('aria-pressed', String(favorite));
+    button.setAttribute('aria-label', label);
+    button.title = label;
+  };
+  render(await isFavorite(bird.speciesCode));
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const favorite = await toggleFavorite(bird);
+    render(favorite);
+    button.classList.remove('just-favorited');
+    if (favorite) {
+      // Restart the little pop
+      void button.offsetWidth;
+      button.classList.add('just-favorited');
+    }
+    trackFeature(favorite ? 'favorite_add' : 'favorite_remove');
+  });
+}
+
 async function initializePage() {
   pageInitFailed = false;
   incrementNewTabCount();
@@ -781,10 +833,17 @@ async function initializePage() {
       });
     });
 
+    // "Change the bird" every hour or day: the same bird as the last tab
+    const heldBird = pendingBird ? null : await getHeldBird();
+
     if (pendingBird) {
       birdInfo = pendingBird;
       usedHistoryFallback = true;
       log(`Using pending bird from history: ${birdInfo.name}`);
+    } else if (heldBird) {
+      birdInfo = heldBird;
+      usedHistoryFallback = true;
+      log(`Holding the current bird: ${birdInfo.name}`);
     } else {
       birdInfo = await loadBirdFromStorage();
     }
@@ -808,6 +867,11 @@ async function initializePage() {
 
     if (!usedHistoryFallback) {
       await addToHistory(birdInfo);
+      const metCount = await recordSighting(birdInfo);
+      if (metCount) showSeenMilestone(metCount);
+    }
+    if (!heldBird) {
+      await rememberShownBird(birdInfo);
     }
 
     // Offline without a cached recording: no audio controls that can't play
@@ -971,6 +1035,7 @@ async function initializePage() {
     setHtml(contentContainer, html`
       <img src="" alt="${birdInfo.name}" class="background-image" decoding="async" fetchpriority="high">
       <div class="gradient-overlay"></div>
+      ${CONFIG.FEATURES.photoTone ? html`<div class="tone-scrim" aria-hidden="true"></div><div class="tone-scrim-center" aria-hidden="true"></div>` : ''}
       <div class="info-panel">
         <div class="info-panel-header">
           <div class="bird-name-row">
@@ -995,6 +1060,14 @@ async function initializePage() {
             <a href="mailto:support@birdtab.app" class="feedback-inline-link" title="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}">
               <img src="images/svg/message.svg" alt="${chrome.i18n.getMessage('sendFeedback') || 'Send Feedback'}" width="16" height="16">
             </a>
+            ${CONFIG.FEATURES.favorites ? html`
+            <button id="favorite-button" class="favorite-inline-button" type="button" aria-pressed="false"
+              title="${chrome.i18n.getMessage('favoriteAdd') || 'Add to favorites'}"
+              aria-label="${chrome.i18n.getMessage('favoriteAdd') || 'Add to favorites'}">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.7 1.2 5 3 1.3-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/>
+              </svg>
+            </button>` : ''}
           </span>
           <!-- Share icon temporarily hidden — will return in a future version
           <span id="share-container" class="credit-item share-container credit-icon-group">
@@ -1075,6 +1148,24 @@ async function initializePage() {
 
     document.getElementById('bird-name').textContent = nameToDisplay;
 
+    if (await isQuickGuessOn()) {
+      applyQuickGuess(document.getElementById('bird-name'));
+    }
+
+    if (CONFIG.FEATURES.favorites) {
+      setupFavoriteButton(birdInfo);
+    }
+
+    if (CONFIG.FEATURES.photoTone) {
+      imageLoadedPromise.then(() => {
+        const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+        schedule(() => {
+          const img = document.querySelector('.background-image');
+          if (img?.currentSrc) applyPhotoTone(img.currentSrc);
+        });
+      });
+    }
+
     document.getElementById('refresh-button').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -1089,6 +1180,9 @@ async function initializePage() {
 
     // After updating the page content, add the review prompt if needed
     showReviewPromptIfNeeded(document.body);
+
+    // After a few trips to Chrome's own new tab page, offer to step aside instead
+    maybeOfferToStepAside();
 
     setupInfoPopover({
       onEbirdClick: () => trackFeature('ebird_click'),
@@ -1125,7 +1219,15 @@ async function initializePage() {
                 SettingsSidebar.getInstance().open();
               }
             },
-            {
+            CONFIG.FEATURES.yourBirds ? {
+              type: 'button',
+              label: chrome.i18n.getMessage('yourBirdsTitle') || 'Your Birds',
+              icon: 'images/svg/bird.svg',
+              onClick: () => {
+                trackFeature('your_birds');
+                openYourBirds('all', { onQuiz: startQuizOnBirds });
+              }
+            } : {
               type: 'button',
               label: chrome.i18n.getMessage('historyAlt') || 'History',
               icon: 'images/svg/history.svg',
@@ -1657,6 +1759,10 @@ async function checkSyncedQuickAccessPermissions() {
 
 // Initialize page when DOM content is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  // boot.js is sending this tab to Chrome's own new tab page: start nothing
+  // (no stats, no history entry, no bird taken from the queue)
+  if (hasSteppedAside()) return;
+
   // Start performance monitoring transaction
   const transaction = startTransaction('page-load', 'navigation');
 
@@ -1677,6 +1783,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   log('Onboarding complete, initializing UI components first');
+
+  // Keep boot.js's copy of "Open BirdTab" in step, and note that BirdTab was shown
+  await initNewTabMode();
 
   // Check if quick access is enabled but permissions are missing (synced from another device)
   await checkSyncedQuickAccessPermissions();
@@ -1741,6 +1850,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Start page update after UI elements are initialized
   await initializePage();
+
+  if (CONFIG.FEATURES.yourBirds) {
+    await reopenYourBirdsIfPending({ onQuiz: startQuizOnBirds });
+  }
 
   // Check if feature tour should be shown (for new users after onboarding)
   // Or if feature spotlights should be shown (for existing users with new features)

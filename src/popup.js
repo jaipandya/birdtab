@@ -7,8 +7,9 @@
  * extension has overridden the new tab page.
  */
 
-// Get the extension's own URL for index.html
-const extensionUrl = chrome.runtime.getURL('index.html');
+// Get the extension's own URL for index.html. ?open: shown even when "Open BirdTab"
+// has BirdTab step aside for Chrome's new tab page (boot.js)
+const extensionUrl = chrome.runtime.getURL('index.html?open');
 
 // Open the BirdTab page in a new tab
 chrome.tabs.create({ url: extensionUrl });

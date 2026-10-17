@@ -34,6 +34,16 @@ module.exports = (env, argv) => {
   const browser = ['edge', 'firefox'].includes(env.BROWSER) ? env.BROWSER : 'chrome';
   const isEdge = browser === 'edge';
   const isFirefox = browser === 'firefox';
+  const isChrome = browser === 'chrome';
+  // FEATURE_PREVIEW=true: the Chrome-first features (CONFIG.FEATURES) in Edge/Firefox builds too
+  const featurePreview = process.env.FEATURE_PREVIEW === 'true';
+  if (featurePreview && isProduction) {
+    console.warn('\n⚠️  FEATURE_PREVIEW is set: this production build has features not yet released for ' + browser + '. Do not upload it.\n');
+  }
+  const previewing = isChrome || featurePreview;
+  // "Open BirdTab" steps aside for the browser's own new tab page: Chrome, and Edge in a preview.
+  // Firefox doesn't let extensions open about:newtab.
+  const stepsAside = isChrome || (featurePreview && isEdge);
   const outputDir = `${isProduction ? 'dist' : 'dev'}-${browser}`;
 
   // Load environment-specific .env file
@@ -92,6 +102,12 @@ module.exports = (env, argv) => {
           manifest.host_permissions = [...PERMISSIONS_BASELINES.edge.host_permissions];
         }
 
+        // Typing "bird" and a bird's name in the address bar opens BirdTab on that bird
+        // (Chrome; Edge and Firefox in a preview)
+        if (previewing) {
+          manifest.omnibox = { keyword: 'bird' };
+        }
+
         // Firefox MV3 runs the background as an event page, has no
         // externally_connectable, and needs a fixed add-on ID (storage.sync
         // and AMO signing depend on it). Analytics and error reports are
@@ -135,7 +151,6 @@ module.exports = (env, argv) => {
     },
     { from: 'src/images', to: 'images' },
     { from: 'src/icons', to: 'icons' },
-    { from: 'src/fonts', to: 'fonts' },
     {
       from: 'src/_locales',
       to: '_locales',
@@ -181,6 +196,21 @@ module.exports = (env, argv) => {
 
   if (isEdge) {
     copyPatterns.push({ from: 'src/edge-assets', to: 'images/edge' });
+  }
+
+  // Runs before the new tab paints to step aside for the browser's own page (CONFIG.FEATURES.newTabMode)
+  if (stepsAside) {
+    copyPatterns.push({
+      from: 'src/boot.js',
+      to: 'boot.js',
+      // Edge's own new tab page, as the Chrome Tab shortcut opens it (browserInfo.js getNewTabUrl)
+      transform: (content) => isEdge
+        ? content.toString().replace("'chrome://new-tab-page/'", "'https://ntp.msn.com/edge/ntp'")
+        : content,
+    });
+  }
+  if (previewing) {
+    copyPatterns.push({ from: 'src/fonts/Inter-LICENSE.txt', to: 'fonts/Inter-LICENSE.txt' });
   }
 
   if (isFirefox) {
@@ -284,6 +314,7 @@ module.exports = (env, argv) => {
       }),
       new DefinePlugin({
         'process.env.BROWSER': JSON.stringify(browser),
+        'process.env.FEATURE_PREVIEW_BUILD': JSON.stringify(featurePreview),
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
         'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
       }),
@@ -305,6 +336,7 @@ module.exports = (env, argv) => {
         chunks: ['vendor', 'script'],
         isEdge,
         isFirefox,
+        withBoot: stepsAside,
       }),
       new HtmlWebpackPlugin({
         template: './src/onboarding.html',
@@ -348,6 +380,11 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.js', '.css'],
+      alias: {
+        // Chrome ships one variable Inter (every weight, optical sizes); the others keep
+        // the two static weights until the variable font is ported to them
+        'birdtab-fonts.css$': path.resolve(__dirname, previewing ? 'src/fontsVariable.css' : 'src/fontsStatic.css'),
+      },
     },
   };
 };

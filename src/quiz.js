@@ -282,7 +282,13 @@ class QuizMode {
     this.eventListeners.push({ element: document, event: 'keydown', handler: keyboardHandler, persist: true });
   }
 
-  async startQuiz() {
+  /**
+   * @param {Object} [options]
+   * @param {Array} [options.questionBirds] - ask about these birds (e.g. "Quiz me on these" in
+   *   Your Birds); wrong answers still come from the region. Kept for "Start a new quiz".
+   */
+  async startQuiz({ questionBirds = null } = {}) {
+    this.questionBirds = Array.isArray(questionBirds) && questionBirds.length > 0 ? questionBirds : null;
     try {
       this.onQuizStart?.();
       this.quizStartTime = Date.now();
@@ -367,16 +373,17 @@ class QuizMode {
   }
 
   async prepareQuestions(birds) {
-    this._birdsByCode = new Map(birds.map(b => [b.speciesCode, b]));
+    const own = (this.questionBirds || []).filter(b => b?.speciesCode && b.primaryComName && b.imageUrl);
+    this._birdsByCode = new Map([...birds, ...own].map(b => [b.speciesCode, b]));
 
     const shuffledBirds = [...birds].sort(() => 0.5 - Math.random());
 
     // Offline, only birds with a cached photo can be shown (a shorter quiz
     // beats broken images); answer options can still be any bird
-    let questionPool = shuffledBirds;
+    let questionPool = own.length > 0 ? [...own].sort(() => 0.5 - Math.random()) : shuffledBirds;
     if (navigator.onLine === false) {
-      const isCached = await Promise.all(shuffledBirds.map(bird => isMediaCached(bird.imageUrl)));
-      const cached = shuffledBirds.filter((_, i) => isCached[i]);
+      const isCached = await Promise.all(questionPool.map(bird => isMediaCached(bird.imageUrl)));
+      const cached = questionPool.filter((_, i) => isCached[i]);
       if (cached.length > 0) questionPool = cached;
     }
 

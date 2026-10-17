@@ -1296,5 +1296,273 @@
   "creditInfoAlt": {
     "message": "クレジットとライセンス",
     "description": "Alt text for the credit info trigger icon"
+  },
+  "settingsCategoryNewTab": {
+    "message": "新しいタブ",
+    "description": "Settings category for how new tabs behave"
+  },
+  "newTabModeLabel": {
+    "message": "BirdTab を開く",
+    "description": "Setting: when BirdTab opens instead of Chrome's own new tab page"
+  },
+  "newTabModeEvery": {
+    "message": "毎回",
+    "description": "Open BirdTab choice (short): on every new tab"
+  },
+  "newTabModeHourly": {
+    "message": "ときどき",
+    "description": "Open BirdTab choice (short): the first new tab after an hour away"
+  },
+  "newTabModeButton": {
+    "message": "必要なときだけ",
+    "description": "Open BirdTab choice (short): only from the toolbar button"
+  },
+  "newTabModeEveryHelp": {
+    "message": "新しいタブを開くたびに鳥を表示します。",
+    "description": "One-line caption for Open BirdTab: every tab"
+  },
+  "newTabModeHourlyHelp": {
+    "message": "1 時間ぶりのタブで鳥を表示し、それ以外は Chrome のページを開きます。",
+    "description": "One-line caption for Open BirdTab: now and then"
+  },
+  "newTabModeButtonHelp": {
+    "message": "新しいタブでは Chrome のページを開きます。鳥を見たいときは BirdTab のボタンをクリック。",
+    "description": "One-line caption for Open BirdTab: when I ask"
+  },
+  "newTabModePinned": {
+    "message": "ツールバーに固定済み",
+    "description": "Status: BirdTab's toolbar button is pinned"
+  },
+  "newTabModeNotPinned": {
+    "message": "まだ固定されていません",
+    "description": "Status: BirdTab's toolbar button isn't pinned"
+  },
+  "newTabModeKeyword": {
+    "message": "アドレスバーに $1、スペース、鳥の名前を入力しても開けます",
+    "description": "Tip; $1 is the keyword 'bird' shown as a key"
+  },
+  "stepAsideOfferTitle": {
+    "message": "Chrome の新しいタブページのほうがいいですか？",
+    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
+  },
+  "stepAsideOfferText": {
+    "message": "BirdTab は普段は表示せず、鳥を見たいときだけ開くようにできます。",
+    "description": "Body of the card offering to step aside for Chrome's new tab page"
+  },
+  "birdRotationLabel": {
+    "message": "新しい鳥",
+    "description": "Setting: how often the bird changes"
+  },
+  "birdRotationEvery": {
+    "message": "タブごと",
+    "description": "New bird option (short): every new tab"
+  },
+  "birdRotationHourly": {
+    "message": "1 時間ごと",
+    "description": "New bird option (short): every hour"
+  },
+  "birdRotationDaily": {
+    "message": "1 日ごと",
+    "description": "New bird option (short): once a day"
+  },
+  "birdRotationHelp": {
+    "message": "更新ボタンを押すといつでも新しい鳥が表示されます。",
+    "description": "Help text for Change the bird"
+  },
+  "quickGuessLabel": {
+    "message": "鳥当てクイズ",
+    "description": "Setting: hide the bird's name until clicked"
+  },
+  "quickGuessHelp": {
+    "message": "クリックするまで鳥の名前を隠し、新しいタブを開くたびに小さなクイズにします。",
+    "description": "Help text for Guess the Bird"
+  },
+  "quickGuessPrompt": {
+    "message": "この鳥は何でしょう？",
+    "description": "Shown in place of the bird's name in Guess the Bird mode"
+  },
+  "quickGuessReveal": {
+    "message": "鳥の名前を表示",
+    "description": "Accessible label for revealing the hidden bird name"
+  },
+  "favoriteAdd": {
+    "message": "お気に入りに追加",
+    "description": "Heart button: add the bird to favorites"
+  },
+  "favoriteRemove": {
+    "message": "お気に入りから削除",
+    "description": "Heart button: remove the bird from favorites"
+  },
+  "favoritesTitle": {
+    "message": "お気に入り",
+    "description": "Favorites tab and menu item"
+  },
+  "yourBirdsTitle": {
+    "message": "あなたの鳥",
+    "description": "Title of the sidebar with History, Favorites and Life List"
+  },
+  "emptyFavoritesTitle": {
+    "message": "お気に入りはまだありません",
+    "description": "Empty state title for favorites"
+  },
+  "emptyFavoritesSubtitle": {
+    "message": "鳥の名前の下のハート、またはここにある鳥のハートをタップしてください。",
+    "description": "Empty Favorites: how to add one"
+  },
+  "omniboxSuggestion": {
+    "message": "BirdTab：鳥の名前を入力（何でも入力すると新しい鳥）",
+    "description": "Address bar suggestion after typing the 'bird' keyword"
+  },
+  "settingsGroupBirds": {
+    "message": "鳥",
+    "description": "Settings group: region, how often the bird changes, guess mode"
+  },
+  "settingsGroupSound": {
+    "message": "サウンド",
+    "description": "Settings group: auto-play and quiet hours"
+  },
+  "settingsGroupPage": {
+    "message": "ページの表示",
+    "description": "Settings group: clock, search, Google apps"
+  },
+  "quickGuessShort": {
+    "message": "クリックするまで名前を隠す",
+    "description": "One-line hint under Guess the Bird"
+  },
+  "pinShowMe": {
+    "message": "やり方を見る",
+    "description": "Button that opens the pinning guide"
+  },
+  "pinCoachEyebrow": {
+    "message": "かんたんな 1 ステップ",
+    "description": "Small heading above the pinning guide"
+  },
+  "pinCoachTitle": {
+    "message": "BirdTab をツールバーに固定しましょう",
+    "description": "Pinning guide title"
+  },
+  "pinCoachExtensions": {
+    "message": "拡張機能",
+    "description": "Title of Chrome's extensions menu, as Chrome shows it in this language"
+  },
+  "pinCoachStep1": {
+    "message": "アドレスバー横のパズルピースをクリック",
+    "description": "Pinning guide step 1"
+  },
+  "pinCoachStep2": {
+    "message": "BirdTab の横のピンをクリック",
+    "description": "Pinning guide step 2"
+  },
+  "pinCoachWaiting": {
+    "message": "固定を待っています…",
+    "description": "Pinning guide: waiting for the user to pin"
+  },
+  "pinCoachLater": {
+    "message": "あとで",
+    "description": "Pinning guide: close without pinning"
+  },
+  "pinCoachDoneTitle": {
+    "message": "固定しました！",
+    "description": "Pinning guide: success title"
+  },
+  "pinCoachDoneText": {
+    "message": "鳥を見たいときはいつでも BirdTab のボタンをクリックしてください。",
+    "description": "Pinning guide: success text"
+  },
+  "pinCoachDone": {
+    "message": "完了",
+    "description": "Pinning guide: close after success"
+  },
+  "yourBirdsCountLabel": {
+    "message": "種類の鳥に出会いました",
+    "description": "Label under the number of different birds seen (stat label; the number is shown separately above it)"
+  },
+  "yourBirdsSearch": {
+    "message": "鳥を探す",
+    "description": "Search box placeholder in Your Birds"
+  },
+  "yourBirdsFilterAll": {
+    "message": "すべて",
+    "description": "Your Birds filter: every bird seen"
+  },
+  "yourBirdsShowingNow": {
+    "message": "表示中",
+    "description": "On the card of the bird currently on the page"
+  },
+  "yourBirdsShowAgain": {
+    "message": "$1 をもう一度表示",
+    "description": "Accessible label: show this bird ($1) on the page again"
+  },
+  "yourBirdsShowAgainHint": {
+    "message": "この鳥をもう一度表示",
+    "description": "Tooltip on a bird card"
+  },
+  "favoriteAddNamed": {
+    "message": "$1 をお気に入りに追加",
+    "description": "Accessible label: add $1 to favorites"
+  },
+  "favoriteRemoveNamed": {
+    "message": "$1 をお気に入りから削除",
+    "description": "Accessible label: remove $1 from favorites"
+  },
+  "yourBirdsEmptyTitle": {
+    "message": "まだ鳥がいません",
+    "description": "Empty Your Birds list: title"
+  },
+  "yourBirdsEmptyText": {
+    "message": "新しいタブで出会った鳥はここに残ります。",
+    "description": "Empty Your Birds list: text"
+  },
+  "yourBirdsNoMatch": {
+    "message": "「$1」に一致する鳥はいません",
+    "description": "Search found nothing; $1 is the search text"
+  },
+  "yourBirdsClear": {
+    "message": "見た鳥を消去",
+    "description": "Button: clear the list of birds seen"
+  },
+  "yourBirdsClearTitle": {
+    "message": "見た鳥を消去しますか？",
+    "description": "Confirmation title for clearing the birds seen"
+  },
+  "yourBirdsClearText": {
+    "message": "このリストから削除され、数は 0 から数え直します。お気に入りは残ります。",
+    "description": "Confirmation text for clearing the birds seen"
+  },
+  "yourBirdsClearConfirm": {
+    "message": "消去",
+    "description": "Confirmation button for clearing the birds seen"
+  },
+  "yourBirdsMilestone": {
+    "message": "$1 種類の鳥に出会いました！",
+    "description": "Note when the number of different birds seen ($1) reaches a round number"
+  },
+  "tourOptionsMenuDescriptionYourBirds": {
+    "message": "設定、あなたの鳥、鳥クイズはこのメニューにあります。",
+    "description": "Feature tour: what the options menu holds"
+  },
+  "yourBirdsQuiz": {
+    "message": "この鳥でクイズ",
+    "description": "Button in Your Birds: start a quiz on the birds listed"
+  },
+  "yourBirdsQuizNeedsMore": {
+    "message": "$1 種類以上の鳥が必要です",
+    "description": "Tooltip when there are too few birds for a quiz; $1 is the minimum"
+  },
+  "favoritesClear": {
+    "message": "お気に入りを消去",
+    "description": "Button: remove every favorite"
+  },
+  "favoritesClearTitle": {
+    "message": "お気に入りをすべて消去しますか？",
+    "description": "Confirmation title for clearing favorites"
+  },
+  "favoritesClearText": {
+    "message": "すべてのパソコンから削除されます。見た鳥は残ります。",
+    "description": "Confirmation text for clearing favorites (they sync across computers)"
+  },
+  "pinCoachStep2Edge": {
+    "message": "BirdTab の横の目のアイコンをクリックしてツールバーに表示",
+    "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
   }
 }

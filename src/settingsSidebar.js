@@ -3,13 +3,38 @@ import { getQuietHoursText } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
-import { resetChromeFooterNotification } from './chromeFooterNotification.js';
+import { resetChromeFooterNotification, showChromeFooterNotification } from './chromeFooterNotification.js';
 import { IS_EDGE, canOpenBrowserNewTab } from './browserInfo.js';
 import { RegionSelector } from './regionSelector.js';
 import CONFIG from './config.js';
 import { updateUserContext } from './sentry.js';
 import { announce } from './loadingIndicators.js';
 import { html, insertHtml } from './utils/html.js';
+import { setNewTabMode, isPinnedToToolbar, maybeOfferToStepAside } from './newTabMode.js';
+import { showSeenMilestone, clearSeenBirds } from './seenBirds.js';
+import { showPinCoach } from './pinCoach.js';
+import { trustedHtml } from './utils/html.js';
+
+// Small pictures of a browser window for the "Open BirdTab" choices
+const BIRD_GLYPH = '<g class="art-bird" transform="translate(32 18) scale(1.05)"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></g>';
+function modeArt(mode) {
+  const frame = '<rect class="art-frame" x="1" y="1" width="86" height="54" rx="7"/>'
+    + '<path class="art-strip" d="M1 8a7 7 0 0 1 7-7h72a7 7 0 0 1 7 7v4H1z"/>';
+  const photo = '<rect class="art-photo" x="5" y="15" width="78" height="36" rx="4"/>';
+  const art = {
+    every: frame + '<rect class="art-tab active" x="6" y="4" width="16" height="6" rx="2"/>'
+      + '<rect class="art-tab" x="25" y="4" width="16" height="6" rx="2"/><rect class="art-tab" x="44" y="4" width="16" height="6" rx="2"/>'
+      + photo + BIRD_GLYPH,
+    hourly: frame + '<rect class="art-tab active" x="6" y="4" width="16" height="6" rx="2"/><rect class="art-tab" x="25" y="4" width="16" height="6" rx="2"/>'
+      + photo + BIRD_GLYPH
+      + '<circle class="art-badge" cx="72" cy="40" r="8"/><path class="art-badge-hands" d="M72 35.5V40l3 2"/>',
+    button: frame + '<rect class="art-tab active" x="6" y="4" width="16" height="6" rx="2"/>'
+      + '<rect class="art-chrome-page" x="5" y="15" width="78" height="36" rx="4"/>'
+      + '<rect class="art-line" x="26" y="27" width="36" height="5" rx="2.5"/><rect class="art-line faint" x="30" y="37" width="28" height="3" rx="1.5"/>'
+      + '<circle class="art-button" cx="78" cy="7" r="5"/><path class="art-cursor" d="M79 9.5l5.5 2.2-2.4 1 1.6 2.6-1.3.8-1.6-2.6-1.8 1.8z"/>',
+  }[mode];
+  return trustedHtml(`<svg class="mode-art" viewBox="0 0 88 56" aria-hidden="true">${art}</svg>`);
+}
 
 // Module-level singleton instance
 let instance = null;
@@ -84,124 +109,213 @@ class SettingsSidebar {
             </button>
           </div>
 
-          <div class="settings-body">
-            <div class="setting">
-              <label for="modal-region" class="setting-label-with-icon">
-                <img src="images/svg/location.svg" alt="" width="18" height="18" class="setting-icon">
-                <span data-i18n="birdingRegion">Birding Region</span>
-              </label>
-              <select id="modal-region" aria-describedby="modal-region-status modal-region-help">
-                <option value="WLD" selected data-i18n="regionWorld">World</option>
-              </select>
-              <!-- Status and help share one slot, so loading/failure text never shifts the layout -->
-              <div class="region-message">
-                <p id="modal-region-status" class="help-text region-status" role="status" aria-live="polite" hidden></p>
-                <p id="modal-region-help" class="help-text" data-i18n="regionHelpText">New tabs show birds from this region.</p>
-              </div>
-            </div>
-
-            <!-- Media & Playback Category -->
-            <div class="settings-category-title" data-i18n="settingsCategoryMedia">Media & Playback</div>
-            
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/microphone.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="autoPlayBirdCalls">Auto-play media</span>
-                  </span>
-                  <p class="help-text" data-i18n="autoPlayHelpText">Automatically play bird calls with each new tab. Quiet hours will override this when active.</p>
+          <div class="settings-body settings-grouped">
+            <!-- Birds -->
+            <section class="settings-group" aria-labelledby="settings-group-birds">
+              <h3 class="settings-category-title" id="settings-group-birds" data-i18n="settingsGroupBirds">Birds</h3>
+              <div class="settings-card">
+                <div class="setting setting-region" data-i18n-title="regionHelpText" title="New tabs show birds from this region.">
+                  <div class="setting-inline">
+                    <label for="modal-region" class="setting-label-with-icon">
+                      <img src="images/svg/location.svg" alt="" width="18" height="18" class="setting-icon">
+                      <span data-i18n="birdingRegion">Birding Region</span>
+                    </label>
+                    <select id="modal-region" aria-describedby="modal-region-status modal-region-help">
+                      <option value="WLD" selected data-i18n="regionWorld">World</option>
+                    </select>
+                  </div>
+                  <!-- Status and help share one slot, so loading/failure text never shifts the layout -->
+                  <div class="region-message">
+                    <p id="modal-region-status" class="help-text region-status" role="status" aria-live="polite" hidden></p>
+                    <p id="modal-region-help" class="help-text" data-i18n="regionHelpText">New tabs show birds from this region.</p>
+                  </div>
                 </div>
-                <label class="switch" data-i18n-title="autoPlayTooltip" title="Enable to automatically play bird calls when you open a new tab">
-                  <input type="checkbox" id="modal-auto-play">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
 
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/moon.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span><span data-i18n="quietHours">Quiet Hours</span> <span id="modal-quiet-hours-text"></span></span>
+                ${CONFIG.FEATURES.birdRotation ? html`
+                <div class="setting setting-stack">
+                  <span class="setting-label-with-icon" id="bird-rotation-label">
+                    <img src="images/svg/refresh.svg" alt="" width="18" height="18" class="setting-icon">
+                    <span data-i18n="birdRotationLabel">New bird</span>
                   </span>
-                  <p class="help-text" data-i18n="quietHoursHelpText">Mute bird songs during specified quiet hours.</p>
-                </div>
-                <label class="switch" data-i18n-title="quietHoursTooltip" title="Enable to automatically turn off auto-play during quiet hours">
-                  <input type="checkbox" id="modal-quiet-hours">
-                  <span class="slider round"></span>
-                </label>
+                  <div class="segmented" role="radiogroup" aria-labelledby="bird-rotation-label" aria-describedby="modal-bird-rotation-help">
+                    <label class="segment"><input type="radio" name="bird-rotation" value="every"><span data-i18n="birdRotationEvery">Every tab</span></label>
+                    <label class="segment"><input type="radio" name="bird-rotation" value="hourly"><span data-i18n="birdRotationHourly">Hourly</span></label>
+                    <label class="segment"><input type="radio" name="bird-rotation" value="daily"><span data-i18n="birdRotationDaily">Daily</span></label>
+                  </div>
+                  <p id="modal-bird-rotation-help" class="help-text visually-hidden" data-i18n="birdRotationHelp">The refresh button always brings a new bird.</p>
+                </div>` : ''}
+
+                ${CONFIG.FEATURES.quickGuess ? html`
+                <div class="setting" data-i18n-title="quickGuessHelp" title="Hide the bird’s name until you click it, so every new tab is a tiny quiz.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/quiz.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="quickGuessLabel">Guess the Bird</span>
+                      </span>
+                      <p class="help-text" id="modal-quick-guess-help" data-i18n="quickGuessShort">Hide the name until you click it</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-quick-guess" aria-describedby="modal-quick-guess-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>` : ''}
               </div>
-            </div>
+            </section>
 
-            <!-- Productivity & Interface Category -->
-            <div class="settings-category-title" data-i18n="settingsCategoryProductivity">Productivity & Interface</div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/clock.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="clockDisplay">Show Clock</span>
-                  </span>
-                  <p class="help-text" id="modal-clock-help" data-i18n="clockDisplayHelpText">Display a large clock in the center of your new tab.</p>
-                </div>
-                <label class="switch" data-i18n-title="clockDisplayTooltip" title="Show current time on new tab page">
-                  <input type="checkbox" id="modal-clock-display" aria-describedby="modal-clock-help">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/search.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="quickAccessFeatures">Quick Access Features</span>
-                  </span>
-                  <p class="help-text" id="modal-productivity-help" data-i18n="productivityHelpText">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
-                </div>
-                <label class="switch" data-i18n-title="productivityTooltip" title="Show search box, most visited sites, and allow custom shortcuts">
-                  <input type="checkbox" id="modal-enable-productivity" aria-describedby="modal-productivity-help">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
-                    <img src="images/svg/settings.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="googleApps">Google Apps</span>
-                  </span>
-                  <p class="help-text" id="modal-google-apps-help" data-i18n="googleAppsHelpText">Show a quick access button to open Google apps like Gmail, Drive, YouTube, and more.</p>
-                </div>
-                <label class="switch" data-i18n-title="googleAppsTooltip" title="Enable to show Google Apps button">
-                  <input type="checkbox" id="modal-google-apps" aria-describedby="modal-google-apps-help">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="setting">
-              <div class="toggle-container">
-                <div class="toggle-text">
-                  <span class="setting-label-with-icon">
+            ${CONFIG.FEATURES.newTabMode ? html`
+            <!-- New tab -->
+            <section class="settings-group" aria-labelledby="settings-group-new-tab">
+              <h3 class="settings-category-title" id="settings-group-new-tab" data-i18n="settingsCategoryNewTab">New Tab</h3>
+              <div class="settings-card">
+                <div class="setting setting-stack">
+                  <span class="setting-label-with-icon" id="new-tab-mode-label">
                     <img src="images/svg/external-link.svg" alt="" width="18" height="18" class="setting-icon">
-                    <span data-i18n="showChromeTab">Chrome Tab Shortcut</span>
+                    <span data-i18n="newTabModeLabel">Open BirdTab</span>
                   </span>
-                  <p class="help-text" id="modal-chrome-tab-help" data-i18n="showChromeTabHelpText">Show a shortcut to quickly access the default Chrome new tab page.</p>
+                  <div class="mode-cards" role="radiogroup" aria-labelledby="new-tab-mode-label" aria-describedby="modal-new-tab-caption">
+                    ${['every', 'hourly', 'button'].map(mode => html`
+                    <label class="mode-card">
+                      <input type="radio" name="new-tab-mode" value="${mode}">
+                      ${modeArt(mode)}
+                      <span class="mode-card-name" data-i18n="${{ every: 'newTabModeEvery', hourly: 'newTabModeHourly', button: 'newTabModeButton' }[mode]}"></span>
+                    </label>`)}
+                  </div>
+                  <p id="modal-new-tab-caption" class="help-text mode-caption" aria-live="polite"></p>
+                  <div class="pin-row" hidden>
+                    <span class="pin-status"><span class="pin-status-dot" aria-hidden="true"></span><span class="pin-status-text"></span></span>
+                    <button type="button" class="pin-show-me" data-i18n="pinShowMe">Show me how</button>
+                  </div>
+                  <p class="keyword-tip" hidden></p>
                 </div>
-                <label class="switch" data-i18n-title="showChromeTabTooltip" title="Enable to show Chrome Tab shortcut">
-                  <input type="checkbox" id="modal-chrome-tab" aria-describedby="modal-chrome-tab-help">
-                  <span class="slider round"></span>
-                </label>
+
+                <div class="setting" data-i18n-title="showChromeTabHelpText" title="Show a shortcut to quickly access the default Chrome new tab page.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/chrome-tab.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="showChromeTab">Chrome Tab Shortcut</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-chrome-tab-help" data-i18n="showChromeTabHelpText">Show a shortcut to quickly access the default Chrome new tab page.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-chrome-tab" aria-describedby="modal-chrome-tab-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>` : ''}
+
+            <!-- Sound -->
+            <section class="settings-group" aria-labelledby="settings-group-sound">
+              <h3 class="settings-category-title" id="settings-group-sound" data-i18n="settingsGroupSound">Sound</h3>
+              <div class="settings-card">
+                <div class="setting" data-i18n-title="autoPlayHelpText" title="Automatically play bird calls with each new tab. Quiet hours will override this when active.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/microphone.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="autoPlayBirdCalls">Auto-play media</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-auto-play-help" data-i18n="autoPlayHelpText">Automatically play bird calls with each new tab. Quiet hours will override this when active.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-auto-play" aria-describedby="modal-auto-play-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="setting" data-i18n-title="quietHoursHelpText" title="Mute bird songs during specified quiet hours.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/moon.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="quietHours">Quiet Hours</span>
+                      </span>
+                      <p class="help-text" id="modal-quiet-hours-text"></p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-quiet-hours" aria-describedby="modal-quiet-hours-text">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- On the page -->
+            <section class="settings-group" aria-labelledby="settings-group-page">
+              <h3 class="settings-category-title" id="settings-group-page" data-i18n="settingsGroupPage">On the Page</h3>
+              <div class="settings-card">
+                <div class="setting" data-i18n-title="clockDisplayHelpText" title="Display a large clock in the center of your new tab.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/clock.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="clockDisplay">Show Clock</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-clock-help" data-i18n="clockDisplayHelpText">Display a large clock in the center of your new tab.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-clock-display" aria-describedby="modal-clock-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="setting" data-i18n-title="productivityHelpText" title="Enable search box, top sites, and custom shortcuts for enhanced productivity.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/search.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="quickAccessFeatures">Quick Access Features</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-productivity-help" data-i18n="productivityHelpText">Enable search box, top sites, and custom shortcuts for enhanced productivity.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-enable-productivity" aria-describedby="modal-productivity-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="setting" data-i18n-title="googleAppsHelpText" title="Show a quick access button to open Google apps like Gmail, Drive, YouTube, and more.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/apps.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="googleApps">Google Apps</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-google-apps-help" data-i18n="googleAppsHelpText">Show a quick access button to open Google apps like Gmail, Drive, YouTube, and more.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-google-apps" aria-describedby="modal-google-apps-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                ${CONFIG.FEATURES.newTabMode ? '' : html`
+                <div class="setting" data-i18n-title="showChromeTabHelpText" title="Show a shortcut to quickly access the default Chrome new tab page.">
+                  <div class="toggle-container">
+                    <div class="toggle-text">
+                      <span class="setting-label-with-icon">
+                        <img src="images/svg/external-link.svg" alt="" width="18" height="18" class="setting-icon">
+                        <span data-i18n="showChromeTab">Chrome Tab Shortcut</span>
+                      </span>
+                      <p class="help-text visually-hidden" id="modal-chrome-tab-help" data-i18n="showChromeTabHelpText">Show a shortcut to quickly access the default Chrome new tab page.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="modal-chrome-tab" aria-describedby="modal-chrome-tab-help">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>`}
+              </div>
+            </section>
           </div>
 
           <a href="mailto:support@birdtab.app" class="settings-footer feedback-link">
@@ -352,6 +466,21 @@ class SettingsSidebar {
                 <button id="sidebar-reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
                 <button id="sidebar-delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
                 <button id="sidebar-reset-review" class="debug-button">Reset Review Prompt</button>
+                <button class="debug-button" data-debug="footer-notice">Show Chrome Footer Tip</button>
+                ${CONFIG.FEATURES.newTabMode ? html`
+                <button class="debug-button" data-debug="pin-coach-steps">Show Pin Coach</button>
+                <button class="debug-button" data-debug="pin-coach-done">Show Pin Coach: Pinned</button>
+                <button class="debug-button" data-debug="step-aside-offer">Show “Prefer Chrome’s Page?” Offer</button>
+                <button class="debug-button" data-debug="reset-new-tab-mode">Reset Open BirdTab to Every Tab</button>` : ''}
+                ${CONFIG.FEATURES.yourBirds ? html`
+                <button class="debug-button" data-debug="milestone">Show “Different Birds Seen” Milestone</button>
+                <button class="debug-button" data-debug="reset-your-birds">Clear Your Birds (and History)</button>
+                <button class="debug-button" data-debug="refill-your-birds">Refill Your Birds from History</button>` : ''}
+                ${CONFIG.FEATURES.favorites ? html`
+                <button class="debug-button" data-debug="reset-favorites">Reset Favorites</button>` : ''}
+                ${CONFIG.FEATURES.birdRotation ? html`
+                <button class="debug-button" data-debug="clear-held-bird">Clear Held Bird</button>` : ''}
+                <p class="debug-status" id="debug-status" role="status" style="margin: 4px 0 0; font-size: 12px; color: var(--white-60);"></p>
               </div>
             </div>
           </div>
@@ -391,6 +520,12 @@ class SettingsSidebar {
     this.enableProductivityCheckbox = document.getElementById('modal-enable-productivity');
     this.googleAppsCheckbox = document.getElementById('modal-google-apps');
     this.chromeTabCheckbox = document.getElementById('modal-chrome-tab');
+    this.newTabModeRadios = [...document.querySelectorAll('input[name="new-tab-mode"]')];
+    this.newTabCaption = document.getElementById('modal-new-tab-caption');
+    this.pinRow = this.sidebar?.querySelector('.pin-row');
+    this.keywordTip = this.sidebar?.querySelector('.keyword-tip');
+    this.birdRotationRadios = [...document.querySelectorAll('input[name="bird-rotation"]')];
+    this.quickGuessCheckbox = document.getElementById('modal-quick-guess');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
 
     const regionSelect = document.getElementById('modal-region');
@@ -406,7 +541,7 @@ class SettingsSidebar {
 
     // Update quiet hours text
     if (this.quietHoursTextElement) {
-      this.quietHoursTextElement.textContent = `(${getQuietHoursText()})`;
+      this.quietHoursTextElement.textContent = getQuietHoursText();
     }
   }
 
@@ -483,6 +618,23 @@ class SettingsSidebar {
     }
     if (this.chromeTabCheckbox) {
       this.chromeTabCheckbox.addEventListener('change', () => this.saveSettings());
+    }
+    for (const radio of this.newTabModeRadios) {
+      radio.addEventListener('change', async () => {
+        if (!radio.checked) return;
+        await setNewTabMode(radio.value);
+        this.syncNewTabNote();
+        this.showSaveNotification();
+        // Stepping aside makes the toolbar button the way back: help pin it
+        if (radio.value !== 'every') showPinCoach();
+      });
+    }
+    this.sidebar?.querySelector('.pin-show-me')?.addEventListener('click', () => showPinCoach());
+    for (const radio of this.birdRotationRadios) {
+      radio.addEventListener('change', () => this.saveSettings());
+    }
+    if (this.quickGuessCheckbox) {
+      this.quickGuessCheckbox.addEventListener('change', () => this.saveSettings());
     }
 
     // Make entire toggle container rows clickable
@@ -700,6 +852,56 @@ class SettingsSidebar {
       });
     }
 
+    // Chrome-first features: show each one's states on demand
+    const status = document.getElementById('debug-status');
+    const done = (text) => { if (status) status.textContent = text; };
+    const actions = {
+      'footer-notice': async () => {
+        await resetChromeFooterNotification();
+        this.close();
+        showChromeFooterNotification();
+      },
+      'pin-coach-steps': () => showPinCoach({ preview: 'steps' }),
+      'pin-coach-done': () => showPinCoach({ preview: 'done' }),
+      'step-aside-offer': async () => {
+        await chrome.storage.local.set({ chromeTabUses: 3, stepAsideOfferDismissed: false, newTabMode: 'every' });
+        document.getElementById('step-aside-offer')?.remove();
+        this.close();
+        maybeOfferToStepAside();
+      },
+      'reset-new-tab-mode': async () => {
+        await setNewTabMode('every');
+        await chrome.storage.local.remove(['chromeTabUses', 'stepAsideOfferDismissed']);
+        this.loadSettings();
+        done('Open BirdTab: every tab. Chrome Tab uses and the offer reset.');
+      },
+      'milestone': () => {
+        this.close();
+        showSeenMilestone(50, { force: true });
+      },
+      'reset-your-birds': async () => {
+        await clearSeenBirds();
+        done('Your Birds and History cleared.');
+      },
+      'refill-your-birds': async () => {
+        await chrome.storage.local.remove(['seenBirdsBackfilled']);
+        done('Your Birds refills from History the next time it opens.');
+      },
+      'reset-favorites': async () => {
+        await chrome.storage.sync.set({ favoriteSpecies: [] });
+        await chrome.storage.local.remove(['favoriteBirds']);
+        document.getElementById('favorite-button')?.setAttribute('aria-pressed', 'false');
+        done('Favorites cleared.');
+      },
+      'clear-held-bird': async () => {
+        await chrome.storage.local.remove(['currentBird']);
+        done('Held bird cleared: the next new tab shows a new bird.');
+      },
+    };
+    for (const button of this.sidebar.querySelectorAll('[data-debug]')) {
+      button.addEventListener('click', () => actions[button.dataset.debug]?.());
+    }
+
     const resetReviewButton = document.getElementById('sidebar-reset-review');
     if (resetReviewButton) {
       resetReviewButton.addEventListener('click', () => {
@@ -775,7 +977,15 @@ class SettingsSidebar {
       return;
     }
 
-    chrome.storage.local.get(['autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'googleAppsEnabled', 'chromeTabEnabled'], (result) => {
+    chrome.storage.local.get(['autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'googleAppsEnabled', 'chromeTabEnabled', 'newTabMode', 'birdRotation', 'quickGuess'], (result) => {
+      const newTabMode = result.newTabMode || CONFIG.STORAGE_DEFAULTS.newTabMode;
+      this.newTabModeRadios.forEach(r => { r.checked = r.value === newTabMode; });
+      this.syncNewTabNote();
+      const birdRotation = result.birdRotation || CONFIG.STORAGE_DEFAULTS.birdRotation;
+      this.birdRotationRadios.forEach(r => { r.checked = r.value === birdRotation; });
+      if (this.quickGuessCheckbox) {
+        this.quickGuessCheckbox.checked = result.quickGuess === true;
+      }
       if (this.autoPlayCheckbox) {
         this.autoPlayCheckbox.checked = result.autoPlay || false;
       }
@@ -835,6 +1045,13 @@ class SettingsSidebar {
       if (this.chromeTabCheckbox) {
         settings.chromeTabEnabled = this.chromeTabCheckbox.checked;
       }
+      const birdRotation = this.birdRotationRadios.find(r => r.checked);
+      if (birdRotation) {
+        settings.birdRotation = birdRotation.value;
+      }
+      if (this.quickGuessCheckbox) {
+        settings.quickGuess = this.quickGuessCheckbox.checked;
+      }
 
       chrome.storage.local.set(settings, () => {
         // Settings saved successfully - show notification
@@ -849,6 +1066,58 @@ class SettingsSidebar {
       onRevert: () => { this.enableProductivityCheckbox.checked = !isEnabled; },
       component: 'settingsSidebar'
     });
+  }
+
+  /**
+   * What the chosen "Open BirdTab" mode does, in one line; and for the modes where
+   * BirdTab steps aside, whether its toolbar button is pinned (checked every 1.5 s
+   * while the sidebar is open, so it changes the moment it's pinned) and the
+   * address-bar keyword.
+   */
+  syncNewTabNote() {
+    if (!this.newTabModeRadios.length || !this.newTabCaption) return;
+    clearInterval(this.pinPoll);
+    this.pinPoll = 0;
+    const mode = this.newTabModeRadios.find(r => r.checked)?.value || 'every';
+    // Also as a class: :has() needs Chrome 105
+    this.newTabModeRadios.forEach(r => r.closest('.mode-card')?.classList.toggle('selected', r.checked));
+    const captions = {
+      every: ['newTabModeEveryHelp', 'A bird on every new tab.'],
+      hourly: ['newTabModeHourlyHelp', 'A bird on your first new tab after an hour away; Chrome’s own page the rest of the time.'],
+      button: ['newTabModeButtonHelp', 'Chrome’s own new tab page. Click BirdTab’s toolbar button whenever you want a bird.'],
+    };
+    const [key, fallback] = captions[mode];
+    this.newTabCaption.textContent = getMessage(key) || fallback;
+
+    const stepsAside = mode !== 'every';
+    if (this.pinRow) this.pinRow.hidden = !stepsAside;
+    if (this.keywordTip) {
+      this.keywordTip.hidden = !stepsAside;
+      if (stepsAside && !this.keywordTip.childElementCount) {
+        // "Or type $1 and a space in the address bar": the keyword as a key cap
+        const [before, after = ''] = (chrome.i18n.getMessage('newTabModeKeyword', ['\u2063']) || 'Or type \u2063 and a space in the address bar').split('\u2063');
+        const kbd = document.createElement('kbd');
+        kbd.textContent = 'bird';
+        this.keywordTip.replaceChildren(document.createTextNode(before), kbd, document.createTextNode(after));
+      }
+    }
+    if (!stepsAside || !this.pinRow) return;
+
+    const update = async () => {
+      if (!this.isOpen && this.pinPoll) {
+        clearInterval(this.pinPoll);
+        this.pinPoll = 0;
+        return;
+      }
+      const pinned = await isPinnedToToolbar();
+      this.pinRow.classList.toggle('pinned', pinned === true);
+      this.pinRow.querySelector('.pin-status-text').textContent = pinned
+        ? (getMessage('newTabModePinned') || 'Pinned to your toolbar')
+        : (getMessage('newTabModeNotPinned') || 'Not pinned yet');
+      this.pinRow.querySelector('.pin-show-me').hidden = pinned === true;
+    };
+    update();
+    this.pinPoll = setInterval(update, 1500);
   }
 
   showSaveNotification() {

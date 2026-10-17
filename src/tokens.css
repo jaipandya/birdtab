@@ -104,6 +104,36 @@
   --modal-accent: var(--primary);
   --modal-focus-outline: var(--primary);
 
+  /* Accent taken from the photo (photoTone.js sets it; the brand gold until then) */
+  --photo-accent: var(--primary);
+  /* Dark glass panels over the photo (review prompt, step-aside offer, notes) */
+  --surface-glass: rgba(18, 18, 20, 0.82);
+
+  /* Buttons (buttons.css): one look per purpose, everywhere */
+  --btn-radius: 10px;
+  --btn-radius-lg: 12px;
+  /* Primary: the one main action, in the brand gold ("gilded"): a light-to-deep gold gradient around
+     --primary, a darker gold edge and a top highlight, with warm dark ink rather than black */
+  --btn-primary-bg: linear-gradient(180deg, #e6bf70 0%, #cb963f 100%);
+  --btn-primary-bg-hover: linear-gradient(180deg, #ecc97f 0%, var(--primary) 100%);
+  --btn-primary-fg: #2a1a03;
+  --btn-primary-border: rgba(122, 80, 18, 0.55);
+  --btn-primary-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 1px 2px var(--black-35);
+  /* Secondary: other actions, glass with a warm tint that sits with the gold */
+  --btn-secondary-bg: rgba(255, 236, 205, 0.08);
+  --btn-secondary-bg-hover: rgba(255, 236, 205, 0.13);
+  --btn-secondary-border: rgba(255, 226, 178, 0.16);
+  --btn-secondary-fg: #f3eadb;
+  /* Quiet: dismissals ("Maybe later", "Skip") */
+  --btn-quiet-fg: var(--white-60);
+  --btn-quiet-fg-hover: var(--white-90);
+  --btn-quiet-bg-hover: var(--white-8);
+  /* Destructive: clearing things */
+  --btn-danger-bg: rgba(239, 68, 68, 0.12);
+  --btn-danger-bg-hover: rgba(239, 68, 68, 0.2);
+  --btn-danger-border: rgba(239, 68, 68, 0.3);
+  --btn-danger-fg: #fca5a5;
+
   /* Status colors */
   --status-success: #22c55e;
   --status-warning: #f59e0b;

@@ -1,19 +1,4 @@
-/* Inter font - self-hosted with full Unicode support and tnum feature */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('./fonts/Inter-Regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('./fonts/Inter-Bold.woff2') format('woff2');
-}
+/* Inter's @font-face rules are in fontsStatic.css / fontsVariable.css (picked per browser in webpack.config.js) */
 
 * {
   margin: 0;
@@ -1650,8 +1635,8 @@ html[dir="rtl"] .credit-popover__ext-icon {
 
 .review-prompt {
   position: fixed;
-  /* Above the control buttons and the quiet-hours pill, so they stay usable */
-  bottom: 148px;
+  /* Same gap from the bottom as from the right; covers the control buttons until answered or closed */
+  bottom: 2rem;
   right: 2rem;
   max-width: min(340px, calc(100vw - 32px));
   padding: 24px 24px 20px;
@@ -3592,8 +3577,8 @@ html[dir="rtl"] .history-footer {
 
 .chrome-footer-notification {
   position: fixed;
-  /* Above the control buttons and the quiet-hours pill, so they stay usable */
-  bottom: 148px;
+  /* Same gap from the bottom as from the right; covers the control buttons until closed */
+  bottom: 2rem;
   right: 2rem;
   max-width: min(340px, calc(100vw - 32px));
   background: rgba(28, 28, 30, 0.95);
@@ -7322,4 +7307,1157 @@ html[dir="rtl"] .share-menu-social {
 .settings-sidebar select:disabled {
   opacity: 0.7;
   cursor: progress;
+}
+
+/* ==========================================================================
+   Chrome-first features (CONFIG.FEATURES): photo tone, favourites, quick guess,
+   life list, "Open BirdTab". Nothing here applies until its feature adds the
+   element or class, so other browsers look as before.
+   ========================================================================== */
+
+/* ── Photo tone (photoTone.js) ── */
+
+/* Extra shading where white text sits, faded in only as far as the photo is bright there */
+.tone-scrim,
+.tone-scrim-center {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.tone-scrim {
+  background: radial-gradient(ellipse 70% 55% at 0% 100%, var(--black-60) 0%, var(--black-30) 45%, transparent 75%);
+  opacity: var(--tone-scrim, 0);
+}
+
+html[dir="rtl"] .tone-scrim {
+  background: radial-gradient(ellipse 70% 55% at 100% 100%, var(--black-60) 0%, var(--black-30) 45%, transparent 75%);
+}
+
+.tone-scrim-center {
+  background: radial-gradient(ellipse 34% 30% at 50% 32%, var(--black-35) 0%, transparent 70%);
+  opacity: var(--tone-center, 0);
+}
+
+/* The photo's accent, used lightly: switches, focus rings */
+html.photo-tone {
+  --modal-accent: var(--photo-accent);
+  --modal-focus-outline: var(--photo-accent);
+}
+
+/* ── Favourite heart (credits row) ── */
+
+.favorite-inline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  margin: -4px -4px -4px 4px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--white-80);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.favorite-inline-button:hover {
+  opacity: 1;
+  background-color: var(--white-20);
+}
+
+.favorite-inline-button:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.favorite-inline-button svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: fill 0.2s ease;
+}
+
+.favorite-inline-button[aria-pressed="true"] {
+  opacity: 1;
+  color: var(--photo-accent);
+}
+
+.favorite-inline-button[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.favorite-inline-button.just-favorited svg {
+  animation: favoritePop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes favoritePop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* ── Guess the bird (quickGuess.js) ── */
+
+.info-popover-trigger#bird-name.guess-hidden {
+  color: var(--white-60);
+  font-style: italic;
+  text-decoration: underline dashed var(--white-30);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
+.info-popover-trigger#bird-name.guess-revealed {
+  animation: guessReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes guessReveal {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+/* ── Life list milestone note ── */
+
+.life-list-milestone {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  color: var(--white-90);
+  font-size: 0.9rem;
+  z-index: 1000;
+  animation: milestoneIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: opacity 0.5s ease;
+}
+
+.life-list-milestone.fade-out {
+  opacity: 0;
+}
+
+@keyframes milestoneIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── "Open BirdTab" offer (newTabMode.js), under the Chrome Tab shortcut ── */
+
+.step-aside-offer {
+  text-align: start;
+  position: fixed;
+  top: 6.5rem;
+  right: 2rem;
+  width: min(320px, calc(100vw - 32px));
+  padding: 20px 20px 18px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  border-top-color: var(--white-15);
+  border-radius: 18px;
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  box-shadow: 0 8px 40px var(--black-40), inset 0 1px 0 var(--white-6);
+  color: var(--white-90);
+  z-index: 1000;
+  animation: reviewSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html[dir="rtl"] .step-aside-offer {
+  right: auto;
+  left: 2rem;
+}
+
+.step-aside-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.step-aside-close:hover {
+  opacity: 1;
+  background: var(--white-8);
+}
+
+.step-aside-title {
+  margin: 0 28px 6px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.step-aside-text,
+.step-aside-pin {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--white-70);
+}
+
+.step-aside-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.step-aside-actions > button {
+  flex: 1;
+}
+
+/* ── Settings: "Open BirdTab" note ── */
+
+.settings-sidebar .new-tab-note {
+  margin-top: 8px;
+}
+
+.settings-sidebar .new-tab-note.needs-pin {
+  color: var(--white-90);
+}
+
+/* ── Your Birds (yourBirds.js): one list of every bird seen; Favorites is a filter ── */
+
+.your-birds-top {
+  padding: 0 var(--modal-spacing) 12px;
+}
+
+.your-birds-count {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.your-birds-count-number {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--white-100);
+}
+
+.your-birds-count-label {
+  font-size: 13px;
+  color: var(--white-60);
+}
+
+.settings-sidebar .your-birds-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0 12px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--white-10);
+  background: var(--white-6);
+  cursor: text;
+}
+
+.your-birds-search:focus-within {
+  border-color: var(--modal-focus-outline);
+}
+
+.your-birds-search img {
+  opacity: 0.6;
+  filter: brightness(0) invert(1);
+}
+
+/* Reloading to show a bird again: hidden until Your Birds is back (yourBirds.js) */
+html.reopen-your-birds body.loaded {
+  opacity: 0;
+}
+
+.settings-sidebar.instant,
+.settings-sidebar.instant .settings-content {
+  transition: none;
+}
+
+.your-birds-footer {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px var(--modal-spacing) 20px;
+}
+
+.your-birds-footer button {
+  white-space: nowrap;
+}
+
+.your-birds-quiz[hidden] {
+  display: none;
+}
+
+.pin-coach-later,
+.pin-coach-done {
+  width: 100%;
+}
+
+.your-birds-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--white-100);
+  font: inherit;
+  font-size: 14px;
+}
+
+.your-birds-search input::placeholder {
+  color: var(--white-40);
+}
+
+.your-birds-filter .segment-count {
+  margin-left: 2px;
+  font-weight: 500;
+  color: var(--white-50);
+}
+
+.your-birds-filter input:checked + span .segment-count {
+  color: var(--white-70);
+}
+
+.your-birds-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bird-card {
+  position: relative;
+  border-radius: 12px;
+  border: 1px solid var(--white-8);
+  background: var(--white-3);
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.bird-card:hover {
+  background: var(--white-8);
+  border-color: var(--white-15);
+}
+
+.bird-card.showing-now {
+  border-color: var(--modal-accent);
+}
+
+.bird-card-show {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 0 0 10px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.bird-card-show:disabled {
+  cursor: default;
+}
+
+.bird-card-show:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+
+.bird-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+.bird-card-image.placeholder {
+  background: var(--white-8);
+}
+
+.bird-card-name {
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--white-90);
+}
+
+.bird-card-meta {
+  padding: 0 10px;
+  min-height: 1.2em;
+  font-size: 11.5px;
+  color: var(--white-50);
+}
+
+.bird-card.showing-now .bird-card-meta {
+  color: var(--white-80);
+}
+
+/* Heart on the photo: always there when it's a favourite, on hover otherwise */
+.bird-card-heart {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: var(--black-40);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--white-100);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+html[dir="rtl"] .bird-card-heart {
+  right: auto;
+  left: 6px;
+}
+
+.bird-card:hover .bird-card-heart,
+.bird-card-heart:focus-visible,
+.bird-card-heart[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.bird-card-heart:hover {
+  transform: scale(1.08);
+}
+
+.bird-card-heart:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 1px;
+}
+
+.bird-card-heart svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.bird-card-heart[aria-pressed="true"] {
+  color: var(--photo-accent);
+}
+
+.bird-card-heart[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.your-birds-empty {
+  padding: 40px 16px;
+  text-align: center;
+}
+
+.your-birds-empty-icon {
+  opacity: 0.45;
+  margin-bottom: 10px;
+}
+
+.your-birds-empty-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white-90);
+}
+
+.your-birds-empty-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--white-60);
+}
+
+.your-birds-empty-text:empty {
+  display: none;
+}
+
+.history-footer[hidden] {
+  display: none;
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .tone-scrim,
+  .tone-scrim-center,
+  .info-panel,
+  .low-distraction-expand,
+  .low-distraction-toggle {
+    transition: none;
+  }
+
+  .favorite-inline-button.just-favorited svg,
+  .info-popover-trigger#bird-name.guess-revealed,
+  .life-list-milestone,
+  .step-aside-offer,
+  .review-prompt {
+    animation: none;
+  }
+}
+
+/* ── Settings, grouped: short sections of one-line rows on cards ── */
+
+.settings-grouped .settings-group + .settings-group {
+  margin-top: 4px;
+}
+
+.settings-grouped .settings-category-title {
+  margin: 22px 0 8px 4px;
+  font-size: 12px;
+}
+
+.settings-grouped .settings-group:first-child .settings-category-title {
+  margin-top: 8px;
+}
+
+.settings-card {
+  border-radius: 14px;
+  background: var(--white-4);
+  border: 1px solid var(--white-8);
+  overflow: hidden;
+}
+
+.settings-grouped .setting {
+  margin: 0;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 0;
+}
+
+.settings-grouped .setting + .setting {
+  border-top: 1px solid var(--white-6);
+}
+
+.settings-grouped .setting:hover {
+  background-color: var(--white-3);
+  border-color: var(--white-6);
+}
+
+.settings-grouped .toggle-container {
+  align-items: center;
+}
+
+.settings-grouped .toggle-text {
+  gap: 2px;
+  min-width: 0;
+}
+
+.settings-grouped .toggle-text .help-text {
+  font-size: 12px;
+}
+
+.settings-grouped .setting-stack > label,
+.settings-grouped .setting-stack > .setting-label-with-icon {
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Region: one line, label and a compact menu. Its help is the row's tooltip; the status
+   line (loading a region, or couldn't) opens below only while there's something to say,
+   by animating its height rather than reserving the space. */
+.settings-grouped .setting-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-grouped .setting-inline > label {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.settings-grouped #modal-region {
+  width: auto;
+  min-width: 0;
+  max-width: 58%;
+  padding: 8px 32px 8px 12px;
+  font-size: 13.5px;
+  text-overflow: ellipsis;
+}
+
+.settings-grouped #modal-region-help {
+  display: none;
+}
+
+.settings-grouped .region-message {
+  min-height: 0;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.settings-grouped .region-message:has(.region-status:not([hidden])) {
+  grid-template-rows: 1fr;
+}
+
+.settings-grouped .region-message > .help-text {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-grouped .region-message {
+    transition: none;
+  }
+}
+
+/* ── Segmented control (New bird) ── */
+
+.segmented {
+  display: flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--white-6);
+  border: 1px solid var(--white-8);
+}
+
+.settings-sidebar .segmented .segment {
+  flex: 1;
+  margin: 0;
+  font-size: inherit;
+  position: relative;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented .segment span {
+  display: block;
+  padding: 7px 4px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white-65);
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.segmented .segment:hover span {
+  color: var(--white-90);
+}
+
+.segmented input:checked + span {
+  background: var(--white-15);
+  color: var(--white-100);
+  box-shadow: 0 1px 2px var(--black-30);
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 1px;
+}
+
+/* ── "Open BirdTab": three picture cards ── */
+
+.mode-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.settings-sidebar .mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 6px 9px;
+  border-radius: 12px;
+  border: 1.5px solid var(--white-10);
+  background: var(--white-3);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.mode-card:hover {
+  border-color: var(--white-25);
+  background: var(--white-6);
+}
+
+.mode-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mode-card.selected,
+.mode-card:has(input:checked) {
+  border-color: var(--modal-accent);
+  background: var(--white-8);
+}
+
+.mode-card:has(input:focus-visible) {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.mode-card-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--white-70);
+}
+
+.mode-card.selected .mode-card-name,
+.mode-card:has(input:checked) .mode-card-name {
+  color: var(--white-100);
+}
+
+.mode-art {
+  width: 100%;
+  max-width: 88px;
+  height: auto;
+}
+
+.mode-art .art-frame { fill: var(--white-6); stroke: var(--white-20); stroke-width: 1.2; }
+.mode-art .art-strip { fill: var(--white-8); }
+.mode-art .art-tab { fill: var(--white-15); }
+.mode-art .art-tab.active { fill: var(--white-30); }
+.mode-art .art-photo { fill: var(--white-12); }
+.mode-art .art-chrome-page { fill: var(--white-10); }
+.mode-art .art-line { fill: var(--white-25); }
+.mode-art .art-line.faint { fill: var(--white-15); }
+.mode-art .art-bird { fill: none; stroke: var(--white-70); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mode-art .art-badge { fill: var(--surface-glass); stroke: var(--white-60); stroke-width: 1.2; }
+.mode-art .art-badge-hands { fill: none; stroke: var(--white-90); stroke-width: 1.3; stroke-linecap: round; }
+.mode-art .art-button { fill: var(--white-30); }
+.mode-art .art-cursor { fill: var(--white-100); stroke: var(--black-60); stroke-width: 0.6; }
+
+.mode-card.selected .art-bird,
+.mode-card.selected .art-badge { stroke: var(--modal-accent); }
+.mode-card.selected .art-button { fill: var(--modal-accent); }
+.mode-card.selected .art-photo { fill: var(--white-15); }
+
+.settings-sidebar .mode-caption,
+.keyword-tip,
+.step-aside-text {
+  text-wrap: pretty;
+}
+
+.settings-sidebar .mode-caption {
+  margin: 10px 2px 0;
+  font-size: 12.5px;
+  min-height: 2.8em;
+}
+
+/* Pinned or not, for the modes where BirdTab steps aside */
+.pin-row[hidden],
+.keyword-tip[hidden] {
+  display: none;
+}
+
+.pin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 9px 10px 9px 12px;
+  border-radius: 10px;
+  background: var(--white-6);
+}
+
+.pin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--white-80);
+}
+
+/* One line; a longer translation is trimmed rather than wrapped */
+.pin-status-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pin-status-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px var(--white-8);
+}
+
+.pin-row.pinned .pin-status-dot {
+  background: var(--green-accent);
+}
+
+.keyword-tip {
+  margin: 8px 2px 0;
+  font-size: 12px;
+  color: var(--modal-text-secondary);
+}
+
+.keyword-tip kbd {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--white-20);
+  border-bottom-width: 2px;
+  background: var(--white-8);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--white-90);
+}
+
+/* ── Pin coach (pinCoach.js) ── */
+
+.pin-coach {
+  position: fixed;
+  inset: 0;
+  /* Above the settings sidebar it's usually opened from */
+  z-index: 50000;
+  background:
+    radial-gradient(circle at calc(100% - 100px) 0, var(--black-30) 0, transparent 260px),
+    var(--black-60);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: pinCoachIn 0.3s ease both;
+}
+
+.pin-coach.closing {
+  animation: pinCoachOut 0.25s ease both;
+}
+
+@keyframes pinCoachIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pinCoachOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Up at Chrome's puzzle-piece button, about 100px in from the window's right edge */
+.pin-coach-arrow {
+  position: absolute;
+  top: 6px;
+  right: 84px;
+  width: 200px;
+  height: 164px;
+  overflow: visible;
+}
+
+.pin-coach-arrow path {
+  fill: none;
+  stroke: var(--white-90);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pin-coach-arrow-line {
+  stroke-dasharray: 7 8;
+  animation: pinArrowFlow 1.2s linear infinite;
+}
+
+.pin-coach-arrow-head {
+  animation: pinArrowNudge 1.6s ease-in-out infinite;
+}
+
+@keyframes pinArrowFlow { to { stroke-dashoffset: -30; } }
+@keyframes pinArrowNudge {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(3px, -4px); }
+}
+
+.pin-coach.pinned .pin-coach-arrow {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pin-coach-card {
+  position: absolute;
+  top: 168px;
+  right: 72px;
+  width: min(360px, calc(100vw - 32px));
+  padding: 22px 22px 18px;
+  border-radius: 20px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-12);
+  border-top-color: var(--white-15);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  box-shadow: 0 16px 60px var(--black-50);
+  color: var(--white-90);
+  text-align: start;
+  animation: reviewSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pin-coach-eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.pin-coach-title {
+  margin: 0 0 16px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--white-100);
+}
+
+/* A small copy of Chrome's toolbar end and extensions menu */
+.pin-coach-mock {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 10px 10px 12px;
+  border-radius: 14px;
+  background: var(--white-6);
+  border: 1px solid var(--white-8);
+}
+
+.pin-mock-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pin-mock-omnibox {
+  flex: 1;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--white-10);
+}
+
+.pin-mock-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.pin-mock-button svg,
+.pin-mock-pin svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--white-80);
+}
+
+.pin-mock-puzzle {
+  animation: pinPulse 3.2s ease-in-out infinite;
+}
+
+.pin-mock-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--white-25);
+}
+
+.pin-mock-dots {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.pin-mock-dots i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--white-50);
+}
+
+.pin-mock-menu {
+  margin: 8px 30px 0 auto;
+  width: 190px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--surface-elevated);
+  box-shadow: 0 6px 18px var(--black-40);
+  animation: pinMenuShow 3.2s ease-in-out infinite;
+  transform-origin: top right;
+}
+
+.pin-mock-menu-title {
+  margin: 0 0 6px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white-60);
+}
+
+.pin-mock-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 4px;
+  border-radius: 6px;
+  background: var(--white-6);
+}
+
+.pin-mock-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--white-90);
+}
+
+.pin-mock-pin {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 50%;
+  animation: pinPulseLate 3.2s ease-in-out infinite;
+}
+
+/* Step 1 (puzzle piece) pulses, then the menu opens and step 2 (the pin) pulses */
+@keyframes pinPulse {
+  0%, 45% { box-shadow: 0 0 0 0 transparent; background: transparent; }
+  10%, 35% { box-shadow: 0 0 0 5px var(--white-15); background: var(--white-20); }
+}
+
+@keyframes pinMenuShow {
+  0%, 38% { opacity: 0.35; transform: scale(0.97); }
+  45%, 95% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.35; transform: scale(0.97); }
+}
+
+@keyframes pinPulseLate {
+  0%, 50% { box-shadow: 0 0 0 0 transparent; background: transparent; }
+  60%, 85% { box-shadow: 0 0 0 4px var(--white-15); background: var(--primary); }
+}
+
+.pin-coach-steps {
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pin-coach-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--white-85, var(--white-80));
+}
+
+.pin-step-number {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--white-12);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--white-100);
+}
+
+.pin-coach-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  color: var(--white-60);
+}
+
+.pin-coach-spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--white-20);
+  border-top-color: var(--white-80);
+  animation: pinSpin 0.9s linear infinite;
+}
+
+@keyframes pinSpin { to { transform: rotate(360deg); } }
+
+.pin-coach-done-view {
+  text-align: center;
+}
+
+.pin-coach-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 4px 0 12px;
+  border-radius: 50%;
+  background: var(--green-accent);
+  animation: favoritePop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pin-coach-check svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: var(--white-100);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pin-coach-text {
+  margin: -8px 0 18px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--white-70);
+}
+
+html[dir="rtl"] .pin-coach-card { right: auto; left: 72px; }
+html[dir="rtl"] .pin-coach-arrow { right: auto; left: 84px; transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-coach,
+  .pin-coach-card,
+  .pin-coach-arrow-line,
+  .pin-coach-arrow-head,
+  .pin-mock-puzzle,
+  .pin-mock-pin,
+  .pin-coach-check {
+    animation: none;
+  }
+
+  .pin-mock-menu {
+    animation: none;
+    opacity: 1;
+  }
 }

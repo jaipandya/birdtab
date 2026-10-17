@@ -451,3 +451,72 @@ async function setPersonalizedUninstallURL() {
 }
 
 log('Background script loaded');
+
+// The "bird" keyword in the address bar (manifest omnibox key, Chrome build): type "bird", a space
+// and a bird's name. Names from the stored manifests are suggested as you type; Enter opens
+// BirdTab on that bird (or a new bird when nothing matches), even when "Open BirdTab" has it
+// step aside for Chrome's new tab page. Chrome does nothing on Enter with no text after the keyword.
+if (chrome.omnibox) {
+  // Chrome and Edge read the description as XML (<dim> for the scientific name); Firefox shows it as plain text
+  const escapeXml = (text) => IS_FIREFOX ? String(text) : String(text).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]));
+  const dim = (text) => (IS_FIREFOX ? `· ${text}` : `<dim>${escapeXml(text)}</dim>`);
+  const uiLang = (chrome.i18n.getUILanguage() || '').toLowerCase();
+  const displayName = (bird) => (uiLang.startsWith('fr') && bird.primaryComName_fr)
+    || (uiLang.startsWith('zh') && bird.primaryComName_cn) || bird.name;
+
+  let omniboxBirds = null;
+  async function birdsForOmnibox() {
+    if (!omniboxBirds) {
+      const region = await getSelectedRegion();
+      const lists = [await getRegionBirds(region).catch(() => [])];
+      if (region !== 'WLD') lists.push(await getRegionBirds('WLD').catch(() => []));
+      const seen = new Set();
+      omniboxBirds = lists.flat().filter((b) => b && !seen.has(b.speciesCode) && seen.add(b.speciesCode));
+    }
+    return omniboxBirds;
+  }
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.region) omniboxBirds = null;
+  });
+
+  async function matchBirds(text, limit = 5) {
+    const query = text.trim().toLowerCase();
+    if (!query) return [];
+    const names = (b) => [b.name, b.primaryComName_fr, b.primaryComName_cn, b.scientificName].filter(Boolean).map((n) => n.toLowerCase());
+    const birds = await birdsForOmnibox();
+    const starts = birds.filter((b) => names(b).some((n) => n.startsWith(query) || n.includes(` ${query}`)));
+    const contains = birds.filter((b) => !starts.includes(b) && names(b).some((n) => n.includes(query)));
+    return [...starts, ...contains].slice(0, limit);
+  }
+
+  chrome.omnibox.setDefaultSuggestion({
+    description: escapeXml(chrome.i18n.getMessage('omniboxSuggestion') || 'BirdTab: type a bird’s name, or anything for a new bird'),
+  });
+  chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
+    try {
+      const birds = await matchBirds(text);
+      suggest(birds.map((b) => ({
+        content: displayName(b),
+        description: `${escapeXml(displayName(b))} ${dim(b.scientificName || '')}`,
+      })));
+    } catch (error) {
+      log(`Omnibox suggestions failed: ${error.message}`);
+    }
+  });
+  chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
+    let bird = null;
+    try {
+      [bird] = await matchBirds(text, 1);
+    } catch (error) {
+      log(`Omnibox lookup failed: ${error.message}`);
+    }
+    // The new tab page shows a pending bird first (the same way History opens one)
+    if (bird) await chrome.storage.local.set({ pendingBirdInfo: bird });
+    const url = chrome.runtime.getURL('index.html?open');
+    if (disposition === 'currentTab') {
+      chrome.tabs.update({ url });
+    } else {
+      chrome.tabs.create({ url, active: disposition === 'newForegroundTab' });
+    }
+  });
+}

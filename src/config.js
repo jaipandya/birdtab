@@ -3,6 +3,12 @@
 // ---------------------------------------------------------------------------
 
 const IS_PRODUCTION_BUILD = process.env.NODE_ENV === 'production';
+const BUILD_BROWSER = process.env.BROWSER;
+// FEATURE_PREVIEW=true (webpack.config.js) turns the Chrome-first features on in Edge and
+// Firefox builds too, where each one can run, to try them before porting. Never for a release.
+const FEATURE_PREVIEW = process.env.FEATURE_PREVIEW_BUILD === true;
+// A feature runs on the browsers it supports: Chrome now, the others in a preview build
+const featureOn = (...supported) => supported.includes(BUILD_BROWSER) && (BUILD_BROWSER === 'chrome' || FEATURE_PREVIEW);
 
 // Production media host. Dev builds can point at a local media server by
 // setting MEDIA_BASE_URL in .env.local (e.g. MEDIA_BASE_URL=http://localhost:8787).
@@ -115,10 +121,29 @@ export const CONFIG = {
     timerSetupMinutes: 5,
     timerSetupSeconds: 0,
     timerAlarmEnabled: false,
+    newTabMode: 'every',
+    birdRotation: 'every',
+    quickGuess: false,
   },
 
   // Keys that should remain in sync storage (cross-device)
-  SYNC_STORAGE_KEYS: ['onboardingComplete', 'featureTourVersion', 'seenFeatures']
+  SYNC_STORAGE_KEYS: ['onboardingComplete', 'featureTourVersion', 'seenFeatures', 'favoriteSpecies'],
+
+  // Features being tried on Chrome first. Porting one to Edge or Firefox means
+  // turning its flag on here (and checking its browser-specific parts).
+  FEATURES: {
+    // "Open BirdTab": every tab / now and then / only from the toolbar button (boot.js).
+    // Not Firefox: extensions can't open its own new tab page to step aside to.
+    newTabMode: featureOn('chrome', 'edge'),
+    // "New bird": every tab / every hour / once a day
+    birdRotation: featureOn('chrome', 'edge', 'firefox'),
+    favorites: featureOn('chrome', 'edge', 'firefox'),
+    // One list of every bird seen, with Favorites as a filter (replaces the History panel)
+    yourBirds: featureOn('chrome', 'edge', 'firefox'),
+    quickGuess: featureOn('chrome', 'edge', 'firefox'),
+    // Accent colour and text shading taken from the photo
+    photoTone: featureOn('chrome', 'edge', 'firefox'),
+  },
 };
 
 export default CONFIG;

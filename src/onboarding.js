@@ -1,5 +1,6 @@
 import './tokens.css';
 import './onboarding.css';
+import './buttons.css';
 import { localizeHtml } from './i18n.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';

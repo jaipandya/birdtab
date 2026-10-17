@@ -1296,5 +1296,273 @@
   "creditInfoAlt": {
     "message": "الحقوق والتراخيص",
     "description": "Alt text for the credit info trigger icon"
+  },
+  "settingsCategoryNewTab": {
+    "message": "علامة تبويب جديدة",
+    "description": "Settings category for how new tabs behave"
+  },
+  "newTabModeLabel": {
+    "message": "فتح BirdTab",
+    "description": "Setting: when BirdTab opens instead of Chrome's own new tab page"
+  },
+  "newTabModeEvery": {
+    "message": "كل علامة تبويب",
+    "description": "Open BirdTab choice (short): on every new tab"
+  },
+  "newTabModeHourly": {
+    "message": "بين حين وآخر",
+    "description": "Open BirdTab choice (short): the first new tab after an hour away"
+  },
+  "newTabModeButton": {
+    "message": "عندما أطلب",
+    "description": "Open BirdTab choice (short): only from the toolbar button"
+  },
+  "newTabModeEveryHelp": {
+    "message": "طائر في كل علامة تبويب جديدة.",
+    "description": "One-line caption for Open BirdTab: every tab"
+  },
+  "newTabModeHourlyHelp": {
+    "message": "طائر بعد غياب ساعة، وصفحة Chrome في بقية الوقت.",
+    "description": "One-line caption for Open BirdTab: now and then"
+  },
+  "newTabModeButtonHelp": {
+    "message": "صفحة Chrome في علامات التبويب الجديدة. انقر على زر BirdTab لرؤية طائر.",
+    "description": "One-line caption for Open BirdTab: when I ask"
+  },
+  "newTabModePinned": {
+    "message": "مثبّت في شريط الأدوات",
+    "description": "Status: BirdTab's toolbar button is pinned"
+  },
+  "newTabModeNotPinned": {
+    "message": "لم يُثبَّت بعد",
+    "description": "Status: BirdTab's toolbar button isn't pinned"
+  },
+  "newTabModeKeyword": {
+    "message": "أو اكتب $1 ومسافة واسم طائر في شريط العناوين",
+    "description": "Tip; $1 is the keyword 'bird' shown as a key"
+  },
+  "stepAsideOfferTitle": {
+    "message": "هل تفضّل صفحة علامة التبويب الجديدة في Chrome؟",
+    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
+  },
+  "stepAsideOfferText": {
+    "message": "يمكن لـ BirdTab أن يتنحى جانبًا ولا يُفتح إلا عندما تريد رؤية طائر.",
+    "description": "Body of the card offering to step aside for Chrome's new tab page"
+  },
+  "birdRotationLabel": {
+    "message": "طائر جديد",
+    "description": "Setting: how often the bird changes"
+  },
+  "birdRotationEvery": {
+    "message": "كل علامة تبويب",
+    "description": "New bird option (short): every new tab"
+  },
+  "birdRotationHourly": {
+    "message": "كل ساعة",
+    "description": "New bird option (short): every hour"
+  },
+  "birdRotationDaily": {
+    "message": "كل يوم",
+    "description": "New bird option (short): once a day"
+  },
+  "birdRotationHelp": {
+    "message": "زر التحديث يأتي دائمًا بطائر جديد.",
+    "description": "Help text for Change the bird"
+  },
+  "quickGuessLabel": {
+    "message": "خمّن الطائر",
+    "description": "Setting: hide the bird's name until clicked"
+  },
+  "quickGuessHelp": {
+    "message": "إخفاء اسم الطائر حتى تنقر عليه، لتصبح كل علامة تبويب جديدة اختبارًا صغيرًا.",
+    "description": "Help text for Guess the Bird"
+  },
+  "quickGuessPrompt": {
+    "message": "ما هذا الطائر؟",
+    "description": "Shown in place of the bird's name in Guess the Bird mode"
+  },
+  "quickGuessReveal": {
+    "message": "إظهار اسم الطائر",
+    "description": "Accessible label for revealing the hidden bird name"
+  },
+  "favoriteAdd": {
+    "message": "إضافة إلى المفضلة",
+    "description": "Heart button: add the bird to favorites"
+  },
+  "favoriteRemove": {
+    "message": "إزالة من المفضلة",
+    "description": "Heart button: remove the bird from favorites"
+  },
+  "favoritesTitle": {
+    "message": "المفضلة",
+    "description": "Favorites tab and menu item"
+  },
+  "yourBirdsTitle": {
+    "message": "طيورك",
+    "description": "Title of the sidebar with History, Favorites and Life List"
+  },
+  "emptyFavoritesTitle": {
+    "message": "لا توجد طيور مفضلة بعد",
+    "description": "Empty state title for favorites"
+  },
+  "emptyFavoritesSubtitle": {
+    "message": "انقر على القلب أسفل اسم الطائر، أو على أي طائر هنا.",
+    "description": "Empty Favorites: how to add one"
+  },
+  "omniboxSuggestion": {
+    "message": "BirdTab: اكتب اسم طائر، أو أي شيء لرؤية طائر جديد",
+    "description": "Address bar suggestion after typing the 'bird' keyword"
+  },
+  "settingsGroupBirds": {
+    "message": "الطيور",
+    "description": "Settings group: region, how often the bird changes, guess mode"
+  },
+  "settingsGroupSound": {
+    "message": "الصوت",
+    "description": "Settings group: auto-play and quiet hours"
+  },
+  "settingsGroupPage": {
+    "message": "على الصفحة",
+    "description": "Settings group: clock, search, Google apps"
+  },
+  "quickGuessShort": {
+    "message": "إخفاء الاسم حتى تنقر عليه",
+    "description": "One-line hint under Guess the Bird"
+  },
+  "pinShowMe": {
+    "message": "أرني كيف",
+    "description": "Button that opens the pinning guide"
+  },
+  "pinCoachEyebrow": {
+    "message": "خطوة سريعة واحدة",
+    "description": "Small heading above the pinning guide"
+  },
+  "pinCoachTitle": {
+    "message": "ثبّت BirdTab في شريط الأدوات",
+    "description": "Pinning guide title"
+  },
+  "pinCoachExtensions": {
+    "message": "الإضافات",
+    "description": "Title of Chrome's extensions menu, as Chrome shows it in this language"
+  },
+  "pinCoachStep1": {
+    "message": "انقر على قطعة الأحجية بجوار شريط العناوين",
+    "description": "Pinning guide step 1"
+  },
+  "pinCoachStep2": {
+    "message": "انقر على الدبوس بجوار BirdTab",
+    "description": "Pinning guide step 2"
+  },
+  "pinCoachWaiting": {
+    "message": "في انتظار التثبيت…",
+    "description": "Pinning guide: waiting for the user to pin"
+  },
+  "pinCoachLater": {
+    "message": "لاحقًا",
+    "description": "Pinning guide: close without pinning"
+  },
+  "pinCoachDoneTitle": {
+    "message": "تم التثبيت!",
+    "description": "Pinning guide: success title"
+  },
+  "pinCoachDoneText": {
+    "message": "انقر على زر BirdTab متى أردت رؤية طائر.",
+    "description": "Pinning guide: success text"
+  },
+  "pinCoachDone": {
+    "message": "تم",
+    "description": "Pinning guide: close after success"
+  },
+  "yourBirdsCountLabel": {
+    "message": "طيور مختلفة شاهدتها",
+    "description": "Label under the number of different birds seen (stat label; the number is shown separately above it)"
+  },
+  "yourBirdsSearch": {
+    "message": "ابحث عن طائر",
+    "description": "Search box placeholder in Your Birds"
+  },
+  "yourBirdsFilterAll": {
+    "message": "الكل",
+    "description": "Your Birds filter: every bird seen"
+  },
+  "yourBirdsShowingNow": {
+    "message": "معروض الآن",
+    "description": "On the card of the bird currently on the page"
+  },
+  "yourBirdsShowAgain": {
+    "message": "عرض $1 مرة أخرى",
+    "description": "Accessible label: show this bird ($1) on the page again"
+  },
+  "yourBirdsShowAgainHint": {
+    "message": "عرض هذا الطائر مرة أخرى",
+    "description": "Tooltip on a bird card"
+  },
+  "favoriteAddNamed": {
+    "message": "إضافة $1 إلى المفضلة",
+    "description": "Accessible label: add $1 to favorites"
+  },
+  "favoriteRemoveNamed": {
+    "message": "إزالة $1 من المفضلة",
+    "description": "Accessible label: remove $1 from favorites"
+  },
+  "yourBirdsEmptyTitle": {
+    "message": "لا توجد طيور بعد",
+    "description": "Empty Your Birds list: title"
+  },
+  "yourBirdsEmptyText": {
+    "message": "يُحفظ هنا كل طائر تراه في علامة تبويب جديدة.",
+    "description": "Empty Your Birds list: text"
+  },
+  "yourBirdsNoMatch": {
+    "message": "لا توجد طيور تطابق \"$1\"",
+    "description": "Search found nothing; $1 is the search text"
+  },
+  "yourBirdsClear": {
+    "message": "مسح الطيور التي شاهدتها",
+    "description": "Button: clear the list of birds seen"
+  },
+  "yourBirdsClearTitle": {
+    "message": "مسح الطيور التي شاهدتها؟",
+    "description": "Confirmation title for clearing the birds seen"
+  },
+  "yourBirdsClearText": {
+    "message": "ستُزال من هذه القائمة ويبدأ العدّ من جديد. تبقى المفضلة.",
+    "description": "Confirmation text for clearing the birds seen"
+  },
+  "yourBirdsClearConfirm": {
+    "message": "مسح",
+    "description": "Confirmation button for clearing the birds seen"
+  },
+  "yourBirdsMilestone": {
+    "message": "شاهدت $1 طائرًا مختلفًا!",
+    "description": "Note when the number of different birds seen ($1) reaches a round number"
+  },
+  "tourOptionsMenuDescriptionYourBirds": {
+    "message": "الإعدادات وطيورك واختبار الطيور كلها في هذه القائمة.",
+    "description": "Feature tour: what the options menu holds"
+  },
+  "yourBirdsQuiz": {
+    "message": "اختبرني في هذه الطيور",
+    "description": "Button in Your Birds: start a quiz on the birds listed"
+  },
+  "yourBirdsQuizNeedsMore": {
+    "message": "يلزم $1 طيور على الأقل",
+    "description": "Tooltip when there are too few birds for a quiz; $1 is the minimum"
+  },
+  "favoritesClear": {
+    "message": "مسح المفضلة",
+    "description": "Button: remove every favorite"
+  },
+  "favoritesClearTitle": {
+    "message": "مسح كل المفضلة؟",
+    "description": "Confirmation title for clearing favorites"
+  },
+  "favoritesClearText": {
+    "message": "ستُزال من كل أجهزتك. تبقى الطيور التي شاهدتها.",
+    "description": "Confirmation text for clearing favorites (they sync across computers)"
+  },
+  "pinCoachStep2Edge": {
+    "message": "انقر على أيقونة العين بجوار BirdTab لإظهاره في شريط الأدوات",
+    "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
   }
 }

@@ -111,6 +111,11 @@ html[dir="rtl"] .quiz-close-btn {
   transition: width 0.3s ease;
 }
 
+/* The photo's accent when photoTone.js has read one (Chrome) */
+html.photo-tone .quiz-progress-fill {
+  background: var(--photo-accent);
+}
+
 .quiz-meta {
   display: flex;
   justify-content: center;

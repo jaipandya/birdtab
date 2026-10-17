@@ -5,6 +5,10 @@
   <meta charset="utf-8">
   <title data-i18n="pageTitle">BirdTab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <% if (htmlWebpackPlugin.options.withBoot) { %>
+  <%/* Before anything paints: step aside for Chrome's own new tab page when "Open BirdTab" says so */%>
+  <script src="boot.js"></script>
+  <% } %>
   <style>
     :root {
       --initial-bg: #000;

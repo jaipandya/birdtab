@@ -25,6 +25,7 @@
 
 import './featureTour.css';
 import { log } from './logger.js';
+import CONFIG from './config.js';
 import { trackTourCompleted } from './analytics.js';
 import { html, setHtml } from './utils/html.js';
 
@@ -87,7 +88,7 @@ const TOUR_STEPS = [
     targetSelector: '#settings-button',
     icon: 'images/svg/settings.svg',
     titleKey: 'tourOptionsMenuTitle',
-    descriptionKey: 'tourOptionsMenuDescription',
+    descriptionKey: CONFIG.FEATURES.yourBirds ? 'tourOptionsMenuDescriptionYourBirds' : 'tourOptionsMenuDescription',
     fallbackTitle: 'Quick Menu',
     fallbackDescription: 'Access settings, viewing history, and bird quiz from this menu. Click to explore your options!',
     position: 'top'

@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Buttons: one look per purpose, wherever they appear
+   Loaded last (script.js, onboarding.js) so it settles the many button
+   classes that grew up separately. Colours are in tokens.css (--btn-*).
+
+   Primary      the one main action in a card or dialog
+   Secondary    other actions
+   Quiet        dismissals: "Maybe later", "Skip tour"
+   Destructive  clearing things
+   Sizes        small (inline), medium (default), large (onboarding, tour start)
+   ========================================================================== */
+
+/* ── Shared shape ── */
+.review-btn,
+.step-aside-btn,
+.tour-btn,
+.tour-link-btn,
+.pin-show-me,
+.pin-coach-later,
+.pin-coach-done,
+.your-birds-quiz,
+.shortcut-btn,
+.confirmation-dialog-btn,
+.error-modal-btn,
+.quiz-btn.primary,
+.quiz-btn.secondary,
+#quiz-next,
+.permission-dialog-btn,
+.chrome-footer-notification-dismiss,
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: var(--btn-radius);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.review-btn:active,
+.step-aside-btn:active,
+.tour-btn:active,
+.pin-show-me:active,
+.pin-coach-later:active,
+.pin-coach-done:active,
+.your-birds-quiz:active,
+.shortcut-btn:active,
+.confirmation-dialog-btn:active,
+.error-modal-btn:active,
+.quiz-btn.primary:active,
+.quiz-btn.secondary:active,
+#quiz-next:active,
+.permission-dialog-btn:active,
+.chrome-footer-notification-dismiss:active,
+.start-btn:active {
+  transform: scale(0.98);
+}
+
+.review-btn:focus-visible,
+.step-aside-btn:focus-visible,
+.tour-btn:focus-visible,
+.tour-link-btn:focus-visible,
+.pin-show-me:focus-visible,
+.pin-coach-later:focus-visible,
+.pin-coach-done:focus-visible,
+.your-birds-quiz:focus-visible,
+.shortcut-btn:focus-visible,
+.confirmation-dialog-btn:focus-visible,
+.error-modal-btn:focus-visible,
+.quiz-btn.primary:focus-visible,
+.quiz-btn.secondary:focus-visible,
+#quiz-next:focus-visible,
+.permission-dialog-btn:focus-visible,
+.chrome-footer-notification-dismiss:focus-visible,
+.start-btn:focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+/* ── Sizes ── */
+.pin-show-me,
+.step-aside-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.tour-btn-large,
+.start-btn {
+  min-height: 46px;
+  padding: 0 22px;
+  font-size: 15px;
+  border-radius: var(--btn-radius-lg);
+}
+
+/* ── Primary ── */
+.review-btn.primary,
+.step-aside-btn.primary,
+.tour-btn.primary,
+.pin-show-me,
+.pin-coach-done,
+.your-birds-quiz,
+.shortcut-btn.primary,
+.confirmation-dialog-btn.primary,
+.error-modal-btn.primary,
+.quiz-btn.primary,
+#quiz-next,
+.permission-dialog-btn-confirm,
+.chrome-footer-notification-dismiss,
+.start-btn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-color: var(--btn-primary-border);
+  box-shadow: var(--btn-primary-highlight);
+}
+
+.review-btn.primary:hover,
+.step-aside-btn.primary:hover,
+.tour-btn.primary:hover,
+.pin-show-me:hover,
+.pin-coach-done:hover,
+.your-birds-quiz:hover:not(:disabled),
+.shortcut-btn.primary:hover,
+.confirmation-dialog-btn.primary:hover,
+.error-modal-btn.primary:hover,
+.quiz-btn.primary:hover,
+#quiz-next:hover:not(:disabled),
+.permission-dialog-btn-confirm:hover,
+.chrome-footer-notification-dismiss:hover,
+.start-btn:hover {
+  background: var(--btn-primary-bg-hover);
+  color: var(--btn-primary-fg);
+  box-shadow: var(--btn-primary-highlight);
+  transform: none;
+}
+
+/* Icons drawn white in the SVG files: the same warm ink as the label on a primary button
+   (sepia turns the black into a dark brown that matches --btn-primary-fg) */
+.error-modal-btn.primary img,
+.your-birds-quiz img,
+.start-btn img {
+  filter: brightness(0) sepia(1) saturate(3) brightness(0.32);
+  opacity: 0.9;
+}
+
+.start-btn svg {
+  stroke: currentColor;
+}
+
+/* ── Secondary ── */
+.step-aside-btn:not(.primary),
+.tour-btn.secondary,
+.pin-coach-later,
+.shortcut-btn.secondary,
+.confirmation-dialog-btn.secondary,
+.error-modal-btn.secondary,
+.quiz-btn.secondary,
+.permission-dialog-btn-cancel {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-fg);
+  border-color: var(--btn-secondary-border);
+  box-shadow: none;
+}
+
+.step-aside-btn:not(.primary):hover,
+.tour-btn.secondary:hover,
+.pin-coach-later:hover,
+.shortcut-btn.secondary:hover,
+.confirmation-dialog-btn.secondary:hover,
+.error-modal-btn.secondary:hover,
+.quiz-btn.secondary:hover,
+.permission-dialog-btn-cancel:hover {
+  background: var(--btn-secondary-bg-hover);
+  color: var(--btn-secondary-fg);
+  border-color: var(--btn-secondary-border);
+  box-shadow: none;
+  transform: none;
+}
+
+.error-modal-btn.secondary img {
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+
+/* ── Quiet ── */
+.review-btn.ghost,
+.tour-link-btn {
+  min-height: 32px;
+  padding: 0 10px;
+  background: transparent;
+  border-color: transparent;
+  color: var(--btn-quiet-fg);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.review-btn.ghost:hover,
+.tour-link-btn:hover {
+  background: var(--btn-quiet-bg-hover);
+  color: var(--btn-quiet-fg-hover);
+  text-decoration: none;
+}
+
+/* ── Destructive ── */
+/* Where deleting is the main action (the confirmation): soft red, filled */
+.confirmation-dialog-btn.primary.danger {
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-fg);
+  border-color: var(--btn-danger-border);
+  box-shadow: none;
+}
+
+.confirmation-dialog-btn.primary.danger:hover {
+  background: var(--btn-danger-bg-hover);
+  color: var(--btn-danger-fg);
+  border-color: var(--btn-danger-border);
+  box-shadow: none;
+}
+
+/* Beside the main action (Your Birds, History): red text, filled only on hover, so it never competes */
+#your-birds-clear,
+#clear-history-btn {
+  background: transparent;
+  color: var(--btn-danger-fg);
+  border-color: transparent;
+  font-weight: 500;
+}
+
+#your-birds-clear:hover,
+#clear-history-btn:hover {
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-fg);
+  border-color: var(--btn-danger-border);
+}
+
+/* ── Disabled ── */
+.your-birds-quiz:disabled,
+#quiz-next:disabled,
+.quiz-btn.primary:disabled,
+.shortcut-btn:disabled,
+.confirmation-dialog-btn:disabled {
+  background: var(--white-8);
+  color: var(--white-40);
+  border-color: transparent;
+  cursor: default;
+  transform: none;
+}
+
+.your-birds-quiz:disabled img {
+  filter: brightness(0) invert(1);
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-btn, .step-aside-btn, .tour-btn, .pin-show-me, .pin-coach-later, .pin-coach-done, .your-birds-quiz,
+  .shortcut-btn, .confirmation-dialog-btn, .error-modal-btn, .quiz-btn.primary, .quiz-btn.secondary, #quiz-next,
+  .permission-dialog-btn, .chrome-footer-notification-dismiss, .start-btn {
+    transition: none;
+  }
+}

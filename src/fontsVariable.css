@@ -1,0 +1,11 @@
+/* Inter 4.1, one variable font for every weight from 200 to 700 (Chrome build).
+   Subset to the characters of the static files it replaces: Latin, Latin Extended,
+   Cyrillic and punctuation. Its optical size axis gives large text (bird name,
+   clock) Inter Display's tighter shapes automatically. Licence: fonts/Inter-LICENSE.txt */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('./fonts/InterVariable.woff2') format('woff2');
+}
