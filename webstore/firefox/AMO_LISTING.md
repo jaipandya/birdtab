@@ -43,11 +43,13 @@ see the English listing.
 - Icon: the BirdTab icon from the manifest (unchanged).
 - Screenshots: one set for all languages. AMO does not allow per-language
   images, only per-language captions.
-  - Uploaded: `extension/screenshots/firefox/amo/feature-image-1..5.jpg`
-    (1280x800, English).
+  - Files: `extension/screenshots/firefox/amo/feature-image-1..5.jpg`
+    (1280x800, English). Regenerated on 2026-10-17 to match 2.1.2 (new birds,
+    current info panel and quiz); upload them to replace the 2026-10-15 set.
   - Source design: `birdtab-marketing/pencil-documents/birdtab-marketing-edge.pen`,
-    frames "Firefox <Language>" (copies of the Edge frames with a Firefox
-    eyebrow and the Firefox logo in the mock browser bar).
+    frames "Firefox · <Language>" (copies of the Edge frames with a Firefox
+    eyebrow and no top-right shortcut, which Firefox doesn't have). How to
+    update and re-export: `birdtab-marketing/pencil-documents/store-screenshots/README.md`.
   - Exports for every language: `birdtab-marketing/firefox/light-1280x800-png/<Language>/`
     and `.../light-1280x800/<Language>/` (JPG). Only English is used on AMO.
     Dark variants and promo tiles were not made for Firefox: AMO has no slot
