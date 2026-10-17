@@ -13,7 +13,7 @@ CARACTERÍSTICAS PRINCIPALES
 - Datos fascinantes sobre aves - comportamiento, hábitat y estado de conservación
 - Aves de tu país - elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo
 - Quiz interactivo de identificación de aves - pon a prueba tus conocimientos y comparte resultados
-- Historial de observación - registra cada ave que has descubierto
+- Tus aves - todas las aves que has visto, con favoritas y un quiz con tus propias aves
 - Reloj y temporizador - mantén el enfoque mientras disfrutas de la naturaleza
 - Herramientas de productividad integradas - buscador, accesos directos y más
 - Funciona sin conexión - disfruta de tus aves incluso sin internet
@@ -35,6 +35,7 @@ PERFECTO PARA
 
 NOVEDADES
 
+2.2.0 - Tus aves: todas las aves que has visto en un solo lugar, con favoritas, búsqueda y un quiz con tus propias aves. Elige cuándo se abre BirdTab y cada cuánto cambia el ave, prueba Adivina el ave y escribe «bird» en la barra de direcciones para encontrar cualquier ave. Además, ajustes más sencillos, botones más claros y texto más legible sobre fotos claras.
 2.1.1 - Los créditos de fotos y sonidos ahora muestran siempre correctamente el nombre del autor y la fecha.
 2.1.0 - Aves para cada país: elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo. Además, mejor soporte offline, una primera pestaña más rápida y mejoras para teclado y lectores de pantalla.
 2.0.0 - Fotos en alta resolución, regiones internacionales, reloj, temporizador, soporte offline mejorado y una experiencia renovada.

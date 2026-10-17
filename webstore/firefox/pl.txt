@@ -51,6 +51,7 @@ Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w 
 
 **Co nowego**
 
+2.2.0 - Przejrzystszy wygląd: prostsze ustawienia i czytelniejsze przyciski.
 2.1.2 - BirdTab jest już dostępny dla Firefoksa.
 
 Pełny dziennik zmian: https://birdtab.app/changelog

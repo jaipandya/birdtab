@@ -55,6 +55,7 @@ Click the Microsoft Edge icon in the top corner of any BirdTab tab.
 
 WHAT'S NEW
 
+2.2.0 - A cleaner look: simpler settings, clearer buttons, and photographers' names with special characters now show correctly.
 2.1.1 - Photo and sound credits now always show the photographer's name and the date correctly.
 2.1.0 - Birds for every country: choose from 250+ countries and regions, or the World's 500 most common birds. Plus better offline support, a faster first tab, and keyboard and screen reader improvements.
 2.0.3 - Minor fixes in error tracking

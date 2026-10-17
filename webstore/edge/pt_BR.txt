@@ -55,6 +55,7 @@ Clique no ícone do Microsoft Edge no canto superior de qualquer aba do BirdTab.
 
 NOVIDADES
 
+2.2.0 - Um visual mais limpo: configurações mais simples, botões mais claros, e nomes de autores com caracteres especiais agora aparecem corretamente.
 2.1.1 - Os créditos de fotos e sons agora sempre mostram corretamente o nome do autor e a data.
 2.1.0 - Aves de cada país: escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo. Além disso, suporte offline melhor, primeira aba mais rápida e melhorias para teclado e leitores de tela.
 2.0.0 - Fotos em alta resolução, regiões internacionais, relógio, temporizador, suporte offline aprimorado e uma experiência renovada.

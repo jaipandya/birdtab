@@ -51,6 +51,7 @@ BirdTab 会把 Firefox 新标签页替换为一张高清鸟类照片。每次打
 
 **更新日志**
 
+2.2.0 - 更简洁的外观：设置更简单，按钮更清晰。
 2.1.2 - BirdTab 现已支持 Firefox。
 
 完整更新日志: https://birdtab.app/changelog

@@ -51,6 +51,7 @@ DESCRIPTION
 
 **ما الجديد**
 
+2.2.0 - مظهر أنظف: إعدادات أبسط وأزرار أوضح.
 2.1.2 - أصبح BirdTab متاحًا الآن على Firefox.
 
 سجل التغييرات الكامل: https://birdtab.app/changelog

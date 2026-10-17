@@ -51,6 +51,7 @@ Elige entre más de 250 países y regiones para ver las aves que viven cerca de 
 
 **Novedades**
 
+2.2.0 - Un aspecto más limpio: ajustes más sencillos y botones más claros.
 2.1.2 - BirdTab ya está disponible para Firefox.
 
 Historial completo: https://birdtab.app/changelog

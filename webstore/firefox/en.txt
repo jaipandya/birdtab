@@ -73,6 +73,7 @@ Choose from 250+ countries and regions to see the birds found near you, or pick 
 
 **What's new**
 
+2.2.0 - A cleaner look: simpler settings and clearer buttons.
 2.1.2 - BirdTab is now available for Firefox.
 
 Full changelog: https://birdtab.app/changelog

@@ -55,6 +55,7 @@ Haz clic en el icono de Microsoft Edge en la esquina superior de cualquier pesta
 
 NOVEDADES
 
+2.2.0 - Un aspecto más limpio: ajustes más sencillos, botones más claros, y los nombres de autores con caracteres especiales ahora se muestran correctamente.
 2.1.1 - Los créditos de fotos y sonidos ahora muestran siempre correctamente el nombre del autor y la fecha.
 2.1.0 - Aves para cada país: elige entre más de 250 países y regiones, o las 500 aves más comunes del mundo. Además, mejor soporte offline, una primera pestaña más rápida y mejoras para teclado y lectores de pantalla.
 2.0.0 - Fotos en alta resolución, regiones internacionales, reloj, temporizador, soporte offline mejorado y una experiencia renovada.
