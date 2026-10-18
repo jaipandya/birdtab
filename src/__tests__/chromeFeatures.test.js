@@ -76,3 +76,26 @@ describe('photoTone.analysePixels', () => {
     expect(lightness).toBeLessThan(0.72);
   });
 });
+
+describe('CONFIG.FEATURES per browser build', () => {
+  const featuresFor = (browser) => {
+    const saved = process.env.BROWSER;
+    process.env.BROWSER = browser;
+    let features;
+    jest.isolateModules(() => { features = require('../config.js').default.FEATURES; });
+    process.env.BROWSER = saved;
+    return features;
+  };
+
+  test('Chrome and Edge get every feature', () => {
+    for (const browser of ['chrome', 'edge']) {
+      expect(Object.values(featuresFor(browser)).every(Boolean)).toBe(true);
+    }
+  });
+
+  test('Firefox gets every feature except Open BirdTab, which needs about:newtab', () => {
+    const { newTabMode, ...rest } = featuresFor('firefox');
+    expect(newTabMode).toBe(false);
+    expect(Object.values(rest).every(Boolean)).toBe(true);
+  });
+});

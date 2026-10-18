@@ -1,5 +1,5 @@
 /**
- * Colour and shading from the photo (Chrome, CONFIG.FEATURES.photoTone)
+ * Colour and shading from the photo (CONFIG.FEATURES.photoTone)
  *
  * Once the photo is on screen, a 64×40 copy of it gives:
  *   --photo-accent   the photo's most colourful hue, at a lightness that suits the dark

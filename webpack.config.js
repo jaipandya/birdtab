@@ -35,15 +35,9 @@ module.exports = (env, argv) => {
   const isEdge = browser === 'edge';
   const isFirefox = browser === 'firefox';
   const isChrome = browser === 'chrome';
-  // FEATURE_PREVIEW=true: the Chrome-first features (CONFIG.FEATURES) in Edge/Firefox builds too
-  const featurePreview = process.env.FEATURE_PREVIEW === 'true';
-  if (featurePreview && isProduction) {
-    console.warn('\n⚠️  FEATURE_PREVIEW is set: this production build has features not yet released for ' + browser + '. Do not upload it.\n');
-  }
-  const previewing = isChrome || featurePreview;
-  // "Open BirdTab" steps aside for the browser's own new tab page: Chrome, and Edge in a preview.
+  // "Open BirdTab" steps aside for the browser's own new tab page (CONFIG.FEATURES.newTabMode).
   // Firefox doesn't let extensions open about:newtab.
-  const stepsAside = isChrome || (featurePreview && isEdge);
+  const stepsAside = !isFirefox;
   const outputDir = `${isProduction ? 'dist' : 'dev'}-${browser}`;
 
   // Load environment-specific .env file
@@ -103,10 +97,7 @@ module.exports = (env, argv) => {
         }
 
         // Typing "bird" and a bird's name in the address bar opens BirdTab on that bird
-        // (Chrome; Edge and Firefox in a preview)
-        if (previewing) {
-          manifest.omnibox = { keyword: 'bird' };
-        }
+        manifest.omnibox = { keyword: 'bird' };
 
         // Firefox MV3 runs the background as an event page, has no
         // externally_connectable, and needs a fixed add-on ID (storage.sync
@@ -209,9 +200,7 @@ module.exports = (env, argv) => {
         : content,
     });
   }
-  if (previewing) {
-    copyPatterns.push({ from: 'src/fonts/Inter-LICENSE.txt', to: 'fonts/Inter-LICENSE.txt' });
-  }
+  copyPatterns.push({ from: 'src/fonts/Inter-LICENSE.txt', to: 'fonts/Inter-LICENSE.txt' });
 
   if (isFirefox) {
     copyPatterns.push({ from: 'src/firefox-assets', to: 'images/firefox' });
@@ -314,7 +303,6 @@ module.exports = (env, argv) => {
       }),
       new DefinePlugin({
         'process.env.BROWSER': JSON.stringify(browser),
-        'process.env.FEATURE_PREVIEW_BUILD': JSON.stringify(featurePreview),
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
         'process.env.SENTRY_ENVIRONMENT': JSON.stringify(isProduction ? 'production' : 'development'),
       }),
@@ -380,11 +368,6 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.js', '.css'],
-      alias: {
-        // Chrome ships one variable Inter (every weight, optical sizes); the others keep
-        // the two static weights until the variable font is ported to them
-        'birdtab-fonts.css$': path.resolve(__dirname, previewing ? 'src/fontsVariable.css' : 'src/fontsStatic.css'),
-      },
     },
   };
 };

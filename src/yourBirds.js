@@ -1,10 +1,10 @@
 /**
- * Your Birds (Chrome, CONFIG.FEATURES.yourBirds)
+ * Your Birds (CONFIG.FEATURES.yourBirds)
  *
  * One place for the birds you've met on new tabs: each species once, most recently
  * seen first, with how many different birds you've seen so far. Favorites is a
  * filter of the same list, and any card can be shown again or (un)favourited in place.
- * Replaces the viewing history panel on Chrome (historyModal.js keeps it elsewhere).
+ * Replaces the viewing history panel (historyModal.js keeps it when the flag is off).
  */
 
 import { html, setHtml, insertHtml } from './utils/html.js';

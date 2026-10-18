@@ -852,7 +852,7 @@ class SettingsSidebar {
       });
     }
 
-    // Chrome-first features: show each one's states on demand
+    // The CONFIG.FEATURES features: show each one's states on demand
     const status = document.getElementById('debug-status');
     const done = (text) => { if (status) status.textContent = text; };
     const actions = {

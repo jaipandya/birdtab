@@ -1,5 +1,5 @@
 /**
- * The birds you've seen (Chrome, CONFIG.FEATURES.yourBirds)
+ * The birds you've seen (CONFIG.FEATURES.yourBirds)
  *
  * Every species BirdTab has shown, once each, with when it was first and last
  * seen: the list behind "Your Birds". Each species has its own key in

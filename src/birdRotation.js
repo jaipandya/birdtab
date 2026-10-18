@@ -1,5 +1,5 @@
 /**
- * "Change the bird" (Chrome, CONFIG.FEATURES.birdRotation): a new bird on every
+ * "Change the bird" (CONFIG.FEATURES.birdRotation): a new bird on every
  * new tab (default), or the same bird for an hour, or for the day.
  *
  * A held bird is shown again as-is: it isn't taken from the ready queue, added

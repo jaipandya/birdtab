@@ -1,5 +1,5 @@
 import './tokens.css';
-import 'birdtab-fonts.css';
+import './fontsVariable.css';
 import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState, getQuietHoursText } from './quietHours.js';

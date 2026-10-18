@@ -1,5 +1,5 @@
 /**
- * "Open BirdTab" (Chrome, CONFIG.FEATURES.newTabMode)
+ * "Open BirdTab" (CONFIG.FEATURES.newTabMode: Chrome and Edge)
  *
  * People who want Chrome's own new tab page back used to have one option: uninstall.
  * BirdTab can instead step aside:

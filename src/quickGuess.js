@@ -1,5 +1,5 @@
 /**
- * "Guess the bird" (Chrome, CONFIG.FEATURES.quickGuess, off by default)
+ * "Guess the bird" (CONFIG.FEATURES.quickGuess, off by default)
  *
  * Every new tab becomes a one-second quiz: the name is hidden until it's clicked.
  * The first click reveals it; after that the name opens the info popover as usual.

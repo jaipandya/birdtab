@@ -1,4 +1,4 @@
-/* Inter's @font-face rules are in fontsStatic.css / fontsVariable.css (picked per browser in webpack.config.js) */
+/* Inter's @font-face rules are in fontsVariable.css */
 
 * {
   margin: 0;
@@ -7310,9 +7310,9 @@ html[dir="rtl"] .share-menu-social {
 }
 
 /* ==========================================================================
-   Chrome-first features (CONFIG.FEATURES): photo tone, favourites, quick guess,
-   life list, "Open BirdTab". Nothing here applies until its feature adds the
-   element or class, so other browsers look as before.
+   CONFIG.FEATURES features: photo tone, favourites, quick guess,
+   Your Birds, "Open BirdTab". Nothing here applies until its feature adds the
+   element or class, so a browser without one looks as before.
    ========================================================================== */
 
 /* ── Photo tone (photoTone.js) ── */

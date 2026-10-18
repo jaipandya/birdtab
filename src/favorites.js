@@ -1,5 +1,5 @@
 /**
- * Favourite birds (Chrome, CONFIG.FEATURES.favorites)
+ * Favourite birds (CONFIG.FEATURES.favorites)
  *
  * The list of species codes is in chrome.storage.sync ('favoriteSpecies', newest
  * first), so favourites follow the user to their other computers. Sync allows

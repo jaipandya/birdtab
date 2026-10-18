@@ -9,8 +9,6 @@
     "dev:chrome": "webpack --mode development --watch --env BROWSER=chrome",
     "dev:edge": "webpack --mode development --watch --env BROWSER=edge",
     "dev:firefox": "webpack --mode development --watch --env BROWSER=firefox",
-    "dev:edge:preview": "FEATURE_PREVIEW=true webpack --mode development --watch --env BROWSER=edge",
-    "dev:firefox:preview": "FEATURE_PREVIEW=true webpack --mode development --watch --env BROWSER=firefox",
     "run:firefox": "web-ext run --source-dir dev-firefox --firefox-profile ./.web-ext-profile --profile-create-if-missing --keep-profile-changes --start-url about:newtab",
     "lint:firefox": "web-ext lint --source-dir dist-firefox",
     "clean": "node -e \"for (const dir of ['dist-chrome', 'dist-edge', 'dist-firefox', 'dev-chrome', 'dev-edge', 'dev-firefox']) require('rimraf').sync(dir);\"",
