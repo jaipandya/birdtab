@@ -31,7 +31,7 @@ Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w 
 **Więcej niż tapeta**
 
 - Quiz z rozpoznawania ptaków: sprawdź swoją wiedzę i udostępnij wyniki
-- Historia wszystkich obejrzanych ptaków
+- Twoje ptaki: wszystkie ptaki, które widziałeś, z ulubionymi i quizem z Twoich ptaków
 - Zegar i minutnik
 - Pole wyszukiwania, które korzysta z Twojej domyślnej wyszukiwarki lub wybranej przez Ciebie
 - Skróty do najczęściej odwiedzanych stron
@@ -51,7 +51,7 @@ Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w 
 
 **Co nowego**
 
-2.2.0 - Przejrzystszy wygląd: prostsze ustawienia i czytelniejsze przyciski.
+2.2.0 - Twoje ptaki: wszystkie ptaki, które widziałeś, w jednym miejscu, z ulubionymi, wyszukiwaniem i quizem z Twoich ptaków. Wybierz, jak często zmienia się ptak, wypróbuj „Zgadnij ptaka” i wpisz „bird” w pasku adresu, aby znaleźć dowolnego ptaka. Do tego prostsze ustawienia, czytelniejsze przyciski i lepiej widoczny tekst na jasnych zdjęciach.
 2.1.2 - BirdTab jest już dostępny dla Firefoksa.
 
 Pełny dziennik zmian: https://birdtab.app/changelog

@@ -44,8 +44,8 @@ see the English listing.
 - Screenshots: one set for all languages. AMO does not allow per-language
   images, only per-language captions.
   - Files: `extension/screenshots/firefox/amo/feature-image-1..5.jpg`
-    (1280x800, English). Regenerated on 2026-10-17 to match 2.1.2 (new birds,
-    current info panel and quiz); upload them to replace the 2026-10-15 set.
+    (1280x800, English). Regenerated on 2026-10-18 for 2.2.0: slide 3 shows
+    favorites and slide 5 Your Birds. Upload them with 2.2.0 to replace the earlier set.
   - Source design: `birdtab-marketing/pencil-documents/birdtab-marketing-edge.pen`,
     frames "Firefox · <Language>" (copies of the Edge frames with a Firefox
     eyebrow and no top-right shortcut, which Firefox doesn't have). How to

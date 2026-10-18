@@ -31,7 +31,7 @@ Choisissez parmi plus de 250 pays et régions pour voir les oiseaux près de che
 **Bien plus qu'un fond d'écran**
 
 - Quiz d'identification des oiseaux : testez vos connaissances et partagez vos résultats
-- Historique de tous les oiseaux que vous avez vus
+- Vos oiseaux : tous les oiseaux que vous avez vus, avec favoris et un quiz sur vos oiseaux
 - Horloge et minuteur
 - Barre de recherche qui utilise votre moteur de recherche par défaut ou celui de votre choix
 - Raccourcis vers vos sites les plus visités
@@ -51,7 +51,7 @@ Choisissez parmi plus de 250 pays et régions pour voir les oiseaux près de che
 
 **Nouveautés**
 
-2.2.0 - Une interface plus épurée : des paramètres plus simples et des boutons plus clairs.
+2.2.0 - Vos oiseaux : tous les oiseaux que vous avez vus au même endroit, avec favoris, recherche et un quiz sur vos propres oiseaux. Choisissez à quelle fréquence l'oiseau change, essayez Devinez l'oiseau et tapez « bird » dans la barre d'adresse pour trouver n'importe quel oiseau. Et aussi des paramètres plus simples, des boutons plus clairs et un texte plus lisible sur les photos claires.
 2.1.2 - BirdTab est désormais disponible sur Firefox.
 
 Journal complet des modifications : https://birdtab.app/changelog

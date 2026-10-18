@@ -13,7 +13,7 @@ GŁÓWNE FUNKCJE
 - Fascynujące fakty o ptakach - zachowanie, siedlisko i status ochrony
 - Ptaki z Twojego kraju - wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata
 - Interaktywny quiz identyfikacji ptaków - sprawdź swoją wiedzę i podziel się wynikami
-- Historia obserwacji - śledź każdego odkrytego ptaka
+- Twoje ptaki - wszystkie ptaki, które widziałeś, z ulubionymi i quizem z Twoich ptaków
 - Zegar i minutnik - zachowaj skupienie, ciesząc się naturą
 - Wbudowane narzędzia produktywności - wyszukiwarka, skróty i więcej
 - Działa offline - ciesz się ptakami nawet bez internetu
@@ -55,7 +55,7 @@ Kliknij ikonę Microsoft Edge w górnym rogu dowolnej karty BirdTab.
 
 CO NOWEGO
 
-2.2.0 - Przejrzystszy wygląd: prostsze ustawienia, czytelniejsze przyciski, a nazwiska autorów ze znakami specjalnymi wyświetlają się teraz poprawnie.
+2.2.0 - Twoje ptaki: wszystkie ptaki, które widziałeś, w jednym miejscu, z ulubionymi, wyszukiwaniem i quizem z Twoich ptaków. Wybierz, kiedy BirdTab się otwiera i jak często zmienia się ptak, wypróbuj „Zgadnij ptaka” i wpisz „bird” w pasku adresu, aby znaleźć dowolnego ptaka. Do tego prostsze ustawienia, czytelniejsze przyciski i lepiej widoczny tekst na jasnych zdjęciach.
 2.1.1 - Informacje o autorach zdjęć i nagrań zawsze poprawnie pokazują teraz nazwisko autora i datę.
 2.1.0 - Ptaki dla każdego kraju: wybieraj spośród ponad 250 krajów i regionów lub 500 najpopularniejszych ptaków świata. Do tego lepsza obsługa offline, szybsza pierwsza karta oraz ulepszenia dla klawiatury i czytników ekranu.
 2.0.0 - Zdjęcia w wysokiej rozdzielczości, międzynarodowe regiony, zegar, minutnik, znacznie ulepszona obsługa offline i odświeżone doświadczenie nowej karty.

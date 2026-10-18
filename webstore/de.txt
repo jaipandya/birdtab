@@ -35,7 +35,7 @@ PERFEKT FÜR
 
 NEUIGKEITEN
 
-2.2.0 - Deine Vögel: alle Vögel, die du gesehen hast, an einem Ort, mit Favoriten, Suche und einem Quiz zu deinen eigenen Vögeln. Wähle, wann BirdTab sich öffnet und wie oft der Vogel wechselt, probiere „Errate den Vogel“ aus und tippe „bird“ in die Adressleiste, um jeden Vogel zu finden. Dazu einfachere Einstellungen, klarere Schaltflächen und besser lesbarer Text auf hellen Fotos.
+2.2.0 - Deine Vögel: alle Vögel, die du gesehen hast, an einem Ort, mit Favoriten, Suche und einem Quiz zu deinen eigenen Vögeln. Wähle, wann BirdTab sich öffnet und wie oft der Vogel wechselt, probiere „Vogel raten“ aus und tippe „bird“ in die Adressleiste, um jeden Vogel zu finden. Dazu einfachere Einstellungen, klarere Schaltflächen und besser lesbarer Text auf hellen Fotos.
 2.1.1 - Bild- und Tonnachweise zeigen jetzt immer den Namen des Fotografen und das Datum korrekt an.
 2.1.0 - Vögel für jedes Land: wähle aus über 250 Ländern und Regionen oder den 500 häufigsten Vögeln der Welt. Dazu bessere Offline-Unterstützung, ein schnellerer erster Tab sowie Verbesserungen für Tastatur und Screenreader.
 2.0.0 - Hochauflösende Fotos, internationale Regionen, Uhr, Countdown-Timer, deutlich verbesserte Offline-Unterstützung und ein erfrischtes Neuer-Tab-Erlebnis.

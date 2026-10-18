@@ -13,7 +13,7 @@ KEY FEATURES
 - Fascinating bird facts - learn about behavior, habitat, and conservation status
 - Birds from your country - choose from 250+ countries and regions, or the World's 500 most common birds
 - Interactive bird identification quiz - test your knowledge and share results
-- Viewing history - track every bird you've discovered
+- Your Birds - every bird you've seen, with favorites and a quiz on your own birds
 - Clock and countdown timer - stay focused while enjoying nature
 - Productivity tools built in - search box, custom shortcuts, and more
 - Works offline - enjoy your birds even without internet
@@ -55,7 +55,7 @@ Click the Microsoft Edge icon in the top corner of any BirdTab tab.
 
 WHAT'S NEW
 
-2.2.0 - A cleaner look: simpler settings, clearer buttons, and photographers' names with special characters now show correctly.
+2.2.0 - Your Birds: every bird you've seen in one place, with favorites, search and a quiz on your own birds. Choose when BirdTab opens and how often the bird changes, try Guess the Bird, and type “bird” in the address bar to find any bird. Plus simpler settings, clearer buttons and easier-to-read text on bright photos.
 2.1.1 - Photo and sound credits now always show the photographer's name and the date correctly.
 2.1.0 - Birds for every country: choose from 250+ countries and regions, or the World's 500 most common birds. Plus better offline support, a faster first tab, and keyboard and screen reader improvements.
 2.0.3 - Minor fixes in error tracking

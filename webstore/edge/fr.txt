@@ -13,7 +13,7 @@ FONCTIONNALITÉS PRINCIPALES
 - Faits fascinants sur les oiseaux - comportement, habitat et statut de conservation
 - Les oiseaux de votre pays - choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde
 - Quiz interactif d'identification d'oiseaux - testez vos connaissances et partagez vos résultats
-- Historique d'observation - suivez chaque oiseau que vous avez découvert
+- Vos oiseaux - tous les oiseaux que vous avez vus, avec favoris et un quiz sur vos oiseaux
 - Horloge et minuteur - restez concentré tout en profitant de la nature
 - Outils de productivité intégrés - barre de recherche, raccourcis et plus
 - Fonctionne hors ligne - profitez de vos oiseaux même sans internet
@@ -55,7 +55,7 @@ Cliquez sur l'icône Microsoft Edge dans le coin supérieur de n'importe quel on
 
 NOUVEAUTÉS
 
-2.2.0 - Une interface plus épurée : des paramètres plus simples, des boutons plus clairs, et les noms d'auteurs avec des caractères spéciaux s'affichent désormais correctement.
+2.2.0 - Vos oiseaux : tous les oiseaux que vous avez vus au même endroit, avec favoris, recherche et un quiz sur vos propres oiseaux. Choisissez quand BirdTab s'ouvre et à quelle fréquence l'oiseau change, essayez Devinez l'oiseau et tapez « bird » dans la barre d'adresse pour trouver n'importe quel oiseau. Et aussi des paramètres plus simples, des boutons plus clairs et un texte plus lisible sur les photos claires.
 2.1.1 - Les crédits des photos et des sons affichent désormais toujours correctement le nom de l'auteur et la date.
 2.1.0 - Des oiseaux pour chaque pays : choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde. Et aussi : meilleur support hors ligne, premier onglet plus rapide, améliorations pour le clavier et les lecteurs d'écran.
 2.0.0 - Photos haute résolution, régions internationales, horloge, minuteur, support hors ligne amélioré et une expérience renouvelée.

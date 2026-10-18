@@ -53,7 +53,7 @@ Choose from 250+ countries and regions to see the birds found near you, or pick 
 **More than a wallpaper**
 
 - Bird identification quiz: test your knowledge and share your results
-- History of every bird you've seen
+- Your Birds: every bird you've seen, with favorites and a quiz on your own birds
 - Clock and countdown timer
 - Search box that uses your default search engine or one you choose
 - Shortcuts to your top sites
@@ -73,7 +73,7 @@ Choose from 250+ countries and regions to see the birds found near you, or pick 
 
 **What's new**
 
-2.2.0 - A cleaner look: simpler settings and clearer buttons.
+2.2.0 - Your Birds: every bird you've seen in one place, with favorites, search and a quiz on your own birds. Choose how often the bird changes, try Guess the Bird, and type “bird” in the address bar to find any bird. Plus simpler settings, clearer buttons and easier-to-read text on bright photos.
 2.1.2 - BirdTab is now available for Firefox.
 
 Full changelog: https://birdtab.app/changelog

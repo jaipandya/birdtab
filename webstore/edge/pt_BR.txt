@@ -13,7 +13,7 @@ RECURSOS PRINCIPAIS
 - Fatos fascinantes sobre aves - comportamento, habitat e status de conservação
 - Aves do seu país - escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo
 - Quiz interativo de identificação de aves - teste seus conhecimentos e compartilhe resultados
-- Histórico de observação - acompanhe cada ave que você descobriu
+- Suas aves - todas as aves que você já viu, com favoritas e um quiz com as suas aves
 - Relógio e temporizador - mantenha o foco enquanto aprecia a natureza
 - Ferramentas de produtividade integradas - busca, atalhos e mais
 - Funciona offline - aproveite suas aves mesmo sem internet
@@ -55,7 +55,7 @@ Clique no ícone do Microsoft Edge no canto superior de qualquer aba do BirdTab.
 
 NOVIDADES
 
-2.2.0 - Um visual mais limpo: configurações mais simples, botões mais claros, e nomes de autores com caracteres especiais agora aparecem corretamente.
+2.2.0 - Suas aves: todas as aves que você já viu em um só lugar, com favoritas, busca e um quiz com as suas próprias aves. Escolha quando o BirdTab abre e com que frequência a ave muda, experimente Adivinhe a ave e digite “bird” na barra de endereços para encontrar qualquer ave. Além disso, configurações mais simples, botões mais claros e texto mais legível sobre fotos claras.
 2.1.1 - Os créditos de fotos e sons agora sempre mostram corretamente o nome do autor e a data.
 2.1.0 - Aves de cada país: escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo. Além disso, suporte offline melhor, primeira aba mais rápida e melhorias para teclado e leitores de tela.
 2.0.0 - Fotos em alta resolução, regiões internacionais, relógio, temporizador, suporte offline aprimorado e uma experiência renovada.
