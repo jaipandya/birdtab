@@ -1,0 +1,57 @@
+# Firefox Add-ons (AMO) listing, pt_PT. Categories, tags, links and reviewer
+# notes are in en.txt. NAME is set for Firefox builds in webpack.config.js
+# from these files' values (AMO limit: 50 characters).
+# DESCRIPTION is Markdown (see en.txt): blank line before lists, no headings.
+
+NAME
+BirdTab - Fundos de ecrã de aves no novo separador
+
+SUMMARY (250 characters max)
+Transforme o novo separador do Firefox numa pausa na natureza: uma nova imagem de fundo de ave em cada separador, com o canto da ave e curiosidades sobre a espécie. Aves de mais de 250 países, quiz, relógio, temporizador e pesquisa.
+
+VERSION RELEASE NOTES
+O BirdTab já está disponível para o Firefox: uma nova imagem de fundo de ave, o canto e curiosidades sobre a espécie em cada novo separador.
+
+DESCRIPTION
+Imagens de fundo de aves, cantos de aves e curiosidades da natureza em cada novo separador do Firefox.
+
+O BirdTab substitui a página Novo separador do Firefox por uma foto de ave em alta resolução. Sempre que abre um separador, conhece uma ave nova: ouça o seu canto, leia sobre a espécie e veja num mapa de distribuição onde vive. É um momento relaxante de natureza no seu dia e uma forma fácil de ficar a conhecer as aves.
+
+**Em cada novo separador**
+
+- Uma nova imagem de fundo de ave em alta resolução, dos beija-flores e papagaios às águias e corujas
+- O canto ou chamamento real da ave, com controlo de volume e horas de silêncio (o som é opcional)
+- Informações sobre a espécie: descrição, estado de conservação e mapa de distribuição
+- Fotos com licença aberta, cada uma com o crédito do respetivo fotógrafo
+
+**Aves de onde vive**
+
+Escolha entre mais de 250 países e regiões para ver as aves que vivem perto de si, ou escolha Mundo para ver as 500 aves mais comuns do planeta.
+
+**Mais do que uma imagem de fundo**
+
+- Quiz de identificação de aves: teste os seus conhecimentos e partilhe os resultados
+- As suas aves: todas as aves que já viu, com favoritos e um quiz com as suas próprias aves
+- Relógio e temporizador
+- Caixa de pesquisa que usa o seu motor de pesquisa predefinido ou outro à sua escolha
+- Atalhos para os sites mais visitados
+- Funciona offline com as aves vistas recentemente
+- Disponível em 12 idiomas: inglês, espanhol, português do Brasil, português europeu, alemão, francês, japonês, polaco, russo, chinês simplificado, chinês tradicional e árabe
+
+**Privacidade**
+
+- Sem anúncios, sem conta, sem registo
+- Não são recolhidos dados pessoais. As estatísticas de utilização anónimas e os relatórios de erros só são enviados se o permitir durante a instalação
+
+**Feito para**
+
+- Observadores de aves, dos principiantes aos mais experientes
+- Amantes da natureza que querem um novo separador calmo e bonito
+- Estudantes, professores e qualquer pessoa curiosa sobre a vida selvagem
+
+**Novidades**
+
+2.2.0 - As suas aves: todas as aves que já viu num só lugar, com favoritos, pesquisa e um quiz com as suas próprias aves. Escolha com que frequência a ave muda, experimente Adivinhe a ave e escreva “bird” na barra de endereço para encontrar qualquer ave. Além disso, definições mais simples, botões mais claros e texto mais fácil de ler sobre fotos claras.
+2.1.2 - O BirdTab já está disponível para o Firefox.
+
+Histórico completo de alterações: https://birdtab.app/changelog

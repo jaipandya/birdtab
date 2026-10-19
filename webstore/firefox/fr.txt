@@ -36,7 +36,7 @@ Choisissez parmi plus de 250 pays et régions pour voir les oiseaux près de che
 - Barre de recherche qui utilise votre moteur de recherche par défaut ou celui de votre choix
 - Raccourcis vers vos sites les plus visités
 - Fonctionne hors ligne avec les oiseaux vus récemment
-- Disponible en 10 langues : anglais, espagnol, portugais, allemand, français, japonais, polonais, russe, chinois et arabe
+- Disponible en 12 langues : anglais, espagnol, portugais du Brésil, portugais européen, allemand, français, japonais, polonais, russe, chinois simplifié, chinois traditionnel et arabe
 
 **Confidentialité**
 

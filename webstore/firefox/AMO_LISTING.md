@@ -8,7 +8,7 @@ file. This note covers everything else on the product page.
 
 ## Languages
 
-AMO locales used: en-us (default), de, es-es, fr, ja, pl, pt-br, ru, zh-cn.
+AMO locales used: en-us (default), de, es-es, fr, ja, pl, pt-br, pt-pt, ru, zh-cn, zh-tw.
 
 | Repo file | AMO locale |
 | --- | --- |
@@ -19,24 +19,26 @@ AMO locales used: en-us (default), de, es-es, fr, ja, pl, pt-br, ru, zh-cn.
 | ja.txt | ja |
 | pl.txt | pl |
 | pt_BR.txt | pt-br |
+| pt_PT.txt | pt-pt |
 | ru.txt | ru |
 | zh_CN.txt | zh-cn |
+| zh_TW.txt | zh-tw |
 | ar.txt | not used: AMO has no Arabic locale |
 
-Users in a locale without a translation (es-mx, es-ar, pt-pt, zh-tw, ...)
+Users in a locale without a translation (es-mx, es-ar, ...)
 see the English listing.
 
 ## Describe Add-on
 
 | Field | Value |
 | --- | --- |
-| Name, Summary, Description | from `<lang>.txt` (all 9 AMO locales) |
+| Name, Summary, Description | from `<lang>.txt` (all 11 AMO locales) |
 | Add-on URL (slug) | `birdtab` |
 | Experimental | no |
 | Requires payment | no |
 | Categories | Appearance; Photos, Music & Videos; Tabs |
 | Support email | support@birdtab.app (en-us; other locales fall back to it) |
-| Support website | https://birdtab.app (en-us); https://birdtab.app/<lang> for de, es-es (/es), fr, ja, pl, pt-br, ru, zh-cn (/zh) |
+| Support website | https://birdtab.app (en-us); https://birdtab.app/<lang> for de, es-es (/es), fr, ja, pl, pt-br, ru, zh-cn (/zh), pt-pt (/pt-pt) and zh-tw (/zh-tw), both from 2.3.0 |
 
 ## Images
 
@@ -110,6 +112,13 @@ Taken from each frame's subline, so they match the image text.
 4. Mantenha o foco com pesquisa, atalhos, relógio e timer em uma única aba.
 5. Desafie-se com quizzes divertidos e descubra novas espécies todos os dias.
 
+**pt-pt**
+1. Veja uma fotografia impressionante de uma nova ave sempre que abrir um separador.
+2. Descubra espécies de todos os continentes em fotografias impressionantes de alta resolução.
+3. Ouça cantos reais de aves e sons ambientes da natureza enquanto navega.
+4. Mantenha a concentração com pesquisa, atalhos, relógio e temporizador num único separador.
+5. Desafie-se com quizzes divertidos e descubra novas espécies todos os dias.
+
 **ru**
 1. Видьте новое потрясающее фото птицы каждый раз, когда открываете вкладку.
 2. Открывайте виды со всех континентов благодаря потрясающим фотографиям в высоком разрешении.
@@ -124,6 +133,13 @@ Taken from each frame's subline, so they match the image text.
 4. 在一个标签页中专注使用搜索、快捷方式、时钟和计时器。
 5. 通过有趣的问答挑战自己，每天发现新物种。
 
+**zh-tw**
+1. 每次開啟分頁，都能看到一張驚豔的全新鳥類照片。
+2. 透過驚豔的高解析度攝影，認識來自各大洲的鳥種。
+3. 瀏覽網頁時聆聽真實的鳥鳴與大自然環境音。
+4. 在同一個分頁中專心使用搜尋、捷徑、時鐘和計時器。
+5. 用有趣的測驗挑戰自己，每天認識新的鳥種。
+
 ## Additional Details
 
 | Field | Value |
@@ -136,7 +152,7 @@ Taken from each frame's subline, so they match the image text.
 
 ## Technical Details
 
-Developer Comments, all 9 locales (en-us below; the others say the same):
+Developer Comments, all 11 locales (en-us below; the others say the same):
 
 > Questions, bug reports or a bird you'd like to see? Email support@birdtab.app or write to us at https://birdtab.app/contact.
 >

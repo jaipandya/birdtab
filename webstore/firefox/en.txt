@@ -58,7 +58,7 @@ Choose from 250+ countries and regions to see the birds found near you, or pick 
 - Search box that uses your default search engine or one you choose
 - Shortcuts to your top sites
 - Works offline for recently seen birds
-- Available in 10 languages: English, Spanish, Portuguese, German, French, Japanese, Polish, Russian, Chinese and Arabic
+- Available in 12 languages: English, Spanish, Brazilian Portuguese, European Portuguese, German, French, Japanese, Polish, Russian, Simplified Chinese, Traditional Chinese and Arabic
 
 **Privacy**
 

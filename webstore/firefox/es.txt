@@ -36,7 +36,7 @@ Elige entre más de 250 países y regiones para ver las aves que viven cerca de 
 - Cuadro de búsqueda que usa tu buscador predeterminado o el que elijas
 - Accesos directos a tus sitios más visitados
 - Funciona sin conexión con las aves que viste recientemente
-- Disponible en 10 idiomas: inglés, español, portugués, alemán, francés, japonés, polaco, ruso, chino y árabe
+- Disponible en 12 idiomas: inglés, español, portugués de Brasil, portugués europeo, alemán, francés, japonés, polaco, ruso, chino simplificado, chino tradicional y árabe
 
 **Privacidad**
 

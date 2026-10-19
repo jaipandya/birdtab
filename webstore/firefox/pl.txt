@@ -36,7 +36,7 @@ Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w 
 - Pole wyszukiwania, które korzysta z Twojej domyślnej wyszukiwarki lub wybranej przez Ciebie
 - Skróty do najczęściej odwiedzanych stron
 - Działa offline z ostatnio oglądanymi ptakami
-- Dostępny w 10 językach: angielskim, hiszpańskim, portugalskim, niemieckim, francuskim, japońskim, polskim, rosyjskim, chińskim i arabskim
+- Dostępny w 12 językach: angielskim, hiszpańskim, portugalskim brazylijskim, portugalskim europejskim, niemieckim, francuskim, japońskim, polskim, rosyjskim, chińskim uproszczonym, chińskim tradycyjnym i arabskim
 
 **Prywatność**
 

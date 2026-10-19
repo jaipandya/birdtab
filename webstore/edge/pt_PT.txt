@@ -1,0 +1,69 @@
+O BirdTab é uma extensão gratuita para o Microsoft Edge que transforma cada novo separador num refúgio tranquilo na natureza: uma imagem de fundo de ave deslumbrante, cantos de aves e sons da natureza reais, e factos fascinantes sobre uma espécie de ave diferente sempre que abre um separador.
+
+O BirdTab substitui a página Novo separador do Microsoft Edge por fotografias de aves de cortar a respiração, do seu país ou de todo o mundo. Sempre que abre um separador, descobre uma nova espécie de ave, com cantos autênticos, sons da natureza e informações interessantes. É como ter uma janela para o mundo natural no seu navegador.
+
+PORQUE É QUE OS UTILIZADORES ADORAM O BIRDTAB
+
+Ao contrário das extensões genéricas de imagens de fundo, o BirdTab é uma experiência completa de natureza. Cada novo separador traz um momento de calma: uma bela fotografia de ave, um canto relaxante e algo novo para aprender. É a combinação perfeita de mindfulness, aprendizagem e beleza visual.
+
+FUNCIONALIDADES PRINCIPAIS
+
+- Nova imagem de fundo de ave em cada novo separador - fotografias deslumbrantes da vida selvagem em alta resolução
+- Cantos de aves e sons da natureza autênticos - com volume ajustável e horas de silêncio
+- Factos fascinantes sobre aves - comportamento, habitat e estado de conservação
+- Aves do seu país - escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo
+- Quiz interativo de identificação de aves - teste os seus conhecimentos e partilhe os resultados
+- As suas aves - todas as aves que já viu, com favoritos e um quiz com as suas próprias aves
+- Relógio e temporizador - mantenha a concentração enquanto aprecia a natureza
+- Ferramentas de produtividade integradas - caixa de pesquisa, atalhos personalizados e muito mais
+- Funciona offline - desfrute das suas aves mesmo sem Internet
+- Sem anúncios, sem registo, sem compromissos
+- 100% focado na privacidade - sem recolha de dados pessoais, sem rastreio
+
+MILHARES DE ESPÉCIES
+
+Descubra milhares de espécies de aves de todos os continentes, desde papagaios tropicais e beija-flores a águias e corujas majestosas. Todas as fotos são de alta resolução e cuidadosamente selecionadas para lhe oferecer a experiência de observação de aves mais deslumbrante e diversificada possível. Escolha o seu país nas Definições para ver as aves de onde vive, ou escolha Mundo para ver as 500 aves mais comuns do planeta.
+
+IDEAL PARA
+
+- Observadores de aves e entusiastas de birdwatching
+- Amantes da natureza e fotógrafos de vida selvagem
+- Quem procura um novo separador bonito e relaxante
+- Mindfulness, meditação e alívio do stress
+- Estudantes e professores que aprendem ornitologia
+- Amantes de imagens de fundo da natureza
+
+PERGUNTAS FREQUENTES
+
+O BirdTab é gratuito?
+Sim. O BirdTab é totalmente gratuito: sem planos pagos, sem anúncios e sem precisar de conta.
+
+Que aves vou ver?
+Aves do país que escolher (mais de 250 países e regiões) ou as 500 aves mais comuns do mundo. Cada ave tem uma foto, o seu canto, curiosidades e uma ligação para a respetiva página no eBird.
+
+O BirdTab funciona offline?
+Sim. O BirdTab mantém aves prontas no seu dispositivo, por isso aparece uma ave nova mesmo sem ligação à Internet.
+
+Posso desativar os sons das aves?
+Sim. O som é opcional: pode silenciá-lo, ajustar o volume ou definir horas de silêncio.
+
+O BirdTab recolhe os meus dados?
+Não. O BirdTab não recolhe dados pessoais nem rastreia a sua navegação.
+
+Como abro o novo separador predefinido do Microsoft Edge?
+Clique no ícone do Microsoft Edge no canto superior de qualquer separador do BirdTab.
+
+NOVIDADES
+
+2.2.0 - As suas aves: todas as aves que já viu num só lugar, com favoritos, pesquisa e um quiz com as suas próprias aves. Escolha quando o BirdTab abre e com que frequência a ave muda, experimente Adivinhe a ave e escreva “bird” na barra de endereço para encontrar qualquer ave. Além disso, definições mais simples, botões mais claros e texto mais fácil de ler sobre fotos claras.
+2.1.1 - Os créditos das fotos e dos sons mostram agora sempre corretamente o nome do fotógrafo e a data.
+2.1.0 - Aves de todos os países: escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo. Além disso, melhor funcionamento offline, um primeiro separador mais rápido e melhorias para teclado e leitores de ecrã.
+2.0.3 - Pequenas correções no registo de erros
+2.0.2 - Carregamento de imagens mais rápido - as fotos das aves aparecem antes de o áudio começar a ser transferido, para um novo separador mais ágil.
+2.0.1 - Mais aves, maior estabilidade da extensão e melhorias de desempenho
+2.0.0 - Fotos em alta resolução, regiões internacionais, relógio, temporizador, funcionamento offline muito melhorado e uma experiência de novo separador renovada.
+1.3.9 - Painel de informações da ave com mapa de distribuição e descrição da ave. Modo sem distrações.
+1.3.6 - Novo menu de opções com temporizador, clicar para reproduzir, escolha do motor de pesquisa e correções na reprodução.
+1.3.4 - Relógio com opções de formato, opção para ocultar os sites mais visitados e correções de erros.
+
+Histórico completo de alterações: https://birdtab.app/changelog
