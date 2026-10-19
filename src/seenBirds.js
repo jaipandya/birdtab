@@ -86,14 +86,6 @@ export async function clearSeenBirds() {
   await chrome.storage.local.set({ [BACKFILLED_KEY]: true, [COUNT_KEY]: 0 });
 }
 
-/** The bird's name in the UI language, as the info panel shows it. */
-export function localizedName(bird, lang = chrome.i18n.getUILanguage()) {
-  const l = (lang || '').toLowerCase();
-  if (l.startsWith('fr') && bird.primaryComName_fr) return bird.primaryComName_fr;
-  if (l.startsWith('zh') && bird.primaryComName_cn) return bird.primaryComName_cn;
-  return bird.name || bird.primaryComName || bird.speciesCode;
-}
-
 // A quiet note when the count reaches a round number. No streaks.
 const MILESTONES = new Set([10, 25, 50, 100, 150, 200, 300, 400, 500, 750, 1000]);
 

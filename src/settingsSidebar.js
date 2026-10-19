@@ -316,6 +316,12 @@ class SettingsSidebar {
                 </div>`}
               </div>
             </section>
+            <p class="settings-credits">
+              <span data-i18n="birdNamesCredit">Bird names:</span>
+              <a href="https://ebird.org" target="_blank" rel="noopener noreferrer">eBird</a> ·
+              <a href="https://www.worldbirdnames.org" target="_blank" rel="noopener noreferrer">IOC World Bird List</a>
+              (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>)
+            </p>
           </div>
 
           <a href="mailto:support@birdtab.app" class="settings-footer feedback-link">
@@ -911,9 +917,7 @@ class SettingsSidebar {
           lastReviewPrompt: 0,
           reviewDismissed: false,
           reviewLeft: false
-        }, () => {
-          alert('Review prompt reset. Open a new tab to see it.');
-        });
+        }, () => done('Review prompt reset. Open a new tab to see it.'));
       });
     }
 

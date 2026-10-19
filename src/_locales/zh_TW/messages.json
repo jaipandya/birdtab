@@ -1,0 +1,1568 @@
+{
+  "extensionName": {
+    "message": "BirdTab - 鳥類桌布與自然音效的新分頁",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "用鳥類桌布和舒緩的自然音效改造你的新分頁，每次開啟都能發現不同的鳥",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "鳥類資訊",
+    "description": "Tooltip for the info icon"
+  },
+  "cameraAlt": {
+    "message": "相機",
+    "description": "Alt text for camera icon"
+  },
+  "audioAlt": {
+    "message": "音訊",
+    "description": "Alt text for audio waveform icon"
+  },
+  "openSettings": {
+    "message": "開啟設定",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "設定",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "重新整理",
+    "description": "Alt text for refresh icon"
+  },
+  "errorTitle": {
+    "message": "嗯，鳥兒們今天好像有點害羞",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "我們在尋找羽毛朋友時遇到了一點麻煩。別擔心，這通常只是短暫的小插曲！",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "再試一次",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "錯誤詳細資訊",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "搜尋網路...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "搜尋",
+    "description": "Alt text for search icon"
+  },
+  "searchTooltip": {
+    "message": "搜尋網路",
+    "description": "Tooltip for search button"
+  },
+  "settingsTitle": {
+    "message": "BirdTab 設定",
+    "description": "Title for settings page"
+  },
+  "settingsCategoryMedia": {
+    "message": "媒體與播放",
+    "description": "Section header for media settings"
+  },
+  "settingsCategoryProductivity": {
+    "message": "效率與介面",
+    "description": "Section header for productivity settings"
+  },
+  "birdingRegion": {
+    "message": "賞鳥地區",
+    "description": "Label for region selection"
+  },
+  "regionHelpText": {
+    "message": "新分頁會顯示這個地區的鳥類。",
+    "description": "Help text under the region selector in settings"
+  },
+  "regionLoadingList": {
+    "message": "正在載入地區…",
+    "description": "Shown under the region selector while the list of regions loads"
+  },
+  "regionLoadingBirds": {
+    "message": "正在載入 $1 的鳥類…",
+    "description": "Shown under the region selector while birds for the chosen region load. $1 is the region name"
+  },
+  "regionListFailed": {
+    "message": "無法載入地區清單。",
+    "description": "Shown when the list of regions could not be loaded"
+  },
+  "regionSwitchFailed": {
+    "message": "無法載入 $1 的鳥類，仍顯示 $2 的鳥類。",
+    "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
+  },
+  "autoPlayBirdCalls": {
+    "message": "自動播放媒體",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "每次開啟新分頁時自動播放鳥鳴。安靜時間啟用時會優先於此設定。",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "啟用後，開啟新分頁時會自動播放鳥鳴",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "安靜時間",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "在指定的安靜時間內將鳥鳴靜音。",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "啟用後，安靜時間內會自動關閉自動播放",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "安靜時間進行中",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "安靜時間",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quietHoursDisabled": {
+    "message": "安靜時間已停用",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "安靜時間內會暫停播放音訊。",
+    "description": "Explanation text for quiet hours tooltip"
+  },
+  "quickAccessFeatures": {
+    "message": "快速存取功能",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "啟用搜尋框、常用網站和自訂捷徑。",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "顯示搜尋框、最常造訪的網站，並允許自訂捷徑",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "設定已儲存",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "偵錯選項",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "刪除快取",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "重設新手導覽",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "歡迎使用 BirdTab！",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "BirdTab 示範",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "每開啟一個新分頁，都能邂逅一隻美麗的鳥。精美的攝影、有趣的知識，以及來自世界各地的療癒自然之聲。",
+    "description": "First paragraph of welcome description"
+  },
+  "autoPlayNote": {
+    "message": "每次開啟新分頁時都能聽到鳥鳴。你可以隨時在設定中調整。",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "開始賞鳥！",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "播放",
+    "description": "Alt text for play indicator icon"
+  },
+  "pauseAlt": {
+    "message": "暫停",
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "喜歡 BirdTab 嗎？",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "你的評論對我們意義重大，也能幫助其他鳥類愛好者發現這個擴充功能！",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "留下評論",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "稍後再說",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "不用了，謝謝",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "這會將所有設定重設為預設值，並再次顯示新手導覽。要繼續嗎？",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ 重設設定時發生錯誤，請再試一次。",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ 設定已重設！\n\n你的所有 BirdTab 設定都已恢復為預設值。\n\n開啟新分頁即可再次看到設定精靈。",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ 清除快取時發生錯誤，請再試一次。",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 快取已清除！\n\n所有快取的鳥類圖片、自訂捷徑和暫存資料都已移除。\n\n如果你先前遇到載入問題，這應該會有幫助。",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 需要權限\n\n若要使用效率功能（搜尋框、最常造訪的網站和自訂捷徑），BirdTab 需要存取瀏覽器的常用網站。\n\n你可以隨時再次切換這項設定來啟用。",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ 發生錯誤\n\n我們無法更新你的效率設定，這可能只是暫時的問題。\n\n請稍後再試。如果問題持續發生，請嘗試重新啟動瀏覽器。",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "梳理羽毛中...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "為鳥鳴調音中...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "掃描天空中...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "偷看鳥巢中...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "補充餵鳥器中...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "擦拭望遠鏡中...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "整理尾羽中...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "鳴叫暖身中...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "調整翼展中...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "清洗鳥浴盆中...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "規劃遷徙路線中...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "分類種子和漿果中...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "練習飛行隊形中...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "翻出野外圖鑑中...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "搭建鳥屋中...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "磨尖鳥喙中...",
+    "description": "Loading message 16"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "closeSettings": {
+    "message": "關閉設定",
+    "description": "Aria label for close settings button"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "最常造訪的網站和自訂捷徑",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "前往",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "網站",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "移除捷徑",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "settingsTooltip": {
+    "message": "開啟設定，自訂你的 BirdTab 體驗",
+    "description": "Tooltip for settings button"
+  },
+  "refreshTooltip": {
+    "message": "載入新的鳥類照片和資訊",
+    "description": "Tooltip for refresh button"
+  },
+  "playTooltip": {
+    "message": "播放鳥鳴",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "暫停鳥鳴",
+    "description": "Tooltip for pause button"
+  },
+  "audioBufferingTooltip": {
+    "message": "正在載入鳥鳴…",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "新增自訂捷徑",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "新增捷徑",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "編輯捷徑",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "移除",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "新增捷徑",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "編輯捷徑",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "名稱：",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "輸入捷徑名稱",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "網址：",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "輸入網址（例如：google.com）",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "取消",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "確定",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "請輸入名稱",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "請輸入網址",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "請輸入有效的網址",
+    "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "這是什麼鳥？",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "第 {currentQuestion} 題，共 {totalQuestions} 題",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "下一題",
+    "description": "Button text for next question"
+  },
+  "quizShowResults": {
+    "message": "查看結果",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "開始新測驗",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "離開測驗",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizShareResults": {
+    "message": "分享結果",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "鳥類測驗結果",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareGenerating": {
+    "message": "產生中...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "無法產生",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "分享你的結果",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "下載圖片",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "已下載！",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "複製到剪貼簿",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "已複製！",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "複製失敗",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "返回結果",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "/ 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "答對 $1 題",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "答錯 $1 題",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "鳥類辨識結果",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "未知鳥類",
+    "description": "Fallback text for unknown bird name"
+  },
+  "quizShareCollageAlt": {
+    "message": "測驗結果拼貼圖",
+    "description": "Alt text for the quiz results share image"
+  },
+  "quizImageUnavailable": {
+    "message": "無法顯示圖片",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "你認得出這隻鳥嗎？",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmTitle": {
+    "message": "要離開測驗嗎？",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "確定要離開測驗嗎？你的進度將不會保留。",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "確定要關閉嗎？",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
+  "quizExitConfirm": {
+    "message": "離開測驗",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "取消",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "太厲害了！你是真正的鳥類專家！",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "做得好！你對鳥類非常了解！",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "不錯喔！繼續賞鳥吧！",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "還不錯！熟能生巧！",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "繼續加油！每位鳥類專家都是從頭學起的！",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "這個地區可用於測驗的鳥類不足，請試試其他地區。",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "可用的鳥類圖片不足。請檢查網路連線後再試一次。",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "無法開始測驗，請再試一次。",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "測驗錯誤",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "確定",
+    "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "正在準備測驗...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "photoBy": {
+    "message": "攝影：",
+    "description": "Text before photographer credit"
+  },
+  "quizResults": {
+    "message": "測驗結果",
+    "description": "Title for quiz results section"
+  },
+  "questionReview": {
+    "message": "題目回顧",
+    "description": "Title for question review section"
+  },
+  "yourAnswer": {
+    "message": "你的答案：$1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
+  "correct": {
+    "message": "正確",
+    "description": "Indicates a correct answer"
+  },
+  "incorrect": {
+    "message": "錯誤",
+    "description": "Indicates an incorrect answer"
+  },
+  "closeAlt": {
+    "message": "關閉",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "關閉測驗",
+    "description": "Aria label for close quiz button"
+  },
+  "quizAlt": {
+    "message": "測驗",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "開始測驗",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "載入中...",
+    "description": "Loading text placeholder"
+  },
+  "volumeTooltip": {
+    "message": "調整音量",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "音量",
+    "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "分享這隻鳥",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "分享",
+    "description": "Alt text for share icon"
+  },
+  "shareLink": {
+    "message": "分享連結",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "複製",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "已複製！",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "分享到",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "快來看這隻美麗的{birdName}！",
+    "description": "Default share text with bird name placeholder"
+  },
+  "loadingAudio": {
+    "message": "正在載入音訊",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "historyTitle": {
+    "message": "瀏覽記錄",
+    "description": "Title for history modal"
+  },
+  "historyAlt": {
+    "message": "瀏覽記錄",
+    "description": "Alt text for history icon"
+  },
+  "emptyHistoryTitle": {
+    "message": "你的賞鳥之旅從這裡開始！",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "探索新的鳥類，牠們就會出現在你的瀏覽記錄中。",
+    "description": "Subtitle shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "清除記錄",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "確定要清除瀏覽記錄嗎？",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "剛剛",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "$1 分鐘前",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "$1 分鐘前",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "$1 小時前",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "$1 小時前",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "昨天",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "$1 天前",
+    "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "歡迎使用 BirdTab！",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "讓我們帶你四處看看！這個快速導覽會帶你認識所有讓賞鳥體驗更特別的功能。",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "一切就緒！",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "盡情探索來自世界各地的美麗鳥類吧。賞鳥愉快！",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "開始吧！",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "開始探索！",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "知道了！",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "新功能！",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "上一步",
+    "description": "Feature tour: back button text"
+  },
+  "tourVolumeTitle": {
+    "message": "音量控制",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "依你的喜好調整音量，控制鳥鳴的大小聲，打造最適合你的賞鳥體驗。",
+    "description": "Feature tour: volume controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "發現新鳥類",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "準備好認識新的羽毛朋友了嗎？隨時點選這裡，載入新的鳥類照片，學點新知識。",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourPlayPauseTitle": {
+    "message": "播放 / 暫停",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "控制鳥鳴播放。隨時點選即可播放或暫停目前的鳥鳴。",
+    "description": "Feature tour: play/pause button description"
+  },
+  "tourChromeTabTitle": {
+    "message": "Chrome 新分頁",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "需要使用 Chrome 預設的新分頁嗎？隨時點選這裡，即可在新分頁中開啟。",
+    "description": "Feature tour: Chrome tab link description"
+  },
+  "tourNextButton": {
+    "message": "下一步",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "略過導覽",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "知道了！",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "resetTour": {
+    "message": "重設功能導覽",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "errorResettingTour": {
+    "message": "重設功能導覽時發生錯誤",
+    "description": "Error message when tour reset fails"
+  },
+  "sendFeedback": {
+    "message": "提供意見",
+    "description": "Link text for sending feedback to support"
+  },
+  "birdNamesCredit": {
+    "message": "鳥名：",
+    "description": "Settings, end of the list: where the bird names come from, followed by links to eBird and the IOC World Bird List"
+  },
+  "chromeTabTooltip": {
+    "message": "開啟 Chrome 預設的新分頁",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Chrome 分頁",
+    "description": "Text label for Chrome tab link"
+  },
+  "permissionDialogTitle": {
+    "message": "BirdTab 需要額外權限",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "為了顯示你最常造訪的網站和自訂捷徑，BirdTab 需要存取額外的瀏覽器功能。",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "我們重視並保護你的隱私。詳情請參閱我們的",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "隱私權政策",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "返回",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "繼續",
+    "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "看到底部有橫幅嗎？",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "那是 Chrome 新增的頁尾。如要隱藏，請在頁尾上按一下滑鼠右鍵，然後選取「在新分頁上隱藏頁尾」。",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "了解詳情",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "關閉通知",
+    "description": "Aria label for close button on Chrome footer notification"
+  },
+  "clockDisplay": {
+    "message": "顯示時鐘",
+    "description": "Label for clock display toggle in settings"
+  },
+  "clockDisplayHelpText": {
+    "message": "在搜尋框上方顯示大型時鐘。",
+    "description": "Help text for clock display setting"
+  },
+  "clockDisplayTooltip": {
+    "message": "在新分頁上顯示目前時間",
+    "description": "Tooltip for clock display toggle"
+  },
+  "clock24Hour": {
+    "message": "24 小時制",
+    "description": "Option to use 24-hour time format"
+  },
+  "clockShowSeconds": {
+    "message": "顯示秒數",
+    "description": "Option to display seconds in the clock"
+  },
+  "clockOptionsAriaLabel": {
+    "message": "時鐘選項",
+    "description": "Aria label for clock options button"
+  },
+  "switchToTimer": {
+    "message": "切換到計時器",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "切換到時鐘",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "開始",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "暫停",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "繼續",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "重設",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "時",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "分",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "秒",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "計時器選項",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "鬧鈴聲",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
+  "showTopSites": {
+    "message": "顯示常用網站",
+    "description": "Option to show the most visited sites grid"
+  },
+  "quickAccessOptionsAriaLabel": {
+    "message": "快速存取選項",
+    "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "要隱藏時鐘嗎？",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "你可以隨時在設定中重新顯示。",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "要隱藏快速存取嗎？",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "搜尋和常用網站將會隱藏。你可以在設定中重新顯示。",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "隱藏時鐘",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "隱藏快速存取",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "隱藏",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Google 應用程式",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "顯示快速存取按鈕，開啟 Gmail、雲端硬碟、YouTube 等 Google 應用程式。",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "啟用以顯示 Google 應用程式按鈕",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Google 應用程式",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Google 應用程式",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "開啟 Google 應用程式",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "關閉 Google 應用程式",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "resetGoogleAppsOrder": {
+    "message": "重設順序",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1。第 $2 個，共 $3 個。按 Ctrl+方向鍵移動。",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "已移到第 $1 個位置",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "順序已重設為預設值",
+    "description": "Screen reader announcement when order is reset"
+  },
+  "showChromeTab": {
+    "message": "Chrome 分頁捷徑",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "顯示捷徑，快速開啟 Chrome 預設的新分頁。",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "啟用以顯示 Chrome 分頁捷徑",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
+  },
+  "searchEngineLabel": {
+    "message": "搜尋引擎",
+    "description": "Label for search engine selection in quick access options"
+  },
+  "searchEngineBrowserDefault": {
+    "message": "瀏覽器預設",
+    "description": "Option for using browser's default search engine"
+  },
+  "searchEngineGoogle": {
+    "message": "Google",
+    "description": "Option for Google search engine"
+  },
+  "searchEngineDuckDuckGo": {
+    "message": "DuckDuckGo",
+    "description": "Option for DuckDuckGo search engine"
+  },
+  "searchEngineChatGPT": {
+    "message": "ChatGPT",
+    "description": "Option for ChatGPT search"
+  },
+  "searchEnginePerplexity": {
+    "message": "Perplexity",
+    "description": "Option for Perplexity AI search"
+  },
+  "tourCreditsTitle": {
+    "message": "出處與授權",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "這裡會列出每隻鳥的攝影師和錄音者。點選名字即可進一步認識他們，並查看授權詳情。",
+    "description": "Feature tour: credits line description"
+  },
+  "tourBirdNameTitle": {
+    "message": "認識這隻鳥",
+    "description": "Feature tour: bird name step title"
+  },
+  "tourBirdNameDescription": {
+    "message": "點選鳥名，查看相關知識、保育狀態，以及牠的分布地圖。",
+    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
+  },
+  "imageLoadFailedMessage": {
+    "message": "無法載入這張照片。",
+    "description": "Shown in place of the bird photo when it fails to load"
+  },
+  "imageOfflineMessage": {
+    "message": "你目前處於離線狀態。恢復網路連線後就會顯示照片。",
+    "description": "Shown in place of the bird photo when the browser is offline"
+  },
+  "tourOptionsMenuTitle": {
+    "message": "快速選單",
+    "description": "Feature tour: options menu title"
+  },
+  "tourOptionsMenuDescription": {
+    "message": "從這個選單開啟設定、瀏覽記錄和鳥類測驗。點選看看有哪些選項！",
+    "description": "Feature tour: options menu description"
+  },
+  "audioPlayingAlt": {
+    "message": "正在播放音訊",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "音訊已暫停",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatusTitle": {
+    "message": "保育狀態",
+    "description": "Heading for the bird conservation status in the info popover"
+  },
+  "conservationLeastConcern": {
+    "message": "無危",
+    "description": "Localized conservation status label for Least Concern"
+  },
+  "conservationLeastConcernHelp": {
+    "message": "目前不被視為有滅絕風險。",
+    "description": "Plain-language explanation for Least Concern conservation status"
+  },
+  "conservationNearThreatened": {
+    "message": "近危",
+    "description": "Localized conservation status label for Near Threatened"
+  },
+  "conservationNearThreatenedHelp": {
+    "message": "若缺乏持續保護，可能會面臨威脅。",
+    "description": "Plain-language explanation for Near Threatened conservation status"
+  },
+  "conservationVulnerable": {
+    "message": "易危",
+    "description": "Localized conservation status label for Vulnerable"
+  },
+  "conservationVulnerableHelp": {
+    "message": "在野外面臨高度滅絕風險。",
+    "description": "Plain-language explanation for Vulnerable conservation status"
+  },
+  "conservationEndangered": {
+    "message": "瀕危",
+    "description": "Localized conservation status label for Endangered"
+  },
+  "conservationEndangeredHelp": {
+    "message": "在野外面臨非常高的滅絕風險。",
+    "description": "Plain-language explanation for Endangered conservation status"
+  },
+  "conservationCriticallyEndangered": {
+    "message": "極危",
+    "description": "Localized conservation status label for Critically Endangered"
+  },
+  "conservationCriticallyEndangeredHelp": {
+    "message": "在野外面臨極高的滅絕風險。",
+    "description": "Plain-language explanation for Critically Endangered conservation status"
+  },
+  "conservationExtinctInWild": {
+    "message": "野外滅絕",
+    "description": "Localized conservation status label for Extinct in the Wild"
+  },
+  "conservationExtinctInWildHelp": {
+    "message": "僅存於圈養或人為管理的族群中。",
+    "description": "Plain-language explanation for Extinct in the Wild conservation status"
+  },
+  "conservationExtinct": {
+    "message": "滅絕",
+    "description": "Localized conservation status label for Extinct"
+  },
+  "conservationExtinctHelp": {
+    "message": "已知沒有存活的個體。",
+    "description": "Plain-language explanation for Extinct conservation status"
+  },
+  "aboutThisBird": {
+    "message": "關於這種鳥",
+    "description": "Heading for the bird description in the info popover"
+  },
+  "viewOnEbird": {
+    "message": "在 eBird 上查看",
+    "description": "Label for the link that opens the current bird on eBird"
+  },
+  "rangeMap": {
+    "message": "分布圖",
+    "description": "Heading for the bird range map in the info popover"
+  },
+  "loadingRangeMap": {
+    "message": "正在載入分布圖...",
+    "description": "Loading text shown while the bird range map is loading"
+  },
+  "rangeMapOffline": {
+    "message": "分布圖需要網路連線才能顯示",
+    "description": "Shown in place of the range map when the browser is offline"
+  },
+  "rangeMapUnavailable": {
+    "message": "無法載入分布圖",
+    "description": "Shown in place of the range map when it takes too long to load"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "關閉瀏覽記錄",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "lowDistractionToggle": {
+    "message": "隱藏詳情",
+    "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
+  },
+  "lowDistractionExpand": {
+    "message": "顯示詳情",
+    "description": "Tooltip for the button that restores the hidden bottom info panel"
+  },
+  "lowDistractionAriaHide": {
+    "message": "隱藏鳥類資訊面板",
+    "description": "Accessible label for the button that hides the bottom info panel"
+  },
+  "lowDistractionAriaShow": {
+    "message": "顯示鳥類資訊面板",
+    "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "世界",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "公海",
+    "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "creditPhotoBy": {
+    "message": "攝影",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "錄音",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "聲音類型",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "拍攝地點",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "錄音地點",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditDateTaken": {
+    "message": "拍攝日期",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "錄音日期",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "已從原圖調整大小",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "圖片已從原始尺寸調整，以便顯示",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "已轉換為 $1",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "音訊已從原始格式轉換，以便播放",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "來源",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "授權",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "媒體出處與授權",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "出處與授權",
+    "description": "Alt text for the credit info trigger icon"
+  },
+  "settingsCategoryNewTab": {
+    "message": "新分頁",
+    "description": "Settings category for how new tabs behave"
+  },
+  "newTabModeLabel": {
+    "message": "開啟 BirdTab",
+    "description": "Setting: when BirdTab opens instead of Chrome's own new tab page"
+  },
+  "newTabModeEvery": {
+    "message": "每次",
+    "description": "Open BirdTab choice (short): on every new tab"
+  },
+  "newTabModeHourly": {
+    "message": "偶爾",
+    "description": "Open BirdTab choice (short): the first new tab after an hour away"
+  },
+  "newTabModeButton": {
+    "message": "需要時",
+    "description": "Open BirdTab choice (short): only from the toolbar button"
+  },
+  "newTabModeEveryHelp": {
+    "message": "每個新分頁都有一隻鳥。",
+    "description": "One-line caption for Open BirdTab: every tab"
+  },
+  "newTabModeHourlyHelp": {
+    "message": "離開一小時後顯示一隻鳥，其餘時間顯示 Chrome 的頁面。",
+    "description": "One-line caption for Open BirdTab: now and then"
+  },
+  "newTabModeButtonHelp": {
+    "message": "新分頁顯示 Chrome 的頁面。想看鳥時，點選 BirdTab 按鈕。",
+    "description": "One-line caption for Open BirdTab: when I ask"
+  },
+  "newTabModePinned": {
+    "message": "已釘選到工具列",
+    "description": "Status: BirdTab's toolbar button is pinned"
+  },
+  "newTabModeNotPinned": {
+    "message": "尚未釘選",
+    "description": "Status: BirdTab's toolbar button isn't pinned"
+  },
+  "newTabModeKeyword": {
+    "message": "也可以在網址列輸入 $1、一個空格和鳥名",
+    "description": "Tip; $1 is the keyword 'bird' shown as a key"
+  },
+  "stepAsideOfferTitle": {
+    "message": "比較喜歡 Chrome 的新分頁嗎？",
+    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
+  },
+  "stepAsideOfferText": {
+    "message": "BirdTab 可以退到一旁，只在你想看鳥時才開啟。",
+    "description": "Body of the card offering to step aside for Chrome's new tab page"
+  },
+  "birdRotationLabel": {
+    "message": "換新鳥",
+    "description": "Setting: how often the bird changes"
+  },
+  "birdRotationEvery": {
+    "message": "每個分頁",
+    "description": "New bird option (short): every new tab"
+  },
+  "birdRotationHourly": {
+    "message": "每小時",
+    "description": "New bird option (short): every hour"
+  },
+  "birdRotationDaily": {
+    "message": "每天",
+    "description": "New bird option (short): once a day"
+  },
+  "birdRotationHelp": {
+    "message": "重新整理按鈕隨時都能換一隻新鳥。",
+    "description": "Help text for Change the bird"
+  },
+  "quickGuessLabel": {
+    "message": "猜猜是什麼鳥",
+    "description": "Setting: hide the bird's name until clicked"
+  },
+  "quickGuessHelp": {
+    "message": "先隱藏鳥名，點選後才顯示，讓每個新分頁都變成一個小測驗。",
+    "description": "Help text for Guess the Bird"
+  },
+  "quickGuessPrompt": {
+    "message": "這是什麼鳥？",
+    "description": "Shown in place of the bird's name in Guess the Bird mode"
+  },
+  "quickGuessReveal": {
+    "message": "顯示鳥名",
+    "description": "Accessible label for revealing the hidden bird name"
+  },
+  "favoriteAdd": {
+    "message": "加入收藏",
+    "description": "Heart button: add the bird to favorites"
+  },
+  "favoriteRemove": {
+    "message": "從收藏中移除",
+    "description": "Heart button: remove the bird from favorites"
+  },
+  "favoritesTitle": {
+    "message": "收藏",
+    "description": "Favorites tab and menu item"
+  },
+  "yourBirdsTitle": {
+    "message": "你的鳥",
+    "description": "Title of the sidebar with History, Favorites and Life List"
+  },
+  "emptyFavoritesTitle": {
+    "message": "還沒有收藏",
+    "description": "Empty state title for favorites"
+  },
+  "emptyFavoritesSubtitle": {
+    "message": "點選鳥名下方的愛心，或這裡任一隻鳥上的愛心。",
+    "description": "Empty Favorites: how to add one"
+  },
+  "omniboxSuggestion": {
+    "message": "BirdTab：輸入鳥名，或輸入任何內容來看一隻新鳥",
+    "description": "Address bar suggestion after typing the 'bird' keyword"
+  },
+  "settingsGroupBirds": {
+    "message": "鳥類",
+    "description": "Settings group: region, how often the bird changes, guess mode"
+  },
+  "settingsGroupSound": {
+    "message": "聲音",
+    "description": "Settings group: auto-play and quiet hours"
+  },
+  "settingsGroupPage": {
+    "message": "頁面顯示",
+    "description": "Settings group: clock, search, Google apps"
+  },
+  "quickGuessShort": {
+    "message": "點選前隱藏鳥名",
+    "description": "One-line hint under Guess the Bird"
+  },
+  "pinShowMe": {
+    "message": "示範給我看",
+    "description": "Button that opens the pinning guide"
+  },
+  "pinCoachEyebrow": {
+    "message": "只差一步",
+    "description": "Small heading above the pinning guide"
+  },
+  "pinCoachTitle": {
+    "message": "將 BirdTab 釘選到工具列",
+    "description": "Pinning guide title"
+  },
+  "pinCoachExtensions": {
+    "message": "擴充功能",
+    "description": "Title of Chrome's extensions menu, as Chrome shows it in this language"
+  },
+  "pinCoachStep1": {
+    "message": "點選網址列旁的拼圖圖示",
+    "description": "Pinning guide step 1"
+  },
+  "pinCoachStep2": {
+    "message": "點選 BirdTab 旁的圖釘",
+    "description": "Pinning guide step 2"
+  },
+  "pinCoachWaiting": {
+    "message": "正在等待釘選…",
+    "description": "Pinning guide: waiting for the user to pin"
+  },
+  "pinCoachLater": {
+    "message": "以後再說",
+    "description": "Pinning guide: close without pinning"
+  },
+  "pinCoachDoneTitle": {
+    "message": "已釘選！",
+    "description": "Pinning guide: success title"
+  },
+  "pinCoachDoneText": {
+    "message": "想看鳥時，隨時點選 BirdTab 按鈕。",
+    "description": "Pinning guide: success text"
+  },
+  "pinCoachDone": {
+    "message": "完成",
+    "description": "Pinning guide: close after success"
+  },
+  "yourBirdsCountLabel": {
+    "message": "種不同的鳥",
+    "description": "Label under the number of different birds seen (stat label; the number is shown separately above it)"
+  },
+  "yourBirdsSearch": {
+    "message": "搜尋鳥類",
+    "description": "Search box placeholder in Your Birds"
+  },
+  "yourBirdsFilterAll": {
+    "message": "全部",
+    "description": "Your Birds filter: every bird seen"
+  },
+  "yourBirdsShowingNow": {
+    "message": "正在顯示",
+    "description": "On the card of the bird currently on the page"
+  },
+  "yourBirdsShowAgain": {
+    "message": "再次顯示 $1",
+    "description": "Accessible label: show this bird ($1) on the page again"
+  },
+  "yourBirdsShowAgainHint": {
+    "message": "再次顯示這隻鳥",
+    "description": "Tooltip on a bird card"
+  },
+  "favoriteAddNamed": {
+    "message": "將 $1 加入收藏",
+    "description": "Accessible label: add $1 to favorites"
+  },
+  "favoriteRemoveNamed": {
+    "message": "從收藏中移除 $1",
+    "description": "Accessible label: remove $1 from favorites"
+  },
+  "yourBirdsEmptyTitle": {
+    "message": "還沒有鳥",
+    "description": "Empty Your Birds list: title"
+  },
+  "yourBirdsEmptyText": {
+    "message": "你在新分頁看到的每隻鳥都會保留在這裡。",
+    "description": "Empty Your Birds list: text"
+  },
+  "yourBirdsNoMatch": {
+    "message": "沒有符合「$1」的鳥",
+    "description": "Search found nothing; $1 is the search text"
+  },
+  "yourBirdsClear": {
+    "message": "清除看過的鳥",
+    "description": "Button: clear the list of birds seen"
+  },
+  "yourBirdsClearTitle": {
+    "message": "要清除你看過的鳥嗎？",
+    "description": "Confirmation title for clearing the birds seen"
+  },
+  "yourBirdsClearText": {
+    "message": "牠們會從這份清單中移除，計數也會重新開始。你的收藏會保留。",
+    "description": "Confirmation text for clearing the birds seen"
+  },
+  "yourBirdsClearConfirm": {
+    "message": "清除",
+    "description": "Confirmation button for clearing the birds seen"
+  },
+  "yourBirdsMilestone": {
+    "message": "已看過 $1 種不同的鳥！",
+    "description": "Note when the number of different birds seen ($1) reaches a round number"
+  },
+  "tourOptionsMenuDescriptionYourBirds": {
+    "message": "設定、你的鳥和鳥類測驗都在這個選單裡。",
+    "description": "Feature tour: what the options menu holds"
+  },
+  "yourBirdsQuiz": {
+    "message": "用這些鳥考考我",
+    "description": "Button in Your Birds: start a quiz on the birds listed"
+  },
+  "yourBirdsQuizNeedsMore": {
+    "message": "至少需要 $1 種鳥",
+    "description": "Tooltip when there are too few birds for a quiz; $1 is the minimum"
+  },
+  "favoritesClear": {
+    "message": "清除收藏",
+    "description": "Button: remove every favorite"
+  },
+  "favoritesClearTitle": {
+    "message": "要清除所有收藏嗎？",
+    "description": "Confirmation title for clearing favorites"
+  },
+  "favoritesClearText": {
+    "message": "你所有電腦上的收藏都會移除。看過的鳥會保留。",
+    "description": "Confirmation text for clearing favorites (they sync across computers)"
+  },
+  "pinCoachStep2Edge": {
+    "message": "點選 BirdTab 旁的眼睛圖示，讓它顯示在工具列中",
+    "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  }
+}

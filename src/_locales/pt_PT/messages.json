@@ -1,0 +1,1568 @@
+{
+  "extensionName": {
+    "message": "BirdTab - Imagens de fundo de aves e sons da natureza no novo separador",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Transforme o novo separador com imagens de fundo de aves e sons relaxantes da natureza",
+    "description": "Description of the extension"
+  },
+  "pageTitle": {
+    "message": "BirdTab",
+    "description": "Title of the main page"
+  },
+  "infoTooltip": {
+    "message": "Informações sobre a ave",
+    "description": "Tooltip for the info icon"
+  },
+  "cameraAlt": {
+    "message": "Câmara",
+    "description": "Alt text for camera icon"
+  },
+  "audioAlt": {
+    "message": "Áudio",
+    "description": "Alt text for audio waveform icon"
+  },
+  "openSettings": {
+    "message": "Abrir definições",
+    "description": "Aria label for settings button"
+  },
+  "settingsAlt": {
+    "message": "Definições",
+    "description": "Alt text for settings icon"
+  },
+  "refreshAlt": {
+    "message": "Atualizar",
+    "description": "Alt text for refresh icon"
+  },
+  "errorTitle": {
+    "message": "Hum, as aves parecem tímidas hoje",
+    "description": "Title for error modal"
+  },
+  "errorMessage": {
+    "message": "Estamos com alguma dificuldade em encontrar os nossos amigos de penas. Não se preocupe, normalmente é só um bater de asas passageiro!",
+    "description": "Error message when bird data fails to load"
+  },
+  "tryAgain": {
+    "message": "Tentar novamente",
+    "description": "Button text to retry loading"
+  },
+  "errorDetails": {
+    "message": "Detalhes do erro",
+    "description": "Label for error details section"
+  },
+  "searchPlaceholder": {
+    "message": "Pesquisar na Web...",
+    "description": "Placeholder text for search input"
+  },
+  "searchAlt": {
+    "message": "Pesquisar",
+    "description": "Alt text for search icon"
+  },
+  "searchTooltip": {
+    "message": "Pesquisar na Web",
+    "description": "Tooltip for search button"
+  },
+  "settingsTitle": {
+    "message": "Definições do BirdTab",
+    "description": "Title for settings page"
+  },
+  "settingsCategoryMedia": {
+    "message": "Multimédia e reprodução",
+    "description": "Section header for media settings"
+  },
+  "settingsCategoryProductivity": {
+    "message": "Produtividade e interface",
+    "description": "Section header for productivity settings"
+  },
+  "birdingRegion": {
+    "message": "Região de observação de aves",
+    "description": "Label for region selection"
+  },
+  "regionHelpText": {
+    "message": "Os novos separadores mostram aves desta região.",
+    "description": "Help text under the region selector in settings"
+  },
+  "regionLoadingList": {
+    "message": "A carregar regiões…",
+    "description": "Shown under the region selector while the list of regions loads"
+  },
+  "regionLoadingBirds": {
+    "message": "A carregar aves: $1…",
+    "description": "Shown under the region selector while birds for the chosen region load. $1 is the region name"
+  },
+  "regionListFailed": {
+    "message": "Não foi possível carregar a lista de regiões.",
+    "description": "Shown when the list of regions could not be loaded"
+  },
+  "regionSwitchFailed": {
+    "message": "Não foi possível carregar as aves: $1. Região mantida: $2.",
+    "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
+  },
+  "autoPlayBirdCalls": {
+    "message": "Reproduzir multimédia automaticamente",
+    "description": "Label for auto-play toggle"
+  },
+  "autoPlayHelpText": {
+    "message": "Reproduz automaticamente cantos de aves em cada novo separador. Quando ativas, as horas de silêncio sobrepõem-se a esta opção.",
+    "description": "Help text for auto-play setting"
+  },
+  "autoPlayTooltip": {
+    "message": "Ative para reproduzir automaticamente cantos de aves ao abrir um novo separador",
+    "description": "Tooltip for auto-play toggle"
+  },
+  "quietHours": {
+    "message": "Horas de silêncio",
+    "description": "Label for quiet hours setting"
+  },
+  "quietHoursHelpText": {
+    "message": "Silencia os cantos das aves durante as horas de silêncio definidas.",
+    "description": "Help text for quiet hours setting"
+  },
+  "quietHoursTooltip": {
+    "message": "Ative para desligar a reprodução automática durante as horas de silêncio",
+    "description": "Tooltip for quiet hours toggle"
+  },
+  "quietHoursActive": {
+    "message": "Horas de silêncio ativas",
+    "description": "Title for quiet hours indicator"
+  },
+  "quietHoursAlt": {
+    "message": "Horas de silêncio",
+    "description": "Alt text for quiet hours moon icon"
+  },
+  "quietHoursDisabled": {
+    "message": "Horas de silêncio desativadas",
+    "description": "Toast notification when quiet hours is disabled"
+  },
+  "quietHoursTooltipExplanation": {
+    "message": "A reprodução de áudio está em pausa durante as horas de silêncio.",
+    "description": "Explanation text for quiet hours tooltip"
+  },
+  "quickAccessFeatures": {
+    "message": "Funcionalidades de acesso rápido",
+    "description": "Label for productivity features toggle"
+  },
+  "productivityHelpText": {
+    "message": "Ativa a caixa de pesquisa, os sites mais visitados e os atalhos personalizados.",
+    "description": "Help text for productivity features"
+  },
+  "productivityTooltip": {
+    "message": "Mostra a caixa de pesquisa e os sites mais visitados, e permite atalhos personalizados",
+    "description": "Tooltip for productivity toggle"
+  },
+  "settingsSaved": {
+    "message": "Definições guardadas",
+    "description": "Notification when settings are saved"
+  },
+  "debugOptions": {
+    "message": "Opções de depuração",
+    "description": "Header for debug section"
+  },
+  "deleteCache": {
+    "message": "Eliminar cache",
+    "description": "Button to delete cache"
+  },
+  "resetOnboarding": {
+    "message": "Repor introdução",
+    "description": "Button to reset onboarding"
+  },
+  "welcomeTitle": {
+    "message": "Bem-vindo ao BirdTab!",
+    "description": "Welcome title for onboarding"
+  },
+  "demoImageAlt": {
+    "message": "Demonstração do BirdTab",
+    "description": "Alt text for demo image"
+  },
+  "welcomeDescription1": {
+    "message": "Descubra uma ave deslumbrante em cada novo separador. Belas fotografias, factos fascinantes e sons relaxantes da natureza de todo o mundo.",
+    "description": "First paragraph of welcome description"
+  },
+  "autoPlayNote": {
+    "message": "Ouça cantos de aves sempre que abrir um novo separador. Pode alterar isto a qualquer momento nas definições.",
+    "description": "Note about auto-play setting flexibility"
+  },
+  "startBirding": {
+    "message": "Começar a observar aves!",
+    "description": "Button text to finish onboarding"
+  },
+  "playAlt": {
+    "message": "Reproduzir",
+    "description": "Alt text for play indicator icon"
+  },
+  "pauseAlt": {
+    "message": "Pausar",
+    "description": "Alt text for pause button"
+  },
+  "reviewPromptTitle": {
+    "message": "Está a gostar do BirdTab?",
+    "description": "Title for review prompt"
+  },
+  "reviewPromptMessage": {
+    "message": "A sua avaliação significaria muito para nós e ajudaria outros entusiastas de aves a descobrir a nossa extensão!",
+    "description": "Message for review prompt"
+  },
+  "leaveReview": {
+    "message": "Deixar uma avaliação",
+    "description": "Button text to leave a review"
+  },
+  "maybeLater": {
+    "message": "Talvez mais tarde",
+    "description": "Button text for maybe later"
+  },
+  "noThanks": {
+    "message": "Não, obrigado",
+    "description": "Button text for no thanks"
+  },
+  "confirmResetSettings": {
+    "message": "Isto vai repor todas as predefinições e voltar a mostrar a introdução. Continuar?",
+    "description": "Confirmation message for resetting settings"
+  },
+  "errorResettingSettings": {
+    "message": "⚠️ Erro ao repor as definições. Tente novamente.",
+    "description": "Error message when resetting settings fails"
+  },
+  "settingsResetComplete": {
+    "message": "✅ Definições repostas!\n\nTodas as definições do BirdTab voltaram aos valores predefinidos.\n\nAbra um novo separador para voltar a ver o assistente de configuração.",
+    "description": "Success message when settings are reset"
+  },
+  "errorClearingCache": {
+    "message": "⚠️ Erro ao limpar a cache. Tente novamente.",
+    "description": "Error message when clearing cache fails"
+  },
+  "cacheCleared": {
+    "message": "🧹 Cache limpa!\n\nTodas as imagens de aves em cache, os atalhos personalizados e os dados temporários foram removidos.\n\nIsto deve ajudar se estava a ter problemas de carregamento.",
+    "description": "Success message when cache is cleared"
+  },
+  "permissionRequired": {
+    "message": "🔒 Permissão necessária\n\nPara usar as funcionalidades de produtividade (caixa de pesquisa, sites mais visitados e atalhos personalizados), o BirdTab precisa de acesso aos sites mais visitados do seu navegador.\n\nPode ativar isto a qualquer momento ao voltar a ligar a definição.",
+    "description": "Message when permissions are required"
+  },
+  "somethingWentWrong": {
+    "message": "⚠️ Algo correu mal\n\nNão foi possível atualizar as suas definições de produtividade. Pode ser um problema temporário.\n\nTente novamente daqui a pouco. Se o problema persistir, experimente reiniciar o navegador.",
+    "description": "Generic error message when something goes wrong"
+  },
+  "loadingMessage1": {
+    "message": "A afofar as penas...",
+    "description": "Loading message 1"
+  },
+  "loadingMessage2": {
+    "message": "A afinar os cantos das aves...",
+    "description": "Loading message 2"
+  },
+  "loadingMessage3": {
+    "message": "A vasculhar os céus...",
+    "description": "Loading message 3"
+  },
+  "loadingMessage4": {
+    "message": "A espreitar os ninhos...",
+    "description": "Loading message 4"
+  },
+  "loadingMessage5": {
+    "message": "A encher os comedouros...",
+    "description": "Loading message 5"
+  },
+  "loadingMessage6": {
+    "message": "A polir os binóculos...",
+    "description": "Loading message 6"
+  },
+  "loadingMessage7": {
+    "message": "A alisar as penas da cauda...",
+    "description": "Loading message 7"
+  },
+  "loadingMessage8": {
+    "message": "A aquecer os chilreios...",
+    "description": "Loading message 8"
+  },
+  "loadingMessage9": {
+    "message": "A ajustar a envergadura das asas...",
+    "description": "Loading message 9"
+  },
+  "loadingMessage10": {
+    "message": "A limpar os bebedouros...",
+    "description": "Loading message 10"
+  },
+  "loadingMessage11": {
+    "message": "A preparar as rotas de migração...",
+    "description": "Loading message 11"
+  },
+  "loadingMessage12": {
+    "message": "A separar sementes e bagas...",
+    "description": "Loading message 12"
+  },
+  "loadingMessage13": {
+    "message": "A treinar padrões de voo...",
+    "description": "Loading message 13"
+  },
+  "loadingMessage14": {
+    "message": "A tirar o pó aos guias de campo...",
+    "description": "Loading message 14"
+  },
+  "loadingMessage15": {
+    "message": "A montar caixas-ninho...",
+    "description": "Loading message 15"
+  },
+  "loadingMessage16": {
+    "message": "A afiar os bicos...",
+    "description": "Loading message 16"
+  },
+  "textDirection": {
+    "message": "@@bidi_dir",
+    "description": "Text direction (ltr or rtl)"
+  },
+  "closeSettings": {
+    "message": "Fechar definições",
+    "description": "Aria label for close settings button"
+  },
+  "mostVisitedSitesAriaLabel": {
+    "message": "Sites mais visitados e atalhos personalizados",
+    "description": "Aria label for top sites grid"
+  },
+  "visitSiteAriaLabel": {
+    "message": "Visitar",
+    "description": "Aria label prefix for site links"
+  },
+  "websiteFallback": {
+    "message": "Site",
+    "description": "Fallback text when site title cannot be determined"
+  },
+  "removeShortcutTooltip": {
+    "message": "Remover atalho",
+    "description": "Tooltip for remove shortcut button"
+  },
+  "settingsTooltip": {
+    "message": "Abrir as definições para personalizar o BirdTab",
+    "description": "Tooltip for settings button"
+  },
+  "refreshTooltip": {
+    "message": "Carregar uma nova foto de ave e as respetivas informações",
+    "description": "Tooltip for refresh button"
+  },
+  "playTooltip": {
+    "message": "Reproduzir o som da ave",
+    "description": "Tooltip for play button"
+  },
+  "pauseTooltip": {
+    "message": "Pausar o som da ave",
+    "description": "Tooltip for pause button"
+  },
+  "audioBufferingTooltip": {
+    "message": "A carregar o som da ave…",
+    "description": "Tooltip shown on play button while audio is loading or buffering"
+  },
+  "addNewShortcutAriaLabel": {
+    "message": "Adicionar novo atalho personalizado",
+    "description": "Aria label for add shortcut button"
+  },
+  "addShortcutButtonText": {
+    "message": "Adicionar atalho",
+    "description": "Text on add shortcut button"
+  },
+  "editShortcutContextMenu": {
+    "message": "Editar atalho",
+    "description": "Context menu item to edit shortcut"
+  },
+  "removeShortcutContextMenu": {
+    "message": "Remover",
+    "description": "Context menu item to remove shortcut"
+  },
+  "addShortcutModalTitle": {
+    "message": "Adicionar atalho",
+    "description": "Title for add shortcut modal"
+  },
+  "editShortcutModalTitle": {
+    "message": "Editar atalho",
+    "description": "Title for edit shortcut modal"
+  },
+  "shortcutNameLabel": {
+    "message": "Nome:",
+    "description": "Label for shortcut name input"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "Introduza o nome do atalho",
+    "description": "Placeholder for shortcut name input"
+  },
+  "shortcutUrlLabel": {
+    "message": "URL:",
+    "description": "Label for shortcut URL input"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "Introduza o URL (ex.: google.com)",
+    "description": "Placeholder for shortcut URL input"
+  },
+  "shortcutCancelButton": {
+    "message": "Cancelar",
+    "description": "Cancel button for shortcut modal"
+  },
+  "shortcutOkButton": {
+    "message": "OK",
+    "description": "OK button for shortcut modal"
+  },
+  "shortcutNameRequired": {
+    "message": "O nome é obrigatório",
+    "description": "Error message when shortcut name is empty"
+  },
+  "shortcutUrlRequired": {
+    "message": "O URL é obrigatório",
+    "description": "Error message when shortcut URL is empty"
+  },
+  "shortcutUrlInvalid": {
+    "message": "Introduza um URL válido",
+    "description": "Error message when shortcut URL is invalid"
+  },
+  "quizModeQuestion": {
+    "message": "Que ave é esta?",
+    "description": "Main question text in quiz mode"
+  },
+  "quizProgress": {
+    "message": "Pergunta {currentQuestion} de {totalQuestions}",
+    "description": "Progress indicator in quiz mode"
+  },
+  "quizNextQuestion": {
+    "message": "Pergunta seguinte",
+    "description": "Button text for next question"
+  },
+  "quizShowResults": {
+    "message": "Ver resultados",
+    "description": "Button text to show final results"
+  },
+  "quizStartNewQuiz": {
+    "message": "Começar novo quiz",
+    "description": "Button text to start a new quiz"
+  },
+  "quizExitQuiz": {
+    "message": "Sair do quiz",
+    "description": "Button text to exit quiz mode"
+  },
+  "quizShareResults": {
+    "message": "Partilhar resultados",
+    "description": "Button text to share quiz results as an image"
+  },
+  "quizShareTitle": {
+    "message": "Resultados do quiz de aves",
+    "description": "Title used when sharing quiz results"
+  },
+  "quizShareGenerating": {
+    "message": "A gerar...",
+    "description": "Button text while generating share image"
+  },
+  "quizShareError": {
+    "message": "Falha ao gerar",
+    "description": "Button text when share image generation fails"
+  },
+  "quizSharePreviewTitle": {
+    "message": "Partilhe os seus resultados",
+    "description": "Title for share preview page"
+  },
+  "quizShareDownload": {
+    "message": "Transferir imagem",
+    "description": "Button to download the share image"
+  },
+  "quizShareDownloaded": {
+    "message": "Transferida!",
+    "description": "Confirmation after image download"
+  },
+  "quizShareCopyImage": {
+    "message": "Copiar para a área de transferência",
+    "description": "Button to copy image to clipboard"
+  },
+  "quizShareCopied": {
+    "message": "Copiada!",
+    "description": "Confirmation after copying to clipboard"
+  },
+  "quizShareCopyFailed": {
+    "message": "Falha ao copiar",
+    "description": "Error message when copy fails"
+  },
+  "quizShareBack": {
+    "message": "Voltar aos resultados",
+    "description": "Button to return to results page"
+  },
+  "quizShareOutOf": {
+    "message": "em 10",
+    "description": "Score display text on share image"
+  },
+  "quizShareCorrectCount": {
+    "message": "$1 certas",
+    "description": "Correct count on share image"
+  },
+  "quizShareIncorrectCount": {
+    "message": "$1 erradas",
+    "description": "Incorrect count on share image"
+  },
+  "quizShareResultsHeader": {
+    "message": "RESULTADOS DA IDENTIFICAÇÃO DE AVES",
+    "description": "Header for results list on share image"
+  },
+  "quizShareUnknownBird": {
+    "message": "Ave desconhecida",
+    "description": "Fallback text for unknown bird name"
+  },
+  "quizShareCollageAlt": {
+    "message": "Colagem dos resultados do quiz",
+    "description": "Alt text for the quiz results share image"
+  },
+  "quizImageUnavailable": {
+    "message": "Imagem indisponível",
+    "description": "Text shown when a quiz image fails to load"
+  },
+  "quizImageUnavailableHint": {
+    "message": "Consegue identificar esta ave?",
+    "description": "Hint text shown when a quiz image fails to load"
+  },
+  "quizExitConfirmTitle": {
+    "message": "Sair do quiz?",
+    "description": "Title for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessage": {
+    "message": "Tem a certeza de que quer sair do quiz? O seu progresso será perdido.",
+    "description": "Message for quiz exit confirmation modal"
+  },
+  "quizExitConfirmMessageResults": {
+    "message": "Tem a certeza de que quer fechar?",
+    "description": "Message for quiz exit confirmation on results/share page"
+  },
+  "quizExitConfirm": {
+    "message": "Sair do quiz",
+    "description": "Confirm button for quiz exit"
+  },
+  "quizExitCancel": {
+    "message": "Cancelar",
+    "description": "Cancel button for quiz exit"
+  },
+  "quizScoreExcellent": {
+    "message": "Excelente! É um verdadeiro especialista em aves!",
+    "description": "Score message for 9-10 correct answers"
+  },
+  "quizScoreGreat": {
+    "message": "Muito bem! Conhece bem as suas aves!",
+    "description": "Score message for 7-8 correct answers"
+  },
+  "quizScoreGood": {
+    "message": "Bom trabalho! Continue a observar aves!",
+    "description": "Score message for 5-6 correct answers"
+  },
+  "quizScoreNotBad": {
+    "message": "Nada mal! A prática leva à perfeição!",
+    "description": "Score message for 3-4 correct answers"
+  },
+  "quizScoreKeepLearning": {
+    "message": "Continue a aprender! Todos os especialistas em aves começaram por algum lado!",
+    "description": "Score message for 0-2 correct answers"
+  },
+  "quizErrorNotEnoughBirds": {
+    "message": "Não há aves suficientes para o quiz nesta região. Experimente outra região.",
+    "description": "Error message when not enough birds for quiz"
+  },
+  "quizErrorNotEnoughImages": {
+    "message": "Não há imagens de aves suficientes. Verifique a sua ligação à Internet e tente novamente.",
+    "description": "Error message when not enough bird images could be loaded for quiz"
+  },
+  "quizErrorGeneral": {
+    "message": "Não foi possível iniciar o quiz. Tente novamente.",
+    "description": "General error message for quiz"
+  },
+  "quizErrorTitle": {
+    "message": "Erro do quiz",
+    "description": "Title for quiz error modal"
+  },
+  "quizErrorOk": {
+    "message": "OK",
+    "description": "OK button for quiz error modal"
+  },
+  "quizLoadingQuestions": {
+    "message": "A preparar o seu quiz...",
+    "description": "Loading message when preparing quiz questions"
+  },
+  "photoBy": {
+    "message": "Foto de",
+    "description": "Text before photographer credit"
+  },
+  "quizResults": {
+    "message": "Resultados do quiz",
+    "description": "Title for quiz results section"
+  },
+  "questionReview": {
+    "message": "Revisão das perguntas",
+    "description": "Title for question review section"
+  },
+  "yourAnswer": {
+    "message": "A sua resposta: $1",
+    "description": "Shows what the user answered (when incorrect)"
+  },
+  "correct": {
+    "message": "Correto",
+    "description": "Indicates a correct answer"
+  },
+  "incorrect": {
+    "message": "Incorreto",
+    "description": "Indicates an incorrect answer"
+  },
+  "closeAlt": {
+    "message": "Fechar",
+    "description": "Alt text for close icon"
+  },
+  "closeQuiz": {
+    "message": "Fechar quiz",
+    "description": "Aria label for close quiz button"
+  },
+  "quizAlt": {
+    "message": "Quiz",
+    "description": "Alt text for quiz icon"
+  },
+  "startQuiz": {
+    "message": "Iniciar quiz",
+    "description": "Aria label for start quiz button"
+  },
+  "loading": {
+    "message": "A carregar...",
+    "description": "Loading text placeholder"
+  },
+  "volumeTooltip": {
+    "message": "Ajustar o volume",
+    "description": "Tooltip for volume button"
+  },
+  "volumeAlt": {
+    "message": "Volume",
+    "description": "Alt text for volume icon"
+  },
+  "shareTooltip": {
+    "message": "Partilhar esta ave",
+    "description": "Tooltip for share button"
+  },
+  "shareAlt": {
+    "message": "Partilhar",
+    "description": "Alt text for share icon"
+  },
+  "shareLink": {
+    "message": "Partilhar ligação",
+    "description": "Label for share link section"
+  },
+  "copyLink": {
+    "message": "Copiar",
+    "description": "Button text to copy link"
+  },
+  "linkCopied": {
+    "message": "Copiada!",
+    "description": "Button text after link is copied"
+  },
+  "shareOn": {
+    "message": "Partilhar em",
+    "description": "Label for social share options"
+  },
+  "shareToX": {
+    "message": "X",
+    "description": "Share to X (Twitter)"
+  },
+  "shareToFacebook": {
+    "message": "Facebook",
+    "description": "Share to Facebook"
+  },
+  "shareToWhatsApp": {
+    "message": "WhatsApp",
+    "description": "Share to WhatsApp"
+  },
+  "shareText": {
+    "message": "Veja que ave tão bonita: {birdName}!",
+    "description": "Default share text with bird name placeholder"
+  },
+  "loadingAudio": {
+    "message": "A carregar o áudio",
+    "description": "Loading indicator text when fetching audio for photo mode"
+  },
+  "historyTitle": {
+    "message": "Histórico de visualização",
+    "description": "Title for history modal"
+  },
+  "historyAlt": {
+    "message": "Histórico",
+    "description": "Alt text for history icon"
+  },
+  "emptyHistoryTitle": {
+    "message": "A sua aventura de observação de aves começa aqui!",
+    "description": "Title shown when history is empty"
+  },
+  "emptyHistorySubtitle": {
+    "message": "Descubra novas aves e elas vão aparecer no seu histórico de visualização.",
+    "description": "Subtitle shown when history is empty"
+  },
+  "clearHistory": {
+    "message": "Limpar histórico",
+    "description": "Button to clear viewing history"
+  },
+  "confirmClearHistory": {
+    "message": "Tem a certeza de que quer limpar o seu histórico de visualização?",
+    "description": "Confirmation dialog for clearing history"
+  },
+  "justNow": {
+    "message": "Agora mesmo",
+    "description": "Relative time: less than 1 minute ago"
+  },
+  "minuteAgo": {
+    "message": "Há $1 minuto",
+    "description": "Relative time: 1 minute ago"
+  },
+  "minutesAgo": {
+    "message": "Há $1 minutos",
+    "description": "Relative time: multiple minutes ago"
+  },
+  "hourAgo": {
+    "message": "Há $1 hora",
+    "description": "Relative time: 1 hour ago"
+  },
+  "hoursAgo": {
+    "message": "Há $1 horas",
+    "description": "Relative time: multiple hours ago"
+  },
+  "yesterday": {
+    "message": "Ontem",
+    "description": "Relative time: yesterday"
+  },
+  "daysAgo": {
+    "message": "Há $1 dias",
+    "description": "Relative time: multiple days ago"
+  },
+  "tourWelcomeTitle": {
+    "message": "Bem-vindo ao BirdTab!",
+    "description": "Feature tour: welcome screen title"
+  },
+  "tourWelcomeDescription": {
+    "message": "Deixe-nos mostrar-lhe tudo! Esta visita rápida ajuda a descobrir todas as funcionalidades que tornam especial a sua observação de aves.",
+    "description": "Feature tour: welcome screen description"
+  },
+  "tourCompleteTitle": {
+    "message": "Está tudo pronto!",
+    "description": "Feature tour: completion screen title"
+  },
+  "tourCompleteDescription": {
+    "message": "Divirta-se a descobrir belas aves de todo o mundo. Boas observações!",
+    "description": "Feature tour: completion screen description"
+  },
+  "tourStartButton": {
+    "message": "Vamos lá!",
+    "description": "Feature tour: start button on welcome screen"
+  },
+  "tourDoneButton": {
+    "message": "Começar a explorar!",
+    "description": "Feature tour: done button on completion screen"
+  },
+  "tourGotIt": {
+    "message": "Percebi!",
+    "description": "Feature spotlight: acknowledgment button"
+  },
+  "tourNewFeature": {
+    "message": "Novo!",
+    "description": "Feature spotlight: badge for new features"
+  },
+  "tourBackButton": {
+    "message": "Voltar",
+    "description": "Feature tour: back button text"
+  },
+  "tourVolumeTitle": {
+    "message": "Controlo de volume",
+    "description": "Feature tour: volume controls title"
+  },
+  "tourVolumeDescription": {
+    "message": "Ajuste o volume ao seu gosto. Regule o som dos cantos das aves para criar a sua experiência ideal.",
+    "description": "Feature tour: volume controls description"
+  },
+  "tourRefreshTitle": {
+    "message": "Descobrir novas aves",
+    "description": "Feature tour: refresh button title"
+  },
+  "tourRefreshDescription": {
+    "message": "Pronto para um novo amigo de penas? Clique aqui a qualquer momento para carregar uma nova foto de ave e aprender algo novo.",
+    "description": "Feature tour: refresh button description"
+  },
+  "tourPlayPauseTitle": {
+    "message": "Reproduzir / Pausar",
+    "description": "Feature tour: play/pause button title"
+  },
+  "tourPlayPauseDescription": {
+    "message": "Controle a reprodução dos cantos. Clique para reproduzir ou pausar o canto da ave atual a qualquer momento.",
+    "description": "Feature tour: play/pause button description"
+  },
+  "tourChromeTabTitle": {
+    "message": "Novo separador do Chrome",
+    "description": "Feature tour: Chrome tab link title"
+  },
+  "tourChromeTabDescription": {
+    "message": "Precisa da página Novo separador predefinida do Chrome? Clique aqui a qualquer momento para a abrir num novo separador.",
+    "description": "Feature tour: Chrome tab link description"
+  },
+  "tourNextButton": {
+    "message": "Seguinte",
+    "description": "Feature tour: next button text"
+  },
+  "tourSkipButton": {
+    "message": "Saltar visita",
+    "description": "Feature tour: skip button text"
+  },
+  "tourFinishButton": {
+    "message": "Percebi!",
+    "description": "Feature tour: finish button text on last step"
+  },
+  "resetTour": {
+    "message": "Repor visita guiada",
+    "description": "Button to reset the feature tour in debug section"
+  },
+  "errorResettingTour": {
+    "message": "Erro ao repor a visita guiada",
+    "description": "Error message when tour reset fails"
+  },
+  "sendFeedback": {
+    "message": "Enviar comentários",
+    "description": "Link text for sending feedback to support"
+  },
+  "birdNamesCredit": {
+    "message": "Nomes das aves:",
+    "description": "Settings, end of the list: where the bird names come from, followed by links to eBird and the IOC World Bird List"
+  },
+  "chromeTabTooltip": {
+    "message": "Abrir a página Novo separador predefinida do Chrome",
+    "description": "Tooltip for Chrome tab link"
+  },
+  "chromeTabText": {
+    "message": "Separador Chrome",
+    "description": "Text label for Chrome tab link"
+  },
+  "permissionDialogTitle": {
+    "message": "O BirdTab precisa de permissões adicionais",
+    "description": "Title for permission request dialog"
+  },
+  "permissionDialogSubtitle": {
+    "message": "Para mostrar os seus sites mais visitados e atalhos personalizados, o BirdTab precisa de acesso a funcionalidades adicionais do navegador.",
+    "description": "Subtitle explaining what permissions are needed"
+  },
+  "permissionDialogPrivacy": {
+    "message": "Valorizamos e protegemos a sua privacidade. Saiba mais na nossa",
+    "description": "Privacy message in permission dialog"
+  },
+  "privacyPolicy": {
+    "message": "Política de Privacidade",
+    "description": "Privacy policy link text"
+  },
+  "goBack": {
+    "message": "Voltar",
+    "description": "Button text to go back/cancel"
+  },
+  "continue": {
+    "message": "Continuar",
+    "description": "Button text to continue/confirm"
+  },
+  "chromeFooterTitle": {
+    "message": "Está a ver uma faixa na parte inferior?",
+    "description": "Title for Chrome footer notification"
+  },
+  "chromeFooterDescription": {
+    "message": "É o novo rodapé do Chrome. Para o ocultar, clique nele com o botão direito e selecione 'Ocultar rodapé na página Novo separador'.",
+    "description": "Description explaining how to hide Chrome's footer"
+  },
+  "chromeFooterLearnMore": {
+    "message": "Saiba mais",
+    "description": "Link text to learn more about Chrome footer"
+  },
+  "chromeFooterClose": {
+    "message": "Fechar notificação",
+    "description": "Aria label for close button on Chrome footer notification"
+  },
+  "clockDisplay": {
+    "message": "Mostrar relógio",
+    "description": "Label for clock display toggle in settings"
+  },
+  "clockDisplayHelpText": {
+    "message": "Mostra um relógio grande por cima da caixa de pesquisa.",
+    "description": "Help text for clock display setting"
+  },
+  "clockDisplayTooltip": {
+    "message": "Mostrar a hora atual no novo separador",
+    "description": "Tooltip for clock display toggle"
+  },
+  "clock24Hour": {
+    "message": "Relógio de 24 horas",
+    "description": "Option to use 24-hour time format"
+  },
+  "clockShowSeconds": {
+    "message": "Mostrar segundos",
+    "description": "Option to display seconds in the clock"
+  },
+  "clockOptionsAriaLabel": {
+    "message": "Opções do relógio",
+    "description": "Aria label for clock options button"
+  },
+  "switchToTimer": {
+    "message": "Mudar para temporizador",
+    "description": "Option to switch from clock to countdown timer"
+  },
+  "switchToClock": {
+    "message": "Mudar para relógio",
+    "description": "Option to switch from timer back to clock"
+  },
+  "timerStart": {
+    "message": "Iniciar",
+    "description": "Button to start the countdown timer"
+  },
+  "timerPause": {
+    "message": "Pausar",
+    "description": "Button to pause the countdown timer"
+  },
+  "timerResume": {
+    "message": "Retomar",
+    "description": "Button to resume the paused timer"
+  },
+  "timerReset": {
+    "message": "Repor",
+    "description": "Button to reset the timer"
+  },
+  "timerHours": {
+    "message": "h",
+    "description": "Hours unit abbreviation for timer"
+  },
+  "timerMinutes": {
+    "message": "m",
+    "description": "Minutes unit abbreviation for timer"
+  },
+  "timerSeconds": {
+    "message": "s",
+    "description": "Seconds unit abbreviation for timer"
+  },
+  "timerOptionsAriaLabel": {
+    "message": "Opções do temporizador",
+    "description": "Aria label for timer options button"
+  },
+  "timerAlarmSound": {
+    "message": "Som do alarme",
+    "description": "Toggle to enable/disable alarm sound when timer ends"
+  },
+  "showTopSites": {
+    "message": "Mostrar sites mais visitados",
+    "description": "Option to show the most visited sites grid"
+  },
+  "quickAccessOptionsAriaLabel": {
+    "message": "Opções de acesso rápido",
+    "description": "Aria label for quick access options button"
+  },
+  "hideClockTitle": {
+    "message": "Ocultar relógio?",
+    "description": "Confirmation dialog title when hiding the clock"
+  },
+  "hideClockSubtitle": {
+    "message": "Pode voltar a mostrá-lo a qualquer momento nas Definições.",
+    "description": "Confirmation dialog subtitle when hiding the clock"
+  },
+  "hideQuickAccessTitle": {
+    "message": "Ocultar acesso rápido?",
+    "description": "Confirmation dialog title when hiding quick access"
+  },
+  "hideQuickAccessSubtitle": {
+    "message": "A pesquisa e os sites mais visitados vão ficar ocultos. Pode voltar a mostrá-los nas Definições.",
+    "description": "Confirmation dialog subtitle when hiding quick access"
+  },
+  "clockCloseAriaLabel": {
+    "message": "Ocultar relógio",
+    "description": "Aria label for clock close button"
+  },
+  "quickAccessCloseAriaLabel": {
+    "message": "Ocultar acesso rápido",
+    "description": "Aria label for quick access close button"
+  },
+  "hide": {
+    "message": "Ocultar",
+    "description": "Button text to confirm hiding an element"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Button text to cancel an action"
+  },
+  "googleApps": {
+    "message": "Aplicações Google",
+    "description": "Label for Google Apps toggle in settings"
+  },
+  "googleAppsHelpText": {
+    "message": "Mostra um botão de acesso rápido às aplicações Google, como o Gmail, o Drive, o YouTube e muito mais.",
+    "description": "Help text for Google Apps setting"
+  },
+  "googleAppsTooltip": {
+    "message": "Ative para mostrar o botão das aplicações Google",
+    "description": "Tooltip for Google Apps toggle"
+  },
+  "googleAppsTriggerTooltip": {
+    "message": "Aplicações Google",
+    "description": "Tooltip for Google Apps trigger button"
+  },
+  "googleAppsTitle": {
+    "message": "Aplicações Google",
+    "description": "Title for Google Apps panel"
+  },
+  "googleAppsTriggerAriaLabel": {
+    "message": "Abrir aplicações Google",
+    "description": "Aria label for Google Apps trigger button"
+  },
+  "closeGoogleApps": {
+    "message": "Fechar aplicações Google",
+    "description": "Aria label for close button in Google Apps panel"
+  },
+  "resetGoogleAppsOrder": {
+    "message": "Repor ordem",
+    "description": "Button to reset Google Apps to default order"
+  },
+  "googleAppPosition": {
+    "message": "$1. Posição $2 de $3. Use Ctrl+setas para mover.",
+    "description": "Aria label for draggable Google App item",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Gmail"
+      },
+      "2": {
+        "content": "$2",
+        "example": "1"
+      },
+      "3": {
+        "content": "$3",
+        "example": "18"
+      }
+    }
+  },
+  "appMovedToPosition": {
+    "message": "Movida para a posição $1",
+    "description": "Screen reader announcement when app is moved",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "orderResetToDefault": {
+    "message": "Ordem predefinida reposta",
+    "description": "Screen reader announcement when order is reset"
+  },
+  "showChromeTab": {
+    "message": "Atalho do separador Chrome",
+    "description": "Label for Chrome Tab shortcut toggle in settings"
+  },
+  "showChromeTabHelpText": {
+    "message": "Mostra um atalho para aceder rapidamente à página Novo separador predefinida do Chrome.",
+    "description": "Help text for Chrome Tab shortcut setting"
+  },
+  "showChromeTabTooltip": {
+    "message": "Ative para mostrar o atalho do separador Chrome",
+    "description": "Tooltip for Chrome Tab shortcut toggle"
+  },
+  "searchEngineLabel": {
+    "message": "Motor de pesquisa",
+    "description": "Label for search engine selection in quick access options"
+  },
+  "searchEngineBrowserDefault": {
+    "message": "Predefinição do navegador",
+    "description": "Option for using browser's default search engine"
+  },
+  "searchEngineGoogle": {
+    "message": "Google",
+    "description": "Option for Google search engine"
+  },
+  "searchEngineDuckDuckGo": {
+    "message": "DuckDuckGo",
+    "description": "Option for DuckDuckGo search engine"
+  },
+  "searchEngineChatGPT": {
+    "message": "ChatGPT",
+    "description": "Option for ChatGPT search"
+  },
+  "searchEnginePerplexity": {
+    "message": "Perplexity",
+    "description": "Option for Perplexity AI search"
+  },
+  "tourCreditsTitle": {
+    "message": "Créditos e licenças",
+    "description": "Feature tour: credits line title"
+  },
+  "tourCreditsDescription": {
+    "message": "Aqui encontra o fotógrafo e o autor da gravação de cada ave. Toque num nome para saber mais sobre eles e ver os detalhes da licença.",
+    "description": "Feature tour: credits line description"
+  },
+  "tourBirdNameTitle": {
+    "message": "Conheça a ave",
+    "description": "Feature tour: bird name step title"
+  },
+  "tourBirdNameDescription": {
+    "message": "Clique no nome da ave para ver curiosidades, o estado de conservação e um mapa de onde vive.",
+    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
+  },
+  "imageLoadFailedMessage": {
+    "message": "Não foi possível carregar esta foto.",
+    "description": "Shown in place of the bird photo when it fails to load"
+  },
+  "imageOfflineMessage": {
+    "message": "Está offline. A foto vai aparecer quando voltar a estar online.",
+    "description": "Shown in place of the bird photo when the browser is offline"
+  },
+  "tourOptionsMenuTitle": {
+    "message": "Menu rápido",
+    "description": "Feature tour: options menu title"
+  },
+  "tourOptionsMenuDescription": {
+    "message": "Aceda às definições, ao histórico de visualização e ao quiz de aves a partir deste menu. Clique para explorar as opções!",
+    "description": "Feature tour: options menu description"
+  },
+  "audioPlayingAlt": {
+    "message": "Áudio a reproduzir",
+    "description": "Alt text for audio playing waveform icon"
+  },
+  "audioPausedAlt": {
+    "message": "Áudio em pausa",
+    "description": "Alt text for audio paused icon"
+  },
+  "conservationStatusTitle": {
+    "message": "Estado de conservação",
+    "description": "Heading for the bird conservation status in the info popover"
+  },
+  "conservationLeastConcern": {
+    "message": "Pouco preocupante",
+    "description": "Localized conservation status label for Least Concern"
+  },
+  "conservationLeastConcernHelp": {
+    "message": "Atualmente não é considerada em risco de extinção.",
+    "description": "Plain-language explanation for Least Concern conservation status"
+  },
+  "conservationNearThreatened": {
+    "message": "Quase ameaçada",
+    "description": "Localized conservation status label for Near Threatened"
+  },
+  "conservationNearThreatenedHelp": {
+    "message": "Pode vir a ficar ameaçada sem proteção contínua.",
+    "description": "Plain-language explanation for Near Threatened conservation status"
+  },
+  "conservationVulnerable": {
+    "message": "Vulnerável",
+    "description": "Localized conservation status label for Vulnerable"
+  },
+  "conservationVulnerableHelp": {
+    "message": "Enfrenta um risco elevado de extinção na natureza.",
+    "description": "Plain-language explanation for Vulnerable conservation status"
+  },
+  "conservationEndangered": {
+    "message": "Em perigo",
+    "description": "Localized conservation status label for Endangered"
+  },
+  "conservationEndangeredHelp": {
+    "message": "Enfrenta um risco muito elevado de extinção na natureza.",
+    "description": "Plain-language explanation for Endangered conservation status"
+  },
+  "conservationCriticallyEndangered": {
+    "message": "Criticamente em perigo",
+    "description": "Localized conservation status label for Critically Endangered"
+  },
+  "conservationCriticallyEndangeredHelp": {
+    "message": "Enfrenta um risco extremamente elevado de extinção na natureza.",
+    "description": "Plain-language explanation for Critically Endangered conservation status"
+  },
+  "conservationExtinctInWild": {
+    "message": "Extinta na natureza",
+    "description": "Localized conservation status label for Extinct in the Wild"
+  },
+  "conservationExtinctInWildHelp": {
+    "message": "Sobrevive apenas em cativeiro ou em populações geridas pelo ser humano.",
+    "description": "Plain-language explanation for Extinct in the Wild conservation status"
+  },
+  "conservationExtinct": {
+    "message": "Extinta",
+    "description": "Localized conservation status label for Extinct"
+  },
+  "conservationExtinctHelp": {
+    "message": "Não restam indivíduos vivos conhecidos.",
+    "description": "Plain-language explanation for Extinct conservation status"
+  },
+  "aboutThisBird": {
+    "message": "Sobre",
+    "description": "Heading for the bird description in the info popover"
+  },
+  "viewOnEbird": {
+    "message": "Ver no eBird",
+    "description": "Label for the link that opens the current bird on eBird"
+  },
+  "rangeMap": {
+    "message": "Mapa de distribuição",
+    "description": "Heading for the bird range map in the info popover"
+  },
+  "loadingRangeMap": {
+    "message": "A carregar o mapa de distribuição...",
+    "description": "Loading text shown while the bird range map is loading"
+  },
+  "rangeMapOffline": {
+    "message": "O mapa de distribuição precisa de ligação à Internet",
+    "description": "Shown in place of the range map when the browser is offline"
+  },
+  "rangeMapUnavailable": {
+    "message": "Não foi possível carregar o mapa de distribuição",
+    "description": "Shown in place of the range map when it takes too long to load"
+  },
+  "closeHistoryAriaLabel": {
+    "message": "Fechar histórico",
+    "description": "Aria label for close history button"
+  },
+  "microsoftEdgeAlt": {
+    "message": "Microsoft Edge",
+    "description": "Alt text for Microsoft Edge icon in search"
+  },
+  "lowDistractionToggle": {
+    "message": "Ocultar detalhes",
+    "description": "Tooltip for the button that hides the bottom info panel for a distraction-free view"
+  },
+  "lowDistractionExpand": {
+    "message": "Mostrar detalhes",
+    "description": "Tooltip for the button that restores the hidden bottom info panel"
+  },
+  "lowDistractionAriaHide": {
+    "message": "Ocultar o painel de informações da ave",
+    "description": "Accessible label for the button that hides the bottom info panel"
+  },
+  "lowDistractionAriaShow": {
+    "message": "Mostrar o painel de informações da ave",
+    "description": "Accessible label for the button that restores the hidden bottom info panel"
+  },
+  "regionWorld": {
+    "message": "Mundo",
+    "description": "Label for the World region option in the region selector"
+  },
+  "regionHighSeas": {
+    "message": "Alto-mar",
+    "description": "Label for the High Seas (XX) region option in the region selector"
+  },
+  "creditPhotoBy": {
+    "message": "Foto de",
+    "description": "Credit popover section header for photo credits"
+  },
+  "creditAudioBy": {
+    "message": "Áudio de",
+    "description": "Credit popover section header for audio credits"
+  },
+  "creditSoundType": {
+    "message": "Tipo de som",
+    "description": "Tooltip for audio sound type tag in credit popover"
+  },
+  "creditPhotoLocation": {
+    "message": "Local da foto",
+    "description": "Tooltip for photo location tag in credit popover"
+  },
+  "creditRecordingLocation": {
+    "message": "Local da gravação",
+    "description": "Tooltip for audio recording location tag in credit popover"
+  },
+  "creditDateTaken": {
+    "message": "Data da foto",
+    "description": "Tooltip for photo date tag in credit popover"
+  },
+  "creditDateRecorded": {
+    "message": "Data da gravação",
+    "description": "Tooltip for audio date tag in credit popover"
+  },
+  "creditResized": {
+    "message": "Redimensionada a partir do original",
+    "description": "Tag text shown when image was resized from the original"
+  },
+  "creditResizedTooltip": {
+    "message": "A imagem foi redimensionada a partir do original para apresentação",
+    "description": "Tooltip for resized image tag in credit popover"
+  },
+  "creditConverted": {
+    "message": "Convertido para $1",
+    "description": "Tag text shown when audio was converted to a different format",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "mp3"
+      }
+    }
+  },
+  "creditConvertedTooltip": {
+    "message": "O áudio foi convertido do formato original para reprodução",
+    "description": "Tooltip for converted audio tag in credit popover"
+  },
+  "creditSource": {
+    "message": "Fonte",
+    "description": "Field label for media source in credit popover"
+  },
+  "creditLicense": {
+    "message": "Licença",
+    "description": "Field label for media license in credit popover"
+  },
+  "creditInfoTitle": {
+    "message": "Créditos e licenças multimédia",
+    "description": "Tooltip for the credit info trigger icon"
+  },
+  "creditInfoAlt": {
+    "message": "Créditos e licenças",
+    "description": "Alt text for the credit info trigger icon"
+  },
+  "settingsCategoryNewTab": {
+    "message": "Novo separador",
+    "description": "Settings category for how new tabs behave"
+  },
+  "newTabModeLabel": {
+    "message": "Abrir o BirdTab",
+    "description": "Setting: when BirdTab opens instead of Chrome's own new tab page"
+  },
+  "newTabModeEvery": {
+    "message": "Cada separador",
+    "description": "Open BirdTab choice (short): on every new tab"
+  },
+  "newTabModeHourly": {
+    "message": "De vez em quando",
+    "description": "Open BirdTab choice (short): the first new tab after an hour away"
+  },
+  "newTabModeButton": {
+    "message": "Quando eu pedir",
+    "description": "Open BirdTab choice (short): only from the toolbar button"
+  },
+  "newTabModeEveryHelp": {
+    "message": "Uma ave em cada novo separador.",
+    "description": "One-line caption for Open BirdTab: every tab"
+  },
+  "newTabModeHourlyHelp": {
+    "message": "Uma ave após uma hora de ausência. No resto do tempo, a página do Chrome.",
+    "description": "One-line caption for Open BirdTab: now and then"
+  },
+  "newTabModeButtonHelp": {
+    "message": "A página do Chrome nos novos separadores. Clique no botão do BirdTab para ver uma ave.",
+    "description": "One-line caption for Open BirdTab: when I ask"
+  },
+  "newTabModePinned": {
+    "message": "Fixado na barra de ferramentas",
+    "description": "Status: BirdTab's toolbar button is pinned"
+  },
+  "newTabModeNotPinned": {
+    "message": "Ainda não fixado",
+    "description": "Status: BirdTab's toolbar button isn't pinned"
+  },
+  "newTabModeKeyword": {
+    "message": "Ou escreva $1, um espaço e o nome de uma ave na barra de endereço",
+    "description": "Tip; $1 is the keyword 'bird' shown as a key"
+  },
+  "stepAsideOfferTitle": {
+    "message": "Prefere a página Novo separador do Chrome?",
+    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
+  },
+  "stepAsideOfferText": {
+    "message": "O BirdTab pode sair do caminho e abrir só quando quiser ver uma ave.",
+    "description": "Body of the card offering to step aside for Chrome's new tab page"
+  },
+  "birdRotationLabel": {
+    "message": "Nova ave",
+    "description": "Setting: how often the bird changes"
+  },
+  "birdRotationEvery": {
+    "message": "Cada separador",
+    "description": "New bird option (short): every new tab"
+  },
+  "birdRotationHourly": {
+    "message": "De hora a hora",
+    "description": "New bird option (short): every hour"
+  },
+  "birdRotationDaily": {
+    "message": "Diariamente",
+    "description": "New bird option (short): once a day"
+  },
+  "birdRotationHelp": {
+    "message": "O botão de atualizar traz sempre uma ave nova.",
+    "description": "Help text for Change the bird"
+  },
+  "quickGuessLabel": {
+    "message": "Adivinhe a ave",
+    "description": "Setting: hide the bird's name until clicked"
+  },
+  "quickGuessHelp": {
+    "message": "Oculta o nome da ave até clicar nele, para que cada novo separador seja um pequeno quiz.",
+    "description": "Help text for Guess the Bird"
+  },
+  "quickGuessPrompt": {
+    "message": "Que ave é esta?",
+    "description": "Shown in place of the bird's name in Guess the Bird mode"
+  },
+  "quickGuessReveal": {
+    "message": "Mostrar o nome da ave",
+    "description": "Accessible label for revealing the hidden bird name"
+  },
+  "favoriteAdd": {
+    "message": "Adicionar aos favoritos",
+    "description": "Heart button: add the bird to favorites"
+  },
+  "favoriteRemove": {
+    "message": "Remover dos favoritos",
+    "description": "Heart button: remove the bird from favorites"
+  },
+  "favoritesTitle": {
+    "message": "Favoritos",
+    "description": "Favorites tab and menu item"
+  },
+  "yourBirdsTitle": {
+    "message": "As suas aves",
+    "description": "Title of the sidebar with History, Favorites and Life List"
+  },
+  "emptyFavoritesTitle": {
+    "message": "Ainda não há favoritos",
+    "description": "Empty state title for favorites"
+  },
+  "emptyFavoritesSubtitle": {
+    "message": "Toque no coração por baixo do nome de uma ave, ou em qualquer ave aqui.",
+    "description": "Empty Favorites: how to add one"
+  },
+  "omniboxSuggestion": {
+    "message": "BirdTab: escreva o nome de uma ave, ou qualquer coisa para ver uma ave nova",
+    "description": "Address bar suggestion after typing the 'bird' keyword"
+  },
+  "settingsGroupBirds": {
+    "message": "Aves",
+    "description": "Settings group: region, how often the bird changes, guess mode"
+  },
+  "settingsGroupSound": {
+    "message": "Som",
+    "description": "Settings group: auto-play and quiet hours"
+  },
+  "settingsGroupPage": {
+    "message": "Na página",
+    "description": "Settings group: clock, search, Google apps"
+  },
+  "quickGuessShort": {
+    "message": "Oculta o nome até clicar nele",
+    "description": "One-line hint under Guess the Bird"
+  },
+  "pinShowMe": {
+    "message": "Mostrar como",
+    "description": "Button that opens the pinning guide"
+  },
+  "pinCoachEyebrow": {
+    "message": "Um passo rápido",
+    "description": "Small heading above the pinning guide"
+  },
+  "pinCoachTitle": {
+    "message": "Fixe o BirdTab na barra de ferramentas",
+    "description": "Pinning guide title"
+  },
+  "pinCoachExtensions": {
+    "message": "Extensões",
+    "description": "Title of Chrome's extensions menu, as Chrome shows it in this language"
+  },
+  "pinCoachStep1": {
+    "message": "Clique na peça de puzzle junto à barra de endereço",
+    "description": "Pinning guide step 1"
+  },
+  "pinCoachStep2": {
+    "message": "Clique no pionés junto ao BirdTab",
+    "description": "Pinning guide step 2"
+  },
+  "pinCoachWaiting": {
+    "message": "À espera que fixe…",
+    "description": "Pinning guide: waiting for the user to pin"
+  },
+  "pinCoachLater": {
+    "message": "Talvez mais tarde",
+    "description": "Pinning guide: close without pinning"
+  },
+  "pinCoachDoneTitle": {
+    "message": "Fixado!",
+    "description": "Pinning guide: success title"
+  },
+  "pinCoachDoneText": {
+    "message": "Clique no botão do BirdTab sempre que quiser ver uma ave.",
+    "description": "Pinning guide: success text"
+  },
+  "pinCoachDone": {
+    "message": "Concluído",
+    "description": "Pinning guide: close after success"
+  },
+  "yourBirdsCountLabel": {
+    "message": "aves diferentes vistas",
+    "description": "Label under the number of different birds seen (stat label; the number is shown separately above it)"
+  },
+  "yourBirdsSearch": {
+    "message": "Procurar uma ave",
+    "description": "Search box placeholder in Your Birds"
+  },
+  "yourBirdsFilterAll": {
+    "message": "Todas",
+    "description": "Your Birds filter: every bird seen"
+  },
+  "yourBirdsShowingNow": {
+    "message": "Agora no ecrã",
+    "description": "On the card of the bird currently on the page"
+  },
+  "yourBirdsShowAgain": {
+    "message": "Voltar a mostrar $1",
+    "description": "Accessible label: show this bird ($1) on the page again"
+  },
+  "yourBirdsShowAgainHint": {
+    "message": "Voltar a mostrar esta ave",
+    "description": "Tooltip on a bird card"
+  },
+  "favoriteAddNamed": {
+    "message": "Adicionar $1 aos favoritos",
+    "description": "Accessible label: add $1 to favorites"
+  },
+  "favoriteRemoveNamed": {
+    "message": "Remover $1 dos favoritos",
+    "description": "Accessible label: remove $1 from favorites"
+  },
+  "yourBirdsEmptyTitle": {
+    "message": "Ainda não há aves",
+    "description": "Empty Your Birds list: title"
+  },
+  "yourBirdsEmptyText": {
+    "message": "Todas as aves que vê num novo separador ficam guardadas aqui.",
+    "description": "Empty Your Birds list: text"
+  },
+  "yourBirdsNoMatch": {
+    "message": "Nenhuma ave corresponde a “$1”",
+    "description": "Search found nothing; $1 is the search text"
+  },
+  "yourBirdsClear": {
+    "message": "Limpar aves vistas",
+    "description": "Button: clear the list of birds seen"
+  },
+  "yourBirdsClearTitle": {
+    "message": "Limpar as aves que já viu?",
+    "description": "Confirmation title for clearing the birds seen"
+  },
+  "yourBirdsClearText": {
+    "message": "Vão ser removidas desta lista e a contagem recomeça. Os seus favoritos mantêm-se.",
+    "description": "Confirmation text for clearing the birds seen"
+  },
+  "yourBirdsClearConfirm": {
+    "message": "Limpar",
+    "description": "Confirmation button for clearing the birds seen"
+  },
+  "yourBirdsMilestone": {
+    "message": "$1 aves diferentes vistas!",
+    "description": "Note when the number of different birds seen ($1) reaches a round number"
+  },
+  "tourOptionsMenuDescriptionYourBirds": {
+    "message": "As definições, as suas aves e o quiz de aves estão todos neste menu.",
+    "description": "Feature tour: what the options menu holds"
+  },
+  "yourBirdsQuiz": {
+    "message": "Quiz com estas aves",
+    "description": "Button in Your Birds: start a quiz on the birds listed"
+  },
+  "yourBirdsQuizNeedsMore": {
+    "message": "São precisas pelo menos $1 aves",
+    "description": "Tooltip when there are too few birds for a quiz; $1 is the minimum"
+  },
+  "favoritesClear": {
+    "message": "Limpar favoritos",
+    "description": "Button: remove every favorite"
+  },
+  "favoritesClearTitle": {
+    "message": "Limpar todos os favoritos?",
+    "description": "Confirmation title for clearing favorites"
+  },
+  "favoritesClearText": {
+    "message": "Vão ser removidos em todos os seus computadores. As aves que já viu mantêm-se.",
+    "description": "Confirmation text for clearing favorites (they sync across computers)"
+  },
+  "pinCoachStep2Edge": {
+    "message": "Clique no olho junto ao BirdTab para o mostrar na barra de ferramentas",
+    "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  }
+}

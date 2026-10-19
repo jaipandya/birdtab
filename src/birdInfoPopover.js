@@ -197,6 +197,11 @@ function openInfoPopover() {
   }
 
   const scientificName = trigger.dataset.scientificName;
+  // Under a name in another language, the English one: what eBird, apps and most guides call it.
+  // Never while Guess the bird hides the name.
+  const englishName = trigger.dataset.englishName;
+  const shownName = trigger.classList.contains('guess-hidden') ? '' : trigger.textContent.trim();
+  const showEnglish = !!englishName && !!shownName && englishName.toLowerCase() !== shownName.toLowerCase();
   const description = trigger.dataset.description;
   const conservation = trigger.dataset.conservation;
   const speciesCode = trigger.dataset.speciesCode;
@@ -218,6 +223,7 @@ function openInfoPopover() {
   setHtml(popoverElement, html`
     <div class="info-popover__content">
       <div class="info-popover__body">
+        ${showEnglish ? html`<p class="info-popover__english-name" lang="en">${englishName}</p>` : ''}
         ${scientificName ? html`<p class="info-popover__scientific-name">${scientificName}</p>` : ''}
         ${description ? html`
           <p class="info-popover__section-label">${chrome.i18n.getMessage('aboutThisBird') || 'About'}</p>

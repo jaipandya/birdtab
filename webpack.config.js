@@ -20,12 +20,14 @@ const FIREFOX_EXTENSION_NAMES = {
   en: "BirdTab - Bird Wallpapers & Sounds for New Tab",
   es: "BirdTab - Fondos de aves y cantos en nueva pestaña",
   "pt_BR": "BirdTab - Papéis de parede de aves na nova aba",
+  "pt_PT": "BirdTab - Fundos de ecrã de aves no novo separador",
   de: "BirdTab - Vogelbilder & Vogelstimmen im neuen Tab",
   fr: "BirdTab - Fonds d'écran d'oiseaux en nouvel onglet",
   ja: "BirdTab - 鳥の壁紙と鳴き声で彩る新しいタブ",
   pl: "BirdTab - Tapety i śpiew ptaków na nowej karcie",
   ru: "BirdTab - Обои и голоса птиц в новой вкладке",
   "zh_CN": "BirdTab - 鸟类壁纸与鸟鸣声新标签页",
+  "zh_TW": "BirdTab - 鳥類桌布與鳥鳴聲新分頁",
   ar: "BirdTab - خلفيات وأصوات الطيور لعلامة تبويب جديدة",
 };
 

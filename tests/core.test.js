@@ -164,6 +164,7 @@ const CONFIG = {
 
 // Sample bird data
 const SAMPLE_BIRD_INFO = {
+  speciesCode: 'bknsti',
   name: 'Black-necked Stilt',
   scientificName: 'Himantopus mexicanus',
   location: 'US',
@@ -194,67 +195,37 @@ describe('Bird Info Display', () => {
     jest.clearAllMocks();
   });
 
+  // The real lookup (src/birdNames.js), as the info panel, Your Birds and the quiz use it
   describe('Localized Bird Names', () => {
-    test('should display English name by default', () => {
-      mockI18n.getUILanguage.mockReturnValue('en-US');
-      
-      const lang = chrome.i18n.getUILanguage();
-      let nameToDisplay = SAMPLE_BIRD_INFO.name;
-      
-      if (lang && SAMPLE_BIRD_INFO.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_fr;
-      } else if (lang && SAMPLE_BIRD_INFO.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_cn;
-      }
-      
-      expect(nameToDisplay).toBe('Black-necked Stilt');
+    const { localizedName, loadBirdNames, resetBirdNames } = require('../src/birdNames.js');
+    const show = async (language, stored) => {
+      mockI18n.getUILanguage.mockReturnValue(language);
+      if (stored) mockStorage.local.data.media_names = stored;
+      resetBirdNames();
+      await loadBirdNames();
+      return localizedName(SAMPLE_BIRD_INFO);
+    };
+
+    test('English by default', async () => {
+      expect(await show('en-US')).toBe('Black-necked Stilt');
     });
 
-    test('should display French name for French locale', () => {
-      mockI18n.getUILanguage.mockReturnValue('fr-FR');
-      
-      const lang = chrome.i18n.getUILanguage();
-      let nameToDisplay = SAMPLE_BIRD_INFO.name;
-      
-      if (lang && SAMPLE_BIRD_INFO.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_fr;
-      } else if (lang && SAMPLE_BIRD_INFO.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_cn;
-      }
-      
-      expect(nameToDisplay).toBe('Échasse d\'Amérique');
+    test('French and Chinese from the manifest before any names are stored', async () => {
+      expect(await show('fr-FR')).toBe('Échasse d\'Amérique');
+      expect(await show('zh-CN')).toBe('黑颈长脚鹬');
+      // Simplified for Taiwan until the Traditional names arrive
+      expect(await show('zh-TW')).toBe('黑颈长脚鹬');
     });
 
-    test('should display Chinese name for Chinese locale', () => {
-      mockI18n.getUILanguage.mockReturnValue('zh-CN');
-      
-      const lang = chrome.i18n.getUILanguage();
-      let nameToDisplay = SAMPLE_BIRD_INFO.name;
-      
-      if (lang && SAMPLE_BIRD_INFO.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_fr;
-      } else if (lang && SAMPLE_BIRD_INFO.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
-        nameToDisplay = SAMPLE_BIRD_INFO.primaryComName_cn;
-      }
-      
-      expect(nameToDisplay).toBe('黑颈长脚鹬');
+    test('the stored names of the UI language win', async () => {
+      expect(await show('de-DE', { locale: 'de', url: 'x', names: { bknsti: 'Amerikanischer Stelzenläufer' } }))
+        .toBe('Amerikanischer Stelzenläufer');
+      expect(await show('zh-TW', { locale: 'zh_TW', url: 'x', names: { bknsti: '黑頸長腳鷸' } })).toBe('黑頸長腳鷸');
     });
 
-    test('should fallback to English when localized name is missing', () => {
-      mockI18n.getUILanguage.mockReturnValue('de-DE');
-      
-      const birdWithoutGerman = { ...SAMPLE_BIRD_INFO };
-      const lang = chrome.i18n.getUILanguage();
-      let nameToDisplay = birdWithoutGerman.name;
-      
-      // German is not supported, should use English
-      if (lang && birdWithoutGerman.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
-        nameToDisplay = birdWithoutGerman.primaryComName_fr;
-      } else if (lang && birdWithoutGerman.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
-        nameToDisplay = birdWithoutGerman.primaryComName_cn;
-      }
-      
-      expect(nameToDisplay).toBe('Black-necked Stilt');
+    test('English when the UI language has no name for the bird', async () => {
+      expect(await show('de-DE')).toBe('Black-necked Stilt');
+      expect(await show('de-DE', { locale: 'de', url: 'x', names: { other: 'Anderer' } })).toBe('Black-necked Stilt');
     });
   });
 });

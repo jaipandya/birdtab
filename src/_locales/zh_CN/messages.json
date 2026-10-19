@@ -823,6 +823,10 @@
     "message": "发送反馈",
     "description": "Link text for sending feedback to support"
   },
+  "birdNamesCredit": {
+    "message": "鸟名：",
+    "description": "Settings, end of the list: where the bird names come from, followed by links to eBird and the IOC World Bird List"
+  },
   "permissionDialogTitle": {
     "message": "BirdTab 需要额外权限",
     "description": "Title for permission request dialog"
@@ -1246,10 +1250,6 @@
   "creditRecordingLocation": {
     "message": "录制地点",
     "description": "Tooltip for audio recording location tag in credit popover"
-  },
-  "creditViewOnMap": {
-    "message": "点击在地图上查看",
-    "description": "Suffix appended to location tooltip when location is clickable"
   },
   "creditDateTaken": {
     "message": "拍摄日期",

@@ -13,6 +13,7 @@ import { initNewTabMode, setNewTabMode, isPinnedToToolbar, noteChromeTabUse, may
 import { applyQuickGuess } from '../quickGuess.js';
 import QuizMode from '../quiz.js';
 import { getBirdByCode } from '../mediaClient.js';
+import { resetBirdNames } from '../birdNames.js';
 
 jest.mock('../analytics.js', () => ({ trackFeature: jest.fn(), trackQuizCompleted: jest.fn() }));
 jest.mock('../sentry.js', () => ({ captureException: jest.fn() }));
@@ -322,6 +323,22 @@ describe('Quiz me on these (quiz.js)', () => {
       expect(q.options.filter(o => o.isCorrect)).toEqual([{ name: q.bird.primaryComName, isCorrect: true }]);
       for (const wrong of q.options.filter(o => !o.isCorrect)) expect(wrong.name).toMatch(/^Region /);
     }
+  });
+
+  test('the answers are in the UI language when names are stored', async () => {
+    installChrome();
+    chrome.i18n.getUILanguage = () => 'de';
+    resetBirdNames();
+    const names = Object.fromEntries([...region, ...mine].map(b => [b.speciesCode, `Vogel ${b.speciesCode}`]));
+    await chrome.storage.local.set({ media_names: { locale: 'de', url: 'x', names } });
+    const ctx = { questionBirds: mine, startImagePreloading: jest.fn() };
+    await QuizMode.prototype.prepareQuestions.call(ctx, region);
+    for (const q of ctx.questions) {
+      expect(q.correctAnswer).toBe(`Vogel ${q.bird.speciesCode}`);
+      expect(q.options.filter(o => o.isCorrect)).toEqual([{ name: q.correctAnswer, isCorrect: true }]);
+      for (const wrong of q.options.filter(o => !o.isCorrect)) expect(wrong.name).toMatch(/^Vogel r/);
+    }
+    resetBirdNames();
   });
 
   test('without a list it is the normal ten-question region quiz', async () => {

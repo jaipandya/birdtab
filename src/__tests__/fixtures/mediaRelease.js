@@ -102,6 +102,33 @@ export function releaseRoutes(release, codes = ['WLD', 'IN', 'US'], { withCurren
   return routes;
 }
 
+/** A names file's URL: content-addressed in a real release, so `version` stands for its hash. */
+export function namesUrl(locale, version = 1) {
+  return `${BASE}/assets/names/${locale}-${version}.json`;
+}
+
+/** A names file (crawlers/src/lib/bird-names.ts) naming every fixture species "<locale> <code>". */
+export function namesFile(locale, version = 1) {
+  const codes = [...new Set(Object.values(REGION_SPECIES).flat())].sort();
+  const names = Object.fromEntries(codes.map(code => [code, `${locale} ${code}${version > 1 ? ` v${version}` : ''}`]));
+  return { schemaVersion: 1, locale, taxonomy: 'eBird/Clements v2025 (30 Oct 2025)', source: 'eBird', count: codes.length, names };
+}
+
+/**
+ * Add names files to a release's routes and index: { de: 1, zh_TW: 2 } lists those locales,
+ * each file at that version.
+ */
+export function withNames(routes, release, versions) {
+  const index = routes[indexUrl(release)];
+  index.names = {};
+  for (const [locale, version] of Object.entries(versions)) {
+    const file = namesFile(locale, version);
+    index.names[locale] = { url: namesUrl(locale, version), bytes: JSON.stringify(file).length, count: file.count };
+    routes[namesUrl(locale, version)] = file;
+  }
+  return routes;
+}
+
 export function legacyManifest() {
   const codes = ['oldbird1', 'oldbird2', 'oldbird3'];
   return {

@@ -823,6 +823,10 @@
     "message": "إرسال ملاحظات",
     "description": "Link text for sending feedback to support"
   },
+  "birdNamesCredit": {
+    "message": "أسماء الطيور:",
+    "description": "Settings, end of the list: where the bird names come from, followed by links to eBird and the IOC World Bird List"
+  },
   "permissionDialogTitle": {
     "message": "يحتاج BirdTab إلى أذونات إضافية",
     "description": "Title for permission request dialog"
@@ -1246,10 +1250,6 @@
   "creditRecordingLocation": {
     "message": "موقع التسجيل",
     "description": "Tooltip for audio recording location tag in credit popover"
-  },
-  "creditViewOnMap": {
-    "message": "انقر للعرض على الخريطة",
-    "description": "Suffix appended to location tooltip when location is clickable"
   },
   "creditDateTaken": {
     "message": "تاريخ الالتقاط",

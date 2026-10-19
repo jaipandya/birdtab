@@ -6,6 +6,7 @@
 import { log } from './logger.js';
 import { localizeHtml } from './i18n.js';
 import { html, insertHtml, setHtml } from './utils/html.js';
+import { loadBirdNames, localizedName } from './birdNames.js';
 
 // Module state
 let historySidebar = null;
@@ -150,7 +151,7 @@ function createHistoryModal() {
  * Populate history list with entries
  */
 export async function populateHistoryList() {
-  const history = await getHistory();
+  const [history] = await Promise.all([getHistory(), loadBirdNames()]);
   const historyList = document.getElementById('history-list');
   const emptyState = document.getElementById('empty-history');
   const clearBtn = document.getElementById('clear-history-btn');
@@ -179,9 +180,9 @@ export async function populateHistoryList() {
   // Store index to retrieve full birdInfo when clicked
   setHtml(historyList, reversedHistory.map((entry, index) => html`
     <button class="history-item" data-history-index="${index}">
-      <img src="${entry.imageUrl}" alt="${entry.name}" class="history-item-image" loading="lazy">
+      <img src="${entry.imageUrl}" alt="${localizedName(entry)}" class="history-item-image" loading="lazy">
       <div class="history-item-info">
-        <div class="history-item-name">${entry.name}</div>
+        <div class="history-item-name">${localizedName(entry)}</div>
         <div class="history-item-scientific">${entry.scientificName}</div>
         <div class="history-item-time">${getRelativeTimeString(entry.timestamp)}</div>
       </div>

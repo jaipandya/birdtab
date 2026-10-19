@@ -7,6 +7,7 @@ import { truncateName } from './utils/escapeHtml.js';
 import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
 import { resolveMediaUrl, isMediaCached } from './mediaCache.js';
 import { html, setHtml, trustedHtml } from './utils/html.js';
+import { loadBirdNames, localizedName } from './birdNames.js';
 
 /*
  * Keep the next quiz image warm in the browser cache once the current image
@@ -373,6 +374,7 @@ class QuizMode {
   }
 
   async prepareQuestions(birds) {
+    await loadBirdNames();
     const own = (this.questionBirds || []).filter(b => b?.speciesCode && b.primaryComName && b.imageUrl);
     this._birdsByCode = new Map([...birds, ...own].map(b => [b.speciesCode, b]));
 
@@ -397,8 +399,8 @@ class QuizMode {
         .slice(0, 3);
 
       const options = [
-        { name: bird.primaryComName, isCorrect: true },
-        ...distractors.map(d => ({ name: d.primaryComName, isCorrect: false }))
+        { name: localizedName(bird), isCorrect: true },
+        ...distractors.map(d => ({ name: localizedName(d), isCorrect: false }))
       ];
 
       options.sort(() => 0.5 - Math.random());
@@ -411,7 +413,7 @@ class QuizMode {
           photographerUrl: bird.photographerUrl ?? null
         },
         options: options,
-        correctAnswer: bird.primaryComName
+        correctAnswer: localizedName(bird)
       };
     });
 
@@ -783,7 +785,7 @@ class QuizMode {
       // The cached copy when there is one (works offline), else the network
       const src = await resolveMediaUrl(imageUrl);
       await this.ensureImagePreloaded(src);
-      displayImage(src, question.bird.primaryComName);
+      displayImage(src, localizedName(question.bird));
     } catch {
       if (!this.isActive) return;
 
@@ -797,7 +799,7 @@ class QuizMode {
 
       try {
         await this.ensureImagePreloaded(imageInfo.imageUrl);
-        displayImage(imageInfo.imageUrl, question.bird.primaryComName);
+        displayImage(imageInfo.imageUrl, localizedName(question.bird));
         if (this.hasValidQuestion()) {
           question.bird = this.updateBirdWithImage(question.bird, imageInfo);
           if (imageInfo.photographer) {
@@ -1041,11 +1043,11 @@ class QuizMode {
       return html`
         <div class="quiz-result-item ${statusClass}">
           <div class="quiz-result-thumbnail-wrapper">
-            <img src="${bird.imageUrl}" alt="${bird.primaryComName}" class="quiz-result-thumbnail" />
+            <img src="${bird.imageUrl}" alt="${localizedName(bird)}" class="quiz-result-thumbnail" />
             <div class="quiz-result-badge ${statusClass}">${badge}</div>
           </div>
           <div class="quiz-result-info">
-            <div class="quiz-result-bird-name">${bird.primaryComName}</div>
+            <div class="quiz-result-bird-name">${localizedName(bird)}</div>
             ${incorrectHint}
             ${creditHtml}
           </div>
@@ -1595,7 +1597,7 @@ class QuizMode {
       ctx.fillText(`${i + 1}`, rightStartX + cardPadding + 20, y + cardHeight / 2 + 5);
 
       // Bird name (truncated if needed)
-      const birdName = answer.question?.bird?.primaryComName || chrome.i18n.getMessage('quizShareUnknownBird') || 'Unknown Bird';
+      const birdName = (answer.question?.bird && localizedName(answer.question.bird)) || chrome.i18n.getMessage('quizShareUnknownBird') || 'Unknown Bird';
       ctx.font = '400 16px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif';
       ctx.fillStyle = colors.textPrimary;
       ctx.textAlign = 'left';

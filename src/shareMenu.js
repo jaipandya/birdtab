@@ -5,6 +5,7 @@
 
 import { trackFeature } from './analytics.js';
 import { html, insertHtml } from './utils/html.js';
+import { localizedName } from './birdNames.js';
 
 // Module state
 let showShareMenu = false;
@@ -52,7 +53,7 @@ function getShareUrl() {
 function getShareText() {
   const birdInfo = getBirdInfo();
   const template = chrome.i18n.getMessage('shareText') || 'Check out this beautiful {birdName}!';
-  return template.replace('{birdName}', birdInfo?.name || '');
+  return template.replace('{birdName}', birdInfo ? localizedName(birdInfo) : '');
 }
 
 // ===== Sharing Actions =====

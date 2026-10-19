@@ -11,7 +11,9 @@
  * Storage (chrome.storage.local):
  *   media_release          { release, indexUrl, index, storedAt } of the current release
  *   media_region_<CODE>    region manifests of the current release (World and the selected region only)
- *   media_discovery        { lastCheckedAt, lastFailureAt } of the current.json check
+ *   media_discovery        { lastCheckedAt, lastFailureAt } of the current.json check,
+ *                          { namesFailedAt, namesFailedUrl } of the last failed names download
+ *   media_names            the release's bird names in the UI language (birdNames.js)
  *   media_manifest(_meta)  schema 1 World manifest from 2.0.x, kept until media_region_WLD is stored
  *
  * A release switch writes the new index and its region manifests in one
@@ -23,6 +25,7 @@
 import { CONFIG } from './config.js';
 import { log } from './logger.js';
 import { cleanCreditName } from './utils/credits.js';
+import { NAMES_KEY, isValidNamesFile, namesFilesFor, namesLocaleFor, pickNamesEntry } from './birdNames.js';
 import bundledBirds from './data/bundledBirds.json';
 
 const MEDIA = CONFIG.MEDIA;
@@ -478,6 +481,54 @@ async function recordDiscovery(update) {
   await storageSet({ [DISCOVERY_KEY]: { ...current, ...update } });
 }
 
+// --- Bird names ----------------------------------------------------------------
+
+/**
+ * What the stored names need for this index and UI language:
+ *   { set }          the names file to store (fetched now)
+ *   { remove: true } the stored names are in another language and the index has none for this one
+ *   null             nothing to do: they're current, or the index has no names (an older
+ *                    release: names stored from a newer one still fit its birds)
+ * Throws when the download fails; the same file isn't tried again for FAILURE_BACKOFF_MS
+ * unless forced.
+ */
+async function namesUpdate(index, { force = false } = {}) {
+  const { [NAMES_KEY]: stored, [DISCOVERY_KEY]: discovery = {} } = await storageGet([NAMES_KEY, DISCOVERY_KEY]);
+  const entry = pickNamesEntry(index);
+  if (!entry) {
+    const wanted = namesFilesFor(namesLocaleFor());
+    return stored && !wanted.includes(stored.locale) ? { remove: true } : null;
+  }
+  if (stored?.names && stored.url === entry.url && stored.locale === entry.locale) return null;
+  const failedRecently = discovery.namesFailedUrl === entry.url
+    && Date.now() - (discovery.namesFailedAt || 0) < MEDIA.FAILURE_BACKOFF_MS;
+  if (failedRecently && !force) return null;
+
+  try {
+    const expectedBytes = Number.isFinite(entry.bytes) && entry.bytes > 0 ? entry.bytes : null;
+    const file = await fetchJson(entry.url, { expectedBytes });
+    if (!isValidNamesFile(file, entry.locale)) {
+      throw new Error(`Invalid ${entry.locale} names file in release ${index.release}`);
+    }
+    log(`Bird names fetched: ${entry.locale}, ${Object.keys(file.names).length} species`);
+    return { set: { locale: entry.locale, url: entry.url, names: file.names, storedAt: Date.now() } };
+  } catch (error) {
+    await recordDiscovery({ namesFailedAt: Date.now(), namesFailedUrl: entry.url });
+    throw error;
+  }
+}
+
+/** Bring the stored names up to date for a release. Never throws; a failure waits for the next try. */
+async function syncNames(index, { force = false } = {}) {
+  try {
+    const update = await namesUpdate(index, { force });
+    if (update?.set) await storageSet({ [NAMES_KEY]: update.set });
+    else if (update?.remove) await storageRemove([NAMES_KEY]);
+  } catch (error) {
+    reportError(error, 'syncNames', { release: index?.release ?? null });
+  }
+}
+
 /**
  * Fetch an index and the region manifests the user needs, then switch to that
  * release with one storage write. Old release data is removed afterwards.
@@ -492,7 +543,13 @@ async function installRelease(indexUrl, selectedRegion) {
   const region = hasSelected ? selectedRegion : WORLD;
   const needed = region === WORLD ? [WORLD] : [WORLD, region];
 
+  // The names come with the release when they can; a failed download never holds it up
+  const namesPromise = namesUpdate(index, { force: true }).catch(error => {
+    reportError(error, 'fetchNames', { indexUrl });
+    return null;
+  });
   const manifests = await Promise.all(needed.map(code => fetchRegionManifest(index, code)));
+  const names = await namesPromise;
 
   const items = {
     [RELEASE_KEY]: {
@@ -506,6 +563,7 @@ async function installRelease(indexUrl, selectedRegion) {
   needed.forEach((code, i) => {
     items[regionStorageKey(code)] = manifests[i];
   });
+  if (names?.set) items[NAMES_KEY] = names.set;
   if (region !== selectedRegion) {
     // The selected region is not in this release; fall back to the default.
     log(`Region ${selectedRegion} is not in release ${index.release}, using ${WORLD}`);
@@ -513,6 +571,7 @@ async function installRelease(indexUrl, selectedRegion) {
   }
 
   await storageSet(items);
+  if (names?.remove) await storageRemove([NAMES_KEY]);
   needed.forEach(code => memoryCache.delete(regionStorageKey(code)));
   await pruneStorage(needed);
 
@@ -671,6 +730,9 @@ export async function ensureMedia({ force = false } = {}) {
       } catch (error) {
         reportError(error, 'repairStoredRelease', { release: stored.release, region: currentRegion });
       }
+      // Names missing (a release from before names, an interrupted download) or in another
+      // language (the browser's language changed)
+      await syncNames(stored.index, { force });
     }
 
     const state = await getStoredMediaState();
@@ -1033,6 +1095,7 @@ export async function clearManifestCache() {
     LEGACY_MANIFEST_META_KEY,
     RELEASE_KEY,
     DISCOVERY_KEY,
+    NAMES_KEY,
     ...regionKeys,
   ]);
 }
@@ -1049,6 +1112,8 @@ export function adaptSpeciesToBirdInfo(entry) {
     primaryComName: entry.primaryComName,
     primaryComName_fr: entry.primaryComName_fr ?? null,
     primaryComName_cn: entry.primaryComName_cn ?? null,
+    // Names by locale, on the bundled birds only (release names are in media_names)
+    ...(entry.names ? { names: entry.names } : {}),
     scientificName: entry.scientificName,
     description: entry.description ?? null,
     conservationStatus: entry.conservationStatus ?? null,

@@ -7,6 +7,7 @@ import { isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
+import { loadBirdNames, localizedName } from './birdNames.js';
 import { applySearchVisibility, initializeSearch, setupSearchKeyboardShortcut } from './search.js';
 import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
@@ -68,6 +69,9 @@ import './buttons.css';
 
 // Initialize Sentry for content script
 initSentry('content-script');
+
+// Read the bird names in the UI language now, while the bird is chosen
+loadBirdNames();
 
 // A bird shown again from Your Birds reloads the page: keep it hidden until the
 // panel is back, so only the bird behind the panel seems to change
@@ -1033,7 +1037,7 @@ async function initializePage() {
     };
 
     setHtml(contentContainer, html`
-      <img src="" alt="${birdInfo.name}" class="background-image" decoding="async" fetchpriority="high">
+      <img src="" alt="${localizedName(birdInfo)}" class="background-image" decoding="async" fetchpriority="high">
       <div class="gradient-overlay"></div>
       ${CONFIG.FEATURES.photoTone ? html`<div class="tone-scrim" aria-hidden="true"></div><div class="tone-scrim-center" aria-hidden="true"></div>` : ''}
       <div class="info-panel">
@@ -1041,6 +1045,7 @@ async function initializePage() {
           <div class="bird-name-row">
             <button class="info-popover-trigger" id="bird-name" aria-expanded="false" aria-haspopup="dialog"
               data-scientific-name="${birdInfo.scientificName}"
+              data-english-name="${birdInfo.primaryComName || birdInfo.name}"
               data-description="${birdInfo.description}"
               data-conservation="${birdInfo.conservationStatus}"
               data-species-code="${birdInfo.speciesCode}"
@@ -1137,16 +1142,8 @@ async function initializePage() {
     }
 
 
-    const lang = chrome.i18n.getUILanguage();
-    let nameToDisplay = birdInfo.name;
-
-    if (lang && birdInfo.primaryComName_fr && lang.toLowerCase().startsWith('fr')) {
-      nameToDisplay = birdInfo.primaryComName_fr;
-    } else if (lang && birdInfo.primaryComName_cn && lang.toLowerCase().startsWith('zh')) {
-      nameToDisplay = birdInfo.primaryComName_cn;
-    }
-
-    document.getElementById('bird-name').textContent = nameToDisplay;
+    await loadBirdNames();
+    document.getElementById('bird-name').textContent = localizedName(birdInfo);
 
     if (await isQuickGuessOn()) {
       applyQuickGuess(document.getElementById('bird-name'));

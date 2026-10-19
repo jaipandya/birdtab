@@ -17,6 +17,7 @@ import {
   RELEASE_KEY,
 } from './mediaClient.js';
 import { trackRegionSwitch } from './regionSwitchTracker.js';
+import { loadBirdNames, localizedName, searchableNames } from './birdNames.js';
 import { cacheBirdMedia, cacheMediaFile, pruneMediaCache, clearMediaCache } from './mediaCache.js';
 
 // --- Event listeners registered FIRST ---
@@ -460,9 +461,7 @@ if (chrome.omnibox) {
   // Chrome and Edge read the description as XML (<dim> for the scientific name); Firefox shows it as plain text
   const escapeXml = (text) => IS_FIREFOX ? String(text) : String(text).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]));
   const dim = (text) => (IS_FIREFOX ? `· ${text}` : `<dim>${escapeXml(text)}</dim>`);
-  const uiLang = (chrome.i18n.getUILanguage() || '').toLowerCase();
-  const displayName = (bird) => (uiLang.startsWith('fr') && bird.primaryComName_fr)
-    || (uiLang.startsWith('zh') && bird.primaryComName_cn) || bird.name;
+  const displayName = (bird) => localizedName(bird);
 
   let omniboxBirds = null;
   async function birdsForOmnibox() {
@@ -482,7 +481,8 @@ if (chrome.omnibox) {
   async function matchBirds(text, limit = 5) {
     const query = text.trim().toLowerCase();
     if (!query) return [];
-    const names = (b) => [b.name, b.primaryComName_fr, b.primaryComName_cn, b.scientificName].filter(Boolean).map((n) => n.toLowerCase());
+    await loadBirdNames();
+    const names = (b) => searchableNames(b).map((n) => n.toLowerCase());
     const birds = await birdsForOmnibox();
     const starts = birds.filter((b) => names(b).some((n) => n.startsWith(query) || n.includes(` ${query}`)));
     const contains = birds.filter((b) => !starts.includes(b) && names(b).some((n) => n.includes(query)));

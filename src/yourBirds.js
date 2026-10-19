@@ -9,7 +9,8 @@
 
 import { html, setHtml, insertHtml } from './utils/html.js';
 import { getRelativeTimeString } from './historyModal.js';
-import { getSeenBirds, clearSeenBirds, localizedName } from './seenBirds.js';
+import { getSeenBirds, clearSeenBirds } from './seenBirds.js';
+import { loadBirdNames, localizedName, searchableNames } from './birdNames.js';
 import { getFavorites, toggleFavorite, clearFavorites } from './favorites.js';
 import { showConfirmationDialog } from './confirmationDialog.js';
 import { trackFeature } from './analytics.js';
@@ -169,9 +170,7 @@ function matches(bird) {
   // Searching mustn't reveal the bird being guessed either
   const nameButton = document.getElementById('bird-name');
   if (nameButton?.classList.contains('guess-hidden') && nameButton.dataset.speciesCode === bird.speciesCode) return false;
-  return [localizedName(bird), bird.name, bird.primaryComName, bird.scientificName]
-    .filter(Boolean)
-    .some(name => name.toLowerCase().includes(query));
+  return searchableNames(bird).some(name => name.toLowerCase().includes(query));
 }
 
 function render() {
@@ -300,7 +299,7 @@ export async function openYourBirds(show = 'all', { onQuiz, query: restoreQuery 
   query = restoreQuery.trim().toLowerCase();
   document.getElementById('your-birds-search').value = restoreQuery;
   try {
-    [seen, favorites] = await Promise.all([getSeenBirds(), getFavorites()]);
+    [seen, favorites] = await Promise.all([getSeenBirds(), getFavorites(), loadBirdNames()]);
   } catch (error) {
     log(`Your Birds failed to load: ${error.message}`);
   }

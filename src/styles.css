@@ -804,6 +804,15 @@ body.image-load-failed {
   text-align: left;
 }
 
+/* The English name, above the scientific one, when the title is in another language */
+.info-popover__english-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white-80);
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
 .info-popover__scientific-name {
   font-style: italic;
   font-size: 0.95rem;
@@ -2832,6 +2841,25 @@ html[dir="rtl"] .credit-popover__ext-icon {
   /* Prevent footer from shrinking */
   background-color: var(--modal-content-bg);
   /* Match content background */
+}
+
+/* Where the bird names come from (IOC's CC BY licence asks for credit) */
+.settings-credits {
+  margin: 8px var(--modal-spacing) 20px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--modal-text-secondary);
+  text-align: center;
+}
+
+.settings-credits a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.settings-credits a:hover {
+  color: var(--modal-text-primary);
 }
 
 .feedback-link {
