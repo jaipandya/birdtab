@@ -1056,11 +1056,11 @@ export function adaptSpeciesToBirdInfo(entry) {
     ebirdUrl: entry.ebirdUrl,
 
     imageUrl: entry.image?.renditions?.default?.url ?? null,
-    photographer: cleanCreditName(entry.image?.creatorName) ?? null,
+    photographer: cleanCreditName(entry.image?.creatorName, entry.image) ?? null,
     photographerUrl: entry.image?.creatorUrl ?? null,
 
     mediaUrl: entry.audio?.renditions?.default?.url ?? null,
-    recordist: cleanCreditName(entry.audio?.creatorName) ?? null,
+    recordist: cleanCreditName(entry.audio?.creatorName, entry.audio) ?? null,
     recordistUrl: entry.audio?.creatorUrl ?? null,
 
     imageSource: entry.image?.source ?? null,
