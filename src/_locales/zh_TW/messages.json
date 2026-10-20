@@ -1565,18 +1565,6 @@
     "message": "已開啟。從下一個分頁起，每隻鳥的鳥名都會先隱藏，點選後才會顯示。",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "常常開啟 Chrome 的頁面嗎？",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "BirdTab 可以讓位。新分頁什麼時候顯示鳥？",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "目前",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "已儲存",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "復原",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "BirdTab 現在是你的新分頁",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "每個新分頁都會帶來一隻鳥。你可以隨時變更。",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "保持每個分頁都有鳥",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "其他選項",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "BirdTab 的其他用法",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "確認之前不會有任何改變。",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "在這裡顯示我的捷徑",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "常造訪的網站顯示在搜尋框下方，鳥也在。",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "先釘選 BirdTab",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "工具列上的按鈕隨時為你帶來一隻鳥。",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "不釘選，繼續",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "在鳥之間顯示 Chrome 頁面",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "在新分頁中開啟 Chrome 頁面",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "你可以隨時在設定中變更。",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "這是你的鳥",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "BirdTab 已設為「$1」。你可以隨時在設定中變更。",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

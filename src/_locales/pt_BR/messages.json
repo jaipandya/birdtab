@@ -1565,18 +1565,6 @@
     "message": "Pronto. A partir da próxima aba, o nome de cada ave fica escondido até você clicar nele.",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "Indo muito para a página do Chrome?",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "O BirdTab pode sair do caminho. Quando uma nova aba deve mostrar uma ave?",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "Atual",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "Salvo",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "Desfazer",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "O BirdTab é a sua página de nova aba",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "Cada nova aba traz uma ave. Você pode mudar isso quando quiser.",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "Manter uma ave em cada aba",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "Outras opções",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "Outras formas de usar o BirdTab",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "Nada muda até você confirmar.",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "Mostrar meus atalhos aqui",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "Seus sites mais visitados abaixo da caixa de pesquisa, com uma ave.",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "Primeiro, fixe o BirdTab",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "O botão dele na barra de ferramentas traz uma ave quando você quiser.",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "Continuar sem fixar",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "Mostrar a página do Chrome entre as aves",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "Abrir a página do Chrome nas novas abas",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "Você pode mudar isso quando quiser em Configurações.",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "Aqui está a sua ave",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "O BirdTab está em “$1”. Você pode mudar isso quando quiser em Configurações.",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

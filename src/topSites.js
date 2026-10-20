@@ -516,6 +516,19 @@ class TopSites {
   }
 
   /**
+   * Show the most visited sites (the guide's new tab tip): asks for the topSites permission,
+   * with BirdTab's own explanation first, if it isn't granted yet.
+   * @returns {Promise<boolean>} whether they show now
+   */
+  async showTopSites() {
+    if (!(await this.checkTopSitesPermission()) && !(await this.requestTopSitesPermission())) return false;
+    this.hideTopSites = false;
+    await chrome.storage.local.set({ quickAccessEnabled: true, hideTopSites: false });
+    log('Top sites shown from the guide');
+    return true;
+  }
+
+  /**
    * Get custom shortcuts from storage
    */
   async getCustomShortcuts() {

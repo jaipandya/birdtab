@@ -9,8 +9,9 @@
  * that would cover `avoid` (the bird's name) rises above it instead, without its arrow; the ring
  * still marks the target.
  *
- * A card can offer `choices` (a short list, the one in use marked) and `actions` (buttons), and
- * can change what it says in place (`update`), e.g. "Saved" with Undo after a choice.
+ * A card can offer `choices` (a short list, each leading on), numbered `steps` with a live
+ * `status`, and `actions` (buttons), and can change what it says in place (`update`): the new
+ * tab tip walks through its views this way, ending in "Saved" with Undo.
  */
 
 import { html, setHtml } from '../utils/html.js';
@@ -33,8 +34,11 @@ export function closeTipCard() {
  * @property {string} title
  * @property {string} text
  * @property {string} [image] - a picture above the text
- * @property {Array<{label: string, help?: string, current?: boolean, onClick: Function}>} [choices]
- * @property {Array<{label: string, kind?: 'primary'|'secondary'|'quiet', href?: string, onClick?: Function}>} [actions]
+ * @property {Array<{label: string, help?: string, onClick: Function}>} [choices]
+ * @property {Array<{icon?: string, text: string}>} [steps] - numbered steps, each with an icon (an SVG path) drawn inline
+ * @property {{text: string, done?: boolean}} [status] - a live line under the steps ("Waiting for the pin…")
+ * @property {string} [note] - small print above the buttons
+ * @property {Array<{label: string, kind?: 'primary'|'secondary'|'quiet', href?: string, disabled?: boolean, onClick?: Function}>} [actions]
  * @property {'row'|'stacked'} [actionsLayout] - stacked: the primary button across the card, the others under it
  */
 
@@ -57,7 +61,6 @@ export function showTipCard(tip) {
   card.setAttribute('aria-labelledby', 'guide-tip-title');
   card.setAttribute('aria-describedby', 'guide-tip-text');
   const closeLabel = chrome.i18n.getMessage('closeAlt') || 'Close';
-  const currentLabel = chrome.i18n.getMessage('tipCurrentChoice') || 'Current';
 
   let content = tip;
   const render = () => {
@@ -77,19 +80,33 @@ export function showTipCard(tip) {
       ${choices.length ? html`
       <div class="guide-tip-choices" role="group" aria-labelledby="guide-tip-text">
         ${choices.map((choice, i) => html`
-        <button type="button" class="guide-choice ${choice.current ? 'current' : ''}" data-choice="${i}">
+        <button type="button" class="guide-choice" data-choice="${i}">
           <span class="guide-choice-text">
             <span class="guide-choice-name">${choice.label}</span>
             ${choice.help ? html`<span class="guide-choice-help">${choice.help}</span>` : ''}
           </span>
-          ${choice.current ? html`<span class="guide-choice-current">${currentLabel}</span>` : ''}
+          <svg class="guide-choice-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </button>`)}
       </div>` : ''}
+      ${content.steps?.length ? html`
+      <ol class="guide-tip-steps">
+        ${content.steps.map((step, i) => html`
+        <li>
+          <span class="guide-step-number">${String(i + 1)}</span>
+          <span class="guide-step-text">${step.text}</span>
+          ${step.icon ? html`<svg class="guide-step-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${step.icon}"/></svg>` : ''}
+        </li>`)}
+      </ol>` : ''}
+      ${content.status ? html`
+      <p class="guide-tip-status ${content.status.done ? 'done' : ''}" aria-live="polite">
+        <span class="guide-status-mark" aria-hidden="true"></span>${content.status.text}
+      </p>` : ''}
+      ${content.note ? html`<p class="guide-tip-note">${content.note}</p>` : ''}
       ${actions.length ? html`
       <div class="guide-tip-actions">
         ${actions.map((action, i) => action.href
           ? html`<a class="guide-btn ${action.kind || 'quiet'}" href="${action.href}" target="_blank" rel="noopener noreferrer" data-index="${i}">${action.label}</a>`
-          : html`<button type="button" class="guide-btn ${action.kind || 'quiet'}" data-index="${i}">${action.label}</button>`)}
+          : html`<button type="button" class="guide-btn ${action.kind || 'quiet'}" data-index="${i}" ${action.disabled ? 'disabled' : ''}>${action.label}</button>`)}
       </div>` : ''}
     `);
   };
@@ -205,7 +222,7 @@ export function showTipCard(tip) {
     const choice = e.target.closest('[data-choice]');
     const button = e.target.closest('[data-index]');
     const chosen = choice ? content.choices[Number(choice.dataset.choice)] : button ? content.actions[Number(button.dataset.index)] : null;
-    if (!chosen) return;
+    if (!chosen || button?.disabled) return;
     // A handler that changed the card (update) keeps it open; any other answer closes it
     const before = content;
     chosen.onClick?.();
@@ -235,7 +252,7 @@ export function showTipCard(tip) {
       position();
       announcer.textContent = `${next.title}. ${next.text}`;
       // Keyboard users stay in the card
-      if (hadFocus) card.querySelector('.guide-btn, .guide-choice')?.focus();
+      if (hadFocus) card.querySelector('.guide-btn:not(:disabled), .guide-choice')?.focus();
     },
   };
   current = handle;

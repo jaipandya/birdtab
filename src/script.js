@@ -1898,6 +1898,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         startQuiz: () => {
           if (quizMode && !quizMode.isActive) quizMode.startQuiz();
         },
+        showShortcuts: () => window.topSitesInstance?.showTopSites(),
+        openSettings,
       },
       canShow: () => !pageInitFailed && navigator.onLine !== false && !quizMode?.isActive,
     });

@@ -1565,18 +1565,6 @@
     "message": "オンにしました。次のタブから、鳥の名前はクリックするまで隠れます。",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "Chromeのページをよく開きますか？",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "BirdTabは控えめにもできます。新しいタブで鳥を表示するのはいつにしますか？",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "現在",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "保存しました",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "元に戻す",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "BirdTabが新しいタブページになりました",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "新しいタブを開くたびに鳥が現れます。いつでも変更できます。",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "すべてのタブで鳥を表示する",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "その他のオプション",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "BirdTabのほかの使い方",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "確定するまで何も変わりません。",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "ここにショートカットを表示",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "よく見るサイトを検索ボックスの下に、鳥と一緒に表示します。",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "まずBirdTabを固定しましょう",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "ツールバーのボタンから、いつでも鳥を表示できます。",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "固定せずに続ける",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "鳥の合間にChromeのページを表示",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "新しいタブでChromeのページを開く",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "設定からいつでも変更できます。",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "あなたの鳥です",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "BirdTabは「$1」に設定されています。設定からいつでも変更できます。",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

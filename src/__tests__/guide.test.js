@@ -50,8 +50,9 @@ function loadGuide(browser = 'chrome') {
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
 const fresh = () => ({ tabs: 0, lastShownAt: 0, lastShownTab: null, shown: {} });
+// By default the new tab check-in was already answered (its own tests set this)
 const ctxFor = (overrides = {}) => ({
-  tabs: 2, seen: 2, days: 0, reviewDue: false, local: {}, sync: {}, learned: {}, ...overrides,
+  tabs: 2, seen: 2, days: 0, reviewDue: false, local: { stepAsideOffer: { offers: 2 } }, sync: {}, learned: {}, ...overrides,
 });
 const ids = (tips) => tips.map(t => t.id);
 
@@ -101,7 +102,7 @@ describe('choosing a tip', () => {
     expect(ids(pickTips(ctxFor({ tabs: 30, seen: 20, days: 1, learned: { ...learned, yourBirds: true } }), fresh()))).toEqual([]);
     expect(ids(pickTips(ctxFor({ tabs: 30, seen: 20, days: 2, learned: { ...learned, yourBirds: true } }), fresh()))).toEqual(['quiz']);
     // Guess the bird already on: the quiz tip has nothing new to say
-    expect(ids(pickTips(ctxFor({ tabs: 30, seen: 20, days: 2, local: { quickGuess: true }, learned: { ...learned, yourBirds: true } }), fresh()))).toEqual([]);
+    expect(ids(pickTips(ctxFor({ tabs: 30, seen: 20, days: 2, local: { quickGuess: true, stepAsideOffer: { offers: 2 } }, learned: { ...learned, yourBirds: true } }), fresh()))).toEqual([]);
   });
 
   test('stepping aside is offered after three trips to Chrome’s page, on the very next tab', () => {
@@ -192,40 +193,100 @@ describe('a tip on the page', () => {
   });
 });
 
-describe('stepping aside', () => {
+describe('the new tab tip (stepping aside)', () => {
+  const flush = () => new Promise(r => setTimeout(r, 0));
+  const button = (label) => [...document.querySelectorAll('.guide-btn')].find(b => b.textContent.trim() === label);
+  const choice = (label) => [...document.querySelectorAll('.guide-choice')].find(c => c.querySelector('.guide-choice-name').textContent === label);
+
   beforeEach(() => {
     Element.prototype.getClientRects = function () { return [{ width: 10, height: 10 }]; };
     document.body.innerHTML = '<a id="chrome-tab-link"><span class="chrome-tab-icon"></span></a>';
   });
 
-  test('all three ways are offered, the one in use marked; keeping it changes nothing', async () => {
-    const chrome = installChrome({ local: { chromeTabUses: 3 } });
-    const { showTip } = loadGuide('chrome');
-    expect(await showTip('stepAside')).toBe(true);
-    const choices = [...document.querySelectorAll('.guide-choice')];
-    expect(choices).toHaveLength(3);
-    expect(choices[0].classList.contains('current')).toBe(true);
-    choices[0].click();
-    await new Promise(r => setTimeout(r, 0));
-    expect(chrome.storage.local.data.newTabMode).toBeUndefined();
-    expect(chrome.storage.local.data.stepAsideOfferDismissed).toBe(true);
+  function setup({ pinned = false, local = {} } = {}) {
+    const chrome = installChrome({ local: { installTime: Date.now(), ...local } });
+    chrome.action = { getUserSettings: jest.fn(async () => ({ isOnToolbar: pinned })) };
+    return chrome;
+  }
+
+  test('due on the first day after two tabs, or at the first trip to Chrome’s page; a second chance after three more', () => {
+    const { pickTips } = loadGuide('chrome');
+    const learned = { birdName: true };
+    const ctx = (over) => ctxFor({ learned, ...over });
+    const state = { ...fresh(), lastShownTab: 2, lastShownAt: Date.now(), shown: { birdName: 1 } };
+    expect(ids(pickTips(ctx({ tabs: 3, days: 0, local: {} }), state))[0]).toBe('stepAside');
+    expect(ids(pickTips(ctx({ tabs: 3, days: 9, local: {} }), state))).not.toContain('stepAside');
+    expect(ids(pickTips(ctx({ tabs: 2, days: 1, local: { chromeTabUses: 1 } }), { ...state, lastShownTab: 1 }))[0]).toBe('stepAside');
+    // Asked once at 1 use: again only after three more
+    const askedOnce = { stepAsideOffer: { offers: 1, usesAtOffer: 1 } };
+    expect(ids(pickTips(ctx({ tabs: 20, days: 9, local: { ...askedOnce, chromeTabUses: 3 } }), state))).not.toContain('stepAside');
+    expect(ids(pickTips(ctx({ tabs: 20, days: 9, local: { ...askedOnce, chromeTabUses: 4 } }), state))[0]).toBe('stepAside');
+    expect(ids(pickTips(ctx({ tabs: 20, days: 9, local: { stepAsideOffer: { offers: 2, usesAtOffer: 4 }, chromeTabUses: 40 } }), state))).not.toContain('stepAside');
   });
 
-  test('a change applies at once, says so in the card, and Undo takes it back', async () => {
-    const chrome = installChrome({ local: { chromeTabUses: 3 } });
+  test('keeping a bird on every tab is the main answer, and changes nothing', async () => {
+    const chrome = setup();
+    const { showTip } = loadGuide('chrome');
+    expect(await showTip('stepAside')).toBe(true);
+    expect(document.querySelector('.guide-btn.primary').textContent.trim()).toBe('Keep a bird on every tab');
+    button('Keep a bird on every tab').click();
+    await flush();
+    expect(chrome.storage.local.data.newTabMode).toBeUndefined();
+    expect(chrome.storage.local.data.stepAsideOffer).toEqual({ offers: 1, usesAtOffer: 0 });
+    expect(document.querySelector('.guide-tip.leaving')).not.toBeNull();
+  });
+
+  test('“When I ask” waits for the pin, or for continuing without it; then saved, with Undo', async () => {
+    const chrome = setup({ pinned: false });
     const { showTip } = loadGuide('chrome');
     await showTip('stepAside');
-    document.querySelectorAll('.guide-choice')[2].click();
-    await new Promise(r => setTimeout(r, 0));
+    button('Other options').click();
+    expect(document.querySelector('.guide-tip-title').textContent).toBe('Other ways to use BirdTab');
+    choice('When I ask').click();
+    expect(chrome.storage.local.data.newTabMode).toBeUndefined();
+    expect(document.querySelectorAll('.guide-tip-steps li')).toHaveLength(2);
+    expect(button('Open Chrome’s page in new tabs').disabled).toBe(true);
+
+    button('Continue without pinning').click();
+    expect(document.querySelector('.guide-tip-note')).not.toBeNull();
+    button('Open Chrome’s page in new tabs').click();
+    await flush();
     expect(chrome.storage.local.data.newTabMode).toBe('button');
-    // Still open, now with Undo
-    const undo = [...document.querySelectorAll('.guide-btn')].find(b => b.textContent === 'Undo');
-    expect(undo).toBeDefined();
-    undo.click();
-    await new Promise(r => setTimeout(r, 0));
+    expect(document.querySelector('.guide-tip-title').textContent).toBe('Saved');
+
+    button('Undo').click();
+    await flush();
     expect(chrome.storage.local.data.newTabMode).toBe('every');
-    // Answered: not offered again
-    expect(chrome.storage.local.data.stepAsideOfferDismissed).toBe(true);
+  });
+
+  test('pinning while the card waits turns it into “Pinned” and lets the change through', async () => {
+    const chrome = setup({ pinned: false });
+    const { showTip } = loadGuide('chrome');
+    await showTip('stepAside');
+    button('Other options').click();
+    choice('When I ask').click();
+    chrome.action.getUserSettings.mockResolvedValue({ isOnToolbar: true });
+    await new Promise(r => setTimeout(r, 1200));
+    expect(document.querySelector('.guide-tip-status.done')).not.toBeNull();
+    expect(button('Open Chrome’s page in new tabs').disabled).toBe(false);
+  });
+
+  test('“Now and then” suggests the pin but doesn’t wait for it', async () => {
+    const chrome = setup({ pinned: false });
+    const { showTip } = loadGuide('chrome');
+    await showTip('stepAside');
+    button('Other options').click();
+    choice('Now and then').click();
+    button('Show Chrome’s page between birds').click();
+    await flush();
+    expect(chrome.storage.local.data.newTabMode).toBe('hourly');
+  });
+
+  test('the reminder comes after stepping aside from the tip, not after a choice in Settings', () => {
+    const { pickTips } = loadGuide('chrome');
+    const learned = { birdName: true };
+    expect(ids(pickTips(ctxFor({ learned, local: { newTabMode: 'button', stepAsideOffer: { offers: 1, usesAtOffer: 0 } } }), fresh()))).toEqual(['newTabReminder']);
+    expect(ids(pickTips(ctxFor({ learned, local: { newTabMode: 'button' } }), fresh()))).toEqual([]);
   });
 });
 

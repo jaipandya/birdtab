@@ -1565,18 +1565,6 @@
     "message": "C’est fait. Dès votre prochain onglet, le nom de chaque oiseau reste masqué jusqu’à ce que vous cliquiez dessus.",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "Souvent sur la page de Chrome ?",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "BirdTab peut s’effacer. Quand un nouvel onglet doit-il afficher un oiseau ?",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "Actuel",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "Enregistré",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "Annuler",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "BirdTab est votre page de nouvel onglet",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "Chaque nouvel onglet apporte un oiseau. Vous pouvez changer cela à tout moment.",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "Garder un oiseau dans chaque onglet",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "Autres options",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "Autres façons d’utiliser BirdTab",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "Rien ne change tant que vous n’avez pas confirmé.",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "Afficher mes raccourcis ici",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "Vos sites les plus visités sous la barre de recherche, avec un oiseau.",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "D’abord, épinglez BirdTab",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "Son bouton dans la barre d’outils apporte un oiseau quand vous le voulez.",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "Continuer sans épingler",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "Afficher la page de Chrome entre les oiseaux",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "Ouvrir la page de Chrome dans les nouveaux onglets",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "Vous pouvez changer cela à tout moment dans les Paramètres.",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "Voici votre oiseau",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "BirdTab est réglé sur « $1 ». Vous pouvez changer cela à tout moment dans les Paramètres.",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

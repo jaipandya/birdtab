@@ -1565,18 +1565,6 @@
     "message": "Gotowe. Od następnej karty nazwa każdego ptaka będzie ukryta, dopóki jej nie klikniesz.",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "Często otwierasz stronę Chrome?",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "BirdTab może ustąpić miejsca. Kiedy nowa karta ma pokazywać ptaka?",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "Obecnie",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "Zapisano",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "Cofnij",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "BirdTab to Twoja strona nowej karty",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "Każda nowa karta przynosi ptaka. Możesz to zmienić w każdej chwili.",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "Zostaw ptaka w każdej karcie",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "Inne opcje",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "Inne sposoby korzystania z BirdTab",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "Nic się nie zmieni, dopóki nie potwierdzisz.",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "Pokaż tu moje skróty",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "Najczęściej odwiedzane strony pod polem wyszukiwania, razem z ptakiem.",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "Najpierw przypnij BirdTab",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "Jego przycisk na pasku narzędzi pokaże ptaka, kiedy zechcesz.",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "Kontynuuj bez przypinania",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "Pokazuj stronę Chrome między ptakami",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "Otwieraj stronę Chrome w nowych kartach",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "Możesz to zmienić w każdej chwili w Ustawieniach.",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "Oto Twój ptak",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "BirdTab działa w trybie „$1”. Możesz to zmienić w każdej chwili w Ustawieniach.",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

@@ -21,8 +21,8 @@ import { track, trackFeature, trackReviewPromptAction, trackReviewPromptShown } 
 import { IS_EDGE, IS_FIREFOX } from '../browserInfo.js';
 import { showTipCard, isTipCardOpen, closeTipCard } from './tipCard.js';
 import { showSeenMilestone } from '../seenBirds.js';
-import { setNewTabMode, isPinnedToToolbar, CHROME_TAB_NUDGE_AFTER } from '../newTabMode.js';
-import { showPinCoach } from '../pinCoach.js';
+import { isPinnedToToolbar } from '../newTabMode.js';
+import { newTabTipDue, newTabTipCard, newTabReminderCard } from './newTabTip.js';
 import { reviewPromptDue, reviewStoreUrl } from '../reviewPrompt.js';
 
 const STATE_KEY = 'guideState';
@@ -59,56 +59,26 @@ function visibleTarget(selector) {
 // card(ctx, done): what the card says and does (`done()` marks it learned).
 export const TIPS = [
   {
-    // The user keeps going to Chrome's page: offer the three ways BirdTab can open, the one in use
-    // (every tab) marked, so keeping it is as easy as changing it. A change applies at once,
-    // says what it did, and can be undone in the same card. (Chrome and Edge)
+    // "BirdTab is your new tab page": keep it (the main answer), or another way, a step away
+    // and confirmed, with the toolbar button pinned first (newTabTip.js). Chrome and Edge.
     id: 'stepAside',
     urgent: true,
+    repeats: true,
     available: () => CONFIG.FEATURES.newTabMode,
-    learnedBefore: (ctx) => ctx.local.stepAsideOfferDismissed === true || (ctx.local.newTabMode || 'every') !== 'every',
-    eligible: (ctx) => (ctx.local.chromeTabUses || 0) >= CHROME_TAB_NUDGE_AFTER,
+    // Answered by the old offer, or already stepping aside
+    eligible: (ctx) => ctx.local.stepAsideOfferDismissed !== true && (ctx.local.newTabMode || 'every') === 'every'
+      && newTabTipDue(ctx),
     target: () => visibleTarget('#chrome-tab-link .chrome-tab-icon') || visibleTarget('#chrome-tab-link'),
-    card: (ctx, done) => {
-      const offered = () => chrome.storage.local.set({ stepAsideOfferDismissed: true });
-      const MODES = {
-        every: [msg('newTabModeEvery', 'Every tab'), msg('newTabModeEveryHelp', 'A bird on every new tab.')],
-        hourly: [msg('newTabModeHourly', 'Now and then'), msg('newTabModeHourlyHelp', 'A bird after an hour away. Chrome’s page the rest of the time.')],
-        button: [msg('newTabModeButton', 'When I ask'), msg('newTabModeButtonHelp', 'Chrome’s page in new tabs. Click BirdTab’s button for a bird.')],
-      };
-      const choose = (mode) => () => {
-        if (mode === 'every') {
-          offered();
-          done('kept');
-          return;
-        }
-        // Said synchronously, so the card stays open with the result
-        ctx.card.update({
-          title: msg('tipSaved', 'Saved'),
-          text: MODES[mode][1],
-          actions: [
-            { label: msg('tipUndo', 'Undo'), kind: 'quiet', onClick: () => {
-              setNewTabMode('every');
-              track('tip_action', { tip: 'stepAside', action: 'undo' });
-            } },
-            // The toolbar button is the way back to a bird now: help pin it, unless it is
-            ctx.pinned
-              ? { label: msg('tipGotIt', 'Got it'), kind: 'primary' }
-              : { label: msg('pinShowMe', 'Show me how'), kind: 'primary', onClick: () => showPinCoach() },
-          ],
-        });
-        setNewTabMode(mode);
-        offered();
-        done(mode);
-      };
-      return {
-        title: msg('tipStepAsideTitle', 'Heading to Chrome’s page often?'),
-        text: msg('tipStepAsideText', 'BirdTab can step aside. When should a new tab show a bird?'),
-        choices: ['every', 'hourly', 'button'].map(mode => ({
-          label: MODES[mode][0], help: MODES[mode][1], current: mode === 'every', onClick: choose(mode),
-        })),
-        onDismiss: offered,
-      };
-    },
+    card: newTabTipCard,
+  },
+  {
+    // The first BirdTab after stepping aside: how it opens now, and where to change it
+    id: 'newTabReminder',
+    urgent: true,
+    available: () => CONFIG.FEATURES.newTabMode,
+    // Only after stepping aside from the tip (a choice made in Settings needs no reminder)
+    eligible: (ctx) => (ctx.local.newTabMode || 'every') !== 'every' && (ctx.local.stepAsideOffer?.offers || 0) > 0,
+    card: newTabReminderCard,
   },
   {
     // The bird's name opens its story: facts, conservation status, the map
@@ -309,7 +279,7 @@ export async function startGuide() {
 async function context(state, extra = {}) {
   const local = await chrome.storage.local.get([
     'installTime', 'newTabCount', 'chromeTabUses', 'chromeTabEnabled', 'newTabMode', 'stepAsideOfferDismissed',
-    'chromeFooterNotificationDismissed', 'quickGuess', 'seenBirdsCount',
+    'chromeFooterNotificationDismissed', 'quickGuess', 'seenBirdsCount', 'stepAsideOffer', 'quickAccessEnabled', 'hideTopSites',
   ]);
   const sync = await chrome.storage.sync.get(['featureTourVersion', 'favoriteSpecies']).catch(() => ({}));
   const installTime = local.installTime || Date.now();
@@ -320,6 +290,7 @@ async function context(state, extra = {}) {
     reviewDue: await reviewPromptDue(),
     // Whether BirdTab's toolbar button is pinned (null where the browser can't say)
     pinned: CONFIG.FEATURES.newTabMode ? await isPinnedToToolbar() : null,
+    topSitesShown: local.quickAccessEnabled !== false && local.hideTopSites === false,
     local,
     sync,
     learned: await readLearned(),
@@ -349,7 +320,8 @@ let pageCanShow = () => true;
 
 /**
  * @param {Object} options
- * @param {{ openYourBirds?: Function, startQuiz?: Function }} options.actions - what tips' buttons do
+ * @param {{ openYourBirds?: Function, startQuiz?: Function, showShortcuts?: Function, openSettings?: Function }} options.actions
+ *   - what tips' buttons do
  * @param {() => boolean} options.canShow - false while the page is busy (quiz, settings, error)
  */
 export function initGuide(options = {}) {
@@ -400,13 +372,9 @@ async function present(tip, ctx, state, { force = false } = {}) {
     target,
     placement: tip.placement || (target ? 'auto' : 'corner'),
     avoid: tip.avoid,
-    title: content.title,
-    text: content.text,
-    image: content.image,
-    choices: content.choices,
-    actions: content.actions,
-    actionsLayout: content.actionsLayout,
+    ...content,
     onClose: (reason) => {
+      content.cleanup?.();
       if (finished || reason === 'replaced') return;
       if (reason === 'action') {
         // The button did its own bookkeeping (the review's answers)
@@ -444,7 +412,8 @@ export async function runGuide({ milestone = null } = {}) {
     await chrome.storage.local.set({ [STATE_KEY]: state });
 
     const ctx = await context(state, { actions });
-    const candidates = pickTips(ctx, state);
+    // Only tips whose target is on the page now (a hidden name, no Chrome Tab icon: skipped)
+    const candidates = pickTips(ctx, state).filter(tip => !tip.target || tip.target());
     const showsYourBirds = candidates[0]?.id === 'yourBirds';
     if (milestone && !showsYourBirds) showSeenMilestone(milestone);
     if (!candidates.length) return;

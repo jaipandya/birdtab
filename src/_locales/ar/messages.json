@@ -1565,18 +1565,6 @@
     "message": "تم. بدءًا من علامة التبويب التالية، سيبقى اسم كل طائر مخفيًا حتى تنقر عليه.",
     "description": "Tip text after Guess the bird was turned on"
   },
-  "tipStepAsideTitle": {
-    "message": "كثيرًا ما تنتقل إلى صفحة Chrome؟",
-    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
-  },
-  "tipStepAsideText": {
-    "message": "يمكن لـ BirdTab أن يتنحى جانبًا. متى تعرض علامة التبويب الجديدة طائرًا؟",
-    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
-  },
-  "tipCurrentChoice": {
-    "message": "الحالي",
-    "description": "Tip: marks the choice that is in use now"
-  },
   "tipSaved": {
     "message": "تم الحفظ",
     "description": "Tip heading after a choice was saved"
@@ -1584,5 +1572,69 @@
   "tipUndo": {
     "message": "تراجع",
     "description": "Tip button: takes back the choice just made"
+  },
+  "tipNewTabTitle": {
+    "message": "BirdTab هو صفحة علامة التبويب الجديدة لديك",
+    "description": "New tab tip (first day, Chrome/Edge): heading"
+  },
+  "tipNewTabText": {
+    "message": "كل علامة تبويب جديدة تأتي بطائر. يمكنك تغيير ذلك في أي وقت.",
+    "description": "New tab tip: under the heading"
+  },
+  "tipKeepEveryTab": {
+    "message": "إبقاء طائر في كل علامة تبويب",
+    "description": "New tab tip: the main button, keeps things as they are"
+  },
+  "tipOtherOptions": {
+    "message": "خيارات أخرى",
+    "description": "New tab tip: link to the other ways BirdTab can open"
+  },
+  "tipOptionsTitle": {
+    "message": "طرق أخرى لاستخدام BirdTab",
+    "description": "New tab tip, other options: heading"
+  },
+  "tipOptionsText": {
+    "message": "لن يتغير شيء حتى تؤكد.",
+    "description": "New tab tip, other options: under the heading"
+  },
+  "tipShortcuts": {
+    "message": "عرض اختصاراتي هنا",
+    "description": "New tab tip, other options: shows the most visited sites on BirdTab"
+  },
+  "tipShortcutsHelp": {
+    "message": "مواقعك الأكثر زيارة أسفل مربع البحث، مع طائر.",
+    "description": "New tab tip, other options: under Show my shortcuts here"
+  },
+  "tipPinTitle": {
+    "message": "أولًا، ثبّت BirdTab",
+    "description": "New tab tip: heading of the pinning step, before stepping aside"
+  },
+  "tipPinText": {
+    "message": "زره في شريط الأدوات يعرض طائرًا متى أردت.",
+    "description": "New tab tip, pinning step: why"
+  },
+  "tipSkipPin": {
+    "message": "المتابعة دون تثبيت",
+    "description": "New tab tip, pinning step: go on without pinning"
+  },
+  "tipConfirmHourly": {
+    "message": "عرض صفحة Chrome بين الطيور",
+    "description": "New tab tip: confirms Now and then"
+  },
+  "tipConfirmButton": {
+    "message": "فتح صفحة Chrome في علامات التبويب الجديدة",
+    "description": "New tab tip: confirms When I ask"
+  },
+  "tipChangeInSettings": {
+    "message": "يمكنك تغيير ذلك في أي وقت من الإعدادات.",
+    "description": "Tip text after a change"
+  },
+  "tipReminderTitle": {
+    "message": "إليك طائرك",
+    "description": "Tip the first time BirdTab shows after stepping aside: heading"
+  },
+  "tipReminderText": {
+    "message": "BirdTab مضبوط على \"$1\". يمكنك تغيير ذلك في أي وقت من الإعدادات.",
+    "description": "Tip the first time BirdTab shows after stepping aside. $1 is the setting's name (Now and then / When I ask)"
   }
 }

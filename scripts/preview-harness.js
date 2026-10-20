@@ -17,7 +17,7 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
   const welcome = params.has('welcome');
   // Every tip learned, so tips only show when asked for (?tip=<id>, ?tips)
   const tipsLearned = params.has('tips') || params.has('tip') ? {}
-    : Object.fromEntries(['stepAside', 'birdName', 'chromeFooter', 'yourBirds', 'favorite', 'chromeTab', 'quiz'].map(id => [id, true]));
+    : Object.fromEntries(['stepAside', 'newTabReminder', 'birdName', 'chromeFooter', 'yourBirds', 'favorite', 'chromeTab', 'quiz'].map(id => [id, true]));
   // ?fresh: ignore what earlier harness pages saved (screenshots start from a clean state)
   const saved = params.has('fresh') ? null : JSON.parse(localStorage.getItem('h:local') || 'null');
   const stores = { local: saved || {
@@ -25,7 +25,8 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
       quickAccessEnabled: true, clockDisplayMode: 'clock', chromeTabEnabled: true,
       viewHistory: { value: [], timestamp: 0 },
       ...(params.has('review') ? { installTime: Date.now() - 10 * day, newTabCount: 80, lastReviewPrompt: 0 } : { installTime: Date.now(), newTabCount: 1 }),
-      ...(params.get('tip') === 'stepAside' ? { chromeTabUses: 3 } : {}) },
+      ...(params.get('tip') === 'stepAside' ? { chromeTabUses: 3 } : {}),
+      ...(params.get('tip') === 'newTabReminder' ? { newTabMode: 'button', stepAsideOffer: { offers: 1, usesAtOffer: 0 } } : {}) },
     sync: { onboardingComplete: !welcome, seenFeatures: tipsLearned, favoriteSpecies: [] },
     session: {} };
   const listeners = [];
