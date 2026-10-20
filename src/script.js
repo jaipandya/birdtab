@@ -1700,11 +1700,15 @@ function setupVolumeKeyboardShortcuts() {
   });
 }
 
-// The first tab after install (and any opened before the welcome is answered) is the welcome
+// The first tab after install (and any opened before the welcome is answered) is the welcome.
+// The welcome saves onboardingComplete to sync and local; either one is enough
 async function isFirstRun() {
   try {
-    const { onboardingComplete } = await chrome.storage.sync.get(['onboardingComplete']);
-    return !onboardingComplete;
+    const [synced, local] = await Promise.all([
+      chrome.storage.sync.get(['onboardingComplete']).catch(() => ({})),
+      chrome.storage.local.get(['onboardingComplete']),
+    ]);
+    return !synced.onboardingComplete && !local.onboardingComplete;
   } catch {
     return false;
   }

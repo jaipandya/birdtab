@@ -132,6 +132,7 @@ export function bindDebugSection(root, panel) {
     },
     'show-welcome': async () => {
       await chrome.storage.sync.set({ onboardingComplete: false });
+      await chrome.storage.local.remove('onboardingComplete');
       done('The next new tab shows the welcome.');
     },
     'pin-coach-steps': () => showPinCoach({ preview: 'steps' }),

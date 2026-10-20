@@ -23,6 +23,7 @@ import { track, trackOnboardingCompleted } from '../analytics.js';
 import { IS_FIREFOX } from '../browserInfo.js';
 import { suggestRegion, browserTimeZone } from './regionSuggest.js';
 import { startGuide } from '../guide/guide.js';
+import { captureException } from '../sentry.js';
 
 const WORLD = CONFIG.MEDIA.DEFAULT_REGION;
 const { REGION_SWITCH_STATE_KEY } = CONFIG.MEDIA;
@@ -346,9 +347,21 @@ export async function showWelcome({ birdName, songLength, audio, onDone }) {
 
     const settings = { autoPlay };
     if (autoPlay) settings.quietHours = quietNights;
-    await chrome.storage.local.set(settings);
-    await startGuide();
-    await chrome.storage.sync.set({ onboardingComplete: true });
+    // Every new tab shows the welcome until onboardingComplete is saved, so a failed write must
+    // not keep the card open: each save is tried on its own, failures are reported, and the card
+    // closes anyway. The flag is kept in local storage too, in case sync refuses it (quotas)
+    const saves = [
+      ['saveWelcomeSettings', () => chrome.storage.local.set(settings)],
+      ['startGuide', () => startGuide()],
+      ['saveOnboardingState', () => chrome.storage.sync.set({ onboardingComplete: true })],
+      ['saveOnboardingStateLocal', () => chrome.storage.local.set({ onboardingComplete: true })],
+    ];
+    const results = await Promise.allSettled(saves.map(([, save]) => save()));
+    results.forEach((result, i) => {
+      if (result.status === 'rejected') {
+        captureException(result.reason, { tags: { operation: saves[i][0] } });
+      }
+    });
 
     trackOnboardingCompleted(region, autoPlay, {
       region_choice: skipped ? 'skipped'
@@ -375,9 +388,9 @@ export async function showWelcome({ birdName, songLength, audio, onDone }) {
     else if (action === 'start') finish(false);
   });
 
-  // Finished in another tab: this one steps aside too
-  const onStorage = (changes, area) => {
-    if (area === 'sync' && changes.onboardingComplete?.newValue === true && !finishing) {
+  // Finished in another tab (saved to sync, local or both): this one steps aside too
+  const onStorage = (changes) => {
+    if (changes.onboardingComplete?.newValue === true && !finishing) {
       finishing = true;
       close();
     }

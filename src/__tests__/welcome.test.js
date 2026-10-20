@@ -4,6 +4,7 @@
  */
 
 jest.mock('../analytics.js', () => ({ track: jest.fn(), trackOnboardingCompleted: jest.fn() }));
+jest.mock('../sentry.js', () => ({ captureException: jest.fn() }));
 jest.mock('../welcome/regionSuggest.js', () => ({
   ...jest.requireActual('../welcome/regionSuggest.js'),
   browserTimeZone: () => 'Asia/Calcutta',
@@ -116,6 +117,30 @@ test('Skip changes nothing but finishes the welcome', async () => {
   expect(chrome.storage.local.data.autoPlay).toBe(false);
   expect(chrome.storage.sync.data.onboardingComplete).toBe(true);
   expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('sync refuses the flag: the card still closes, the flag is kept locally and the failure reported', async () => {
+  const { chrome, onDone, $ } = await open();
+  const { captureException } = require('../sentry.js');
+  chrome.storage.sync.set.mockRejectedValueOnce(new Error('QUOTA_BYTES quota exceeded'));
+  $('[data-action="skip"]').click();
+  await flush();
+  await flush();
+  expect(onDone).toHaveBeenCalledTimes(1);
+  expect(chrome.storage.sync.data.onboardingComplete).toBe(false);
+  expect(chrome.storage.local.data.onboardingComplete).toBe(true);
+  expect(captureException).toHaveBeenCalledWith(expect.any(Error), { tags: { operation: 'saveOnboardingState' } });
+});
+
+test('a failed settings save still finishes the welcome', async () => {
+  const { chrome, onDone, $ } = await open();
+  chrome.storage.local.set.mockRejectedValueOnce(new Error('IO error'));
+  $('[data-action="next"]').click();
+  $('[data-action="start"]').click();
+  await flush();
+  await flush();
+  expect(onDone).toHaveBeenCalledTimes(1);
+  expect(chrome.storage.sync.data.onboardingComplete).toBe(true);
 });
 
 test('finished in another tab: this one steps aside too', async () => {

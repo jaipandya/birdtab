@@ -382,12 +382,15 @@ bootstrap();
 
 // A new install opens BirdTab itself: its first tab is the welcome (welcome/welcome.js).
 // ?open: boot.js never steps aside for this tab, whatever "Open BirdTab" says
-function checkOnboarding() {
-  chrome.storage.sync.get(['onboardingComplete'], function (result) {
-    if (!result.onboardingComplete) {
-      chrome.tabs.create({ url: 'index.html?open' });
-    }
-  });
+// The welcome saves onboardingComplete to sync and local; either one means it's done
+async function checkOnboarding() {
+  const [synced, local] = await Promise.all([
+    chrome.storage.sync.get(['onboardingComplete']).catch(() => ({})),
+    chrome.storage.local.get(['onboardingComplete']),
+  ]);
+  if (!synced.onboardingComplete && !local.onboardingComplete) {
+    chrome.tabs.create({ url: 'index.html?open' });
+  }
 }
 
 chrome.runtime.onInstalled.addListener(async function (details) {
