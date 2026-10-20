@@ -1160,6 +1160,13 @@ p {
   overflow: hidden;
 }
 
+/* Room for the links' focus ring inside the clipped box; the margin cancels it so nothing moves
+   (beside the 0.05rem every .credits span keeps on its right) */
+.credits .credit-attribution {
+  padding: 4px;
+  margin: -4px calc(0.05rem - 4px) -4px -4px;
+}
+
 .credit-item {
   display: flex;
   align-items: center;

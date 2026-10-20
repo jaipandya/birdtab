@@ -821,12 +821,14 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
   font-size: 13px;
   color: var(--settings-text-muted);
   opacity: 0;
-  transition: opacity 0.2s ease, padding 0.25s ease;
+  transition: opacity 0.2s ease, padding 0.25s ease, margin 0.25s ease;
 }
 
 .quiet-hours-setting.is-on .quiet-hours-sentence {
-  /* The bottom padding keeps the menus' focus ring inside the clipped line */
-  padding-bottom: 12px;
+  /* The padding keeps the menus' 2px focus ring inside the clipped line (the margin
+     cancels it on the sides and top, so the line doesn't move); the bottom is the gap */
+  padding: 2px 2px 12px;
+  margin: -2px -2px 0;
   opacity: 1;
 }
 
