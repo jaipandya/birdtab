@@ -45,6 +45,8 @@ let infoPopover = null;
 let infoPopoverBackdrop = null;
 let infoPopoverGlobalListenersAttached = false;
 let handleEbirdClick = null;
+// Called each time the popover opens (the guide counts the bird-name tip as learned)
+let handleOpen = null;
 
 function getConservationDetails(status) {
   if (!status) return null;
@@ -298,6 +300,7 @@ function openInfoPopover() {
   infoPopoverBackdrop = backdropElement;
   infoPopover = popoverElement;
   trigger.setAttribute('aria-expanded', 'true');
+  handleOpen?.();
   trigger.setAttribute('aria-controls', popoverElement.id);
 
   const rect = trigger.getBoundingClientRect();
@@ -367,7 +370,7 @@ function handleInfoPopoverDocumentKeydown(e) {
   }
 }
 
-export function setupInfoPopover({ onEbirdClick } = {}) {
+export function setupInfoPopover({ onEbirdClick, onOpen } = {}) {
   const trigger = document.querySelector('.info-popover-trigger');
 
   if (infoPopoverTrigger && infoPopoverTrigger !== trigger) {
@@ -377,6 +380,7 @@ export function setupInfoPopover({ onEbirdClick } = {}) {
   closeInfoPopover();
   infoPopoverTrigger = trigger;
   handleEbirdClick = onEbirdClick || null;
+  handleOpen = onOpen || null;
 
   if (!trigger) return;
 

@@ -1,20 +1,18 @@
 /* ==========================================================================
    Buttons: one look per purpose, wherever they appear
-   Loaded last (script.js, onboarding.js) so it settles the many button
+   Loaded last (script.js) so it settles the many button
    classes that grew up separately. Colours are in tokens.css (--btn-*).
 
    Primary      the one main action in a card or dialog
    Secondary    other actions
-   Quiet        dismissals: "Maybe later", "Skip tour"
+   Quiet        dismissals: "Maybe later", "Skip"
    Destructive  clearing things
-   Sizes        small (inline), medium (default), large (onboarding, tour start)
+   Sizes        small (inline, tips), medium (default), large (the welcome)
    ========================================================================== */
 
 /* ── Shared shape ── */
-.review-btn,
-.step-aside-btn,
-.tour-btn,
-.tour-link-btn,
+.welcome-btn,
+.guide-btn,
 .pin-show-me,
 .pin-coach-later,
 .pin-coach-done,
@@ -25,9 +23,7 @@
 .quiz-btn.primary,
 .quiz-btn.secondary,
 #quiz-next,
-.permission-dialog-btn,
-.chrome-footer-notification-dismiss,
-.start-btn {
+.permission-dialog-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -48,9 +44,8 @@
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
-.review-btn:active,
-.step-aside-btn:active,
-.tour-btn:active,
+.welcome-btn:active,
+.guide-btn:active,
 .pin-show-me:active,
 .pin-coach-later:active,
 .pin-coach-done:active,
@@ -61,16 +56,12 @@
 .quiz-btn.primary:active,
 .quiz-btn.secondary:active,
 #quiz-next:active,
-.permission-dialog-btn:active,
-.chrome-footer-notification-dismiss:active,
-.start-btn:active {
+.permission-dialog-btn:active {
   transform: scale(0.98);
 }
 
-.review-btn:focus-visible,
-.step-aside-btn:focus-visible,
-.tour-btn:focus-visible,
-.tour-link-btn:focus-visible,
+.welcome-btn:focus-visible,
+.guide-btn:focus-visible,
 .pin-show-me:focus-visible,
 .pin-coach-later:focus-visible,
 .pin-coach-done:focus-visible,
@@ -81,34 +72,30 @@
 .quiz-btn.primary:focus-visible,
 .quiz-btn.secondary:focus-visible,
 #quiz-next:focus-visible,
-.permission-dialog-btn:focus-visible,
-.chrome-footer-notification-dismiss:focus-visible,
-.start-btn:focus-visible {
+.permission-dialog-btn:focus-visible {
   outline: 2px solid var(--modal-focus-outline);
   outline-offset: 2px;
 }
 
 /* ── Sizes ── */
 .pin-show-me,
-.step-aside-btn {
+.guide-btn {
   min-height: 32px;
   padding: 0 12px;
   font-size: 13px;
   border-radius: 8px;
 }
 
-.tour-btn-large,
-.start-btn {
-  min-height: 46px;
-  padding: 0 22px;
-  font-size: 15px;
+.welcome-btn {
+  min-height: 42px;
+  padding: 0 20px;
+  font-size: 14.5px;
   border-radius: var(--btn-radius-lg);
 }
 
 /* ── Primary ── */
-.review-btn.primary,
-.step-aside-btn.primary,
-.tour-btn.primary,
+.welcome-btn.primary,
+.guide-btn.primary,
 .pin-show-me,
 .pin-coach-done,
 .your-birds-quiz,
@@ -117,18 +104,15 @@
 .error-modal-btn.primary,
 .quiz-btn.primary,
 #quiz-next,
-.permission-dialog-btn-confirm,
-.chrome-footer-notification-dismiss,
-.start-btn {
+.permission-dialog-btn-confirm {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-fg);
   border-color: var(--btn-primary-border);
   box-shadow: var(--btn-primary-highlight);
 }
 
-.review-btn.primary:hover,
-.step-aside-btn.primary:hover,
-.tour-btn.primary:hover,
+.welcome-btn.primary:hover,
+.guide-btn.primary:hover,
 .pin-show-me:hover,
 .pin-coach-done:hover,
 .your-birds-quiz:hover:not(:disabled),
@@ -137,9 +121,7 @@
 .error-modal-btn.primary:hover,
 .quiz-btn.primary:hover,
 #quiz-next:hover:not(:disabled),
-.permission-dialog-btn-confirm:hover,
-.chrome-footer-notification-dismiss:hover,
-.start-btn:hover {
+.permission-dialog-btn-confirm:hover {
   background: var(--btn-primary-bg-hover);
   color: var(--btn-primary-fg);
   box-shadow: var(--btn-primary-highlight);
@@ -149,19 +131,14 @@
 /* Icons drawn white in the SVG files: the same warm ink as the label on a primary button
    (sepia turns the black into a dark brown that matches --btn-primary-fg) */
 .error-modal-btn.primary img,
-.your-birds-quiz img,
-.start-btn img {
+.your-birds-quiz img {
   filter: brightness(0) sepia(1) saturate(3) brightness(0.32);
   opacity: 0.9;
 }
 
-.start-btn svg {
-  stroke: currentColor;
-}
-
 /* ── Secondary ── */
-.step-aside-btn:not(.primary),
-.tour-btn.secondary,
+.welcome-btn.secondary,
+.guide-btn.secondary,
 .pin-coach-later,
 .shortcut-btn.secondary,
 .confirmation-dialog-btn.secondary,
@@ -174,8 +151,8 @@
   box-shadow: none;
 }
 
-.step-aside-btn:not(.primary):hover,
-.tour-btn.secondary:hover,
+.welcome-btn.secondary:hover,
+.guide-btn.secondary:hover,
 .pin-coach-later:hover,
 .shortcut-btn.secondary:hover,
 .confirmation-dialog-btn.secondary:hover,
@@ -195,8 +172,8 @@
 }
 
 /* ── Quiet ── */
-.review-btn.ghost,
-.tour-link-btn {
+.welcome-btn.quiet,
+.guide-btn.quiet {
   min-height: 32px;
   padding: 0 10px;
   background: transparent;
@@ -206,8 +183,8 @@
   font-size: 13px;
 }
 
-.review-btn.ghost:hover,
-.tour-link-btn:hover {
+.welcome-btn.quiet:hover,
+.guide-btn.quiet:hover {
   background: var(--btn-quiet-bg-hover);
   color: var(--btn-quiet-fg-hover);
   text-decoration: none;
@@ -264,9 +241,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .review-btn, .step-aside-btn, .tour-btn, .pin-show-me, .pin-coach-later, .pin-coach-done, .your-birds-quiz,
+  .welcome-btn, .guide-btn, .pin-show-me, .pin-coach-later, .pin-coach-done, .your-birds-quiz,
   .shortcut-btn, .confirmation-dialog-btn, .error-modal-btn, .quiz-btn.primary, .quiz-btn.secondary, #quiz-next,
-  .permission-dialog-btn, .chrome-footer-notification-dismiss, .start-btn {
+  .permission-dialog-btn {
     transition: none;
   }
 }

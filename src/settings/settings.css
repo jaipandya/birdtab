@@ -525,6 +525,23 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
   outline: none;
 }
 
+/* Chrome's own clear button is blue: draw it in the page's colours */
+.region-search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  background-color: var(--white-60);
+  -webkit-mask: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%204l8%208M12%204l-8%208%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E') center / 12px no-repeat;
+  mask: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%204l8%208M12%204l-8%208%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E') center / 12px no-repeat;
+  cursor: pointer;
+}
+
+.region-search input::-webkit-search-cancel-button:hover {
+  background-color: var(--white-90);
+}
+
 .region-search input::placeholder {
   color: var(--white-50);
 }

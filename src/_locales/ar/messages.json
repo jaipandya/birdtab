@@ -147,14 +147,6 @@
     "message": "تعذّر تحميل طيور $1. لا تزال المنطقة المعروضة: $2.",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "تشغيل الوسائط تلقائياً",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "تمكين التشغيل التلقائي لأصوات الطيور عند فتح علامة تبويب جديدة",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "الساعات الهادئة",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "إعادة تعيين الإرشاد",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "مرحباً بك في BirdTab!",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "عرض توضيحي لـ BirdTab",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "اكتشف طائراً مذهلاً مع كل علامة تبويب جديدة. تصوير جميل وحقائق رائعة وأصوات طبيعة هادئة من حول العالم.",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "استمع لأصوات الطيور في كل مرة تفتح فيها علامة تبويب جديدة. يمكنك تعديل هذا في أي وقت من الإعدادات.",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "ابدأ مراقبة الطيور!",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "تشغيل",
     "description": "Alt text for play button"
@@ -236,7 +208,7 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "مراجعتك ستعني لنا العالم وتساعد محبي الطيور الآخرين في اكتشاف إضافتنا!",
+    "message": "مراجعة قصيرة تساعد محبي الطيور الآخرين في العثور على BirdTab.",
     "description": "Message for review prompt"
   },
   "leaveReview": {
@@ -751,94 +723,6 @@
     "message": "منذ $1 يوم",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "مرحباً بك في BirdTab!",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "دعنا نريك كل شيء! ستساعدك هذه الجولة السريعة على اكتشاف جميع الميزات.",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "أنت جاهز!",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "استمتع باكتشاف الطيور الجميلة من جميع أنحاء العالم. مراقبة سعيدة!",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "هيا بنا!",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "ابدأ الاستكشاف!",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "فهمت!",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "جديد!",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "رجوع",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "التحكم في مستوى الصوت",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "اضبط مستوى الصوت حسب تفضيلك. تحكم في صوت أصوات الطيور لإنشاء تجربتك المثالية.",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "اكتشف طيور جديدة",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "هل أنت مستعد لصديق ريشي جديد؟ انقر هنا لتحميل صورة طائر جديدة.",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "تشغيل / إيقاف",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "تحكم في تشغيل أصوات الطيور. انقر للتشغيل أو الإيقاف في أي وقت.",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "علامة تبويب Chrome جديدة",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "هل تحتاج إلى الوصول إلى صفحة علامة التبويب الجديدة الافتراضية في Chrome؟ انقر هنا لفتحها في علامة تبويب جديدة.",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "التالي",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "تخطي الجولة",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "فهمت!",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "إعادة تعيين جولة الميزات",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "خطأ في إعادة تعيين جولة الميزات",
-    "description": "Error message when tour reset fails"
-  },
   "chromeTabTooltip": {
     "message": "فتح صفحة علامة تبويب Chrome الجديدة الافتراضية",
     "description": "Tooltip for Chrome tab link"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "معرفة المزيد",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "إغلاق الإشعار",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "إظهار الساعة",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "الاعتمادات والترخيص",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "ستجد هنا اسم المصوّر ومسجّل الصوت لكل طائر. اضغط على أي اسم لمعرفة المزيد والاطلاع على تفاصيل الترخيص.",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "تعرّف على الطائر",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "انقر على اسم الطائر لمعرفة حقائق عنه وحالة الحفاظ عليه وخريطة لأماكن عيشه.",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "تعذّر تحميل هذه الصورة.",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "أنت غير متصل بالإنترنت. ستظهر الصورة عند عودة الاتصال.",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "القائمة السريعة",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "الوصول إلى الإعدادات وسجل المشاهدة واختبار الطيور من هذه القائمة. انقر لاستكشاف خياراتك!",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "تشغيل الصوت",
@@ -1349,14 +1205,6 @@
     "message": "أو اكتب $1 ومسافة واسم طائر في شريط العناوين",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "هل تفضّل صفحة علامة التبويب الجديدة في Chrome؟",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "يمكن لـ BirdTab أن يتنحى جانبًا ولا يُفتح إلا عندما تريد رؤية طائر.",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "زر التحديث يأتي دائمًا بطائر جديد.",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "شاهدت $1 طائرًا مختلفًا!",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "الإعدادات وطيورك واختبار الطيور كلها في هذه القائمة.",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "اختبرني في هذه الطيور",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "انقر على أيقونة العين بجوار BirdTab لإظهاره في شريط الأدوات",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "مرحبًا بك في BirdTab",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "طائر جديد كلما فتحت علامة تبويب",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "يأتي كل طائر مع صورته وصوته وخريطة للمكان الذي يعيش فيه.",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "يأتي كل طائر مع صورته ومعلومات عنه وخريطة للمكان الذي يعيش فيه.",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "طائرك الأول",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "استمع إلى صوته",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "إيقاف مؤقت",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "تشغيل مرة أخرى",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "تخطي",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "متابعة",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "اجعله على ذوقك",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "بلد أو منطقة أخرى",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "طيور من كل القارات",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "مقترحة حسب منطقتك الزمنية",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "مقترحة حسب لغة متصفحك",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "قائمة قصيرة، لذا تتكرر الطيور أكثر",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "أصوات الطيور",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "تشغيلها عند فتح كل علامة تبويب",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "فقط عندما أضغط على تشغيل",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "هادئ ليلًا، $1",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "يمكنك تغيير هذه الخيارات في أي وقت من الإعدادات.",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "رجوع",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "بدء مشاهدة الطيور",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "افتح علامة تبويب جديدة لتتعرّف على طائرك التالي",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "إذا سألك Firefox عن صفحة علامة التبويب الجديدة، فاحتفظ بالتغيير.",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "أرني",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "فهمت",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "هناك المزيد عن كل طائر",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "انقر على اسمه لترى معلومات عنه وحالة الحماية وخريطة للمكان الذي يعيش فيه.",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "كل طائر تعرّفت عليه",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "تجدها كلها مع صورها وأصواتها في \"طيورك\"، وهي في هذه القائمة.",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "فتح طيورك",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "احتفظ بالطيور التي تحبها",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "يضيف القلب هذا الطائر إلى المفضلة، وتجدها في \"طيورك\".",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "صفحة علامة التبويب الجديدة في Chrome على بُعد نقرة",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "يفتح هذا صفحة علامة التبويب الجديدة الخاصة بـ Chrome متى احتجت إليها.",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "كم طائرًا تستطيع أن تسمّي؟",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "اختبر نفسك في الطيور التي تعرّفت عليها، أو أخفِ اسم كل طائر جديد حتى تخمّنه.",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "اختبر نفسك في الطيور التي تعرّفت عليها.",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "بدء الاختبار",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "التخمين في كل علامة تبويب",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "تم. بدءًا من علامة التبويب التالية، سيبقى اسم كل طائر مخفيًا حتى تنقر عليه.",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "كثيرًا ما تنتقل إلى صفحة Chrome؟",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "يمكن لـ BirdTab أن يتنحى جانبًا. متى تعرض علامة التبويب الجديدة طائرًا؟",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "الحالي",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "تم الحفظ",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "تراجع",
+    "description": "Tip button: takes back the choice just made"
   }
 }

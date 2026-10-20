@@ -11,27 +11,27 @@ const [out, dir = 'dev-chrome', ...rest] = process.argv.slice(2);
 const variant = (rest.find(a => a.startsWith('--btn=')) || '').slice(6);
 const only = rest.filter(a => !a.startsWith('--'));
 const SURFACES = {
-  review: 'harness.html?review',
-  footer: 'harness.html?footer',
-  offer: 'harness.html?offer',
-  tour: 'harness.html?tour',
+  welcome: 'harness.html?welcome',
+  review: 'harness.html?tip=review',
+  footer: 'harness.html?tip=chromeFooter',
+  offer: 'harness.html?tip=stepAside',
+  tip: 'harness.html?tip=birdName',
   coach: 'harness.html?mode=button#coach',
   settings: 'harness.html?mode=button#settings',
   birds: 'harness.html?seed=8#birds',
   confirm: 'harness.html?seed=8#confirm',
   error: 'harness.html#error',
   quiz: 'harness.html#quiz',
-  onboarding: 'harness-onboarding.html',
 };
 // The card or panel holding the buttons, also saved as <name>-crop.png
 const CROP = {
-  review: '.review-prompt', footer: '.chrome-footer-notification', offer: '#step-aside-offer',
-  tour: '.tour-tooltip, [class*="tour-tooltip"], [class*="tour-welcome"]', coach: '.pin-coach-card',
+  welcome: '.welcome-card', review: '.guide-tip', footer: '.guide-tip', offer: '.guide-tip', tip: '.guide-tip',
+  coach: '.pin-coach-card',
   settings: '#settings-panel .settings-panel-surface', birds: '#your-birds-sidebar .settings-content',
-  confirm: '.confirmation-dialog', error: '.error-modal-content', quiz: '.quiz-content', onboarding: '.onboarding-card',
+  confirm: '.confirmation-dialog', error: '.error-modal-content', quiz: '.quiz-content',
 };
 // Cards that appear on their own after a delay
-const SETTLE_MS = { review: 3500, footer: 4000, offer: 2500, tour: 3500, quiz: 2500, onboarding: 2500 };
+const SETTLE_MS = { welcome: 1200, quiz: 2500 };
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -57,9 +57,9 @@ async function main() {
       const flags = 'fresh' + (variant ? `&btn=${variant}` : '');
       const fresh = page.includes('?') ? page.replace('?', `?${flags}&`) : page.replace(/(#|$)/, `?${flags}$1`);
       await send('Page.navigate', { url: `file://${path.resolve(dir, fresh)}` });
-      // Ready: the harness says so (main page), or the page has loaded (onboarding)
+      // Ready: the harness says so
       for (let i = 0; i < 100; i++) {
-        const r = await send('Runtime.evaluate', { expression: "document.documentElement.dataset.harnessReady === 'true' || (location.pathname.endsWith('onboarding.html') && document.readyState === 'complete')", returnByValue: true });
+        const r = await send('Runtime.evaluate', { expression: "document.documentElement.dataset.harnessReady === 'true'", returnByValue: true });
         if (r.result?.result?.value) break;
         await sleep(200);
       }

@@ -1,31 +1,8 @@
 /**
- * Review Prompt Module
- * Handles the review prompt logic, HTML, and event listeners
+ * When to ask for a store review (shown as one of the guide's tips: guide/guide.js)
  */
 
 import CONFIG from './config.js';
-import { trackReviewPromptAction, trackReviewPromptShown } from './analytics.js';
-import { html, insertHtml } from './utils/html.js';
-
-// Module state
-let shouldShowReviewPrompt = false;
-let reviewPromptData = null;
-
-/**
- * Get whether review prompt should be shown
- * @returns {boolean}
- */
-export function getShouldShowReviewPrompt() {
-  return shouldShowReviewPrompt;
-}
-
-/**
- * Get review prompt data for analytics
- * @returns {Object|null}
- */
-export function getReviewPromptData() {
-  return reviewPromptData;
-}
 
 /**
  * Increment new tab count for review prompt timing
@@ -44,133 +21,28 @@ export function incrementNewTabCount() {
 }
 
 /**
- * Check and prepare review prompt based on user activity
- * @returns {Promise<boolean>} Whether review prompt should be shown
+ * Whether it's time to ask: some days after install, after enough tabs, not answered, and not
+ * asked recently ("Maybe later", or shown without an answer).
+ * @returns {Promise<boolean>}
  */
-export function checkAndPrepareReviewPrompt() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft'], function (result) {
-      const now = Date.now();
-      const installTime = result.installTime || now;
-      const newTabCount = result.newTabCount || 0;
-      const lastReviewPrompt = result.lastReviewPrompt || 0;
-      const reviewDismissed = result.reviewDismissed || false;
-      const reviewLeft = result.reviewLeft || false;
+export async function reviewPromptDue() {
+  const result = await chrome.storage.local.get(['installTime', 'newTabCount', 'lastReviewPrompt', 'reviewDismissed', 'reviewLeft']);
+  if (result.reviewLeft || result.reviewDismissed) return false;
 
-      if (reviewLeft || reviewDismissed) {
-        resolve(false);
-        return;
-      }
+  const now = Date.now();
+  const isDev = process.env.NODE_ENV !== 'production';
+  const timeDelay = isDev ? CONFIG.DEV_TIME_DELAY : CONFIG.PROD_TIME_DELAY;
+  const tabCountThreshold = isDev ? CONFIG.DEV_TAB_COUNT : CONFIG.PROD_TAB_COUNT;
 
-      const isDev = process.env.NODE_ENV !== 'production';
-      const timeDelay = isDev ? CONFIG.DEV_TIME_DELAY : CONFIG.PROD_TIME_DELAY;
-      const tabCountThreshold = isDev ? CONFIG.DEV_TAB_COUNT : CONFIG.PROD_TAB_COUNT;
-
-      const timeCondition = now - installTime > timeDelay;
-      const activityCondition = newTabCount >= tabCountThreshold;
-      const frequencyCondition = now - lastReviewPrompt > timeDelay;
-
-      shouldShowReviewPrompt = timeCondition && activityCondition && frequencyCondition;
-
-      // Store data for analytics tracking
-      if (shouldShowReviewPrompt) {
-        const daysSinceInstall = Math.floor((now - installTime) / (1000 * 60 * 60 * 24));
-        reviewPromptData = {
-          daysSinceInstall,
-          newTabCount
-        };
-      }
-
-      resolve(shouldShowReviewPrompt);
-    });
-  });
+  const timeCondition = now - (result.installTime || now) > timeDelay;
+  const activityCondition = (result.newTabCount || 0) >= tabCountThreshold;
+  const frequencyCondition = now - (result.lastReviewPrompt || 0) > timeDelay;
+  return timeCondition && activityCondition && frequencyCondition;
 }
 
-/**
- * Get review prompt HTML
- * @returns {string} HTML string for review prompt
- */
-export function getReviewPromptHTML() {
-  return html`
-    <div id="review-prompt" class="review-prompt">
-      <button class="review-close" id="review-close" aria-label="${chrome.i18n.getMessage('closeAlt') || 'Close'}">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <h2 class="review-title">${chrome.i18n.getMessage('reviewPromptTitle')}</h2>
-      <p class="review-message">${chrome.i18n.getMessage('reviewPromptMessage')}</p>
-      <div class="review-actions">
-        <button id="leave-review" class="review-btn primary">${chrome.i18n.getMessage('leaveReview')}</button>
-        <div class="review-actions-secondary">
-          <button id="maybe-later" class="review-btn ghost">${chrome.i18n.getMessage('maybeLater')}</button>
-          <span class="review-separator">·</span>
-          <button id="no-thanks" class="review-btn ghost">${chrome.i18n.getMessage('noThanks')}</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Add event listeners to review prompt buttons
- */
-export function addReviewPromptListeners() {
-  const daysSinceInstall = reviewPromptData?.daysSinceInstall || -1;
-
-  document.getElementById('leave-review').addEventListener('click', () => {
-    if (process.env.BROWSER === 'edge') {
-      chrome.tabs.create({ url: 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg' });
-    } else if (process.env.BROWSER === 'firefox') {
-      chrome.tabs.create({ url: 'https://addons.mozilla.org/firefox/addon/birdtab/reviews/' });
-    } else {
-      chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn' });
-    }
-    chrome.storage.local.set({ reviewLeft: true });
-    trackReviewPromptAction('left_review', daysSinceInstall);
-    dismissPrompt();
-  });
-
-  document.getElementById('maybe-later').addEventListener('click', () => {
-    chrome.storage.local.set({ lastReviewPrompt: Date.now() });
-    trackReviewPromptAction('maybe_later', daysSinceInstall);
-    dismissPrompt();
-  });
-
-  document.getElementById('no-thanks').addEventListener('click', () => {
-    chrome.storage.local.set({ reviewDismissed: true });
-    trackReviewPromptAction('dismissed', daysSinceInstall);
-    dismissPrompt();
-  });
-
-  document.getElementById('review-close').addEventListener('click', () => {
-    chrome.storage.local.set({ lastReviewPrompt: Date.now() });
-    trackReviewPromptAction('maybe_later', daysSinceInstall);
-    dismissPrompt();
-  });
-}
-
-/**
- * Dismiss the review prompt with animation
- */
-export function dismissPrompt() {
-  const prompt = document.getElementById('review-prompt');
-  if (prompt) {
-    prompt.style.opacity = '0';
-    setTimeout(() => prompt.remove(), 300);
-  }
-}
-
-/**
- * Show the review prompt if conditions are met
- * @param {HTMLElement} container - Container to insert prompt into
- */
-export function showReviewPromptIfNeeded(container) {
-  if (shouldShowReviewPrompt && container) {
-    insertHtml(container, 'beforeend', getReviewPromptHTML());
-    addReviewPromptListeners();
-    
-    // Track that prompt was shown
-    if (reviewPromptData) {
-      trackReviewPromptShown(reviewPromptData.daysSinceInstall);
-    }
-  }
+/** The store page to review BirdTab on, for this browser. */
+export function reviewStoreUrl() {
+  if (process.env.BROWSER === 'edge') return 'https://microsoftedge.microsoft.com/addons/detail/ciggnaneplggkgmjnmcjpmaggbbbcakg';
+  if (process.env.BROWSER === 'firefox') return 'https://addons.mozilla.org/firefox/addon/birdtab/reviews/';
+  return 'https://chromewebstore.google.com/detail/birdtab/dkdnidbnjihhilbjndnnlfipmbnoaipn';
 }

@@ -36,6 +36,23 @@ html[dir="rtl"] .control-buttons {
   left: 2rem;
 }
 
+/* The quiet hours pill sits above the buttons, which are on the left in RTL */
+html[dir="rtl"] .quiet-hours-pill {
+  right: auto;
+  left: 2rem;
+}
+
+html[dir="rtl"] .quiet-hours-pill-tooltip {
+  right: auto;
+  left: 0;
+  text-align: right;
+}
+
+html[dir="rtl"] .quiet-hours-pill-tooltip::after {
+  right: auto;
+  left: 20px;
+}
+
 html[dir="rtl"] .credit-item {
   flex-direction: row-reverse;
 }
@@ -1604,41 +1621,8 @@ html[dir="rtl"] .credit-popover__ext-icon {
   display: none;
 }
 
-/* ── Review prompt ── */
-
-.review-prompt {
-  position: fixed;
-  /* Same gap from the bottom as from the right; covers the control buttons until answered or closed */
-  bottom: 2rem;
-  right: 2rem;
-  max-width: min(340px, calc(100vw - 32px));
-  padding: 24px 24px 20px;
-  background: rgba(18, 18, 20, 0.82);
-  border: 1px solid var(--white-10);
-  border-top-color: var(--white-15);
-  border-radius: 20px;
-  backdrop-filter: blur(40px) saturate(1.4);
-  -webkit-backdrop-filter: blur(40px) saturate(1.4);
-  box-shadow:
-    0 8px 40px var(--black-40),
-    0 2px 8px var(--black-20),
-    inset 0 1px 0 var(--white-6);
-  z-index: 1000;
-  text-align: center;
-  animation: reviewSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: opacity 0.3s ease;
-}
-
-/* Controls are in the top corner on small screens, so the card can use the
-   bottom edge */
-@media (max-width: 767px) {
-  .review-prompt {
-    bottom: 16px;
-    right: 16px;
-  }
-}
-
-@keyframes reviewSlideIn {
+/* Cards that rise into place (the pin coach) */
+@keyframes cardSlideIn {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -1647,99 +1631,6 @@ html[dir="rtl"] .credit-popover__ext-icon {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-.review-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--white-30);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.review-close:hover {
-  background: var(--white-8);
-  color: var(--white-70);
-}
-
-.review-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--white-95);
-  margin: 0 0 8px;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.review-message {
-  font-size: 0.85rem;
-  color: var(--white-70);
-  line-height: 1.6;
-  margin: 0 0 20px;
-}
-
-.review-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.review-btn {
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.review-btn.primary {
-  width: 100%;
-  padding: 11px 20px;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  background: var(--primary);
-  color: var(--primary-foreground);
-  transition: filter 0.15s ease;
-}
-
-.review-btn.primary:hover {
-  filter: brightness(1.1);
-}
-
-.review-btn.primary:active {
-  filter: brightness(0.95);
-}
-
-.review-actions-secondary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.review-separator {
-  color: var(--white-20);
-  font-size: 0.75rem;
-  user-select: none;
-}
-
-.review-btn.ghost {
-  padding: 4px 2px;
-  background: transparent;
-  color: var(--white-40);
-  font-size: 0.8rem;
-  transition: color 0.15s ease;
-}
-
-.review-btn.ghost:hover {
-  color: var(--white-70);
 }
 
 /* Chrome Tab Link - Top Right */
@@ -3053,17 +2944,12 @@ html[dir="rtl"] .history-footer {
 
   .volume-slider-container,
   .error-modal,
-  .review-prompt,
   .search-input,
   #search-input,
   .info-popover {
     backdrop-filter: none !important;
     background-color: var(--black-90) !important;
     /* Fallback opaque background */
-  }
-
-  .review-prompt {
-    background: var(--black-90);
   }
 
   #conservation-status {
@@ -3255,227 +3141,6 @@ html[dir="rtl"] .history-footer {
 
   .permission-dialog-btn {
     width: 100%;
-  }
-}
-
-/* ==========================================================================
-   Chrome Footer Notification
-   A subtle notification informing users about Chrome's new footer bar
-   ========================================================================== */
-
-.chrome-footer-notification {
-  position: fixed;
-  /* Same gap from the bottom as from the right; covers the control buttons until closed */
-  bottom: 2rem;
-  right: 2rem;
-  max-width: min(340px, calc(100vw - 32px));
-  background: rgba(28, 28, 30, 0.95);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 16px;
-  border: 1px solid var(--white-10);
-  box-shadow:
-    0 16px 48px var(--black-50),
-    0 4px 16px var(--black-30),
-    inset 0 1px 0 var(--white-5);
-  z-index: 1500;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.chrome-footer-notification.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.chrome-footer-notification.exiting {
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-}
-
-/* Close button (X) */
-.chrome-footer-notification-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white-12);
-  border: 1px solid var(--white-15);
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--white-70);
-  transition: all 0.2s ease;
-  z-index: 2;
-}
-
-.chrome-footer-notification-close:hover {
-  background: var(--white-20);
-  border-color: var(--white-25);
-  color: var(--text-primary);
-}
-
-.chrome-footer-notification-close:focus-visible {
-  outline: 2px solid rgba(52, 199, 89, 0.6);
-  outline-offset: 2px;
-}
-
-/* Content container */
-.chrome-footer-notification-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* Screenshot image */
-.chrome-footer-notification-image {
-  width: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--black-20);
-}
-
-.chrome-footer-notification-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 10px;
-}
-
-/* Text content */
-.chrome-footer-notification-text {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-right: 24px;
-}
-
-.chrome-footer-notification-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-.chrome-footer-notification-description {
-  font-size: 13px;
-  color: var(--white-65);
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* Actions container */
-.chrome-footer-notification-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-}
-
-/* Got it / Dismiss button */
-.chrome-footer-notification-dismiss {
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-on-accent);
-  background: rgba(52, 199, 89, 0.9);
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.chrome-footer-notification-dismiss:hover {
-  background: rgba(52, 199, 89, 1);
-  transform: translateY(-1px);
-}
-
-.chrome-footer-notification-dismiss:active {
-  transform: translateY(0);
-}
-
-.chrome-footer-notification-dismiss:focus-visible {
-  outline: 2px solid rgba(52, 199, 89, 0.6);
-  outline-offset: 2px;
-}
-
-/* Learn more link */
-.chrome-footer-notification-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--white-60);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.chrome-footer-notification-link:hover {
-  color: var(--white-90);
-}
-
-.chrome-footer-notification-link svg,
-.chrome-footer-notification-link .external-link-icon {
-  transition: transform 0.2s ease;
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
-}
-
-.chrome-footer-notification-link:hover svg,
-.chrome-footer-notification-link:hover .external-link-icon {
-  transform: translate(2px, -2px);
-  opacity: 0.9;
-}
-
-/* RTL Support */
-html[dir="rtl"] .chrome-footer-notification {
-  right: auto;
-  left: 24px;
-}
-
-html[dir="rtl"] .chrome-footer-notification-close {
-  right: auto;
-  left: 12px;
-}
-
-html[dir="rtl"] .chrome-footer-notification-text {
-  padding-right: 0;
-  padding-left: 24px;
-}
-
-/* Hide on smaller screens where Chrome footer is less relevant */
-@media (max-width: 768px) {
-  .chrome-footer-notification {
-    display: none;
-  }
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .chrome-footer-notification {
-    transition: opacity 0.2s ease;
-    transform: none;
-  }
-
-  .chrome-footer-notification.visible {
-    transform: none;
-  }
-
-  .chrome-footer-notification.exiting {
-    transform: none;
   }
 }
 
@@ -5584,77 +5249,6 @@ html.photo-tone {
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-/* ── "Open BirdTab" offer (newTabMode.js), under the Chrome Tab shortcut ── */
-
-.step-aside-offer {
-  text-align: start;
-  position: fixed;
-  top: 6.5rem;
-  right: 2rem;
-  width: min(320px, calc(100vw - 32px));
-  padding: 20px 20px 18px;
-  background: var(--surface-glass);
-  border: 1px solid var(--white-10);
-  border-top-color: var(--white-15);
-  border-radius: 18px;
-  backdrop-filter: blur(40px) saturate(1.4);
-  -webkit-backdrop-filter: blur(40px) saturate(1.4);
-  box-shadow: 0 8px 40px var(--black-40), inset 0 1px 0 var(--white-6);
-  color: var(--white-90);
-  z-index: 1000;
-  animation: reviewSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-html[dir="rtl"] .step-aside-offer {
-  right: auto;
-  left: 2rem;
-}
-
-.step-aside-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-  opacity: 0.6;
-}
-
-.step-aside-close:hover {
-  opacity: 1;
-  background: var(--white-8);
-}
-
-.step-aside-title {
-  margin: 0 28px 6px 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.step-aside-text {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--white-70);
-  text-wrap: pretty;
-}
-
-.step-aside-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.step-aside-actions > button {
-  flex: 1;
-}
-
 /* ── Your Birds (yourBirds.js): one list of every bird seen; Favorites is a filter ── */
 
 .your-birds-top {
@@ -5938,9 +5532,7 @@ html[dir="rtl"] .bird-card-heart {
 
   .favorite-inline-button.just-favorited svg,
   .info-popover-trigger#bird-name.guess-revealed,
-  .life-list-milestone,
-  .step-aside-offer,
-  .review-prompt {
+  .life-list-milestone {
     animation: none;
   }
 }
@@ -6070,7 +5662,7 @@ html[dir="rtl"] .bird-card-heart {
   box-shadow: 0 16px 60px var(--black-50);
   color: var(--white-90);
   text-align: start;
-  animation: reviewSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: cardSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .pin-coach-eyebrow {
@@ -6313,5 +5905,34 @@ html[dir="rtl"] .pin-coach-arrow { right: auto; left: 84px; transform: scaleX(-1
   .pin-mock-menu {
     animation: none;
     opacity: 1;
+  }
+}
+
+/* ── The welcome (welcome/welcome.js): on the first tab only the bird shows until the card is
+   answered; then the clock, search and buttons come in one after another ── */
+
+html.first-run :is(#clock-container, #search-container, .top-sites-container, #chrome-tab-link,
+  .google-apps-trigger, .control-buttons, .low-distraction-toggle, .low-distraction-expand, #quiet-hours-pill) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  translate: 0 10px;
+}
+
+html.first-run-reveal :is(#clock-container, #search-container, .top-sites-container, #chrome-tab-link,
+  .google-apps-trigger, .control-buttons, .low-distraction-toggle, #quiet-hours-pill) {
+  transition: opacity 0.7s ease, translate 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.first-run-reveal #search-container { transition-delay: 0.08s; }
+html.first-run-reveal .top-sites-container { transition-delay: 0.16s; }
+html.first-run-reveal .control-buttons,
+html.first-run-reveal #quiet-hours-pill { transition-delay: 0.24s; }
+html.first-run-reveal #chrome-tab-link,
+html.first-run-reveal .google-apps-trigger { transition-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.first-run :is(#clock-container, #search-container, .top-sites-container, #chrome-tab-link,
+    .google-apps-trigger, .control-buttons, .low-distraction-toggle, .low-distraction-expand, #quiet-hours-pill) {
+    translate: none;
   }
 }

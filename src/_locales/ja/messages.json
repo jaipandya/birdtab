@@ -147,14 +147,6 @@
     "message": "$1 の鳥を読み込めませんでした。引き続き $2 の鳥を表示します。",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "メディアを自動再生",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "新しいタブを開いたときに鳥の鳴き声を自動再生するよう有効にする",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "静寂時間",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "オンボーディングをリセット",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "BirdTabへようこそ！",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "BirdTabデモ",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "新しいタブを開くたびに美しい鳥を発見。素晴らしい写真、興味深い豆知識、そして世界中の癒しの自然の音をお届けします。",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "新しいタブを開くたびに鳥のさえずりが流れます。設定でいつでも変更できます。",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "バードウォッチングを開始！",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "再生",
     "description": "Alt text for play button"
@@ -236,7 +208,7 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "あなたのレビューは私たちにとって大きな意味があり、他の鳥愛好家が私たちの拡張機能を発見するのに役立ちます！",
+    "message": "短いレビューが、ほかの鳥好きの人が BirdTab を見つける助けになります。",
     "description": "Message for review prompt"
   },
   "leaveReview": {
@@ -751,94 +723,6 @@
     "message": "$1日前",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "BirdTabへようこそ！",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "ご案内させてください！このツアーで便利な機能を発見できます。",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "準備完了！",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "世界中の美しい鳥たちを楽しみましょう。素敵なバードウォッチングを！",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "始めましょう！",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "探索を開始！",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "了解！",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "新機能！",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "戻る",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "音量調整",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "お好みの音量に調整してください。鳥のさえずりをコントロールして、完璧なバードウォッチング体験を作りましょう。",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "新しい鳥を発見",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "新しい羽毛の友達に会う準備はできましたか？ここをクリックして新しい鳥の写真を読み込みます。",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "再生 / 一時停止",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "鳥の鳴き声の再生を操作できます。いつでもクリックして再生または一時停止できます。",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "Chromeの新しいタブ",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "デフォルトのChromeの新しいタブページにアクセスしたい場合は、ここをクリックして新しいタブで開けます。",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "次へ",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "ツアーをスキップ",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "了解！",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "機能ツアーをリセット",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "機能ツアーのリセット中にエラーが発生しました",
-    "description": "Error message when tour reset fails"
-  },
   "chromeTabTooltip": {
     "message": "デフォルトのChromeの新しいタブページを開く",
     "description": "Tooltip for Chrome tab link"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "詳細を見る",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "通知を閉じる",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "時計を表示",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "クレジットとライセンス",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "ここでは各鳥の写真の撮影者と音声の録音者を確認できます。名前をタップすると、詳細やライセンス情報をご覧いただけます。",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "鳥について知る",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "鳥の名前をクリックすると、解説、保全状況、生息地の地図が表示されます。",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "この写真を読み込めませんでした。",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "オフラインです。オンラインに戻ると写真が表示されます。",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "クイックメニュー",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "このメニューから設定、閲覧履歴、鳥クイズにアクセスできます。クリックしてオプションを確認しましょう！",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "オーディオ再生中",
@@ -1349,14 +1205,6 @@
     "message": "アドレスバーに $1、スペース、鳥の名前を入力しても開けます",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "Chrome の新しいタブページのほうがいいですか？",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "BirdTab は普段は表示せず、鳥を見たいときだけ開くようにできます。",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "更新ボタンを押すといつでも新しい鳥が表示されます。",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "$1 種類の鳥に出会いました！",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "設定、あなたの鳥、鳥クイズはこのメニューにあります。",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "この鳥でクイズ",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "BirdTab の横の目のアイコンをクリックしてツールバーに表示",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "BirdTab へようこそ",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "タブを開くたびに、新しい鳥",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "どの鳥にも、写真と鳴き声、生息地の地図が付いています。",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "どの鳥にも、写真と情報、生息地の地図が付いています。",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "最初の鳥",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "鳴き声を聞く",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "一時停止",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "もう一度再生",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "スキップ",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "次へ",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "自分好みに設定",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "ほかの国・地域",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "すべての大陸の鳥",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "タイムゾーンからのおすすめ",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "ブラウザの言語からのおすすめ",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "鳥の種類が少ないため、同じ鳥がよく出てきます",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "鳴き声",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "タブを開くたびに再生",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "再生ボタンを押したときだけ",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "夜間は鳴らさない（$1）",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "設定でいつでも変更できます。",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "戻る",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "バードウォッチングを始める",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "新しいタブを開いて、次の鳥に会いましょう",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "Firefox から新しいタブページについて確認されたら、変更を保持してください。",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "見てみる",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "わかりました",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "どの鳥にも、もっと情報があります",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "名前をクリックすると、鳥の情報、保全状況、生息地の地図が見られます。",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "これまでに出会った鳥",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "写真や鳴き声と一緒に、すべて「あなたの鳥」に残っています。このメニューから開けます。",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "「あなたの鳥」を開く",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "気に入った鳥を残しておく",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "ハートを押すと、この鳥がお気に入りに追加され、「あなたの鳥」に残ります。",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "Chrome の新しいタブページもワンクリックで",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "必要なときはいつでも、ここから Chrome 本来の新しいタブページを開けます。",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "いくつ名前がわかりますか？",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "出会った鳥でクイズに挑戦したり、新しい鳥の名前を隠して当てたりできます。",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "出会った鳥でクイズに挑戦できます。",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "クイズに挑戦",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "タブごとに名前を当てる",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "オンにしました。次のタブから、鳥の名前はクリックするまで隠れます。",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "Chromeのページをよく開きますか？",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "BirdTabは控えめにもできます。新しいタブで鳥を表示するのはいつにしますか？",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "現在",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "保存しました",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "元に戻す",
+    "description": "Tip button: takes back the choice just made"
   }
 }

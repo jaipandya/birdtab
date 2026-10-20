@@ -147,14 +147,6 @@
     "message": "Не удалось загрузить птиц: $1. Остаётся регион: $2.",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "Автовоспроизведение медиа",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "Включить автоматическое воспроизведение голосов птиц при открытии новой вкладки",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "Тихие часы",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "Сбросить ознакомление",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "Добро пожаловать в BirdTab!",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "Демо BirdTab",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "Открывайте удивительных птиц с каждой новой вкладкой. Прекрасные фотографии, увлекательные факты и умиротворяющие звуки природы со всего мира.",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "Слушайте пение птиц каждый раз при открытии новой вкладки. Вы можете изменить это в любое время в настройках.",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "Начать наблюдение за птицами!",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "Воспроизвести",
     "description": "Alt text for play button"
@@ -236,7 +208,7 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "Ваш отзыв будет значить для нас целый мир и поможет другим любителям птиц открыть наше расширение!",
+    "message": "Короткий отзыв поможет другим любителям птиц найти BirdTab.",
     "description": "Message for review prompt"
   },
   "leaveReview": {
@@ -751,94 +723,6 @@
     "message": "$1 дней назад",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "Добро пожаловать в BirdTab!",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "Позвольте показать вам всё! Этот тур поможет открыть все возможности.",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "Всё готово!",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "Наслаждайтесь открытием прекрасных птиц со всего мира. Удачного наблюдения!",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "Поехали!",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "Начать исследование!",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "Понял!",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "Новинка!",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "Назад",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "Регулировка Громкости",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "Настройте громкость по своему предпочтению. Управляйте звуком птичьих песен для создания идеального опыта наблюдения за птицами.",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "Открыть Новых Птиц",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "Готовы к новому пернатому другу? Нажмите здесь, чтобы загрузить новое фото птицы.",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "Воспроизведение / Пауза",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "Управляйте воспроизведением голосов птиц. Нажмите, чтобы воспроизвести или поставить на паузу.",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "Новая вкладка Chrome",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "Нужен доступ к стандартной странице новой вкладки Chrome? Нажмите здесь, чтобы открыть её в новой вкладке.",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "Далее",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "Пропустить тур",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "Понял!",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "Сбросить тур по функциям",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "Ошибка сброса тура по функциям",
-    "description": "Error message when tour reset fails"
-  },
   "chromeTabTooltip": {
     "message": "Открыть стандартную страницу новой вкладки Chrome",
     "description": "Tooltip for Chrome tab link"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "Узнать больше",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "Закрыть уведомление",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "Показать часы",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "Авторство и лицензия",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "Здесь указаны фотограф и автор аудиозаписи каждой птицы. Нажмите на имя, чтобы узнать больше и посмотреть лицензию.",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "Познакомьтесь с птицей",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "Нажмите на название птицы, чтобы узнать факты о ней, её охранный статус и посмотреть карту ареала.",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "Не удалось загрузить это фото.",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "Нет подключения к интернету. Фото появится, когда соединение восстановится.",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "Быстрое меню",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "Доступ к настройкам, истории просмотра и викторине о птицах из этого меню. Нажмите, чтобы изучить опции!",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "Воспроизведение аудио",
@@ -1349,14 +1205,6 @@
     "message": "Или введите $1, пробел и название птицы в адресной строке",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "Предпочитаете страницу новой вкладки Chrome?",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "BirdTab может уступить место и открываться, только когда вы хотите увидеть птицу.",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "Кнопка обновления всегда показывает новую птицу.",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "Уже $1 разных птиц!",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "Настройки, ваши птицы и викторина — в этом меню.",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "Викторина по этим птицам",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "Нажмите на значок глаза рядом с BirdTab, чтобы показать его на панели инструментов",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "Добро пожаловать в BirdTab",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "Новая птица в каждой новой вкладке",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "У каждой есть фото, голос и карта мест, где она живёт.",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "У каждой есть фото, интересные факты и карта мест, где она живёт.",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "Ваша первая птица",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "Послушать голос",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "Пауза",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "Послушать ещё раз",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "Пропустить",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "Продолжить",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "Настройте под себя",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "Другая страна или регион",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "Птицы со всех континентов",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "Предложено по вашему часовому поясу",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "Предложено по языку браузера",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "Список небольшой, поэтому птицы будут повторяться чаще",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "Голоса птиц",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "Воспроизводить при открытии вкладки",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "Только по нажатию кнопки",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "Тишина ночью, $1",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "Это можно изменить в любой момент в Настройках.",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "Назад",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "Начать наблюдение",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "Откройте новую вкладку, чтобы познакомиться со следующей птицей",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "Если Firefox спросит о странице новой вкладки, сохраните изменения.",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "Показать",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "Понятно",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "О каждой птице можно узнать больше",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "Нажмите на название, чтобы увидеть факты о птице, её охранный статус и карту мест, где она живёт.",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "Все птицы, которых вы встретили",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "Они все в разделе «Ваши птицы», с фото и голосами. Он в этом меню.",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "Открыть «Ваши птицы»",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "Сохраняйте любимых",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "Сердечко добавляет эту птицу в избранное, которое хранится в разделе «Ваши птицы».",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "Страница новой вкладки Chrome в один клик",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "Эта кнопка открывает стандартную страницу новой вкладки Chrome, когда она вам нужна.",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "Скольких вы сможете назвать?",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "Пройдите викторину по встреченным птицам или скрывайте название каждой новой птицы, пока не угадаете.",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "Пройдите викторину по встреченным птицам.",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "Пройти викторину",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "Угадывать в каждой вкладке",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "Готово. Со следующей вкладки название каждой птицы будет скрыто, пока вы на него не нажмёте.",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "Часто открываете страницу Chrome?",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "BirdTab может уступить место. Когда новая вкладка должна показывать птицу?",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "Сейчас",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "Сохранено",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "Отменить",
+    "description": "Tip button: takes back the choice just made"
   }
 }

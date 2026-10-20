@@ -1,0 +1,647 @@
+/* The welcome (welcome.js): a glass card in the corner opposite the bird's name, over the first
+   bird, and after it a note at the top of the page. What the page hides meanwhile is in styles.css
+   (html.first-run), which loads with the page. */
+
+.welcome {
+  position: fixed;
+  inset-block-end: 32px;
+  inset-inline-end: 32px;
+  z-index: 1002;
+  width: min(400px, calc(100vw - 32px));
+  color: var(--white-95);
+  text-align: start;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.welcome.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.welcome.leaving {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition-duration: 0.3s;
+}
+
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 64px);
+  padding: 26px 26px 20px;
+  border-radius: 24px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  border-top-color: var(--white-15);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  box-shadow: 0 24px 64px var(--black-45), 0 2px 8px var(--black-20), inset 0 1px 0 var(--white-6);
+  box-sizing: border-box;
+}
+
+.welcome-card.resizing {
+  overflow: hidden;
+  transition: height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.welcome-step {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.welcome-step[hidden] {
+  display: none;
+}
+
+.welcome-step.entering {
+  animation: welcomeStepIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes welcomeStepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.welcome :focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Headings take focus when a step opens (for screen readers), without a ring */
+.welcome-title:focus {
+  outline: none;
+}
+
+.welcome-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white-65);
+}
+
+.welcome-eyebrow img {
+  border-radius: 6px;
+}
+
+.welcome-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.welcome-text {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--white-70);
+  text-wrap: pretty;
+}
+
+.welcome-legend {
+  margin: 22px 0 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white-55);
+}
+
+/* ── The first bird, and its song ── */
+
+.welcome-bird {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 12px;
+  border-radius: 16px;
+  background: var(--white-6);
+  box-shadow: inset 0 0 0 1px var(--white-10);
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+html[dir="rtl"] .welcome-bird {
+  padding: 12px 12px 12px 16px;
+}
+
+.welcome-song {
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.welcome-song:hover {
+  background: var(--white-10);
+}
+
+.welcome-song.playing {
+  box-shadow: inset 0 0 0 1px var(--white-15);
+}
+
+.welcome-song-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--white-10);
+}
+
+.welcome-song .welcome-song-icon {
+  background: var(--btn-primary-bg);
+  box-shadow: var(--btn-primary-highlight);
+  transition: transform 0.15s ease;
+}
+
+.welcome-song:hover .welcome-song-icon {
+  background: var(--btn-primary-bg-hover);
+}
+
+.welcome-song:active .welcome-song-icon {
+  transform: scale(0.95);
+}
+
+.welcome-song-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--btn-primary-fg);
+}
+
+.welcome-song-icon img {
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+
+/* The triangle sits a little right of centre, as play symbols do */
+.welcome-song-play {
+  margin-inline-start: 2px;
+}
+
+.welcome-song-pause,
+.welcome-song.playing .welcome-song-play {
+  display: none;
+}
+
+.welcome-song.playing .welcome-song-pause {
+  display: block;
+}
+
+.welcome-bird-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.welcome-bird-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.welcome-song-label {
+  font-size: 13px;
+  color: var(--white-65);
+}
+
+.welcome-song-time {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center end;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--white-55);
+}
+
+.welcome-song-time > * {
+  grid-area: 1 / 1;
+  transition: opacity 0.2s ease;
+}
+
+/* Playing: the length gives way to four bars moving in the photo's colour */
+.welcome-song-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+  opacity: 0;
+}
+
+.welcome-song-bars i {
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--photo-accent);
+  transform-origin: bottom;
+  transform: scaleY(0.3);
+}
+
+.welcome-song.playing .welcome-song-length {
+  opacity: 0;
+}
+
+.welcome-song.playing .welcome-song-bars {
+  opacity: 1;
+}
+
+.welcome-song.playing:not(.buffering) .welcome-song-bars i {
+  animation: welcomeBar 0.9s ease-in-out infinite alternate;
+}
+
+.welcome-song-bars i:nth-child(2) { animation-delay: -0.3s !important; }
+.welcome-song-bars i:nth-child(3) { animation-delay: -0.6s !important; }
+.welcome-song-bars i:nth-child(4) { animation-delay: -0.15s !important; }
+
+@keyframes welcomeBar {
+  from { transform: scaleY(0.25); }
+  to { transform: scaleY(1); }
+}
+
+.welcome-song-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+}
+
+.welcome-song-progress i {
+  display: block;
+  height: 100%;
+  background: var(--photo-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s linear;
+}
+
+html[dir="rtl"] .welcome-song-progress i {
+  transform-origin: right;
+}
+
+/* ── Setup: where the birds come from, and songs ── */
+
+/* The step scrolls between its heading and its buttons on short windows; the padding keeps the
+   options' focus rings inside the scrolled box (the margin cancels it) */
+.welcome-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 12px 4px;
+  margin: 0 -12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--white-20) transparent;
+}
+
+.welcome .pref-options {
+  gap: 6px;
+}
+
+.welcome .pref-option {
+  padding: 11px 14px;
+}
+
+.welcome .pref-option:has(input:focus-visible) {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.welcome .pref-option input:focus-visible {
+  outline: none;
+}
+
+.welcome .pref-help {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--white-60);
+}
+
+.welcome-other {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  margin-inline-start: -8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--white-80);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.welcome-other:hover {
+  background: var(--white-8);
+  color: var(--white-100);
+}
+
+.welcome-other-chevron {
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.welcome-other[aria-expanded="true"] .welcome-other-chevron {
+  transform: rotate(180deg);
+}
+
+.welcome-region-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.welcome-region-picker[hidden] {
+  display: none;
+}
+
+.welcome-region-picker .region-options {
+  max-height: 188px;
+}
+
+/* The search box draws its own ring */
+.welcome .region-search input:focus-visible {
+  outline: none;
+}
+
+.welcome-quiet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-inline-start: 2px;
+  font-size: 13.5px;
+  color: var(--white-80);
+  cursor: pointer;
+}
+
+.welcome-quiet[hidden] {
+  display: none;
+}
+
+.welcome-quiet input {
+  appearance: none;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border-radius: 5px;
+  border: 1.5px solid var(--white-50);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.welcome-quiet input:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.welcome-quiet input:checked::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  margin-top: -2px;
+  border: solid var(--btn-primary-fg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.welcome-later {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  color: var(--white-55);
+}
+
+/* ── Buttons along the bottom ── */
+
+.welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.welcome-actions .welcome-btn.primary {
+  margin-inline-start: auto;
+}
+
+.welcome-dots {
+  display: flex;
+  gap: 5px;
+  margin-inline-start: auto;
+}
+
+.welcome-dots + .welcome-btn.primary {
+  margin-inline-start: 12px;
+}
+
+.welcome-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--white-25);
+}
+
+.welcome-dots i.on {
+  width: 16px;
+  background: var(--white-80);
+}
+
+/* ── After: open a new tab ── */
+
+.welcome-note {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 1002;
+  max-width: calc(100vw - 32px);
+  padding: 10px 10px 10px 18px;
+  border-radius: 18px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  backdrop-filter: blur(32px) saturate(1.4);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  box-shadow: 0 12px 40px var(--black-40);
+  color: var(--white-90);
+  font-size: 14px;
+  text-align: start;
+  opacity: 0;
+  transform: translate(-50%, -12px);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+html[dir="rtl"] .welcome-note {
+  padding: 10px 18px 10px 10px;
+}
+
+.welcome-note.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.welcome-note.leaving {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+}
+
+.welcome-note-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome-note-text {
+  font-weight: 500;
+}
+
+.welcome-note-keys {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.welcome-note-keys[hidden],
+.welcome-note-spinner[hidden],
+.welcome-note-retry[hidden] {
+  display: none;
+}
+
+.welcome-note kbd {
+  min-width: 26px;
+  height: 26px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 7px;
+  border-radius: 7px;
+  background: var(--white-10);
+  box-shadow: inset 0 -1px 0 var(--white-15), 0 1px 0 var(--black-30);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.welcome-note-spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--white-20);
+  border-top-color: var(--photo-accent);
+  animation: welcomeSpin 0.8s linear infinite;
+}
+
+@keyframes welcomeSpin {
+  to { transform: rotate(360deg); }
+}
+
+.welcome-note-retry {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--btn-secondary-border);
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-fg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.welcome-note-close {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.welcome-note-close:hover {
+  background: var(--white-10);
+}
+
+.welcome-note-close img {
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+}
+
+.welcome-note-sub {
+  margin: 4px 0 2px;
+  font-size: 12.5px;
+  color: var(--white-60);
+}
+
+.welcome-note :focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+/* ── Narrow windows: the card across the bottom ── */
+
+@media (max-width: 640px) {
+  .welcome {
+    inset-inline: 16px;
+    inset-block-end: 16px;
+    width: auto;
+  }
+
+  .welcome-card {
+    max-height: calc(100vh - 32px);
+    padding: 22px 20px 16px;
+  }
+
+  .welcome-title {
+    font-size: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome,
+  .welcome-note,
+  .welcome-step.entering {
+    transition: opacity 0.2s ease;
+    animation: none;
+    transform: none;
+  }
+
+  .welcome-note,
+  .welcome-note.visible,
+  .welcome-note.leaving {
+    transform: translate(-50%, 0);
+  }
+
+  .welcome-song.playing:not(.buffering) .welcome-song-bars i {
+    animation: none;
+    transform: scaleY(0.7);
+  }
+
+  .welcome-note-spinner {
+    animation-duration: 2.4s;
+  }
+}

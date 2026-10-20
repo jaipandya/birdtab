@@ -158,7 +158,7 @@ test('opens, and closes on Escape or a click beside it', async () => {
 test('Debug Options: a section in dev builds only', async () => {
   await setup({ env: 'development' });
   expect(navKeys()).toContain('debug');
-  expect($('debug-reset-tour')).not.toBeNull();
+  expect($('debug-tip')).not.toBeNull();
 
   panelModule.resetSettingsPanel();
   await setup({ env: 'production' });

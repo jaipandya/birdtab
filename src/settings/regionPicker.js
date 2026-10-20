@@ -49,14 +49,19 @@ export function regionPickerHtml() {
 }
 
 export class RegionPicker {
-  /** @param {HTMLElement} root - the .pref-region element regionPickerHtml() made */
-  constructor(root) {
-    this.card = root.querySelector('.pref-region-card');
-    this.nameEl = root.querySelector('.pref-region-name');
-    this.panel = root.querySelector('.region-picker');
-    this.search = root.querySelector('#region-search');
-    this.list = root.querySelector('#region-options');
-    this.empty = root.querySelector('.region-empty');
+  /**
+   * @param {HTMLElement} root - the .pref-region element regionPickerHtml() made
+   * @param {Object} [parts] - other elements to use instead (the welcome's: its own button, no name,
+   *   ids that don't clash with the settings window's); optionIdPrefix names the options' ids
+   */
+  constructor(root, parts = {}) {
+    this.card = parts.card || root.querySelector('.pref-region-card');
+    this.nameEl = 'nameEl' in parts ? parts.nameEl : root.querySelector('.pref-region-name');
+    this.panel = parts.panel || root.querySelector('.region-picker');
+    this.search = parts.search || root.querySelector('#region-search');
+    this.list = parts.list || root.querySelector('#region-options');
+    this.empty = parts.empty || root.querySelector('.region-empty');
+    this.optionIdPrefix = parts.optionIdPrefix || 'region-option-';
     this.options = [];
     this.shown = [];
     this.current = null;
@@ -114,7 +119,7 @@ export class RegionPicker {
 
   showName() {
     const option = this.options.find(o => o.code === this.current);
-    if (option) {
+    if (option && this.nameEl) {
       this.nameEl.textContent = option.name;
       this.nameEl.removeAttribute('data-i18n');
     }
@@ -160,7 +165,7 @@ export class RegionPicker {
       this.shown = this.options;
     }
     setHtml(this.list, this.shown.map(o => html`
-      <li class="region-option" id="region-option-${o.code}" role="option" aria-selected="${String(o.code === this.current)}" data-code="${o.code}">
+      <li class="region-option" id="${this.optionIdPrefix}${o.code}" role="option" aria-selected="${String(o.code === this.current)}" data-code="${o.code}">
         <span class="region-option-name">${o.name}</span>${CHECK}
       </li>`));
     this.empty.hidden = this.shown.length > 0;

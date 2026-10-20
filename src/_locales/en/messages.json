@@ -147,14 +147,6 @@
     "message": "Couldn't load birds for $1. Still showing $2.",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "Auto-play media",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "Enable to automatically play bird calls when you open a new tab",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "Quiet Hours",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "Reset Onboarding",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "Welcome to BirdTab!",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "BirdTab demo",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "Discover a stunning bird with every new tab. Beautiful photography, fascinating facts, and soothing nature sounds from around the world.",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "Hear bird songs each time you open a new tab. You can adjust this anytime in settings.",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "Start Birding!",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "Play",
     "description": "Alt text for play indicator icon"
@@ -236,19 +208,19 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "Your review would mean the world to us and help other bird enthusiasts discover our extension!",
+    "message": "A short review helps other bird lovers find BirdTab.",
     "description": "Message for review prompt"
   },
   "leaveReview": {
-    "message": "Leave a Review",
+    "message": "Leave a review",
     "description": "Button text to leave a review"
   },
   "maybeLater": {
-    "message": "Maybe Later",
+    "message": "Maybe later",
     "description": "Button text for maybe later"
   },
   "noThanks": {
-    "message": "No, Thanks",
+    "message": "No thanks",
     "description": "Button text for no thanks"
   },
   "confirmResetSettings": {
@@ -751,94 +723,6 @@
     "message": "$1 days ago",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "Welcome to BirdTab!",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "Let us show you around! This quick tour will help you discover all the features that make your birding experience special.",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "You're All Set!",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "Enjoy discovering beautiful birds from around the world. Happy birding!",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "Let's Go!",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "Start Exploring!",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "Got it!",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "New!",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "Back",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "Volume Control",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "Adjust the volume to your preference. Control the sound of bird calls to create your perfect birding experience.",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "Discover New Birds",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "Ready for a new feathered friend? Click here anytime to load a fresh bird photo and learn something new.",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "Play / Pause",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "Control bird call playback. Click to play or pause the current bird song anytime.",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "Chrome New Tab",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "Need to access your default Chrome new tab page? Click here anytime to open it in a new tab.",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "Next",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "Skip tour",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "Got it!",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "Reset Feature Tour",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "Error resetting the feature tour",
-    "description": "Error message when tour reset fails"
-  },
   "sendFeedback": {
     "message": "Send Feedback",
     "description": "Link text for sending feedback to support"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "Learn more",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "Close notification",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "Show Clock",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "Credits & Licensing",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "Here you'll find the photographer and audio recordist for each bird. Tap a name to learn more about them and see the license details.",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "Meet the Bird",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "Click the bird's name for facts, its conservation status and a map of where it lives.",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "This photo couldn't be loaded.",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "You're offline. The photo will appear when you're back online.",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "Quick Menu",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "Access settings, viewing history, and bird quiz from this menu. Click to explore your options!",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "Audio Playing",
@@ -1349,14 +1205,6 @@
     "message": "Or type $1, a space and a bird’s name in the address bar",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "Prefer Chrome’s new tab page?",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "BirdTab can step aside and open only when you want a bird.",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "The refresh button always brings a new bird.",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "$1 different birds seen!",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "Settings, your birds and the bird quiz are all in this menu.",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "Quiz me on these",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "Click the eye next to BirdTab to show it in the toolbar",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "Welcome to BirdTab",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "A new bird every time you open a tab",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "Each one comes with its photo, its song and a map of where it lives.",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "Each one comes with its photo, facts and a map of where it lives.",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "Your first bird",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "Hear its song",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "Pause",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "Play again",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "Skip",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "Continue",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "Make it yours",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "Another country or region",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "Birds from every continent",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "Suggested from your time zone",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "Suggested from your browser’s language",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "A short list, so birds repeat more often",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "Bird songs",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "Play as each tab opens",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "Only when I press play",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "Quiet at night, $1",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "You can change these anytime in Settings.",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "Back",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "Start birding",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "Open a new tab to meet your next bird",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "If Firefox asks about your new tab page, keep the change.",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "Show me",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "Got it",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "There’s more to every bird",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "Click its name for facts, its conservation status and a map of where it lives.",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "Every bird you’ve met",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "They’re all in Your Birds, with their photos and songs. It’s in this menu.",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "Open Your Birds",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "Keep the ones you love",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "The heart adds this bird to your favorites, kept in Your Birds.",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "Chrome’s new tab page, one click away",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "This opens Chrome’s own new tab page whenever you need it.",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "How many can you name?",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "Take a quiz on birds you’ve met, or hide each new bird’s name until you guess it.",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "Take a quiz on the birds you’ve met.",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "Take the quiz",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "Guess on each tab",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "Done. From your next tab, each bird’s name stays hidden until you click it.",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "Heading to Chrome’s page often?",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "BirdTab can step aside. When should a new tab show a bird?",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "Current",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "Saved",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "Undo",
+    "description": "Tip button: takes back the choice just made"
   }
 }

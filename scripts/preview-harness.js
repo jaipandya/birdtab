@@ -1,9 +1,10 @@
-// Preview harness: dev-chrome/harness.html opens the new tab page outside the extension with a stubbed
+// Preview harness: dev-chrome/harness.html (or dev-firefox/, dist-*/) opens the new tab page outside the extension with a stubbed
 // chrome.* API (in-memory storage seeded past onboarding), for screenshots in any browser.
 // Usage: npx webpack --mode development --env BROWSER=chrome && node scripts/preview-harness.js dev-chrome
 // Then open dev-chrome/harness.html: #settings #birds #favorites #coach #confirm #error #quiz open that surface;
-// ?mode=button ?guess ?review ?offer ?tour ?footer ?seed=8 seed the state; window.__pinned = true pretends BirdTab
-// is pinned. dev-chrome/harness-onboarding.html shows onboarding. scripts/screenshot-harness.sh captures them all.
+// ?mode=button ?guess ?review ?seed=8 seed the state; ?welcome shows the welcome (a fresh install's first tab);
+// ?tip=<id> shows that tip (guide/guide.js), ?tips lets the guide choose (otherwise every tip counts as learned);
+// window.__pinned = true pretends BirdTab is pinned. scripts/screenshot-harness.js captures them all.
 
 const fs = require('fs'); const path = require('path');
 const dir = process.argv[2];
@@ -13,18 +14,19 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
 (function(){
   const params = new URLSearchParams(location.search);
   const day = 24 * 60 * 60 * 1000;
-  const onboarding = location.pathname.endsWith('harness-onboarding.html');
+  const welcome = params.has('welcome');
+  // Every tip learned, so tips only show when asked for (?tip=<id>, ?tips)
+  const tipsLearned = params.has('tips') || params.has('tip') ? {}
+    : Object.fromEntries(['stepAside', 'birdName', 'chromeFooter', 'yourBirds', 'favorite', 'chromeTab', 'quiz'].map(id => [id, true]));
   // ?fresh: ignore what earlier harness pages saved (screenshots start from a clean state)
   const saved = params.has('fresh') ? null : JSON.parse(localStorage.getItem('h:local') || 'null');
   const stores = { local: saved || {
       region: 'WLD', autoPlay: false, newTabMode: params.get('mode') || 'every', birdRotation: 'every', quickGuess: params.has('guess'),
       quickAccessEnabled: true, clockDisplayMode: 'clock', chromeTabEnabled: true,
-      chromeFooterNotificationDismissed: !params.has('footer'),
       viewHistory: { value: [], timestamp: 0 },
       ...(params.has('review') ? { installTime: Date.now() - 10 * day, newTabCount: 80, lastReviewPrompt: 0 } : { installTime: Date.now(), newTabCount: 1 }),
-      ...(params.has('offer') ? { chromeTabUses: 3, stepAsideOfferDismissed: false } : {}) },
-    sync: { onboardingComplete: !onboarding, featureTourVersion: params.has('tour') ? 0 : 99,
-      seenFeatures: params.has('tour') ? {} : { chromeTab: true, birdName: true }, favoriteSpecies: [] },
+      ...(params.get('tip') === 'stepAside' ? { chromeTabUses: 3 } : {}) },
+    sync: { onboardingComplete: !welcome, seenFeatures: tipsLearned, favoriteSpecies: [] },
     session: {} };
   const listeners = [];
   function area(name) {
@@ -74,12 +76,21 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
                 await window.chrome.storage.local.set({ media_release: { schemaVersion: current.schemaVersion, release: current.release, indexUrl: current.indexUrl, index, storedAt: Date.now() } });
                 return { success: true };
               }).catch(() => ({ success: false }))
-            : Promise.resolve(undefined);
+            : m && m.action === 'switchRegion'
+              // A region download of about two seconds, its progress where the page reads it
+              ? (async () => {
+                  const state = (received) => ({ regionSwitchState: { code: m.region, state: 'loading', received, expected: 400000, updatedAt: Date.now() } });
+                  for (let received = 0; received < 400000; received += 80000) { await window.chrome.storage.session.set(state(received)); await wait(400); }
+                  await window.chrome.storage.session.remove(['regionSwitchState']);
+                  await window.chrome.storage.local.set({ region: m.region });
+                  return { success: true, region: m.region };
+                })()
+              : Promise.resolve(undefined);
         if (typeof cb === 'function') reply.then(cb);
         return reply;
       } },
-    tabs: { create() { return Promise.resolve({}); }, update() { return Promise.resolve({}); }, query: (q, cb) => cb && cb([]), getCurrent: (cb) => cb && cb({ id: 1 }) },
-    permissions: { contains: (p, cb) => { if (cb) cb(false); return Promise.resolve(false); }, request: (p, cb) => { if (cb) cb(false); return Promise.resolve(false); }, onAdded: ev(), onRemoved: ev() },
+    tabs: { create() { return Promise.resolve({}); }, update() { return Promise.resolve({}); }, query: (q, cb) => cb && cb([]), getCurrent: (cb) => { if (cb) cb({ id: 1 }); return Promise.resolve({ id: 1 }); } },
+    permissions: { getAll: () => Promise.resolve({ permissions: [], origins: [], data_collection: [] }), contains: (p, cb) => { if (cb) cb(false); return Promise.resolve(false); }, request: (p, cb) => { if (cb) cb(false); return Promise.resolve(false); }, onAdded: ev(), onRemoved: ev() },
     action: { getUserSettings: () => Promise.resolve({ isOnToolbar: window.__pinned === true }) },
     topSites: { get: (cb) => cb([]) }, search: { query() {} },
   };
@@ -147,8 +158,13 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
 
   // #settings #birds #favorites #coach #confirm #error #quiz: open that surface once the page is ready
   window.addEventListener('load', async () => {
-    if (onboarding) return;
     await until(() => document.getElementById('bird-name')?.textContent);
+    if (welcome) {
+      await until(() => document.querySelector('.welcome.visible'));
+      await wait(700);
+      document.documentElement.dataset.harnessReady = 'true';
+      return;
+    }
     await wait(800);
     if (params.has('seed')) await seed(Number(params.get('seed')) || 8);
     const h = location.hash.slice(1);
@@ -157,6 +173,14 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
     if (h === 'favorites') { await openMenuItem(['Your Birds']); document.querySelector('input[name=your-birds-filter][value=favorites]')?.click(); }
     if (h === 'confirm') { await wait(300); document.getElementById('your-birds-clear')?.click(); }
     if (h === 'coach') { await openMenuItem(['Settings']); document.querySelector('[data-debug=pin-coach-steps]')?.click(); }
+    if (params.get('tip')) {
+      // Through Debug Options, as a developer would
+      await openMenuItem(['Settings']);
+      const select = document.getElementById('debug-tip');
+      if (select) { select.value = params.get('tip'); document.querySelector('[data-debug=show-tip]')?.click(); }
+      await until(() => document.querySelector('.guide-tip.visible'), 4000);
+      await wait(600);
+    }
     if (h === 'error') {
       // As the page's own error state: everything but the error hides
       ['#content-container', '.search-container', '.clock-container', '.timer-container', '.top-sites-container', '#chrome-tab-link']
@@ -173,9 +197,10 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
   });
 })();`;
 fs.writeFileSync(path.join(dir, 'harness-shim.js'), shim);
-const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8').replace('<script src="boot.js"></script>', '<script src="harness-shim.js"></script>');
+// The stub first in <head>, in place of boot.js where the build has it (Chrome and Edge; Firefox has none)
+const index = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
+const html = index.includes('<script src="boot.js"></script>')
+  ? index.replace('<script src="boot.js"></script>', '<script src="harness-shim.js"></script>')
+  : index.replace(/<head>/i, '<head><script src="harness-shim.js"></script>');
 fs.writeFileSync(path.join(dir, 'harness.html'), html);
-// Onboarding: the same stub, ahead of onboarding.html's own scripts
-const onboardingHtml = fs.readFileSync(path.join(dir, 'onboarding.html'), 'utf8').replace(/<head>/i, '<head><script src="harness-shim.js"></script>');
-fs.writeFileSync(path.join(dir, 'harness-onboarding.html'), onboardingHtml);
 console.log('harness written');

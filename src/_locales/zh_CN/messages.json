@@ -147,14 +147,6 @@
     "message": "无法加载$1的鸟类，仍显示$2的鸟类。",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "自动播放媒体",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "启用后在打开新标签页时自动播放鸟鸣",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "安静时间",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "重置引导",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "欢迎使用 BirdTab！",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "BirdTab 演示",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "每打开一个新标签页，都能邂逅一只美丽的鸟。精美摄影、有趣知识，以及来自世界各地的自然之声。",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "每次打开新标签页时聆听鸟鸣声。您可以随时在设置中调整。",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "开始观鸟！",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "播放",
     "description": "Alt text for play button"
@@ -236,7 +208,7 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "您的评价对我们意义重大，将帮助其他鸟类爱好者发现我们的扩展！",
+    "message": "一条简短的评价，能帮助其他爱鸟人士找到 BirdTab。",
     "description": "Message for review prompt"
   },
   "leaveReview": {
@@ -751,94 +723,6 @@
     "message": "$1天前",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "欢迎使用 BirdTab！",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "让我们带您了解！这个快速导览将帮助您发现所有功能。",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "一切就绪！",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "尽情发现来自世界各地的美丽鸟类。祝您观鸟愉快！",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "开始吧！",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "开始探索！",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "明白了！",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "新功能！",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "返回",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "音量控制",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "根据您的喜好调节音量。控制鸟鸣声，打造完美的观鸟体验。",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "发现新鸟类",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "准备好认识新的羽毛朋友了吗？点击这里加载新的鸟类照片。",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "播放 / 暂停",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "控制鸟鸣播放。随时点击播放或暂停当前的鸟鸣声。",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "Chrome新标签页",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "需要访问您的默认Chrome新标签页？点击这里随时在新标签页中打开它。",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "下一步",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "跳过导览",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "明白了！",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "重置功能导览",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "重置功能导览时出错",
-    "description": "Error message when tour reset fails"
-  },
   "chromeTabTooltip": {
     "message": "打开默认的Chrome新标签页",
     "description": "Tooltip for Chrome tab link"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "了解更多",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "关闭通知",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "显示时钟",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "署名与许可",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "这里展示了每只鸟的摄影师和录音师。点击姓名可了解更多信息并查看许可详情。",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "认识这只鸟",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "点击鸟名，查看相关知识、保护状况以及它的分布地图。",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "无法加载这张照片。",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "你已离线。恢复联网后将显示照片。",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "快捷菜单",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "从此菜单访问设置、浏览历史和鸟类问答。点击探索您的选项！",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "正在播放音频",
@@ -1349,14 +1205,6 @@
     "message": "也可以在地址栏输入 $1、一个空格和鸟名",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "更喜欢 Chrome 的新标签页？",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "BirdTab 可以让开，只在你想看鸟时才打开。",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "点击刷新按钮总会换一只新鸟。",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "已看到 $1 种不同的鸟！",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "设置、你的鸟和鸟类测验都在这个菜单里。",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "用这些鸟出题",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "点击 BirdTab 旁的眼睛图标，将其显示在工具栏中",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "欢迎使用 BirdTab",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "每次打开标签页，都有一只新的鸟",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "每只鸟都配有照片、鸣声和分布范围图。",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "每只鸟都配有照片、相关信息和分布范围图。",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "你的第一只鸟",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "听听它的鸣声",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "暂停",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "重新播放",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "跳过",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "继续",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "按你的喜好设置",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "其他国家或地区",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "来自各大洲的鸟",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "根据你的时区推荐",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "根据你的浏览器语言推荐",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "鸟种较少，同一只鸟会更常出现",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "鸟鸣",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "每次打开标签页时播放",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "仅在我点击播放时",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "夜间静音，$1",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "你可以随时在设置中更改。",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "返回",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "开始观鸟",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "打开新标签页，认识下一只鸟",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "如果 Firefox 询问新标签页的设置，请保留更改。",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "看看",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "知道了",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "每只鸟都有更多内容",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "点击鸟名，查看相关信息、保护状态和分布范围图。",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "你见过的每只鸟",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "它们都在“你的鸟”里，附有照片和鸣声。就在这个菜单中。",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "打开“你的鸟”",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "留住你喜欢的鸟",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "点击爱心可将这只鸟加入收藏，收藏保存在“你的鸟”中。",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "Chrome 新标签页，一键即达",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "需要时，可以从这里打开 Chrome 自带的新标签页。",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "你能认出多少种？",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "用你见过的鸟做个测验，或者先隐藏每只新鸟的名字，等你来猜。",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "用你见过的鸟做个测验。",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "开始测验",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "每个标签页都猜一猜",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "已开启。从下一个标签页起，每只鸟的名字都会先隐藏，点击后才显示。",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "经常打开 Chrome 的页面？",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "BirdTab 可以让位。新标签页什么时候显示鸟？",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "当前",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "已保存",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "撤销",
+    "description": "Tip button: takes back the choice just made"
   }
 }

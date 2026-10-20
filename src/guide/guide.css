@@ -1,0 +1,292 @@
+/* A tip (tipCard.js): a small glass card beside what it talks about, its arrow pointing there, and a
+   ring around that thing in the photo's colour. Nothing is dimmed; the page stays usable. */
+
+.guide-tip {
+  position: fixed;
+  z-index: 1001;
+  width: min(300px, calc(100vw - 32px));
+  padding: 14px 14px 12px 16px;
+  border-radius: 16px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  border-top-color: var(--white-15);
+  backdrop-filter: blur(36px) saturate(1.4);
+  -webkit-backdrop-filter: blur(36px) saturate(1.4);
+  box-shadow: 0 14px 44px var(--black-45), 0 2px 6px var(--black-20), inset 0 1px 0 var(--white-6);
+  color: var(--white-90);
+  text-align: start;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[dir="rtl"] .guide-tip {
+  padding: 14px 16px 12px 14px;
+}
+
+.guide-tip[data-side="above"] {
+  transform: translateY(8px);
+}
+
+.guide-tip[data-side="below"] {
+  transform: translateY(-8px);
+}
+
+.guide-tip.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.guide-tip.leaving {
+  opacity: 0;
+  transition-duration: 0.22s;
+}
+
+/* No target: the corner opposite the bird's name, over the buttons until answered */
+.guide-tip[data-placement="corner"] {
+  inset-block-end: 2rem;
+  inset-inline-end: 2rem;
+  width: min(320px, calc(100vw - 32px));
+  transform: translateY(12px);
+}
+
+.guide-tip[data-placement="corner"].visible {
+  transform: none;
+}
+
+.guide-tip-arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  background: var(--surface-glass);
+  border: 1px solid var(--white-10);
+  backdrop-filter: blur(36px) saturate(1.4);
+  -webkit-backdrop-filter: blur(36px) saturate(1.4);
+  transform: rotate(45deg);
+}
+
+/* Only the half outside the card is drawn, so the glass isn't doubled inside it */
+.guide-tip[data-side="above"] .guide-tip-arrow {
+  bottom: -7px;
+  border-top: none;
+  border-left: none;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.guide-tip[data-side="below"] .guide-tip-arrow {
+  top: -7px;
+  border-bottom: none;
+  border-right: none;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.guide-tip[data-placement="corner"] .guide-tip-arrow {
+  display: none;
+}
+
+.guide-tip-image {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+.guide-tip-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.guide-tip-title {
+  flex: 1;
+  margin: 2px 0 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--white-100);
+}
+
+.guide-tip-close {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  margin: -4px -4px 0 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+html[dir="rtl"] .guide-tip-close {
+  margin: -4px 0 0 -4px;
+}
+
+.guide-tip-close:hover {
+  background: var(--white-10);
+}
+
+.guide-tip-close img {
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+}
+
+.guide-tip-text {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--white-70);
+  text-wrap: pretty;
+}
+
+.guide-tip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+/* Stacked: the main answer across the card, the quiet ones side by side under it (the review) */
+.guide-tip[data-actions="stacked"] .guide-tip-actions {
+  justify-content: center;
+}
+
+.guide-tip[data-actions="stacked"] .guide-btn.primary {
+  flex-basis: 100%;
+}
+
+/* Risen above the bird's name: no arrow, the ring marks the target */
+.guide-tip[data-detached] .guide-tip-arrow {
+  display: none;
+}
+
+/* ── Choices: a short list, the one in use marked; choosing applies it ── */
+
+.guide-tip-stepAside {
+  width: min(320px, calc(100vw - 32px));
+}
+
+.guide-tip-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.guide-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--white-4);
+  box-shadow: inset 0 0 0 1px var(--white-12);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.guide-choice:hover {
+  background: var(--white-8);
+  box-shadow: inset 0 0 0 1px var(--white-20);
+}
+
+.guide-choice.current {
+  background: var(--settings-chosen-bg);
+  box-shadow: inset 0 0 0 1.5px var(--settings-chosen-ring);
+}
+
+.guide-choice-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.guide-choice-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--white-95);
+}
+
+.guide-choice-help {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--white-60);
+}
+
+.guide-choice-current {
+  flex-shrink: 0;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--settings-chosen-bg);
+  color: var(--settings-chosen-fg);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.guide-tip :focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+/* ── The ring around what the tip is about: two slow pulses, then a faint ring ── */
+
+.guide-beacon {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 2px solid var(--photo-accent);
+  box-shadow: 0 0 0 0 var(--photo-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.guide-beacon.visible {
+  opacity: 0.85;
+  animation: guideBeacon 1.6s ease-out 2;
+}
+
+.guide-beacon.leaving {
+  opacity: 0;
+}
+
+@keyframes guideBeacon {
+  0% { box-shadow: 0 0 0 0 var(--photo-accent); opacity: 1; }
+  70% { box-shadow: 0 0 0 10px transparent; opacity: 0.85; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 0.85; }
+}
+
+/* Read out once, never seen */
+.guide-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-tip,
+  .guide-tip[data-side],
+  .guide-tip[data-placement="corner"] {
+    transform: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .guide-beacon.visible {
+    animation: none;
+  }
+}

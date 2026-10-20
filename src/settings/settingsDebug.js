@@ -2,13 +2,12 @@
  * Dev builds only: a Debug Options section in the settings window, with buttons that show
  * each feature's states on demand.
  */
-import { getTourVersion } from '../featureTour.js';
 import { getMessage } from '../i18n.js';
 import { log } from '../logger.js';
-import { resetChromeFooterNotification, showChromeFooterNotification } from '../chromeFooterNotification.js';
+import { TIP_IDS, showTip, resetGuide } from '../guide/guide.js';
 import CONFIG from '../config.js';
 import { html } from '../utils/html.js';
-import { setNewTabMode, maybeOfferToStepAside } from '../newTabMode.js';
+import { setNewTabMode } from '../newTabMode.js';
 import { showSeenMilestone, clearSeenBirds } from '../seenBirds.js';
 import { showPinCoach } from '../pinCoach.js';
 
@@ -39,17 +38,17 @@ export function debugSection() {
           .settings-debug .debug-select { padding: 0 8px; border-radius: 8px; background: var(--debug-accent-10); color: var(--debug-accent); border: 1px solid var(--debug-accent-30); }
         </style>
         <div style="display: flex; gap: 6px;">
-          <select id="debug-tour-version" class="debug-select"></select>
-          <button id="debug-reset-tour" class="debug-button" style="flex: 1;" data-i18n="resetTour">Reset Feature Tour</button>
+          <select id="debug-tip" class="debug-select">${TIP_IDS.map(id => html`<option value="${id}">${id}</option>`)}</select>
+          <button class="debug-button" style="flex: 1;" data-debug="show-tip">Show Tip</button>
         </div>
+        <button class="debug-button" data-debug="reset-tips">Reset Tips (Learned and Pacing)</button>
+        <button class="debug-button" data-debug="show-welcome">Show the Welcome on the Next Tab</button>
         <button id="debug-reset-onboarding" class="debug-button" data-i18n="resetOnboarding">Reset Onboarding</button>
         <button id="debug-delete-cache" class="debug-button" data-i18n="deleteCache">Delete Cache</button>
         <button class="debug-button" data-debug="reset-review">Reset Review Prompt</button>
-        <button class="debug-button" data-debug="footer-notice">Show Chrome Footer Tip</button>
         ${CONFIG.FEATURES.newTabMode ? html`
         <button class="debug-button" data-debug="pin-coach-steps">Show Pin Coach</button>
         <button class="debug-button" data-debug="pin-coach-done">Show Pin Coach: Pinned</button>
-        <button class="debug-button" data-debug="step-aside-offer">Show “Prefer Chrome’s Page?” Offer</button>
         <button class="debug-button" data-debug="reset-new-tab-mode">Reset Open BirdTab to Every Tab</button>` : ''}
         ${CONFIG.FEATURES.yourBirds ? html`
         <button class="debug-button" data-debug="milestone">Show “Different Birds Seen” Milestone</button>
@@ -76,22 +75,6 @@ export function bindDebugSection(root, panel) {
   const status = section.querySelector('#debug-status');
   const done = (text) => { status.textContent = text; };
 
-  const versionSelect = section.querySelector('#debug-tour-version');
-  for (let i = 0; i <= getTourVersion(); i++) versionSelect.add(new Option(`v${i}`, String(i)));
-  versionSelect.value = '0';
-
-  section.querySelector('#debug-reset-tour').addEventListener('click', async () => {
-    try {
-      const targetVersion = parseInt(versionSelect.value, 10);
-      await chrome.storage.sync.set({ featureTourVersion: targetVersion });
-      await resetChromeFooterNotification();
-      done(`Tour version set to ${targetVersion}. Reload to see effect.`);
-    } catch (error) {
-      log('Error resetting tour: ' + error.message);
-      done(getMessage('errorResettingTour') || 'Error resetting the feature tour');
-    }
-  });
-
   section.querySelector('#debug-reset-onboarding').addEventListener('click', async () => {
     if (!confirm(getMessage('confirmResetSettings'))) return;
     try {
@@ -104,7 +87,7 @@ export function bindDebugSection(root, panel) {
         quickAccessEnabled: true,
         hideTopSites: true
       });
-      await chrome.storage.sync.set({ onboardingComplete: false, featureTourVersion: 0 });
+      await chrome.storage.sync.set({ onboardingComplete: false, featureTourVersion: 0, seenFeatures: {} });
       panel.close();
       done(getMessage('settingsResetComplete'));
     } catch (error) {
@@ -136,21 +119,23 @@ export function bindDebugSection(root, panel) {
         reviewDismissed: false,
         reviewLeft: false
       });
-      done('Review prompt reset. Open a new tab to see it.');
+      done('Review prompt due. It shows when the guide next has room, or choose it under Show Tip.');
     },
-    'footer-notice': async () => {
-      await resetChromeFooterNotification();
+    'show-tip': async () => {
       panel.close();
-      showChromeFooterNotification();
+      const shown = await showTip(section.querySelector('#debug-tip').value);
+      if (!shown) done('That tip has nothing to point at on this page (or this browser).');
+    },
+    'reset-tips': async () => {
+      await resetGuide();
+      done('Tips reset: the guide starts over from the next tab.');
+    },
+    'show-welcome': async () => {
+      await chrome.storage.sync.set({ onboardingComplete: false });
+      done('The next new tab shows the welcome.');
     },
     'pin-coach-steps': () => showPinCoach({ preview: 'steps' }),
     'pin-coach-done': () => showPinCoach({ preview: 'done' }),
-    'step-aside-offer': async () => {
-      await chrome.storage.local.set({ chromeTabUses: 3, stepAsideOfferDismissed: false, newTabMode: 'every' });
-      document.getElementById('step-aside-offer')?.remove();
-      panel.close();
-      maybeOfferToStepAside();
-    },
     'reset-new-tab-mode': async () => {
       await setNewTabMode('every');
       await chrome.storage.local.remove(['chromeTabUses', 'stepAsideOfferDismissed']);

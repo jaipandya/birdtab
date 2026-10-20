@@ -23,8 +23,9 @@
  * - session_start: New tab opened (with user settings)
  * - feature_used: User interacts with a feature
  * - quiz_completed: Quiz finished
- * - onboarding_completed: Onboarding flow done
- * - tour_completed: Feature tour done
+ * - onboarding_completed: The welcome done or skipped (welcome/welcome.js)
+ * - welcome_shown, welcome_song_played: the welcome's first steps
+ * - tip_shown, tip_action: the guide's tips (guide/guide.js), with the tip's id
  */
 
 import PostHog from 'posthog-js-lite';
@@ -365,26 +366,17 @@ export function trackQuizAbandoned(questionsAnswered, totalQuestions) {
 }
 
 /**
- * Track onboarding completion
- * 
- * @param {string} region - Selected region
- * @param {boolean} autoPlay - Auto-play setting
+ * Track onboarding completion (the welcome finished or skipped)
+ *
+ * @param {string} region - Region the birds come from now
+ * @param {boolean} autoPlay - Songs play as each tab opens
+ * @param {Object} [details] - How it went: region_choice, suggested_region, heard_song, ...
  */
-export function trackOnboardingCompleted(region, autoPlay) {
+export function trackOnboardingCompleted(region, autoPlay, details = {}) {
   track('onboarding_completed', {
     region,
     auto_play: autoPlay,
-  });
-}
-
-/**
- * Track feature tour completion
- * 
- * @param {number} stepsViewed - Number of steps viewed
- */
-export function trackTourCompleted(stepsViewed) {
-  track('tour_completed', {
-    steps_viewed: stepsViewed,
+    ...details,
   });
 }
 
@@ -440,7 +432,6 @@ export default {
   trackSessionStart,
   trackQuizCompleted,
   trackOnboardingCompleted,
-  trackTourCompleted,
   flush,
   getPostHogInstance,
 };

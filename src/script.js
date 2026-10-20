@@ -12,9 +12,8 @@ import QuizMode from './quiz.js';
 import { initSentry, captureException, addBreadcrumb, startTransaction } from './sentry.js';
 import { log } from './logger.js';
 import { IS_EDGE, IS_FIREFOX } from './browserInfo.js';
-import { startTour, isTourCompleted, hasCompletedAnyTour, getUnseenFeatureSpotlights, showFeatureSpotlight, setOnTourEndCallback } from './featureTour.js';
-import { initChromeFooterNotification } from './chromeFooterNotification.js';
-import { initAnalytics, trackSessionStart, trackFeature, trackReviewPromptShown, trackReviewPromptAction } from './analytics.js';
+import { initGuide, runGuide, markLearned } from './guide/guide.js';
+import { initAnalytics, trackSessionStart, trackFeature } from './analytics.js';
 import { initClock, showClock, hideClock } from './clock.js';
 import { initTimer, showTimer, hideTimer } from './timer.js';
 import {
@@ -37,16 +36,7 @@ import {
   showMediaPauseIndicator,
   showToast
 } from './loadingIndicators.js';
-import {
-  incrementNewTabCount,
-  checkAndPrepareReviewPrompt,
-  getReviewPromptHTML,
-  addReviewPromptListeners,
-  dismissPrompt,
-  getShouldShowReviewPrompt,
-  getReviewPromptData,
-  showReviewPromptIfNeeded
-} from './reviewPrompt.js';
+import { incrementNewTabCount } from './reviewPrompt.js';
 // Share temporarily hidden — will return in a future version
 // import { initShareMenu, setupShareButton } from './shareMenu.js';
 import { setupInfoPopover } from './birdInfoPopover.js';
@@ -56,10 +46,10 @@ import { setupCreditPopovers } from './creditPopover.js';
 import { truncateName } from './utils/escapeHtml.js';
 import { takeStoredBird, getBundledBird } from './mediaClient.js';
 import { html, setHtml } from './utils/html.js';
-import { hasSteppedAside, initNewTabMode, maybeOfferToStepAside } from './newTabMode.js';
+import { hasSteppedAside, initNewTabMode } from './newTabMode.js';
 import { getHeldBird, rememberShownBird } from './birdRotation.js';
 import { isFavorite, toggleFavorite } from './favorites.js';
-import { recordSighting, showSeenMilestone } from './seenBirds.js';
+import { recordSighting } from './seenBirds.js';
 import { openYourBirds, hasPendingReopen, reopenYourBirdsIfPending } from './yourBirds.js';
 import { isQuickGuessOn, applyQuickGuess } from './quickGuess.js';
 import { applyPhotoTone } from './photoTone.js';
@@ -97,8 +87,11 @@ let lastVolumeLevel = CONFIG.STORAGE_DEFAULTS.volumeLevel;
 let audio;
 let fadeAudioInterval = null; // Interval for fading audio in/out
 let isPlaying = false;
-// shouldShowReviewPrompt and reviewPromptData are now managed by reviewPrompt.js
 let birdInfo;
+// The first tab after install: the welcome shows instead of the usual page furniture
+let firstRun = false;
+// "10 different birds seen": passed to the guide, which shows it unless a tip has more to say
+let pendingMilestone = null;
 let quizMode;
 let saveVolumeTimeout = null;
 
@@ -255,8 +248,24 @@ async function findCachedHistoryBird() {
   return cached.length > 0 ? cached[Math.floor(Math.random() * cached.length)] : null;
 }
 
+/**
+ * Tell the page (the welcome's song button) what the bird's song is doing:
+ * birdtab:audio { playing, buffering, currentTime, duration }.
+ */
+function announceAudioState() {
+  document.dispatchEvent(new CustomEvent('birdtab:audio', {
+    detail: {
+      playing: isPlaying,
+      buffering: !!document.getElementById('play-button')?.classList.contains('audio-buffering'),
+      currentTime: audio?.currentTime ?? 0,
+      duration: Number.isFinite(audio?.duration) ? audio.duration : 0,
+    },
+  }));
+}
+
 // Update play/pause button UI
 const updatePlayPauseButton = () => {
+  announceAudioState();
   const playButton = document.getElementById('play-button');
   if (playButton) {
     setHtml(playButton, isPlaying ?
@@ -305,6 +314,7 @@ let _bufferingReadyTimeout = null;
 function setPlayButtonBuffering(buffering) {
   const btn = document.getElementById('play-button');
   if (!btn) return;
+  queueMicrotask(announceAudioState);
 
   if (_bufferingReadyTimeout) {
     clearTimeout(_bufferingReadyTimeout);
@@ -480,6 +490,7 @@ function createBirdAudio(url) {
     }
   }, { once: true });
   attachBufferingListeners(el);
+  el.addEventListener('timeupdate', announceAudioState);
   return el;
 }
 
@@ -771,8 +782,8 @@ function hideImageLoadError() {
   }
 }
 
-// Set when initializePage lands on an error state, so the tour (whose
-// targets are hidden then) isn't started and marked complete.
+// Set when initializePage lands on an error state, so neither the welcome nor the guide
+// (whose targets are hidden then) starts.
 let pageInitFailed = false;
 
 // Main function to update the page with new bird information
@@ -796,6 +807,7 @@ async function setupFavoriteButton(bird) {
     e.stopPropagation();
     const favorite = await toggleFavorite(bird);
     render(favorite);
+    if (favorite) markLearned('favorite');
     button.classList.remove('just-favorited');
     if (favorite) {
       // Restart the little pop
@@ -809,7 +821,6 @@ async function setupFavoriteButton(bird) {
 async function initializePage() {
   pageInitFailed = false;
   incrementNewTabCount();
-  await checkAndPrepareReviewPrompt();
   log('Initializing page');
   restoreNonEssentialUI();
   showLoadingIndicator();
@@ -871,8 +882,7 @@ async function initializePage() {
 
     if (!usedHistoryFallback) {
       await addToHistory(birdInfo);
-      const metCount = await recordSighting(birdInfo);
-      if (metCount) showSeenMilestone(metCount);
+      pendingMilestone = await recordSighting(birdInfo);
     }
     if (!heldBird) {
       await rememberShownBird(birdInfo);
@@ -1175,13 +1185,8 @@ async function initializePage() {
 
     // setupShareButton();
 
-    // After updating the page content, add the review prompt if needed
-    showReviewPromptIfNeeded(document.body);
-
-    // After a few trips to Chrome's own new tab page, offer to step aside instead
-    maybeOfferToStepAside();
-
     setupInfoPopover({
+      onOpen: () => markLearned('birdName'),
       onEbirdClick: () => trackFeature('ebird_click'),
     });
     setupCreditPopovers(creditInfoData);
@@ -1222,6 +1227,7 @@ async function initializePage() {
               icon: 'images/svg/bird.svg',
               onClick: () => {
                 trackFeature('your_birds');
+                markLearned('yourBirds');
                 openYourBirds('all', { onQuiz: startQuizOnBirds });
               }
             } : {
@@ -1542,7 +1548,8 @@ function setupMediaClickHandler() {
       '#clock-options-trigger',
       '.timer-controls', '.timer-digit-group', '.timer-preset-btn', '.timer-start-btn', '.timer-time',
       '.confirmation-dialog', '.confirmation-dialog-backdrop',
-      '.share-container', '.share-menu'
+      '.share-container', '.share-menu',
+      '.welcome', '.welcome-note', '.guide-tip'
     ];
 
     // Check if click target or its parents match any interactive selector
@@ -1693,19 +1700,42 @@ function setupVolumeKeyboardShortcuts() {
   });
 }
 
-// Check if onboarding is complete before initializing
-function checkOnboardingStatus() {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(['onboardingComplete'], (result) => {
-      if (!result.onboardingComplete) {
-        // Redirect to onboarding
-        window.location.href = 'onboarding.html';
-        resolve(false);
-      } else {
-        resolve(true);
-      }
+// The first tab after install (and any opened before the welcome is answered) is the welcome
+async function isFirstRun() {
+  try {
+    const { onboardingComplete } = await chrome.storage.sync.get(['onboardingComplete']);
+    return !onboardingComplete;
+  } catch {
+    return false;
+  }
+}
+
+/** The welcome (loaded only now, so other tabs never download it), over the first bird. */
+async function startWelcome() {
+  try {
+    const { showWelcome } = await import(/* webpackChunkName: "welcome" */ './welcome/welcome.js');
+    await showWelcome({
+      birdName: localizedName(birdInfo),
+      songLength: birdInfo.mediaUrl ? (birdInfo.audioDurationFormatted || '') : null,
+      audio: { toggle: togglePlay, pause: pauseAudio },
+      onDone: revealPage,
     });
-  });
+  } catch (error) {
+    // Never leave the page without its clock, search and buttons
+    captureException(error, { tags: { operation: 'startWelcome' } });
+    revealPage();
+  }
+}
+
+/** The welcome is done: the clock, search and buttons come in, one after another (styles.css). */
+function revealPage() {
+  const root = document.documentElement;
+  root.classList.add('first-run-reveal');
+  root.classList.remove('first-run');
+  setTimeout(() => root.classList.remove('first-run-reveal'), 1600);
+  // Typing goes to the search box again, as on every tab
+  const search = document.getElementById('search-input');
+  if (search?.offsetParent) search.focus({ preventScroll: true });
 }
 
 /**
@@ -1769,17 +1799,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Localize the page immediately
   localizeHtml();
 
-  log('DOM content loaded, checking onboarding status');
   addBreadcrumb('DOM content loaded', 'navigation', 'info');
 
-  // Check if onboarding is complete first
-  const shouldContinue = await checkOnboardingStatus();
-  if (!shouldContinue) {
-    log('Redirecting to onboarding');
-    return;
+  firstRun = await isFirstRun();
+  if (firstRun) {
+    // Hidden before the page shows (body waits for .loaded): the welcome brings them in
+    document.documentElement.classList.add('first-run');
+    log('First run: the welcome will show');
   }
-
-  log('Onboarding complete, initializing UI components first');
 
   // Keep boot.js's copy of "Open BirdTab" in step, and note that BirdTab was shown
   await initNewTabMode();
@@ -1837,7 +1864,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize quiz mode
   try {
-    quizMode = new QuizMode({ onQuizStart: pauseAudio });
+    quizMode = new QuizMode({
+      onQuizStart: () => {
+        pauseAudio();
+        markLearned('quiz');
+      },
+    });
     log('Quiz mode initialized');
   } catch (error) {
     captureException(error, {
@@ -1852,50 +1884,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     await reopenYourBirdsIfPending({ onQuiz: startQuizOnBirds });
   }
 
-  // Check if feature tour should be shown (for new users after onboarding)
-  // Or if feature spotlights should be shown (for existing users with new features)
-  try {
-    // First check if user has completed ANY version of the tour
-    const completedAnyTour = await hasCompletedAnyTour();
-
-    if (pageInitFailed || navigator.onLine === false) {
-      // Tour targets are hidden on error and offline states; try next tab
-      log('Skipping feature tour: page is in an error or offline state');
-    } else if (!completedAnyTour) {
-      // New user - show full tour
-      // Set callback to show Chrome footer notification when tour ends
-      setOnTourEndCallback(() => {
-        log('Tour ended, showing Chrome footer notification');
-        initChromeFooterNotification(2000);
-      });
-
-      // Delay tour start to let UI fully render and user orient themselves
-      log('Feature tour not completed, scheduling tour start');
-      setTimeout(() => {
-        startTour();
-      }, 1500);
-    } else {
-      // Existing user - check for new feature spotlights
-      // This handles users who completed an older version and need to see new features
-      const unseenSpotlights = await getUnseenFeatureSpotlights();
-      if (unseenSpotlights.length > 0) {
-        log(`Found ${unseenSpotlights.length} unseen feature spotlights`);
-        // Show the first unseen spotlight after a delay
-        setTimeout(() => {
-          const firstSpotlight = unseenSpotlights[0];
-          showFeatureSpotlight(firstSpotlight.featureKey);
-        }, 1500);
-      } else {
-        // No spotlights to show - initialize Chrome footer notification
-        // This only shows on Chrome, after tour is complete, and if not dismissed
-        initChromeFooterNotification(2500);
-      }
-    }
-  } catch (error) {
-    log('Error checking feature tour status: ' + error.message);
-    captureException(error, {
-      tags: { operation: 'checkFeatureTour' }
+  if (firstRun) {
+    if (!pageInitFailed) imageLoadedPromise.then(startWelcome);
+  } else {
+    // One tip at a time, once the bird is on screen (guide/guide.js)
+    initGuide({
+      actions: {
+        openYourBirds: () => openYourBirds('all', { onQuiz: startQuizOnBirds }),
+        startQuiz: () => {
+          if (quizMode && !quizMode.isActive) quizMode.startQuiz();
+        },
+      },
+      canShow: () => !pageInitFailed && navigator.onLine !== false && !quizMode?.isActive,
     });
+    if (!pageInitFailed && navigator.onLine !== false) {
+      imageLoadedPromise.then(() => runGuide({ milestone: pendingMilestone }));
+    }
   }
 
   // Finish performance monitoring transaction

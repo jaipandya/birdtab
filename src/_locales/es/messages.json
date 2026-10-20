@@ -147,14 +147,6 @@
     "message": "No se pudieron cargar las aves de $1. Se mantiene $2.",
     "description": "Shown when switching region failed. $1 is the region that failed, $2 the region still in use"
   },
-  "autoPlayBirdCalls": {
-    "message": "Reproducir medios automáticamente",
-    "description": "Label for auto-play toggle"
-  },
-  "autoPlayTooltip": {
-    "message": "Habilitar para reproducir automáticamente cantos de aves al abrir una nueva pestaña",
-    "description": "Tooltip for auto-play toggle"
-  },
   "quietHours": {
     "message": "Horas Silenciosas",
     "description": "Label for quiet hours setting"
@@ -203,26 +195,6 @@
     "message": "Reiniciar Tutorial",
     "description": "Button to reset onboarding"
   },
-  "welcomeTitle": {
-    "message": "¡Bienvenido a BirdTab!",
-    "description": "Welcome title for onboarding"
-  },
-  "demoImageAlt": {
-    "message": "Demo de BirdTab",
-    "description": "Alt text for demo image"
-  },
-  "welcomeDescription1": {
-    "message": "Descubre un ave impresionante con cada nueva pestaña. Hermosa fotografía, datos fascinantes y sonidos relajantes de la naturaleza de todo el mundo.",
-    "description": "First paragraph of welcome description"
-  },
-  "autoPlayNote": {
-    "message": "Escucha cantos de aves cada vez que abras una nueva pestaña. Puedes ajustar esto en cualquier momento en la configuración.",
-    "description": "Note about auto-play setting flexibility"
-  },
-  "startBirding": {
-    "message": "¡Empezar a Observar Aves!",
-    "description": "Button text to finish onboarding"
-  },
   "playAlt": {
     "message": "Reproducir",
     "description": "Alt text for play button"
@@ -236,7 +208,7 @@
     "description": "Title for review prompt"
   },
   "reviewPromptMessage": {
-    "message": "¡Tu reseña significaría mucho para nosotros y ayudaría a otros entusiastas de las aves a descubrir nuestra extensión!",
+    "message": "Una reseña breve ayuda a otros amantes de las aves a encontrar BirdTab.",
     "description": "Message for review prompt"
   },
   "leaveReview": {
@@ -751,94 +723,6 @@
     "message": "Hace $1 días",
     "description": "Relative time: multiple days ago"
   },
-  "tourWelcomeTitle": {
-    "message": "¡Bienvenido a BirdTab!",
-    "description": "Feature tour: welcome screen title"
-  },
-  "tourWelcomeDescription": {
-    "message": "¡Permítenos mostrarte todo! Este breve recorrido te ayudará a descubrir todas las funciones.",
-    "description": "Feature tour: welcome screen description"
-  },
-  "tourCompleteTitle": {
-    "message": "¡Todo listo!",
-    "description": "Feature tour: completion screen title"
-  },
-  "tourCompleteDescription": {
-    "message": "Disfruta descubriendo hermosas aves de todo el mundo. ¡Feliz observación!",
-    "description": "Feature tour: completion screen description"
-  },
-  "tourStartButton": {
-    "message": "¡Vamos!",
-    "description": "Feature tour: start button on welcome screen"
-  },
-  "tourDoneButton": {
-    "message": "¡Empezar a explorar!",
-    "description": "Feature tour: done button on completion screen"
-  },
-  "tourGotIt": {
-    "message": "¡Entendido!",
-    "description": "Feature spotlight: acknowledgment button"
-  },
-  "tourNewFeature": {
-    "message": "¡Nuevo!",
-    "description": "Feature spotlight: badge for new features"
-  },
-  "tourBackButton": {
-    "message": "Atrás",
-    "description": "Feature tour: back button text"
-  },
-  "tourVolumeTitle": {
-    "message": "Control de Volumen",
-    "description": "Feature tour: volume controls title"
-  },
-  "tourVolumeDescription": {
-    "message": "Ajusta el volumen a tu preferencia. Controla el sonido de los cantos de aves para crear tu experiencia perfecta.",
-    "description": "Feature tour: volume controls description"
-  },
-  "tourRefreshTitle": {
-    "message": "Descubrir Nuevas Aves",
-    "description": "Feature tour: refresh button title"
-  },
-  "tourRefreshDescription": {
-    "message": "¿Listo para un nuevo amigo emplumado? Haz clic aquí para cargar una nueva foto de ave.",
-    "description": "Feature tour: refresh button description"
-  },
-  "tourPlayPauseTitle": {
-    "message": "Reproducir / Pausar",
-    "description": "Feature tour: play/pause button title"
-  },
-  "tourPlayPauseDescription": {
-    "message": "Controla la reproducción de cantos de aves. Haz clic para reproducir o pausar en cualquier momento.",
-    "description": "Feature tour: play/pause button description"
-  },
-  "tourChromeTabTitle": {
-    "message": "Nueva Pestaña de Chrome",
-    "description": "Feature tour: Chrome tab link title"
-  },
-  "tourChromeTabDescription": {
-    "message": "¿Necesitas acceder a tu página de nueva pestaña predeterminada de Chrome? Haz clic aquí para abrirla en una nueva pestaña.",
-    "description": "Feature tour: Chrome tab link description"
-  },
-  "tourNextButton": {
-    "message": "Siguiente",
-    "description": "Feature tour: next button text"
-  },
-  "tourSkipButton": {
-    "message": "Saltar tour",
-    "description": "Feature tour: skip button text"
-  },
-  "tourFinishButton": {
-    "message": "¡Entendido!",
-    "description": "Feature tour: finish button text on last step"
-  },
-  "resetTour": {
-    "message": "Reiniciar tour de funciones",
-    "description": "Button to reset the feature tour in debug section"
-  },
-  "errorResettingTour": {
-    "message": "Error al reiniciar el tour de funciones",
-    "description": "Error message when tour reset fails"
-  },
   "chromeTabTooltip": {
     "message": "Abrir la página de nueva pestaña predeterminada de Chrome",
     "description": "Tooltip for Chrome tab link"
@@ -890,10 +774,6 @@
   "chromeFooterLearnMore": {
     "message": "Más información",
     "description": "Link text to learn more about Chrome footer"
-  },
-  "chromeFooterClose": {
-    "message": "Cerrar notificación",
-    "description": "Aria label for close button on Chrome footer notification"
   },
   "clockDisplay": {
     "message": "Mostrar reloj",
@@ -1083,22 +963,6 @@
     "message": "Perplexity",
     "description": "Option for Perplexity AI search"
   },
-  "tourCreditsTitle": {
-    "message": "Créditos y licencia",
-    "description": "Feature tour: credits line title"
-  },
-  "tourCreditsDescription": {
-    "message": "Aquí encontrarás al fotógrafo y al grabador de audio de cada ave. Toca un nombre para conocerlo mejor y ver los detalles de la licencia.",
-    "description": "Feature tour: credits line description"
-  },
-  "tourBirdNameTitle": {
-    "message": "Conoce al ave",
-    "description": "Feature tour: bird name step title"
-  },
-  "tourBirdNameDescription": {
-    "message": "Haz clic en el nombre del ave para ver datos, su estado de conservación y un mapa de dónde vive.",
-    "description": "Feature tour: bird name step description (clicking the name opens facts and a range map)"
-  },
   "imageLoadFailedMessage": {
     "message": "No se pudo cargar esta foto.",
     "description": "Shown in place of the bird photo when it fails to load"
@@ -1106,14 +970,6 @@
   "imageOfflineMessage": {
     "message": "Estás sin conexión. La foto aparecerá cuando vuelvas a estar en línea.",
     "description": "Shown in place of the bird photo when the browser is offline"
-  },
-  "tourOptionsMenuTitle": {
-    "message": "Menú rápido",
-    "description": "Feature tour: options menu title"
-  },
-  "tourOptionsMenuDescription": {
-    "message": "Accede a configuración, historial y cuestionario de aves desde este menú. ¡Haz clic para explorar tus opciones!",
-    "description": "Feature tour: options menu description"
   },
   "audioPlayingAlt": {
     "message": "Reproduciendo audio",
@@ -1349,14 +1205,6 @@
     "message": "O escribe $1, un espacio y el nombre de un ave en la barra de direcciones",
     "description": "Tip; $1 is the keyword 'bird' shown as a key"
   },
-  "stepAsideOfferTitle": {
-    "message": "¿Prefieres la página de nueva pestaña de Chrome?",
-    "description": "Title of the card offered after using the Chrome Tab shortcut a few times"
-  },
-  "stepAsideOfferText": {
-    "message": "BirdTab puede hacerse a un lado y abrirse solo cuando quieras ver un ave.",
-    "description": "Body of the card offering to step aside for Chrome's new tab page"
-  },
   "birdRotationHelp": {
     "message": "El botón de actualizar siempre trae un ave nueva.",
     "description": "Help text for Change the bird"
@@ -1525,10 +1373,6 @@
     "message": "¡$1 aves distintas vistas!",
     "description": "Note when the number of different birds seen ($1) reaches a round number"
   },
-  "tourOptionsMenuDescriptionYourBirds": {
-    "message": "Los ajustes, tus aves y el quiz de aves están en este menú.",
-    "description": "Feature tour: what the options menu holds"
-  },
   "yourBirdsQuiz": {
     "message": "Pregúntame sobre estas",
     "description": "Button in Your Birds: start a quiz on the birds listed"
@@ -1552,5 +1396,193 @@
   "pinCoachStep2Edge": {
     "message": "Haz clic en el ojo junto a BirdTab para mostrarlo en la barra de herramientas",
     "description": "Pinning guide step 2 in Microsoft Edge, whose extensions menu shows an eye (Show in toolbar) instead of a pin"
+  },
+  "welcomeEyebrow": {
+    "message": "Te damos la bienvenida a BirdTab",
+    "description": "The welcome card (first tab after install): small line above the heading"
+  },
+  "welcomeHeadline": {
+    "message": "Un ave nueva cada vez que abres una pestaña",
+    "description": "The welcome card's heading"
+  },
+  "welcomeIntro": {
+    "message": "Cada una llega con su foto, su canto y un mapa de dónde vive.",
+    "description": "The welcome card, under the heading"
+  },
+  "welcomeIntroNoSong": {
+    "message": "Cada una llega con su foto, datos y un mapa de dónde vive.",
+    "description": "The welcome card, under the heading, when the first bird has no recording"
+  },
+  "welcomeFirstBird": {
+    "message": "Tu primera ave",
+    "description": "The welcome card: label above the first bird's name"
+  },
+  "welcomeHearSong": {
+    "message": "Escuchar su canto",
+    "description": "The welcome card: under the first bird's name, plays its recording"
+  },
+  "welcomePause": {
+    "message": "Pausar",
+    "description": "The welcome card: under the bird's name while its song plays"
+  },
+  "welcomePlayAgain": {
+    "message": "Volver a escuchar",
+    "description": "The welcome card: under the bird's name after its song was played"
+  },
+  "welcomeSkip": {
+    "message": "Omitir",
+    "description": "The welcome card: button that finishes the welcome without changing anything"
+  },
+  "welcomeContinue": {
+    "message": "Continuar",
+    "description": "The welcome card: button to the next step"
+  },
+  "welcomeSetupTitle": {
+    "message": "A tu manera",
+    "description": "The welcome card's second step: heading above the region and sound choices"
+  },
+  "welcomeOtherRegion": {
+    "message": "Otro país o región",
+    "description": "The welcome card: opens a search over every region"
+  },
+  "welcomeWorldHelp": {
+    "message": "Aves de todos los continentes",
+    "description": "The welcome card: under the World option"
+  },
+  "welcomeSuggestedTimeZone": {
+    "message": "Sugerido por tu zona horaria",
+    "description": "The welcome card: under the country suggested from the computer's time zone"
+  },
+  "welcomeSuggestedLanguage": {
+    "message": "Sugerido por el idioma de tu navegador",
+    "description": "The welcome card: under the country suggested from the browser's language (e.g. en-IN)"
+  },
+  "welcomeSmallRegion": {
+    "message": "Una lista corta, así que las aves se repiten más",
+    "description": "The welcome card: under a suggested country that has few birds"
+  },
+  "welcomeSoundLabel": {
+    "message": "Cantos de aves",
+    "description": "The welcome card: label above the two sound choices"
+  },
+  "welcomeSoundOn": {
+    "message": "Reproducir al abrir cada pestaña",
+    "description": "The welcome card: each new tab plays its bird's song"
+  },
+  "welcomeSoundOff": {
+    "message": "Solo si pulso reproducir",
+    "description": "The welcome card: songs play only when asked"
+  },
+  "welcomeQuietNights": {
+    "message": "Silencio por la noche, $1",
+    "description": "The welcome card: checkbox shown when songs play as tabs open. $1 is the hours, e.g. 8 PM – 8 AM"
+  },
+  "welcomeChangeLater": {
+    "message": "Puedes cambiarlo cuando quieras en Configuración.",
+    "description": "The welcome card: under the choices"
+  },
+  "welcomeBack": {
+    "message": "Atrás",
+    "description": "The welcome card: back to the first step"
+  },
+  "welcomeStart": {
+    "message": "Empezar",
+    "description": "The welcome card: saves the choices and finishes the welcome"
+  },
+  "welcomeNextTab": {
+    "message": "Abre una pestaña nueva para conocer tu próxima ave",
+    "description": "Note at the top of the page after the welcome, beside the keyboard shortcut for a new tab"
+  },
+  "welcomeFirefoxKeep": {
+    "message": "Si Firefox te pregunta por tu página de nueva pestaña, mantén el cambio.",
+    "description": "Firefox only: note after the welcome. Firefox asks once whether to keep an extension's new tab page"
+  },
+  "tipShowMe": {
+    "message": "Muéstramelo",
+    "description": "Tip button: does the thing the tip describes"
+  },
+  "tipGotIt": {
+    "message": "Entendido",
+    "description": "Tip button: closes the tip"
+  },
+  "tipBirdNameTitle": {
+    "message": "Cada ave tiene más que contar",
+    "description": "Tip beside the bird's name: heading"
+  },
+  "tipBirdNameText": {
+    "message": "Haz clic en su nombre para ver datos, su estado de conservación y un mapa de dónde vive.",
+    "description": "Tip beside the bird's name"
+  },
+  "tipYourBirdsTitle": {
+    "message": "Todas las aves que has visto",
+    "description": "Tip beside the menu button, after ten different birds: heading"
+  },
+  "tipYourBirdsText": {
+    "message": "Están todas en Tus aves, con sus fotos y cantos. Lo encontrarás en este menú.",
+    "description": "Tip beside the menu button. Your Birds is the list of every bird seen"
+  },
+  "tipOpenYourBirds": {
+    "message": "Abrir Tus aves",
+    "description": "Tip button: opens the list of every bird seen"
+  },
+  "tipFavoriteTitle": {
+    "message": "Guarda las que te gustan",
+    "description": "Tip beside the heart button: heading"
+  },
+  "tipFavoriteText": {
+    "message": "El corazón añade esta ave a tus favoritos, que se guardan en Tus aves.",
+    "description": "Tip beside the heart button"
+  },
+  "tipChromeTabTitle": {
+    "message": "La página de nueva pestaña de Chrome, a un clic",
+    "description": "Tip beside the icon that opens the browser's own new tab page: heading"
+  },
+  "tipChromeTabText": {
+    "message": "Esto abre la página de nueva pestaña de Chrome siempre que la necesites.",
+    "description": "Tip beside the icon that opens the browser's own new tab page"
+  },
+  "tipQuizTitle": {
+    "message": "¿Cuántas sabes nombrar?",
+    "description": "Tip beside the menu button, after twenty birds: heading"
+  },
+  "tipQuizText": {
+    "message": "Haz un quiz sobre las aves que has visto, u oculta el nombre de cada ave nueva hasta que lo adivines.",
+    "description": "Tip beside the menu button"
+  },
+  "tipQuizTextNoGuess": {
+    "message": "Haz un quiz sobre las aves que has visto.",
+    "description": "Tip beside the menu button, where Guess the bird isn't available"
+  },
+  "tipTakeQuiz": {
+    "message": "Iniciar quiz",
+    "description": "Tip button: starts the quiz"
+  },
+  "tipGuessEachTab": {
+    "message": "Adivinar en cada pestaña",
+    "description": "Tip button: turns on Guess the bird (each bird's name hidden until clicked)"
+  },
+  "tipGuessOn": {
+    "message": "Listo. Desde tu próxima pestaña, el nombre de cada ave queda oculto hasta que hagas clic en él.",
+    "description": "Tip text after Guess the bird was turned on"
+  },
+  "tipStepAsideTitle": {
+    "message": "¿Vas a menudo a la página de Chrome?",
+    "description": "Tip beside the Chrome Tab icon, after it was used a few times: heading"
+  },
+  "tipStepAsideText": {
+    "message": "BirdTab puede hacerse a un lado. ¿Cuándo debe mostrar un ave una pestaña nueva?",
+    "description": "Tip beside the Chrome Tab icon, above the three choices (every tab, now and then, when I ask)"
+  },
+  "tipCurrentChoice": {
+    "message": "Actual",
+    "description": "Tip: marks the choice that is in use now"
+  },
+  "tipSaved": {
+    "message": "Guardado",
+    "description": "Tip heading after a choice was saved"
+  },
+  "tipUndo": {
+    "message": "Deshacer",
+    "description": "Tip button: takes back the choice just made"
   }
 }

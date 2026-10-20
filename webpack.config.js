@@ -204,10 +204,6 @@ module.exports = (env, argv) => {
   }
   copyPatterns.push({ from: 'src/fonts/Inter-LICENSE.txt', to: 'fonts/Inter-LICENSE.txt' });
 
-  if (isFirefox) {
-    copyPatterns.push({ from: 'src/firefox-assets', to: 'images/firefox' });
-  }
-
   // Firefox production builds always get Sentry's debug IDs, which are hashed
   // from the code, so AMO reviewers rebuilding without our token get the same
   // files. Release injection (the git commit) is off for Firefox for the same
@@ -251,7 +247,6 @@ module.exports = (env, argv) => {
       background: './src/background.js',
       popup: './src/popup.js',
       script: './src/script.js',
-      onboarding: './src/onboarding.js',
       quiz: './src/quiz.css'
     },
     output: {
@@ -327,12 +322,6 @@ module.exports = (env, argv) => {
         isEdge,
         isFirefox,
         withBoot: stepsAside,
-      }),
-      new HtmlWebpackPlugin({
-        template: './src/onboarding.html',
-        filename: 'onboarding.html',
-        chunks: ['vendor', 'onboarding'],
-        isFirefox,
       }),
       // Sentry plugin - uploads source maps when UPLOAD_SOURCEMAPS is set (during deploy) and token is present
       ...sentryPlugins(),

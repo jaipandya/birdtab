@@ -1,5 +1,5 @@
 /* CSS Custom Properties - Design Token System
- * Shared across all entry points (new tab, onboarding, etc.)
+ * Shared across all entry points (new tab, popup)
  */
 :root {
   /* ── Primitive: White alpha scale ── */
@@ -54,24 +54,15 @@
   --surface-elevated: rgba(42, 42, 42, 0.98);
   --surface-modal: #18181b;
   --surface-select: #2a2a2a;
-  --surface-onboarding: #0a0a0a; /* also inline in onboarding.html (pre-paint) */
 
   /* ── Dark gradient (quiz share preview) ── */
   --gradient-dark-start: #1a1a2e;
-
-  /* ── Accent: Orange (tour badge) ── */
-  --orange: #FF9500;
-  --orange-dark: #FF6B00;
 
   /* ── Accent: iOS green (toggles, custom shortcuts) ── */
   --green-accent: rgb(52, 199, 89);
 
   /* ── Conservation status brown ── */
   --conservation-brown: rgba(124, 107, 89, 0.4);
-
-  /* ── Tour-specific (unique values) ── */
-  --tour-backdrop-color: var(--black-80);
-  --tour-spotlight-color: rgba(212, 162, 76, 0.4);
 
   /* ── Semantic: Text ── */
   --text-primary: var(--white-100);
@@ -106,7 +97,7 @@
 
   /* Accent taken from the photo (photoTone.js sets it; the brand gold until then) */
   --photo-accent: var(--primary);
-  /* Dark glass panels over the photo (review prompt, step-aside offer, notes) */
+  /* Dark glass panels over the photo (the welcome, tips, notes) */
   --surface-glass: rgba(18, 18, 20, 0.82);
 
   /* Settings window (src/settings/): its surface, the page behind it, and gold for what's chosen */

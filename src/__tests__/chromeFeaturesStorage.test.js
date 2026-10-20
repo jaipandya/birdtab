@@ -9,7 +9,7 @@ import CONFIG from '../config.js';
 import { recordSighting, getSeenBirds, clearSeenBirds } from '../seenBirds.js';
 import { toggleFavorite, isFavorite, getFavorites, clearFavorites } from '../favorites.js';
 import { getHeldBird, rememberShownBird } from '../birdRotation.js';
-import { initNewTabMode, setNewTabMode, isPinnedToToolbar, noteChromeTabUse, maybeOfferToStepAside, hasSteppedAside } from '../newTabMode.js';
+import { initNewTabMode, setNewTabMode, isPinnedToToolbar, noteChromeTabUse, hasSteppedAside } from '../newTabMode.js';
 import { applyQuickGuess } from '../quickGuess.js';
 import QuizMode from '../quiz.js';
 import { getBirdByCode } from '../mediaClient.js';
@@ -229,29 +229,11 @@ describe('Open BirdTab (newTabMode.js)', () => {
     expect(await isPinnedToToolbar()).toBe(true);
   });
 
-  test('the offer appears after three uses of the Chrome Tab shortcut, once', async () => {
+  test('uses of the Chrome Tab shortcut are counted (the guide offers to step aside after a few)', async () => {
     const chrome = installChrome();
     await noteChromeTabUse();
     await noteChromeTabUse();
-    await maybeOfferToStepAside();
-    expect(document.getElementById('step-aside-offer')).toBeNull();
-    await noteChromeTabUse();
-    await maybeOfferToStepAside();
-    const offer = document.getElementById('step-aside-offer');
-    expect(offer).not.toBeNull();
-    offer.querySelector('.step-aside-close').click();
-    await new Promise(r => setTimeout(r, 0));
-    expect(chrome.storage.local.data.stepAsideOfferDismissed).toBe(true);
-    await maybeOfferToStepAside();
-    expect(document.getElementById('step-aside-offer')).toBeNull();
-  });
-
-  test('no offer once BirdTab already steps aside', async () => {
-    const chrome = installChrome();
-    chrome.storage.local.data.chromeTabUses = 5;
-    chrome.storage.local.data.newTabMode = 'hourly';
-    await maybeOfferToStepAside();
-    expect(document.getElementById('step-aside-offer')).toBeNull();
+    expect(chrome.storage.local.data.chromeTabUses).toBe(2);
   });
 });
 
