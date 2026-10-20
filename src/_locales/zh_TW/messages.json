@@ -63,25 +63,73 @@
     "message": "搜尋網路",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "BirdTab 設定",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "媒體與播放",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "效率與介面",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "賞鳥地區",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "新分頁會顯示這個地區的鳥類。",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "地區",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "搜尋地區",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "沒有這個名稱的地區。",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "每隻鳥顯示多久",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "一個分頁",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "一小時",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "一天",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "每個新分頁都換一隻鳥。",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "一小時內是同一隻鳥，之後換新的。",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "一整天都是同一隻鳥。",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "連到 Chrome 原本新分頁的連結。",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "播放鳥鳴",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "開啟新分頁時開始播放。",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "搜尋和常用網站",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "搜尋框、常用網站和捷徑。",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail、雲端硬碟、YouTube 等。",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "正在載入地區…",
@@ -103,10 +151,6 @@
     "message": "自動播放媒體",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "每次開啟新分頁時自動播放鳥鳴。安靜時間啟用時會優先於此設定。",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "啟用後，開啟新分頁時會自動播放鳥鳴",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "安靜時間",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "在指定的安靜時間內將鳥鳴靜音。",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "啟用後，安靜時間內會自動關閉自動播放",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "安靜時間進行中",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "安靜時間結束",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "快速存取功能",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "啟用搜尋框、常用網站和自訂捷徑。",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "顯示搜尋框、最常造訪的網站，並允許自訂捷徑",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "設定已儲存",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 快取已清除！\n\n所有快取的鳥類圖片、自訂捷徑和暫存資料都已移除。\n\n如果你先前遇到載入問題，這應該會有幫助。",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 需要權限\n\n若要使用效率功能（搜尋框、最常造訪的網站和自訂捷徑），BirdTab 需要存取瀏覽器的常用網站。\n\n你可以隨時再次切換這項設定來啟用。",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ 發生錯誤\n\n我們無法更新你的效率設定，這可能只是暫時的問題。\n\n請稍後再試。如果問題持續發生，請嘗試重新啟動瀏覽器。",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "梳理羽毛中...",
@@ -887,10 +903,6 @@
     "message": "在搜尋框上方顯示大型時鐘。",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "在新分頁上顯示目前時間",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "24 小時制",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "Google 應用程式",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "顯示快速存取按鈕，開啟 Gmail、雲端硬碟、YouTube 等 Google 應用程式。",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "啟用以顯示 Google 應用程式按鈕",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "Google 應用程式",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "Chrome 分頁捷徑",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "顯示捷徑，快速開啟 Chrome 預設的新分頁。",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "啟用以顯示 Chrome 分頁捷徑",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "搜尋引擎",
@@ -1361,22 +1357,6 @@
     "message": "BirdTab 可以退到一旁，只在你想看鳥時才開啟。",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "換新鳥",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "每個分頁",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "每小時",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "每天",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "重新整理按鈕隨時都能換一隻新鳥。",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "猜猜是什麼鳥",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "先隱藏鳥名，點選後才顯示，讓每個新分頁都變成一個小測驗。",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "這是什麼鳥？",

@@ -63,25 +63,73 @@
     "message": "البحث في الويب",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "إعدادات BirdTab",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "Media & Playback",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "Productivity & Interface",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "منطقة مراقبة الطيور",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "تعرض علامات التبويب الجديدة طيورًا من هذه المنطقة.",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "المنطقة",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "ابحث عن منطقة",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "لا توجد منطقة بهذا الاسم.",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "مدة بقاء كل طائر",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "علامة تبويب واحدة",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "ساعة",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "يوم",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "طائر مختلف في كل علامة تبويب جديدة.",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "الطائر نفسه لمدة ساعة، ثم طائر جديد.",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "طائر واحد طوال اليوم.",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "رابط إلى صفحة علامة التبويب الجديدة الخاصة بـ Chrome.",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "تشغيل أصوات الطيور",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "يبدأ عند فتح علامة تبويب جديدة.",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "البحث والمواقع الأكثر زيارة",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "مربع بحث ومواقعك الأكثر زيارة واختصاراتك.",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail وDrive وYouTube والمزيد.",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "جارٍ تحميل المناطق…",
@@ -103,10 +151,6 @@
     "message": "تشغيل الوسائط تلقائياً",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "تشغيل أصوات الطيور تلقائياً مع كل علامة تبويب جديدة. الساعات الهادئة ستلغي هذا عند تفعيلها.",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "تمكين التشغيل التلقائي لأصوات الطيور عند فتح علامة تبويب جديدة",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "الساعات الهادئة",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "كتم أصوات الطيور خلال الساعات الهادئة المحددة.",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "تمكين إيقاف التشغيل التلقائي تلقائياً خلال الساعات الهادئة",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "الساعات الهادئة نشطة",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "نهاية الساعات الهادئة",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "ميزات الوصول السريع",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "تمكين مربع البحث والمواقع الأكثر زيارة والاختصارات المخصصة .",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "إظهار مربع البحث والمواقع الأكثر زيارة والسماح بالاختصارات المخصصة",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "تم حفظ الإعدادات",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 تم مسح التخزين المؤقت!\n\nتم حذف جميع صور الطيور المخزنة مؤقتاً والاختصارات المخصصة والبيانات المؤقتة.\n\nيجب أن يساعد هذا إذا كنت تواجه مشاكل في التحميل.",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 الإذن مطلوب\n\nلاستخدام ميزات الإنتاجية (مربع البحث والمواقع الأكثر زيارة والاختصارات المخصصة)، يحتاج BirdTab للوصول إلى المواقع الأولى في متصفحك.\n\nيمكنك تمكين هذا في أي وقت بتبديل الإعداد مرة أخرى.",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ حدث خطأ ما\n\nلم نتمكن من تحديث إعدادات الإنتاجية الخاصة بك. قد تكون هذه مشكلة مؤقتة.\n\nيرجى المحاولة مرة أخرى بعد قليل. إذا استمرت المشكلة، حاول إعادة تشغيل متصفحك.",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "تنظيف الريش...",
@@ -360,7 +376,7 @@
     "description": "Tooltip for pause button"
   },
   "audioBufferingTooltip": {
-    "message": "جارٍ تحميل صوت الطائر\u2026",
+    "message": "جارٍ تحميل صوت الطائر…",
     "description": "Tooltip shown on play button while audio is loading or buffering"
   },
   "addNewShortcutAriaLabel": {
@@ -887,10 +903,6 @@
     "message": "عرض ساعة كبيرة فوق مربع البحث.",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "إظهار الوقت الحالي في صفحة علامة تبويب جديدة",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "ساعة 24 ساعة",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "تطبيقات Google",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "إظهار زر للوصول السريع لتطبيقات Google مثل Gmail وDrive وYouTube والمزيد.",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "تمكين لإظهار زر تطبيقات Google",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "تطبيقات Google",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "اختصار علامة تبويب Chrome",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "إظهار اختصار للوصول السريع إلى صفحة علامة تبويب Chrome الجديدة الافتراضية.",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "تمكين لإظهار اختصار علامة تبويب Chrome",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "محرك البحث",
@@ -1361,22 +1357,6 @@
     "message": "يمكن لـ BirdTab أن يتنحى جانبًا ولا يُفتح إلا عندما تريد رؤية طائر.",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "طائر جديد",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "كل علامة تبويب",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "كل ساعة",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "كل يوم",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "زر التحديث يأتي دائمًا بطائر جديد.",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "خمّن الطائر",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "إخفاء اسم الطائر حتى تنقر عليه، لتصبح كل علامة تبويب جديدة اختبارًا صغيرًا.",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "ما هذا الطائر؟",

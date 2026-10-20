@@ -1,7 +1,7 @@
 /**
  * Region Switch Tracker (background)
  *
- * Runs region switches for the settings sidebar and mirrors their state in
+ * Runs region switches for the settings window and mirrors their state in
  * chrome.storage.session under one key, so a settings panel opened (or
  * reopened) mid-download can show progress or a failure:
  *

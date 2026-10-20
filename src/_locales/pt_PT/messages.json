@@ -63,25 +63,73 @@
     "message": "Pesquisar na Web",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "Definições do BirdTab",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "Multimédia e reprodução",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "Produtividade e interface",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "Região de observação de aves",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "Os novos separadores mostram aves desta região.",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "Região",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "Pesquisar regiões",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "Nenhuma região com esse nome.",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "Manter cada ave durante",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "Um separador",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "Uma hora",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "Um dia",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "Uma ave diferente em cada novo separador.",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "A mesma ave durante uma hora, depois outra.",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "Uma ave durante todo o dia.",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "Uma ligação para a página Novo separador do Chrome.",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "Reproduzir cantos das aves",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "Começa quando abre um novo separador.",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "Pesquisa e sites mais visitados",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "Uma caixa de pesquisa, os sites mais visitados e atalhos.",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail, Drive, YouTube e muito mais.",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "A carregar regiões…",
@@ -103,10 +151,6 @@
     "message": "Reproduzir multimédia automaticamente",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "Reproduz automaticamente cantos de aves em cada novo separador. Quando ativas, as horas de silêncio sobrepõem-se a esta opção.",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "Ative para reproduzir automaticamente cantos de aves ao abrir um novo separador",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "Horas de silêncio",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "Silencia os cantos das aves durante as horas de silêncio definidas.",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "Ative para desligar a reprodução automática durante as horas de silêncio",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "Horas de silêncio ativas",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "Fim das horas de silêncio",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "Funcionalidades de acesso rápido",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "Ativa a caixa de pesquisa, os sites mais visitados e os atalhos personalizados.",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "Mostra a caixa de pesquisa e os sites mais visitados, e permite atalhos personalizados",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "Definições guardadas",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 Cache limpa!\n\nTodas as imagens de aves em cache, os atalhos personalizados e os dados temporários foram removidos.\n\nIsto deve ajudar se estava a ter problemas de carregamento.",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 Permissão necessária\n\nPara usar as funcionalidades de produtividade (caixa de pesquisa, sites mais visitados e atalhos personalizados), o BirdTab precisa de acesso aos sites mais visitados do seu navegador.\n\nPode ativar isto a qualquer momento ao voltar a ligar a definição.",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ Algo correu mal\n\nNão foi possível atualizar as suas definições de produtividade. Pode ser um problema temporário.\n\nTente novamente daqui a pouco. Se o problema persistir, experimente reiniciar o navegador.",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "A afofar as penas...",
@@ -887,10 +903,6 @@
     "message": "Mostra um relógio grande por cima da caixa de pesquisa.",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "Mostrar a hora atual no novo separador",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "Relógio de 24 horas",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "Aplicações Google",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "Mostra um botão de acesso rápido às aplicações Google, como o Gmail, o Drive, o YouTube e muito mais.",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "Ative para mostrar o botão das aplicações Google",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "Aplicações Google",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "Atalho do separador Chrome",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "Mostra um atalho para aceder rapidamente à página Novo separador predefinida do Chrome.",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "Ative para mostrar o atalho do separador Chrome",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "Motor de pesquisa",
@@ -1361,22 +1357,6 @@
     "message": "O BirdTab pode sair do caminho e abrir só quando quiser ver uma ave.",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "Nova ave",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "Cada separador",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "De hora a hora",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "Diariamente",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "O botão de atualizar traz sempre uma ave nova.",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "Adivinhe a ave",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "Oculta o nome da ave até clicar nele, para que cada novo separador seja um pequeno quiz.",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "Que ave é esta?",

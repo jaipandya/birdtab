@@ -1,14 +1,14 @@
 /**
  * Region Selector
  *
- * Fills the settings region <select> from the stored release index and
- * switches regions through the background service worker.
+ * Fills the settings region list (regionPicker.js) from the stored release
+ * index and switches regions through the background service worker.
  *
  * - The list comes from storage (works offline). With no stored index it
  *   shows a short loading state and asks the background to discover the release.
  * - Choosing a region keeps the current bird on screen and shows
  *   "Loading birds for India… 42%" until the region's manifest is stored.
- *   The dropdown stays usable: choosing another region replaces the
+ *   The list stays usable: choosing another region replaces the
  *   download, and a replaced switch shows nothing.
  *   On failure the previous region stays selected, with a retry.
  * - The background mirrors the switch in chrome.storage.session
@@ -16,10 +16,10 @@
  *   progress, or a recent failure.
  */
 
-import CONFIG from './config.js';
-import { getMessage, getUILanguage } from './i18n.js';
-import { log } from './logger.js';
-import { RELEASE_KEY } from './mediaClient.js';
+import CONFIG from '../config.js';
+import { getMessage, getUILanguage } from '../i18n.js';
+import { log } from '../logger.js';
+import { RELEASE_KEY } from '../mediaClient.js';
 
 const WORLD = CONFIG.MEDIA.DEFAULT_REGION;
 const { REGION_SWITCH_STATE_KEY, REGION_SWITCH_STALE_MS } = CONFIG.MEDIA;
@@ -64,15 +64,9 @@ export function getRegionDisplayName(region, uiLanguage = safeUILanguage()) {
 }
 
 /**
- * Option label: the region's localized name.
- */
-export function getRegionLabel(region, uiLanguage = safeUILanguage()) {
-  return getRegionDisplayName(region, uiLanguage);
-}
-
-/**
- * Options for the dropdown: World first, then by localized name.
- * @returns {Array<{code: string, name: string, label: string}>}
+ * The list's regions: World first, then by localized name. `indexName` is the
+ * release's own (English) name, so a search finds a region by either.
+ * @returns {Array<{code: string, name: string, indexName: string}>}
  */
 export function buildRegionOptions(regions, uiLanguage = safeUILanguage()) {
   let collator;
@@ -87,7 +81,7 @@ export function buildRegionOptions(regions, uiLanguage = safeUILanguage()) {
     .map(region => ({
       code: region.code,
       name: getRegionDisplayName(region, uiLanguage),
-      label: getRegionLabel(region, uiLanguage),
+      indexName: region.name || region.code,
     }));
 
   const world = options.filter(o => o.code === WORLD);
@@ -153,17 +147,16 @@ function sendMessage(message) {
 export class RegionSelector {
   /**
    * @param {Object} options
-   * @param {HTMLSelectElement} options.select
+   * @param {import('./regionPicker.js').RegionPicker} options.picker - the list the user chooses from
    * @param {HTMLElement} options.status - live region for loading/failure text
    * @param {(region: string) => void} [options.onRegionChanged] - after a successful switch
    */
-  constructor({ select, status, onRegionChanged = () => {} }) {
-    this.select = select;
+  constructor({ picker, status, onRegionChanged = () => {} }) {
+    this.picker = picker;
     this.status = status;
     this.onRegionChanged = onRegionChanged;
     this.currentRegion = WORLD;
     this.options = [];
-    this.indexLoaded = false;
     // Region being downloaded, its latest progress, and the request token
     // (a response for an older token is a choice the user already replaced)
     this.pendingRegion = null;
@@ -171,7 +164,7 @@ export class RegionSelector {
     this.requestToken = 0;
     this.loadingTimer = null;
 
-    this.select.addEventListener('change', () => this.switchTo(this.select.value));
+    this.picker.onChoose = (code) => this.switchTo(code);
     try {
       chrome.storage?.onChanged?.addListener((changes, area) => {
         if (area === 'session' && changes[REGION_SWITCH_STATE_KEY]) {
@@ -201,7 +194,7 @@ export class RegionSelector {
     this.render(stored.index.regions);
     if (this.pendingRegion) {
       // Settings reopened on this page mid-download: the switch is still ours
-      this.select.value = this.pendingRegion;
+      this.picker.value = this.pendingRegion;
       this.showLoading();
     } else {
       await this.restoreSwitchState();
@@ -237,18 +230,18 @@ export class RegionSelector {
   }
 
   async fetchIndex() {
-    this.select.disabled = true;
+    this.picker.disabled = true;
     this.showStatusLater(getMessage('regionLoadingList'));
 
     const response = await sendMessage({ action: 'loadRegionIndex' });
-    this.select.disabled = false;
+    this.picker.disabled = false;
 
     if (response.success) {
       const { [RELEASE_KEY]: stored } = await chrome.storage.local.get([RELEASE_KEY]);
       if (stored?.index?.regions?.length) {
         this.render(stored.index.regions);
         if (this.pendingRegion) {
-          this.select.value = this.pendingRegion;
+          this.picker.value = this.pendingRegion;
           this.showLoading();
         } else {
           this.clearStatus();
@@ -263,23 +256,12 @@ export class RegionSelector {
 
   render(regions) {
     this.options = buildRegionOptions(regions);
-    this.indexLoaded = this.options.length > 1;
-    const fragment = document.createDocumentFragment();
-    for (const option of this.options) {
-      const el = document.createElement('option');
-      el.value = option.code;
-      el.textContent = option.label;
-      fragment.appendChild(el);
-    }
     // A selected region missing from the list (shouldn't happen) still shows
-    if (!this.options.some(o => o.code === this.currentRegion)) {
-      const el = document.createElement('option');
-      el.value = this.currentRegion;
-      el.textContent = this.currentRegion;
-      fragment.appendChild(el);
-    }
-    this.select.replaceChildren(fragment);
-    this.select.value = this.currentRegion;
+    const options = this.options.some(o => o.code === this.currentRegion)
+      ? this.options
+      : [...this.options, { code: this.currentRegion, name: this.currentRegion, indexName: this.currentRegion }];
+    this.picker.setOptions(options);
+    this.picker.value = this.currentRegion;
   }
 
   nameOf(code) {
@@ -330,7 +312,7 @@ export class RegionSelector {
         sendMessage({ action: 'switchRegion', region: this.currentRegion });
       }
       log(`Offline: not switching region to ${code}`);
-      this.select.value = this.currentRegion;
+      this.picker.value = this.currentRegion;
       this.showFailure(code);
       return;
     }
@@ -342,7 +324,7 @@ export class RegionSelector {
     const token = ++this.requestToken;
     if (!showNow) this.progress = null;
     this.pendingRegion = code;
-    this.select.value = code;
+    this.picker.value = code;
     const loadingShown = !this.status.hidden && !this.status.classList.contains('region-status-error');
     if (showNow || loadingShown) {
       // Already showing a download (or restoring one): switch the text now
@@ -361,7 +343,7 @@ export class RegionSelector {
 
     if (response.success) {
       this.currentRegion = response.region || code;
-      this.select.value = this.currentRegion;
+      this.picker.value = this.currentRegion;
       this.clearStatus();
       this.onRegionChanged(this.currentRegion);
       return;
@@ -371,14 +353,14 @@ export class RegionSelector {
       // Replaced from elsewhere (e.g. another tab's settings): show what is stored now
       const { region } = await chrome.storage.local.get(['region']);
       this.currentRegion = region || WORLD;
-      this.select.value = this.currentRegion;
+      this.picker.value = this.currentRegion;
       this.clearStatus();
       await this.restoreSwitchState();
       return;
     }
 
     log(`Region switch to ${code} failed: ${response.error}`);
-    this.select.value = this.currentRegion;
+    this.picker.value = this.currentRegion;
     this.showFailure(code);
   }
 

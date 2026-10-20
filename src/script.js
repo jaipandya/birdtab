@@ -3,7 +3,7 @@ import './fontsVariable.css';
 import './styles.css';
 import CONFIG from './config.js';
 import { getAutoPlayState, getQuietHoursText, isQuietHoursActive } from './quietHours.js';
-import SettingsSidebar from './settingsSidebar.js';
+import { initSettingsPanel, openSettings } from './settings/settingsPanel.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
 import { loadBirdNames, localizedName } from './birdNames.js';
@@ -1187,13 +1187,13 @@ async function initializePage() {
     setupCreditPopovers(creditInfoData);
     initLowDistractionMode();
 
-    // Initialize settings modal immediately after DOM elements are created
+    // Build the settings window now, so it opens at once
     try {
-      new SettingsSidebar();
+      initSettingsPanel();
     } catch (error) {
-      log(`Failed to initialize settings modal: ${error.message}`);
+      log(`Failed to initialize settings panel: ${error.message}`);
       captureException(error, {
-        tags: { operation: 'initializeSettingsSidebar' }
+        tags: { operation: 'initializeSettingsPanel' }
       });
     }
 
@@ -1213,7 +1213,7 @@ async function initializePage() {
               icon: 'images/svg/settings.svg',
               onClick: () => {
                 trackFeature('settings');
-                SettingsSidebar.getInstance().open();
+                openSettings();
               }
             },
             CONFIG.FEATURES.yourBirds ? {
@@ -1533,7 +1533,7 @@ function setupMediaClickHandler() {
     const interactiveSelectors = [
       'button', 'a', 'input', 'select', 'textarea', 'label',
       '.icon-button', '.control-buttons', '.volume-control',
-      '.settings-sidebar', '.quiz-mode',
+      '.settings-sidebar', '.settings-panel', '.quiz-mode',
       '.search-container',
       '.options-menu', '.options-menu-item',
       '.info-popover',

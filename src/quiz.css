@@ -1,6 +1,5 @@
 /* Quiz Mode Styles - Clean & Minimal Design matching BirdTab aesthetic */
 
-
 /* RTL Support for quiz */
 html[dir="rtl"] .quiz-mode {
   direction: rtl;
@@ -172,34 +171,6 @@ html.photo-tone .quiz-progress-fill {
   overflow: hidden;
 }
 
-/* Quiz Loading State - Skeleton UI */
-.quiz-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  min-height: 200px;
-}
-
-.quiz-loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--white-10);
-  border-top: 3px solid var(--white-60);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-.quiz-loading-text {
-  font-size: 16px;
-  color: var(--white-65);
-  margin: 0;
-  font-weight: 500;
-}
-
 /* Skeleton Loading Animation */
 @keyframes shimmer {
   0% {
@@ -247,19 +218,6 @@ html.photo-tone .quiz-progress-fill {
 .skeleton-option {
   height: 52px;
   border-radius: 10px;
-}
-
-/* Skeleton Text */
-.skeleton-text {
-  height: 20px;
-  width: 60%;
-  margin: 0 auto;
-}
-
-.skeleton-text-short {
-  height: 16px;
-  width: 40%;
-  margin: 0 auto;
 }
 
 /* Loading State for Image Container */
@@ -384,35 +342,9 @@ html.photo-tone .quiz-progress-fill {
   color: var(--text-primary);
 }
 
-/* Image Loader */
-.image-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  color: var(--white-50);
-}
-
-.image-loader .spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--white-10);
-  border-top: 2px solid var(--white-60);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 12px;
-}
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.image-loader p {
-  font-size: 14px;
-  margin: 0;
-  color: var(--white-50);
 }
 
 /* Options Section */
@@ -980,16 +912,6 @@ html.photo-tone .quiz-progress-fill {
   .quiz-final-score {
     font-size: 32px;
   }
-}
-
-/* Quiz Loading Message in Options */
-.quiz-loading-message {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--white-50);
-  font-size: 16px;
-  font-style: italic;
 }
 
 /* Focus styles for keyboard navigation */

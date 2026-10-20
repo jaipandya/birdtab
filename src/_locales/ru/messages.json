@@ -63,25 +63,73 @@
     "message": "Поиск в интернете",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "Настройки BirdTab",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "Media & Playback",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "Productivity & Interface",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "Регион наблюдения за птицами",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "В новых вкладках показываются птицы этого региона.",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "Регион",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "Поиск региона",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "Нет региона с таким названием.",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "Одна птица на",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "Одну вкладку",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "Час",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "День",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "Новая птица в каждой новой вкладке.",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "Одна и та же птица в течение часа, затем новая.",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "Одна птица на весь день.",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "Ссылка на стандартную страницу новой вкладки Chrome.",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "Воспроизводить голоса птиц",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "Начинается при открытии новой вкладки.",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "Поиск и топ-сайты",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "Строка поиска, топ-сайты и ярлыки.",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail, Диск, YouTube и другие.",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "Загрузка регионов…",
@@ -103,10 +151,6 @@
     "message": "Автовоспроизведение медиа",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "Автоматически воспроизводить голоса птиц с каждой новой вкладкой. Тихие часы будут переопределять это, когда активны.",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "Включить автоматическое воспроизведение голосов птиц при открытии новой вкладки",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "Тихие часы",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "Отключить песни птиц в течение указанных тихих часов.",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "Включить автоматическое отключение автовоспроизведения в тихие часы",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "Тихие часы активны",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "Конец тихих часов",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "Функции быстрого доступа",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "Включить поисковую строку, топ-сайты и пользовательские ярлыки для повышения продуктивности.",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "Показать поисковую строку, наиболее посещаемые сайты и разрешить пользовательские ярлыки",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "Настройки сохранены",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 Кэш очищен!\n\nВсе кэшированные изображения птиц, пользовательские ярлыки и временные данные были удалены.\n\nЭто должно помочь, если у вас были проблемы с загрузкой.",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 Требуется разрешение\n\nДля использования функций продуктивности (поисковая строка, наиболее посещаемые сайты и пользовательские ярлыки) BirdTab нужен доступ к топ-сайтам вашего браузера.\n\nВы можете включить это в любое время, переключив настройку снова.",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ Что-то пошло не так\n\nМы не смогли обновить ваши настройки продуктивности. Это может быть временная проблема.\n\nПожалуйста, попробуйте снова через некоторое время. Если проблема продолжается, попробуйте перезапустить браузер.",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "Взъерошиваем перья...",
@@ -360,7 +376,7 @@
     "description": "Tooltip for pause button"
   },
   "audioBufferingTooltip": {
-    "message": "Загрузка звука птицы\u2026",
+    "message": "Загрузка звука птицы…",
     "description": "Tooltip shown on play button while audio is loading or buffering"
   },
   "addNewShortcutAriaLabel": {
@@ -887,10 +903,6 @@
     "message": "Отображать большие часы над строкой поиска.",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "Показывать текущее время на странице новой вкладки",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "24-часовой формат",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "Приложения Google",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "Показать кнопку быстрого доступа к приложениям Google, таким как Gmail, Диск, YouTube и другие.",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "Включить для отображения кнопки приложений Google",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "Приложения Google",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "Ярлык вкладки Chrome",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "Показать ярлык для быстрого доступа к стандартной странице новой вкладки Chrome.",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "Включить для отображения ярлыка вкладки Chrome",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "Поисковая система",
@@ -1361,22 +1357,6 @@
     "message": "BirdTab может уступить место и открываться, только когда вы хотите увидеть птицу.",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "Новая птица",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "Каждая вкладка",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "Каждый час",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "Каждый день",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "Кнопка обновления всегда показывает новую птицу.",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "Угадай птицу",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "Название птицы скрыто, пока вы не нажмёте на него, — каждая новая вкладка становится маленькой викториной.",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "Что это за птица?",

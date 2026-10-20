@@ -109,6 +109,15 @@
   /* Dark glass panels over the photo (review prompt, step-aside offer, notes) */
   --surface-glass: rgba(18, 18, 20, 0.82);
 
+  /* Settings window (src/settings/): its surface, the page behind it, and gold for what's chosen */
+  --settings-surface: rgba(24, 24, 27, 0.96);
+  --settings-scrim: var(--black-45);
+  --settings-row-divider: var(--white-8);
+  --settings-text-muted: var(--white-60);
+  --settings-chosen-bg: rgba(212, 162, 76, 0.12);
+  --settings-chosen-ring: var(--primary);
+  --settings-chosen-fg: #f0cf8c;
+
   /* Buttons (buttons.css): one look per purpose, everywhere */
   --btn-radius: 10px;
   --btn-radius-lg: 12px;
@@ -140,9 +149,6 @@
   --status-warning-dark: #d97706;
   --status-error: #ef4444;
   --status-info: #3b82f6;
-
-  /* ── Neutral gray (free badge, muted text) ── */
-  --gray-muted: #9ca3af;
 
   /* ── Initial background (shown before image loads) ── */
   --bg-initial: #979797;

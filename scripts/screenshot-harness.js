@@ -27,7 +27,7 @@ const SURFACES = {
 const CROP = {
   review: '.review-prompt', footer: '.chrome-footer-notification', offer: '#step-aside-offer',
   tour: '.tour-tooltip, [class*="tour-tooltip"], [class*="tour-welcome"]', coach: '.pin-coach-card',
-  settings: '#settings-group-new-tab + .settings-card', birds: '#your-birds-sidebar .settings-content',
+  settings: '#settings-panel .settings-panel-surface', birds: '#your-birds-sidebar .settings-content',
   confirm: '.confirmation-dialog', error: '.error-modal-content', quiz: '.quiz-content', onboarding: '.onboarding-card',
 };
 // Cards that appear on their own after a delay

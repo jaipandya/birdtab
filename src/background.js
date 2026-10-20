@@ -132,14 +132,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     })();
     return true;
   } else if (request.action === 'switchRegion') {
-    // Settings sidebar: fetch the region's manifest, then change the setting.
+    // Settings window: fetch the region's manifest, then change the setting.
     // The storage.onChanged listener below preloads the next bird from it.
     // Progress and failures are mirrored in chrome.storage.session.
     // A switch superseded by a later choice answers { superseded: true }.
     trackRegionSwitch(request.region).then(sendResponse);
     return true;
   } else if (request.action === 'loadRegionIndex') {
-    // Settings sidebar has no stored region list: discover the release now.
+    // Settings window has no stored region list: discover the release now.
     (async () => {
       const result = await refreshRelease({ force: true });
       const { [RELEASE_KEY]: stored } = await chrome.storage.local.get(RELEASE_KEY);

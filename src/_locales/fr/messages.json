@@ -63,25 +63,73 @@
     "message": "Rechercher sur le web",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "Paramètres BirdTab",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "Media & Playback",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "Productivity & Interface",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "Région d'Observation des Oiseaux",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "Les nouveaux onglets affichent des oiseaux de cette région.",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "Région",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "Rechercher une région",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "Aucune région de ce nom.",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "Garder chaque oiseau",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "Un onglet",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "Une heure",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "Un jour",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "Un oiseau différent dans chaque nouvel onglet.",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "Le même oiseau pendant une heure, puis un nouveau.",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "Un seul oiseau pour toute la journée.",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "Un lien vers la page Nouvel onglet de Chrome.",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "Jouer les chants",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "Démarre à l’ouverture d’un nouvel onglet.",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "Recherche et sites principaux",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "Une barre de recherche, vos sites principaux et vos raccourcis.",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail, Drive, YouTube et plus.",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "Chargement des régions…",
@@ -103,10 +151,6 @@
     "message": "Lecture automatique des médias",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "Joue automatiquement les chants d'oiseaux à chaque nouvel onglet. Les heures silencieuses remplacent ceci quand actives.",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "Activer pour jouer automatiquement les chants d'oiseaux lors de l'ouverture d'un nouvel onglet",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "Heures Silencieuses",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "Couper le son des chants d'oiseaux pendant les heures silencieuses spécifiées.",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "Activer pour désactiver automatiquement la lecture automatique pendant les heures silencieuses",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "Heures Silencieuses Actives",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "Fin des heures silencieuses",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "Fonctionnalités d'Accès Rapide",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "Activer la boîte de recherche, les sites principaux et les raccourcis personnalisés pour une productivité améliorée.",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "Afficher la boîte de recherche, les sites les plus visités et permettre les raccourcis personnalisés",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "Paramètres sauvegardés",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 Cache Supprimé !\n\nToutes les images d'oiseaux en cache, les raccourcis personnalisés et les données temporaires ont été supprimés.\n\nCela devrait aider si vous rencontriez des problèmes de chargement.",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 Autorisation Requise\n\nPour utiliser les fonctionnalités de productivité (boîte de recherche, sites les plus visités et raccourcis personnalisés), BirdTab a besoin d'accéder aux sites principaux de votre navigateur.\n\nVous pouvez activer cela à tout moment en basculant à nouveau le paramètre.",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ Quelque chose s'est mal passé\n\nNous n'avons pas pu mettre à jour vos paramètres de productivité. Cela pourrait être un problème temporaire.\n\nVeuillez réessayer dans un moment. Si le problème persiste, essayez de redémarrer votre navigateur.",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "Ébouriffage de plumes...",
@@ -360,7 +376,7 @@
     "description": "Tooltip for pause button"
   },
   "audioBufferingTooltip": {
-    "message": "Chargement du son d\u2019oiseau\u2026",
+    "message": "Chargement du son d’oiseau…",
     "description": "Tooltip shown on play button while audio is loading or buffering"
   },
   "addNewShortcutAriaLabel": {
@@ -887,10 +903,6 @@
     "message": "Afficher une grande horloge au-dessus de la barre de recherche.",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "Afficher l'heure actuelle sur la page Nouvel onglet",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "Format 24 heures",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "Applications Google",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "Afficher un bouton d'accès rapide aux applications Google comme Gmail, Drive, YouTube et plus.",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "Activer pour afficher le bouton Applications Google",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "Applications Google",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "Raccourci onglet Chrome",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "Afficher un raccourci pour accéder rapidement à la page nouvel onglet Chrome par défaut.",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "Activer pour afficher le raccourci onglet Chrome",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "Moteur de recherche",
@@ -1361,22 +1357,6 @@
     "message": "BirdTab peut s’effacer et ne s’ouvrir que lorsque vous voulez voir un oiseau.",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "Nouvel oiseau",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "Chaque onglet",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "Chaque heure",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "Chaque jour",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "Le bouton Actualiser apporte toujours un nouvel oiseau.",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "Devinez l’oiseau",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "Masque le nom de l’oiseau jusqu’à ce que vous cliquiez dessus : chaque nouvel onglet devient un petit quiz.",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "Quel est cet oiseau ?",

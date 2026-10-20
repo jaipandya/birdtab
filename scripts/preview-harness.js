@@ -67,7 +67,14 @@ window.__MSGS = ${JSON.stringify(Object.fromEntries(Object.entries(msgs).map(([k
       sendMessage: (m, cb) => {
         const reply = m && m.action === 'getBirdsByRegion'
           ? manifestBirds().then(birds => ({ success: true, birds: birds.slice(0, 80) }))
-          : Promise.resolve(undefined);
+          : m && m.action === 'loadRegionIndex'
+            // The settings region list, from the live release (no background here to discover it)
+            ? fetch('https://media.birdtab.app/current.json').then(r => r.json()).then(async (current) => {
+                const index = await (await fetch(current.indexUrl)).json();
+                await window.chrome.storage.local.set({ media_release: { schemaVersion: current.schemaVersion, release: current.release, indexUrl: current.indexUrl, index, storedAt: Date.now() } });
+                return { success: true };
+              }).catch(() => ({ success: false }))
+            : Promise.resolve(undefined);
         if (typeof cb === 'function') reply.then(cb);
         return reply;
       } },

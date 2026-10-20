@@ -1,0 +1,916 @@
+/* Settings window (settings/): a window in the middle of the page, the sections listed
+   down its side, one shown at a time. */
+
+/* ── The layer over the page; a click on it outside the window closes ── */
+
+.settings-panel {
+  position: fixed;
+  inset: 0;
+  /* Above chrome-tab-link (10000) */
+  z-index: 10001;
+  visibility: hidden;
+  opacity: 0;
+  color: var(--modal-text-primary);
+  /* The page centres its text; panels read from the start */
+  text-align: start;
+  transition: opacity 0.25s ease, visibility 0.25s ease, background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.settings-panel.open {
+  visibility: visible;
+  opacity: 1;
+  background-color: var(--settings-scrim);
+  backdrop-filter: blur(8px);
+}
+
+.settings-panel-surface {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(920px, calc(100vw - 48px));
+  height: min(680px, calc(100vh - 48px));
+  display: flex;
+  border-radius: 22px;
+  background: var(--settings-surface);
+  box-shadow: 0 30px 80px var(--black-50), 0 0 0 1px var(--white-12);
+  overflow: hidden;
+  outline: none;
+  transform: translate(-50%, -48%) scale(0.98);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-panel.open .settings-panel-surface {
+  transform: translate(-50%, -50%);
+}
+
+.settings-panel :focus-visible {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.pref-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pref-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: var(--white-8);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pref-close:hover {
+  background: var(--white-15);
+}
+
+.pref-close img {
+  filter: invert(1);
+}
+
+/* ── The list of sections down the side ── */
+
+.sp-nav {
+  flex: none;
+  width: 236px;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 12px 16px;
+  background: var(--white-3);
+  border-inline-end: 1px solid var(--settings-row-divider);
+}
+
+.sp-nav .pref-title {
+  padding: 0 12px 16px;
+  font-size: 18px;
+}
+
+.sp-nav-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sp-nav-item {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--white-80);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.sp-nav-item:hover {
+  background: var(--white-6);
+}
+
+.sp-nav-item img {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+}
+
+.sp-nav-item[aria-current] {
+  background: var(--settings-chosen-bg);
+  color: var(--settings-chosen-fg);
+  font-weight: 600;
+}
+
+.sp-nav-item[aria-current] img {
+  opacity: 1;
+}
+
+.sp-nav .pref-footer {
+  padding: 12px 12px 0;
+}
+
+/* ── The section shown ── */
+
+.sp-page {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 24px 40px 32px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--white-20) transparent;
+}
+
+.sp-page > .pref-close {
+  position: absolute;
+  top: 18px;
+  inset-inline-end: 18px;
+}
+
+.sp-page-title {
+  margin: 0 0 18px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Focused only so screen readers hear the section's name: no ring */
+.settings-panel .sp-page-title:focus-visible {
+  outline: none;
+}
+
+.pref-section {
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+}
+
+.pref-section[hidden] {
+  display: none;
+}
+
+/* Narrow windows: the sections in a row across the top, feedback and credits at the bottom */
+@media (max-width: 720px) {
+  .settings-panel-surface {
+    flex-direction: column;
+  }
+
+  /* Its parts become the window's own rows, so the footer can go last */
+  .sp-nav {
+    display: contents;
+  }
+
+  .sp-nav .pref-title {
+    padding: 18px 20px 10px;
+  }
+
+  .sp-nav-list {
+    flex: none;
+    flex-direction: row;
+    padding: 0 12px 10px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--settings-row-divider);
+  }
+
+  .sp-nav-item {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .sp-page {
+    padding: 20px;
+  }
+
+  .sp-nav .pref-footer {
+    order: 1;
+    padding: 12px 20px 16px;
+  }
+}
+
+/* ── Rows ── */
+
+.pref-row {
+  display: flex;
+  padding: 12px 10px;
+  margin-inline: -10px;
+  border-radius: 10px;
+}
+
+/* A hairline between rows that follow one another, as wide as their text */
+:where(.pref-region, .pref-row, .quiet-hours-setting) + :where(.pref-row, .quiet-hours-setting) {
+  position: relative;
+}
+
+:where(.pref-region, .pref-row, .quiet-hours-setting) + :where(.pref-row, .quiet-hours-setting)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--settings-row-divider);
+}
+
+/* Rows reach 10px past their text (for the hover), the line doesn't */
+:where(.pref-region, .pref-row, .quiet-hours-setting) + .pref-row::before {
+  inset-inline: 10px;
+}
+
+.pref-toggle {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pref-toggle:hover {
+  background-color: var(--white-4);
+}
+
+.pref-stack {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pref-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pref-label {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--modal-text-primary);
+}
+
+.pref-help {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--settings-text-muted);
+  text-wrap: pretty;
+}
+
+/* ── Switch: the checkbox itself, drawn ── */
+
+.pref-switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  margin: 0;
+  border-radius: 13px;
+  background: var(--white-20);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pref-switch::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  inset-inline-start: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--control-thumb);
+  box-shadow: 0 1px 3px var(--black-30);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pref-switch:checked {
+  background: var(--primary);
+}
+
+.pref-switch:checked::before {
+  transform: translateX(18px);
+}
+
+html[dir="rtl"] .pref-switch:checked::before {
+  transform: translateX(-18px);
+}
+
+/* ── A few-way choice: one per line, a sentence under each ── */
+
+.pref-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pref-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--white-4);
+  box-shadow: inset 0 0 0 1px var(--white-12);
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pref-option:hover {
+  background: var(--white-6);
+}
+
+.pref-option:has(input:checked) {
+  background: var(--settings-chosen-bg);
+  box-shadow: inset 0 0 0 1.5px var(--settings-chosen-ring);
+}
+
+.pref-option input {
+  appearance: none;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--white-50);
+  cursor: pointer;
+}
+
+.pref-option input:checked {
+  border: 5px solid var(--primary);
+}
+
+.pref-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pref-option-name {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.pref-option:has(input:checked) .pref-option-name {
+  font-weight: 600;
+}
+
+/* ── Region: the lead row. The card opens a search over the list (regionPicker.js) ── */
+
+.pref-region {
+  padding-bottom: 6px;
+}
+
+.pref-region-card {
+  width: 100%;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px 12px 14px;
+  border: none;
+  border-radius: 14px;
+  background: var(--white-6);
+  box-shadow: inset 0 0 0 1px var(--white-12);
+  color: var(--modal-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pref-region-card:hover {
+  background: var(--white-8);
+}
+
+.pref-region-card:disabled {
+  cursor: progress;
+}
+
+.pref-region-icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--settings-chosen-bg);
+}
+
+.pref-region-icon img {
+  filter: brightness(0) invert(1);
+}
+
+.pref-region-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pref-region-caption {
+  font-size: 12.5px;
+  color: var(--settings-text-muted);
+}
+
+.pref-region-name {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pref-region-chevron {
+  color: var(--white-60);
+  transition: transform 0.2s ease;
+}
+
+.pref-region-card[aria-expanded="true"] .pref-region-chevron {
+  transform: rotate(90deg);
+}
+
+html[dir="rtl"] .pref-region-chevron {
+  transform: scaleX(-1);
+}
+
+html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
+  transform: rotate(90deg);
+}
+
+.region-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.region-picker[hidden] {
+  display: none;
+}
+
+.region-search {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border-radius: 11px;
+  background: var(--white-6);
+  box-shadow: inset 0 0 0 1px var(--white-15);
+}
+
+.region-search:focus-within {
+  box-shadow: inset 0 0 0 1.5px var(--settings-chosen-ring);
+}
+
+.region-search img {
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+}
+
+.region-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--modal-text-primary);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+/* The box draws the ring (.region-search:focus-within) */
+.settings-panel .region-search input:focus-visible {
+  outline: none;
+}
+
+.region-search input::placeholder {
+  color: var(--white-50);
+}
+
+.region-options {
+  /* The rows' offsetTop is measured from here (regionPicker.js scrollTo) */
+  position: relative;
+  max-height: 264px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  border-radius: 12px;
+  background: var(--white-3);
+  box-shadow: inset 0 0 0 1px var(--white-8);
+  scrollbar-width: thin;
+  scrollbar-color: var(--white-20) transparent;
+}
+
+.region-option {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--white-85);
+  font-size: 14.5px;
+  cursor: pointer;
+}
+
+.region-option.active {
+  background: var(--white-8);
+}
+
+.region-option[aria-selected="true"] {
+  color: var(--settings-chosen-fg);
+  font-weight: 600;
+}
+
+.region-option-check {
+  flex-shrink: 0;
+  visibility: hidden;
+}
+
+.region-option[aria-selected="true"] .region-option-check {
+  visibility: visible;
+}
+
+.region-empty {
+  padding: 4px 4px 0;
+}
+
+.region-empty[hidden] {
+  display: none;
+}
+
+/* The quiet hours menus */
+.settings-panel select option {
+  background-color: var(--surface-select);
+  color: var(--text-primary);
+}
+
+/* Status and help overlap in one cell: a status replaces the help in place, no jump */
+.region-message {
+  display: grid;
+  /* Two lines, so a status that wraps ("Loading birds for United Kingdom… 42%") doesn't grow it */
+  min-height: calc(8px + 2 * 12.5px * 1.4);
+}
+
+.region-message > .pref-help {
+  grid-area: 1 / 1;
+  padding: 8px 2px 0;
+}
+
+.region-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.region-status[hidden] {
+  visibility: hidden;
+}
+
+.region-message:has(.region-status:not([hidden])) #modal-region-help {
+  visibility: hidden;
+}
+
+.region-status.region-status-error {
+  color: var(--status-error);
+}
+
+.region-retry-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--modal-text-primary);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── "Open BirdTab": three picture cards ── */
+
+.mode-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 6px 9px;
+  border-radius: 12px;
+  border: 1.5px solid var(--white-10);
+  background: var(--white-3);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.mode-card:hover {
+  border-color: var(--white-25);
+  background: var(--white-6);
+}
+
+.mode-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mode-card.selected,
+.mode-card:has(input:checked) {
+  border-color: var(--settings-chosen-ring);
+  background: var(--settings-chosen-bg);
+}
+
+.mode-card:has(input:focus-visible) {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 2px;
+}
+
+.mode-card-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--white-70);
+}
+
+.mode-card.selected .mode-card-name,
+.mode-card:has(input:checked) .mode-card-name {
+  color: var(--white-100);
+}
+
+.mode-art {
+  width: 100%;
+  max-width: 88px;
+  height: auto;
+}
+
+.mode-art .art-frame { fill: var(--white-6); stroke: var(--white-20); stroke-width: 1.2; }
+.mode-art .art-strip { fill: var(--white-8); }
+.mode-art .art-tab { fill: var(--white-15); }
+.mode-art .art-tab.active { fill: var(--white-30); }
+.mode-art .art-photo { fill: var(--white-12); }
+.mode-art .art-chrome-page { fill: var(--white-10); }
+.mode-art .art-line { fill: var(--white-25); }
+.mode-art .art-line.faint { fill: var(--white-15); }
+.mode-art .art-bird { fill: none; stroke: var(--white-70); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mode-art .art-badge { fill: var(--surface-glass); stroke: var(--white-60); stroke-width: 1.2; }
+.mode-art .art-badge-hands { fill: none; stroke: var(--white-90); stroke-width: 1.3; stroke-linecap: round; }
+.mode-art .art-button { fill: var(--white-30); }
+.mode-art .art-cursor { fill: var(--white-100); stroke: var(--black-60); stroke-width: 0.6; }
+
+.mode-card.selected .art-bird,
+.mode-card.selected .art-badge { stroke: var(--settings-chosen-fg); }
+.mode-card.selected .art-button { fill: var(--primary); }
+.mode-card.selected .art-photo { fill: var(--white-15); }
+
+.mode-caption {
+  min-height: 2.8em;
+  padding-inline: 2px;
+}
+
+/* Pinned or not, for the modes where BirdTab steps aside */
+.pin-row[hidden],
+.keyword-tip[hidden] {
+  display: none;
+}
+
+.pin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px 9px 12px;
+  border-radius: 10px;
+  background: var(--white-6);
+}
+
+.pin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--white-80);
+}
+
+/* One line; a longer translation is trimmed rather than wrapped */
+.pin-status-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pin-status-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px var(--white-8);
+}
+
+.pin-row.pinned .pin-status-dot {
+  background: var(--green-accent);
+}
+
+.keyword-tip {
+  margin: 0 2px;
+  font-size: 12px;
+  color: var(--settings-text-muted);
+  text-wrap: pretty;
+}
+
+.keyword-tip kbd {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--white-20);
+  border-bottom-width: 2px;
+  background: var(--white-8);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--white-90);
+}
+
+/* ── Quiet hours ──
+   Off, the hours sit under the name as plain text. On, that line opens into
+   "From [8 PM] to [8 AM]", so the times are edited where they were read. */
+
+.quiet-hours-summary {
+  max-height: 1.5em;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-summary {
+  max-height: 0;
+  opacity: 0;
+}
+
+.quiet-hours-schedule {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-schedule {
+  grid-template-rows: 1fr;
+}
+
+.quiet-hours-sentence {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--settings-text-muted);
+  opacity: 0;
+  transition: opacity 0.2s ease, padding 0.25s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-sentence {
+  /* The bottom padding keeps the menus' focus ring inside the clipped line */
+  padding-bottom: 12px;
+  opacity: 1;
+}
+
+.quiet-hours-select {
+  padding: 6px 28px 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--modal-border);
+  appearance: none;
+  background-color: var(--white-6);
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 10px auto;
+  color: var(--modal-text-primary);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.quiet-hours-select:hover {
+  background-color: var(--white-10);
+}
+
+/* The line clips its overflow (for the animation): a ring hugging the menu stays visible */
+.quiet-hours-select:focus-visible {
+  outline-offset: 0;
+}
+
+html[dir="rtl"] .quiet-hours-select {
+  padding: 6px 10px 6px 28px;
+  background-position: left 10px top 50%;
+}
+
+/* ── Footer: feedback, and where the names come from ── */
+
+.pref-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 16px;
+  box-shadow: inset 0 1px 0 var(--settings-row-divider);
+}
+
+.pref-feedback {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--white-80);
+  text-decoration: none;
+}
+
+.pref-feedback:hover {
+  color: var(--white-100);
+}
+
+.pref-feedback img {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+}
+
+.pref-credits {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--settings-text-muted);
+}
+
+.pref-credits a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.pref-credits a:hover {
+  color: var(--modal-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-panel,
+  .settings-panel * {
+    transition: none !important;
+  }
+}

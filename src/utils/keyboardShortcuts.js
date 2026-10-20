@@ -24,6 +24,6 @@ export function shouldIgnoreGlobalShortcut(e) {
   if (e.ctrlKey || e.metaKey || e.altKey) return true;
   if (e.target instanceof Element && e.target.closest(KEY_OWNING_SELECTOR)) return true;
   if (isTourActive()) return true;
-  if (document.querySelector('.settings-sidebar.open')) return true;
+  if (document.querySelector('.settings-sidebar.open, .settings-panel.open')) return true;
   return false;
 }

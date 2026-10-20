@@ -63,25 +63,73 @@
     "message": "ウェブを検索",
     "description": "Tooltip for search button"
   },
-  "settingsTitle": {
-    "message": "BirdTab 設定",
-    "description": "Title for settings page"
-  },
-  "settingsCategoryMedia": {
-    "message": "Media & Playback",
-    "description": "Section header for media settings"
-  },
-  "settingsCategoryProductivity": {
-    "message": "Productivity & Interface",
-    "description": "Section header for productivity settings"
-  },
-  "birdingRegion": {
-    "message": "バードウォッチング地域",
-    "description": "Label for region selection"
-  },
   "regionHelpText": {
     "message": "新しいタブには、この地域の鳥が表示されます。",
     "description": "Help text under the region selector in settings"
+  },
+  "regionLeadLabel": {
+    "message": "地域",
+    "description": "Settings: caption over the chosen region (the region menu is its value)"
+  },
+  "regionSearchPlaceholder": {
+    "message": "地域を検索",
+    "description": "Settings: search box over the list of regions"
+  },
+  "regionNoMatch": {
+    "message": "その名前の地域はありません。",
+    "description": "Settings: the region search found nothing"
+  },
+  "birdRotationKeepLabel": {
+    "message": "同じ鳥を表示する時間",
+    "description": "Settings: how long a bird stays before a new one; the choices are One tab / An hour / A day"
+  },
+  "birdRotationKeepTab": {
+    "message": "1 タブ",
+    "description": "Settings choice under \"Keep each bird for\": a new bird in every tab"
+  },
+  "birdRotationKeepHour": {
+    "message": "1 時間",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for an hour"
+  },
+  "birdRotationKeepDay": {
+    "message": "1 日",
+    "description": "Settings choice under \"Keep each bird for\": the same bird for a day"
+  },
+  "birdRotationTabHelp": {
+    "message": "新しいタブごとに違う鳥。",
+    "description": "Settings: sentence under the \"One tab\" choice"
+  },
+  "birdRotationHourHelp": {
+    "message": "1 時間は同じ鳥、その後は新しい鳥。",
+    "description": "Settings: sentence under the \"An hour\" choice"
+  },
+  "birdRotationDayHelp": {
+    "message": "1 日中同じ鳥。",
+    "description": "Settings: sentence under the \"A day\" choice"
+  },
+  "showChromeTabShort": {
+    "message": "Chrome 本来の新しいタブページへのリンク。",
+    "description": "Settings: one line under Chrome Tab Shortcut"
+  },
+  "autoPlayLabel": {
+    "message": "鳴き声を再生",
+    "description": "Settings: toggle that plays the bird’s recording when a new tab opens"
+  },
+  "autoPlayShort": {
+    "message": "新しいタブを開くと再生されます。",
+    "description": "Settings: one line under Play Bird Songs"
+  },
+  "quickAccessLabel": {
+    "message": "検索とトップサイト",
+    "description": "Settings: toggle for the search box, top sites and shortcuts"
+  },
+  "quickAccessShort": {
+    "message": "検索ボックス、トップサイト、ショートカット。",
+    "description": "Settings: one line under Search and Top Sites"
+  },
+  "googleAppsShort": {
+    "message": "Gmail、ドライブ、YouTube など。",
+    "description": "Settings: one line under Google Apps"
   },
   "regionLoadingList": {
     "message": "地域を読み込み中…",
@@ -103,10 +151,6 @@
     "message": "メディアを自動再生",
     "description": "Label for auto-play toggle"
   },
-  "autoPlayHelpText": {
-    "message": "新しいタブを開くたびに鳥の鳴き声を自動再生します。静寂時間が有効になっている場合はそれが優先されます。",
-    "description": "Help text for auto-play setting"
-  },
   "autoPlayTooltip": {
     "message": "新しいタブを開いたときに鳥の鳴き声を自動再生するよう有効にする",
     "description": "Tooltip for auto-play toggle"
@@ -114,14 +158,6 @@
   "quietHours": {
     "message": "静寂時間",
     "description": "Label for quiet hours setting"
-  },
-  "quietHoursHelpText": {
-    "message": "指定された静寂時間中に鳥の鳴き声をミュートします。",
-    "description": "Help text for quiet hours setting"
-  },
-  "quietHoursTooltip": {
-    "message": "静寂時間中に自動再生を自動的にオフにするよう有効にする",
-    "description": "Tooltip for quiet hours toggle"
   },
   "quietHoursActive": {
     "message": "静寂時間が有効",
@@ -150,18 +186,6 @@
   "quietHoursEndLabel": {
     "message": "静寂時間の終了",
     "description": "Screen reader label for the menu of hours quiet hours end at"
-  },
-  "quickAccessFeatures": {
-    "message": "クイックアクセス機能",
-    "description": "Label for productivity features toggle"
-  },
-  "productivityHelpText": {
-    "message": "生産性向上のため、検索ボックス、トップサイト、カスタムショートカットを有効にします。",
-    "description": "Help text for productivity features"
-  },
-  "productivityTooltip": {
-    "message": "検索ボックス、最も訪問されたサイトを表示し、カスタムショートカットを許可する",
-    "description": "Tooltip for productivity toggle"
   },
   "settingsSaved": {
     "message": "設定が保存されました",
@@ -246,14 +270,6 @@
   "cacheCleared": {
     "message": "🧹 キャッシュがクリアされました！\n\nキャッシュされた鳥の画像、カスタムショートカット、一時データがすべて削除されました。\n\n読み込みの問題が発生していた場合、これが役立つはずです。",
     "description": "Success message when cache is cleared"
-  },
-  "permissionRequired": {
-    "message": "🔒 権限が必要です\n\n生産性機能（検索ボックス、最も訪問されたサイト、カスタムショートカット）を使用するには、BirdTabがブラウザのトップサイトにアクセスする必要があります。\n\n設定を再度切り替えることで、いつでもこれを有効にできます。",
-    "description": "Message when permissions are required"
-  },
-  "somethingWentWrong": {
-    "message": "⚠️ 何かが間違っています\n\n生産性設定を更新できませんでした。これは一時的な問題かもしれません。\n\nしばらくしてからもう一度お試しください。問題が続く場合は、ブラウザを再起動してみてください。",
-    "description": "Generic error message when something goes wrong"
   },
   "loadingMessage1": {
     "message": "羽毛をふくらませています...",
@@ -360,7 +376,7 @@
     "description": "Tooltip for pause button"
   },
   "audioBufferingTooltip": {
-    "message": "鳥の音を読み込み中\u2026",
+    "message": "鳥の音を読み込み中…",
     "description": "Tooltip shown on play button while audio is loading or buffering"
   },
   "addNewShortcutAriaLabel": {
@@ -887,10 +903,6 @@
     "message": "検索ボックスの上に大きな時計を表示します。",
     "description": "Help text for clock display setting"
   },
-  "clockDisplayTooltip": {
-    "message": "新しいタブページに現在時刻を表示",
-    "description": "Tooltip for clock display toggle"
-  },
   "clock24Hour": {
     "message": "24時間形式",
     "description": "Option to use 24-hour time format"
@@ -991,14 +1003,6 @@
     "message": "Google アプリ",
     "description": "Label for Google Apps toggle in settings"
   },
-  "googleAppsHelpText": {
-    "message": "Gmail、ドライブ、YouTube などの Google アプリにすばやくアクセスするボタンを表示します。",
-    "description": "Help text for Google Apps setting"
-  },
-  "googleAppsTooltip": {
-    "message": "Google アプリボタンを表示する",
-    "description": "Tooltip for Google Apps toggle"
-  },
   "googleAppsTriggerTooltip": {
     "message": "Google アプリ",
     "description": "Tooltip for Google Apps trigger button"
@@ -1054,14 +1058,6 @@
   "showChromeTab": {
     "message": "Chrome タブショートカット",
     "description": "Label for Chrome Tab shortcut toggle in settings"
-  },
-  "showChromeTabHelpText": {
-    "message": "デフォルトの Chrome 新しいタブページにすばやくアクセスするショートカットを表示します。",
-    "description": "Help text for Chrome Tab shortcut setting"
-  },
-  "showChromeTabTooltip": {
-    "message": "Chrome タブショートカットを表示する",
-    "description": "Tooltip for Chrome Tab shortcut toggle"
   },
   "searchEngineLabel": {
     "message": "検索エンジン",
@@ -1361,22 +1357,6 @@
     "message": "BirdTab は普段は表示せず、鳥を見たいときだけ開くようにできます。",
     "description": "Body of the card offering to step aside for Chrome's new tab page"
   },
-  "birdRotationLabel": {
-    "message": "新しい鳥",
-    "description": "Setting: how often the bird changes"
-  },
-  "birdRotationEvery": {
-    "message": "タブごと",
-    "description": "New bird option (short): every new tab"
-  },
-  "birdRotationHourly": {
-    "message": "1 時間ごと",
-    "description": "New bird option (short): every hour"
-  },
-  "birdRotationDaily": {
-    "message": "1 日ごと",
-    "description": "New bird option (short): once a day"
-  },
   "birdRotationHelp": {
     "message": "更新ボタンを押すといつでも新しい鳥が表示されます。",
     "description": "Help text for Change the bird"
@@ -1384,10 +1364,6 @@
   "quickGuessLabel": {
     "message": "鳥当てクイズ",
     "description": "Setting: hide the bird's name until clicked"
-  },
-  "quickGuessHelp": {
-    "message": "クリックするまで鳥の名前を隠し、新しいタブを開くたびに小さなクイズにします。",
-    "description": "Help text for Guess the Bird"
   },
   "quickGuessPrompt": {
     "message": "この鳥は何でしょう？",
