@@ -345,12 +345,15 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     resetMemoryCache();
   }
 
-  if (namespace === 'local' && changes.quietHours) {
+  // Quiet hours turned on or off, or their hours changed: the active tab pauses a call now inside them
+  if (namespace === 'local' && (changes.quietHours || changes.quietHoursStart || changes.quietHoursEnd)) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs[0]) {
-        sendToNewTab(tabs[0].id, {
-          action: "quietHoursChanged",
-          quietHoursEnabled: changes.quietHours.newValue
+        chrome.storage.local.get(['quietHours'], ({ quietHours }) => {
+          sendToNewTab(tabs[0].id, {
+            action: "quietHoursChanged",
+            quietHoursEnabled: quietHours ?? false
+          });
         });
       }
     });

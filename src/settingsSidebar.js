@@ -1,5 +1,5 @@
 import { getTourVersion } from './featureTour.js';
-import { getQuietHoursText } from './quietHours.js';
+import { QUIET_HOURS_KEYS, quietHoursFrom, hourFormatter, formatHour, formatQuietHours } from './quietHours.js';
 import { localizeHtml, getMessage } from './i18n.js';
 import { log, warn } from './logger.js';
 import { handleQuickAccessToggle } from './quickAccessPermissions.js';
@@ -228,19 +228,23 @@ class SettingsSidebar {
                   </div>
                 </div>
 
-                <div class="setting" data-i18n-title="quietHoursHelpText" title="Mute bird songs during specified quiet hours.">
+                <!-- Off: the hours as a line of text. On: that line opens into "From [8 PM] to [8 AM]". -->
+                <div class="setting quiet-hours-setting" data-i18n-title="quietHoursHelpText" title="Mute bird songs during specified quiet hours.">
                   <div class="toggle-container">
                     <div class="toggle-text">
                       <span class="setting-label-with-icon">
                         <img src="images/svg/moon.svg" alt="" width="18" height="18" class="setting-icon">
                         <span data-i18n="quietHours">Quiet Hours</span>
                       </span>
-                      <p class="help-text" id="modal-quiet-hours-text"></p>
+                      <p class="help-text quiet-hours-summary" id="modal-quiet-hours-text"></p>
                     </div>
                     <label class="switch">
-                      <input type="checkbox" id="modal-quiet-hours" aria-describedby="modal-quiet-hours-text">
+                      <input type="checkbox" id="modal-quiet-hours" aria-describedby="modal-quiet-hours-text" aria-controls="modal-quiet-hours-schedule">
                       <span class="slider round"></span>
                     </label>
+                  </div>
+                  <div class="quiet-hours-schedule" id="modal-quiet-hours-schedule">
+                    <p class="quiet-hours-sentence"></p>
                   </div>
                 </div>
               </div>
@@ -533,6 +537,8 @@ class SettingsSidebar {
     this.birdRotationRadios = [...document.querySelectorAll('input[name="bird-rotation"]')];
     this.quickGuessCheckbox = document.getElementById('modal-quick-guess');
     this.quietHoursTextElement = document.getElementById('modal-quiet-hours-text');
+    this.quietHoursSetting = this.sidebar?.querySelector('.quiet-hours-setting');
+    this.buildQuietHoursSentence();
 
     const regionSelect = document.getElementById('modal-region');
     const regionStatus = document.getElementById('modal-region-status');
@@ -544,11 +550,60 @@ class SettingsSidebar {
         updateUserContext({ region });
       }
     }) : null;
+  }
 
-    // Update quiet hours text
+  /**
+   * "From [start] to [end]" in the UI language, with a menu of hours in place of each time. The
+   * translation decides the word order, so it's split around the two placeholders.
+   */
+  buildQuietHoursSentence() {
+    const sentence = this.sidebar?.querySelector('.quiet-hours-sentence');
+    if (!sentence) return;
+    const START = '\u2060start\u2060', END = '\u2060end\u2060';
+    const text = getMessage('quietHoursFromTo', [START, END]);
+    const parts = text.includes(START) && text.includes(END) ? text.split(/(\u2060start\u2060|\u2060end\u2060)/) : ['', START, ' – ', END, ''];
+
+    const makeSelect = (id, labelKey) => {
+      const select = document.createElement('select');
+      select.id = id;
+      select.className = 'quiet-hours-select';
+      select.setAttribute('aria-label', getMessage(labelKey));
+      for (let hour = 0; hour < 24; hour++) select.add(new Option('', String(hour)));
+      select.addEventListener('change', () => this.saveSettings());
+      return select;
+    };
+    this.quietStartSelect = makeSelect('modal-quiet-hours-start', 'quietHoursStartLabel');
+    this.quietEndSelect = makeSelect('modal-quiet-hours-end', 'quietHoursEndLabel');
+
+    sentence.replaceChildren(...parts.filter(Boolean).map(part => {
+      if (part === START) return this.quietStartSelect;
+      if (part === END) return this.quietEndSelect;
+      const span = document.createElement('span');
+      span.textContent = part.trim();
+      return span;
+    }));
+  }
+
+  /** Show the schedule: the summary line, the menus (in the clock's 12/24-hour style), open or not. */
+  renderQuietHours(schedule) {
+    const { enabled, start, end, use24Hour } = schedule;
+    this.quietHoursSetting?.classList.toggle('is-on', enabled);
     if (this.quietHoursTextElement) {
-      this.quietHoursTextElement.textContent = getQuietHoursText();
+      this.quietHoursTextElement.textContent = formatQuietHours(schedule);
     }
+    if (!this.quietStartSelect || !this.quietEndSelect) return;
+    const formatter = hourFormatter(use24Hour);
+    for (const [select, value, other] of [[this.quietStartSelect, start, end], [this.quietEndSelect, end, start]]) {
+      for (const option of select.options) {
+        const hour = Number(option.value);
+        option.textContent = formatHour(hour, formatter);
+        // A window has to last at least an hour
+        option.disabled = hour === other;
+      }
+      select.value = String(value);
+    }
+    // Closed, the menus are out of reach for the keyboard and screen readers too
+    this.quietStartSelect.closest('.quiet-hours-schedule').inert = !enabled;
   }
 
   bindEvents() {
@@ -981,7 +1036,7 @@ class SettingsSidebar {
       return;
     }
 
-    chrome.storage.local.get(['autoPlay', 'quietHours', 'clockDisplayMode', 'quickAccessEnabled', 'googleAppsEnabled', 'chromeTabEnabled', 'newTabMode', 'birdRotation', 'quickGuess'], (result) => {
+    chrome.storage.local.get(['autoPlay', ...QUIET_HOURS_KEYS, 'clockDisplayMode', 'quickAccessEnabled', 'googleAppsEnabled', 'chromeTabEnabled', 'newTabMode', 'birdRotation', 'quickGuess'], (result) => {
       const newTabMode = result.newTabMode || CONFIG.STORAGE_DEFAULTS.newTabMode;
       this.newTabModeRadios.forEach(r => { r.checked = r.value === newTabMode; });
       this.syncNewTabNote();
@@ -996,6 +1051,8 @@ class SettingsSidebar {
       if (this.quietHoursCheckbox) {
         this.quietHoursCheckbox.checked = result.quietHours || false;
       }
+      this.quietHoursUse24Hour = result.clockFormat24Hour ?? false;
+      this.renderQuietHours(quietHoursFrom(result));
       if (this.clockDisplayCheckbox) {
         const clockMode = result.clockDisplayMode !== undefined ? result.clockDisplayMode : 'clock';
         this.clockDisplayCheckbox.checked = (clockMode === 'clock' || clockMode === 'timer');
@@ -1027,6 +1084,14 @@ class SettingsSidebar {
       }
       if (this.quietHoursCheckbox) {
         settings.quietHours = this.quietHoursCheckbox.checked;
+      }
+      if (this.quietStartSelect && this.quietEndSelect) {
+        settings.quietHoursStart = Number(this.quietStartSelect.value);
+        settings.quietHoursEnd = Number(this.quietEndSelect.value);
+        this.renderQuietHours(quietHoursFrom({
+          ...settings,
+          clockFormat24Hour: this.quietHoursUse24Hour,
+        }));
       }
       if (this.clockDisplayCheckbox) {
         let clockDisplayMode = 'off';

@@ -101,6 +101,8 @@ export const CONFIG = {
     region: DEFAULT_REGION,
     autoPlay: false,
     quietHours: false,
+    quietHoursStart: 20, // 8 PM
+    quietHoursEnd: 8, // 8 AM
     clockDisplayMode: 'clock',
     clockShowSeconds: false,
     clockFormat24Hour: false,

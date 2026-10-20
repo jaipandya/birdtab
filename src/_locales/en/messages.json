@@ -139,6 +139,18 @@
     "message": "Audio playback is paused during quiet hours.",
     "description": "Explanation text for quiet hours tooltip"
   },
+  "quietHoursFromTo": {
+    "message": "From $1 to $2",
+    "description": "Quiet hours in settings, shown while they are on. $1 and $2 are menus of hours (e.g. 8 PM, 20:00): when quiet hours start and end"
+  },
+  "quietHoursStartLabel": {
+    "message": "Quiet hours start",
+    "description": "Screen reader label for the menu of hours quiet hours start at"
+  },
+  "quietHoursEndLabel": {
+    "message": "Quiet hours end",
+    "description": "Screen reader label for the menu of hours quiet hours end at"
+  },
   "quickAccessFeatures": {
     "message": "Quick Access Features",
     "description": "Label for productivity features toggle"

@@ -139,6 +139,18 @@
     "message": "静寂時間中は音声再生が一時停止されます。",
     "description": "Explanation text for quiet hours tooltip"
   },
+  "quietHoursFromTo": {
+    "message": "$1 から $2 まで",
+    "description": "Quiet hours in settings, shown while they are on. $1 and $2 are menus of hours (e.g. 8 PM, 20:00): when quiet hours start and end"
+  },
+  "quietHoursStartLabel": {
+    "message": "静寂時間の開始",
+    "description": "Screen reader label for the menu of hours quiet hours start at"
+  },
+  "quietHoursEndLabel": {
+    "message": "静寂時間の終了",
+    "description": "Screen reader label for the menu of hours quiet hours end at"
+  },
   "quickAccessFeatures": {
     "message": "クイックアクセス機能",
     "description": "Label for productivity features toggle"

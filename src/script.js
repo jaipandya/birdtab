@@ -2,8 +2,7 @@ import './tokens.css';
 import './fontsVariable.css';
 import './styles.css';
 import CONFIG from './config.js';
-import { getAutoPlayState, getQuietHoursText } from './quietHours.js';
-import { isQuietHoursActive } from './quietHours.js';
+import { getAutoPlayState, getQuietHoursText, isQuietHoursActive } from './quietHours.js';
 import SettingsSidebar from './settingsSidebar.js';
 import TopSites from './topSites.js';
 import { localizeHtml } from './i18n.js';
@@ -401,8 +400,10 @@ function showDisabledPlayButton() {
  * - Displays tooltip with time range on hover
  * - Shows close button on hover to disable quiet hours
  */
-function showQuietHoursPill() {
+async function showQuietHoursPill() {
   // Don't create if already exists
+  if (document.getElementById('quiet-hours-pill')) return;
+  const quietHoursTime = await getQuietHoursText();
   if (document.getElementById('quiet-hours-pill')) return;
 
   const pill = document.createElement('div');
@@ -411,7 +412,6 @@ function showQuietHoursPill() {
 
   // Get localized strings
   const quietHoursLabel = chrome.i18n.getMessage('quietHours') || 'Quiet Hours';
-  const quietHoursTime = getQuietHoursText();
   const tooltipExplanation = chrome.i18n.getMessage('quietHoursTooltipExplanation') || 'Audio playback is paused during quiet hours.';
   const closeAlt = chrome.i18n.getMessage('closeAlt') || 'Close';
 
@@ -1950,15 +1950,16 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       }
     }
 
-    // Handle quiet hours toggle - show/hide pill in real-time
-    if (changes.quietHours) {
-      const isQuietHoursEnabled = changes.quietHours.newValue;
-
+    // Quiet hours turned on or off, or their hours changed: show/hide the pill in real time
+    if (changes.quietHours || changes.quietHoursStart || changes.quietHoursEnd) {
       // Check if we're currently in quiet hours time window
-      isQuietHoursActive().then(isActive => {
+      isQuietHoursActive().then(async isActive => {
         const existingPill = document.getElementById('quiet-hours-pill');
 
-        if (isActive && !existingPill) {
+        if (isActive && existingPill) {
+          const time = existingPill.querySelector('.quiet-hours-pill-tooltip-time');
+          if (time) time.textContent = await getQuietHoursText();
+        } else if (isActive && !existingPill) {
           showQuietHoursPill();
           showDisabledPlayButton();
         } else if (!isActive && existingPill) {

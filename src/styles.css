@@ -7958,6 +7958,89 @@ html[dir="rtl"] .bird-card-heart {
   }
 }
 
+/* ── Quiet hours ──
+   Off, the row reads like the others: the hours sit under the name as plain text. On, that
+   line opens into "From [8 PM] to [8 AM]", lined up with the name, so the times are edited
+   where they were read. Same height-animation as the region status. */
+/* The summary closes as the menus open, so the row grows in one motion */
+.quiet-hours-summary {
+  max-height: 1.5em;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-summary {
+  max-height: 0;
+  opacity: 0;
+}
+
+.quiet-hours-schedule {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-schedule {
+  grid-template-rows: 1fr;
+}
+
+.quiet-hours-sentence {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+  /* Under the name: past the 18px icon and its 10px gap */
+  padding-inline-start: 28px;
+  font-size: 13px;
+  color: var(--modal-text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s ease, padding 0.25s ease;
+}
+
+.quiet-hours-setting.is-on .quiet-hours-sentence {
+  /* The bottom padding keeps the menus' focus ring inside the clipped line */
+  padding-top: 8px;
+  padding-bottom: 2px;
+  opacity: 1;
+}
+
+.settings-sidebar select.quiet-hours-select {
+  width: auto;
+  min-width: 0;
+  padding: 6px 28px 6px 10px;
+  border-radius: 8px;
+  background-position: right 10px top 50%;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.settings-sidebar select.quiet-hours-select:hover {
+  background-color: var(--white-10);
+}
+
+/* The line clips its overflow (for the animation): a ring hugging the menu stays visible */
+.settings-sidebar select.quiet-hours-select:focus {
+  outline-offset: 0;
+}
+
+html[dir="rtl"] .settings-sidebar select.quiet-hours-select {
+  padding: 6px 10px 6px 28px;
+  background-position: left 10px top 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quiet-hours-summary,
+  .quiet-hours-schedule,
+  .quiet-hours-sentence {
+    transition: none;
+  }
+}
+
 /* ── Segmented control (New bird) ── */
 
 .segmented {
