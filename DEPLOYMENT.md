@@ -140,7 +140,7 @@ Dashboard: https://partner.microsoft.com/en-us/dashboard/microsoftedge/4745a19a-
 2. **Packages**: upload `releases/birdtab-edge-vX.Y.Z-<commit>.zip` and wait for "Your current package has been verified". Check the version and permissions it lists.
 3. **Store listings**: update each language's description from `webstore/edge/<lang>.txt`.
 4. **Publish** (top right) opens "Submit your extension":
-   - "Does a tester need credentials...?" → **No**. All features work without an account; new installs get the 14-day Pro trial.
+   - "Does a tester need credentials...?" → **No**. All features work without an account.
    - With **No** selected, the "Notes for certification" box is greyed out and not required.
 5. **Publish**. The overview should show "UPDATE ... Version X.Y.Z — In review" above the live version. Microsoft quotes up to 7 business days.
 
