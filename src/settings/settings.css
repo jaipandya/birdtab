@@ -250,7 +250,7 @@
 }
 
 /* Rows reach 10px past their text (for the hover), the line doesn't */
-:where(.pref-region, .pref-row, .quiet-hours-setting) + .pref-row::before {
+:where(.pref-region, .pref-row, .quiet-hours-setting) + :is(.pref-row, .quiet-hours-setting)::before {
   inset-inline: 10px;
 }
 
@@ -805,6 +805,33 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
 /* ── Quiet hours ──
    Off, the hours sit under the name as plain text. On, that line opens into
    "From [8 PM] to [8 AM]", so the times are edited where they were read. */
+
+/* The times are part of the row: the hover reaches around them too */
+.quiet-hours-setting {
+  margin-inline: -10px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+
+.quiet-hours-setting:hover {
+  background-color: var(--white-4);
+}
+
+.quiet-hours-setting > .pref-toggle {
+  margin-inline: 0;
+  padding-inline: 0;
+  transition: padding 0.25s ease;
+}
+
+.quiet-hours-setting > .pref-toggle:hover {
+  background-color: transparent;
+}
+
+/* On, the times take the place of the hours line, close under the name */
+.quiet-hours-setting.is-on > .pref-toggle {
+  padding-bottom: 6px;
+}
 
 .quiet-hours-summary {
   max-height: 1.5em;
