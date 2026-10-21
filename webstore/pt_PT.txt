@@ -35,7 +35,7 @@ IDEAL PARA
 
 NOVIDADES
 
-2.2.0 - As suas aves: todas as aves que já viu num só lugar, com favoritos, pesquisa e um quiz com as suas próprias aves. Escolha quando o BirdTab abre e com que frequência a ave muda, experimente Adivinhe a ave e escreva “bird” na barra de endereço para encontrar qualquer ave. Além disso, definições mais simples, botões mais claros e texto mais fácil de ler sobre fotos claras.
+2.3.0 - Nomes das aves no seu idioma, e o BirdTab agora também em chinês tradicional e português europeu. As suas aves: todas as aves que já viu num só lugar, com favoritos, pesquisa e um quiz com as suas próprias aves. Umas breves boas-vindas no seu primeiro separador, uma nova janela de definições com pesquisa de regiões e Horas de silêncio no horário que escolher. Escolha quando o BirdTab abre e com que frequência a ave muda, experimente Adivinhe a ave e escreva “bird” na barra de endereço para encontrar qualquer ave. Os novos separadores mostram uma ave mesmo sem ligação à internet ou quando as fotos não carregam.
 2.1.1 - Os créditos das fotos e dos sons mostram agora sempre corretamente o nome do fotógrafo e a data.
 2.1.0 - Aves de todos os países: escolha entre mais de 250 países e regiões, ou as 500 aves mais comuns do mundo. Além disso, melhor funcionamento offline, um primeiro separador mais rápido e melhorias para teclado e leitores de ecrã.
 2.0.3 - Pequenas correções no registo de erros

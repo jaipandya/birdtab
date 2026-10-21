@@ -55,7 +55,7 @@ Cliquez sur l'icône Microsoft Edge dans le coin supérieur de n'importe quel on
 
 NOUVEAUTÉS
 
-2.2.0 - Vos oiseaux : tous les oiseaux que vous avez vus au même endroit, avec favoris, recherche et un quiz sur vos propres oiseaux. Choisissez quand BirdTab s'ouvre et à quelle fréquence l'oiseau change, essayez Devinez l'oiseau et tapez « bird » dans la barre d'adresse pour trouver n'importe quel oiseau. Et aussi des paramètres plus simples, des boutons plus clairs et un texte plus lisible sur les photos claires.
+2.3.0 - Les noms des oiseaux dans votre langue, et BirdTab est désormais disponible en chinois traditionnel et en portugais européen. Vos oiseaux : tous les oiseaux que vous avez vus au même endroit, avec favoris, recherche et un quiz sur vos propres oiseaux. Un court accueil dans votre premier onglet, une nouvelle fenêtre de paramètres avec recherche de région, et des Heures Silencieuses aux horaires de votre choix. Choisissez quand BirdTab s'ouvre et à quelle fréquence l'oiseau change, essayez Devinez l'oiseau et tapez « bird » dans la barre d'adresse pour trouver n'importe quel oiseau. Les nouveaux onglets affichent un oiseau même hors ligne ou quand les photos ne se chargent pas.
 2.1.1 - Les crédits des photos et des sons affichent désormais toujours correctement le nom de l'auteur et la date.
 2.1.0 - Des oiseaux pour chaque pays : choisissez parmi plus de 250 pays et régions, ou les 500 oiseaux les plus communs du monde. Et aussi : meilleur support hors ligne, premier onglet plus rapide, améliorations pour le clavier et les lecteurs d'écran.
 2.0.0 - Photos haute résolution, régions internationales, horloge, minuteur, support hors ligne amélioré et une expérience renouvelée.

@@ -51,7 +51,7 @@ Escolha entre mais de 250 países e regiões para ver as aves que vivem perto de
 
 **Novidades**
 
-2.2.0 - Suas aves: todas as aves que você já viu em um só lugar, com favoritas, busca e um quiz com as suas próprias aves. Escolha com que frequência a ave muda, experimente Adivinhe a ave e digite “bird” na barra de endereços para encontrar qualquer ave. Além disso, configurações mais simples, botões mais claros e texto mais legível sobre fotos claras.
+2.3.0 - Nomes das aves no seu idioma, e o BirdTab agora também em chinês tradicional e português europeu. Suas aves: todas as aves que você já viu em um só lugar, com favoritas, busca e um quiz com as suas próprias aves. Boas-vindas rápidas na sua primeira aba, uma nova janela de configurações com busca de regiões e Horas Silenciosas no horário que você escolher. Escolha com que frequência a ave muda, experimente Adivinhe a ave e digite “bird” na barra de endereços para encontrar qualquer ave. As novas abas mostram uma ave mesmo quando você está offline ou as fotos não carregam.
 2.1.2 - O BirdTab agora está disponível para Firefox.
 
 Registro completo de alterações: https://birdtab.app/changelog

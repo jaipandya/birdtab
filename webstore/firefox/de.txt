@@ -51,7 +51,7 @@ Wähle aus über 250 Ländern und Regionen, um die Vögel in deiner Nähe zu seh
 
 **Neuigkeiten**
 
-2.2.0 - Deine Vögel: alle Vögel, die du gesehen hast, an einem Ort, mit Favoriten, Suche und einem Quiz zu deinen eigenen Vögeln. Wähle, wie oft der Vogel wechselt, probiere „Vogel raten“ aus und tippe „bird“ in die Adressleiste, um jeden Vogel zu finden. Dazu einfachere Einstellungen, klarere Schaltflächen und besser lesbarer Text auf hellen Fotos.
+2.3.0 - Vogelnamen in deiner Sprache, und BirdTab gibt es jetzt auch auf traditionellem Chinesisch und europäischem Portugiesisch. Deine Vögel: alle Vögel, die du gesehen hast, an einem Ort, mit Favoriten, Suche und einem Quiz zu deinen eigenen Vögeln. Eine kurze Begrüßung im ersten Tab, ein neues Einstellungsfenster mit Regionssuche und Ruhezeiten zu den Uhrzeiten, die du wählst. Wähle, wie oft der Vogel wechselt, probiere „Vogel raten“ aus und tippe „bird“ in die Adressleiste, um jeden Vogel zu finden. Neue Tabs zeigen jetzt auch dann einen Vogel, wenn du offline bist oder Fotos nicht laden.
 2.1.2 - BirdTab gibt es jetzt für Firefox.
 
 Vollständiges Änderungsprotokoll: https://birdtab.app/changelog

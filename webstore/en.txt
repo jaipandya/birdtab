@@ -35,7 +35,7 @@ PERFECT FOR
 
 WHAT'S NEW
 
-2.2.0 - Your Birds: every bird you've seen in one place, with favorites, search and a quiz on your own birds. Choose when BirdTab opens and how often the bird changes, try Guess the Bird, and type “bird” in the address bar to find any bird. Plus simpler settings, clearer buttons and easier-to-read text on bright photos.
+2.3.0 - Bird names in your language, and BirdTab now in Traditional Chinese and European Portuguese. Your Birds: every bird you've seen in one place, with favorites, search and a quiz on your own birds. A short welcome on your first tab, a new settings window with region search, and Quiet Hours at the hours you choose. Choose when BirdTab opens and how often the bird changes, try Guess the Bird, and type “bird” in the address bar to find any bird. New tabs now show a bird even when you're offline or photos can't load.
 2.1.1 - Photo and sound credits now always show the photographer's name and the date correctly.
 2.1.0 - Birds for every country: choose from 250+ countries and regions, or the World's 500 most common birds. Plus better offline support, a faster first tab, and keyboard and screen reader improvements.
 2.0.3 - Minor fixes in error tracking

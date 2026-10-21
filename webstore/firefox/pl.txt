@@ -51,7 +51,7 @@ Wybierz spośród ponad 250 krajów i regionów, aby zobaczyć ptaki żyjące w 
 
 **Co nowego**
 
-2.2.0 - Twoje ptaki: wszystkie ptaki, które widziałeś, w jednym miejscu, z ulubionymi, wyszukiwaniem i quizem z Twoich ptaków. Wybierz, jak często zmienia się ptak, wypróbuj „Zgadnij ptaka” i wpisz „bird” w pasku adresu, aby znaleźć dowolnego ptaka. Do tego prostsze ustawienia, czytelniejsze przyciski i lepiej widoczny tekst na jasnych zdjęciach.
+2.3.0 - Nazwy ptaków w Twoim języku, a BirdTab jest teraz dostępny także po chińsku (tradycyjnym) i portugalsku (europejskim). Twoje ptaki: wszystkie ptaki, które widziałeś, w jednym miejscu, z ulubionymi, wyszukiwaniem i quizem z Twoich ptaków. Krótkie powitanie w pierwszej karcie, nowe okno ustawień z wyszukiwaniem regionu i Ciche godziny w wybranych przez Ciebie godzinach. Wybierz, jak często zmienia się ptak, wypróbuj „Zgadnij ptaka” i wpisz „bird” w pasku adresu, aby znaleźć dowolnego ptaka. Nowe karty pokazują ptaka nawet bez internetu lub gdy zdjęcia się nie wczytują.
 2.1.2 - BirdTab jest już dostępny dla Firefoksa.
 
 Pełny dziennik zmian: https://birdtab.app/changelog
