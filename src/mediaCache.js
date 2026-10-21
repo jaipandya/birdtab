@@ -48,14 +48,55 @@ export async function isMediaCached(url) {
   }
 }
 
-async function cacheUrl(cache, url) {
-  if (isPackaged(url)) return true;
-  if (await cache.match(url)) return true;
-  // CORS mode (the default): an opaque no-cors response can't be read back as a blob
-  const response = await fetch(url);
-  if (!response.ok) return false;
-  await cache.put(url, response);
-  return true;
+/**
+ * A response that isn't the media file itself: a captive portal or proxy page
+ * reached through a redirect, or an HTML/JSON error page. Media files are
+ * served directly (no redirect) as image/* or audio/*.
+ */
+function isNotMedia(response) {
+  if (response.redirected) return true;
+  const type = response.headers.get('content-type') || '';
+  return /^text\/|html|json/i.test(type);
+}
+
+/**
+ * Download one file into the cache.
+ * @param {Object} [options]
+ * @param {AbortSignal} [options.signal]
+ * @param {Function} [options.onAnswer] - called once the server has answered
+ *   with the file ('answered', the body still downloading), when it's already
+ *   cached ('cached'), or with the failure below
+ * @returns {Promise<'cached'|'network'|'http'|'not-media'|'aborted'|'unavailable'>}
+ *   'network' when the request failed (offline, DNS, TLS, refused, dropped);
+ *   'http' for an error status; 'not-media' for a page that isn't the file;
+ *   'unavailable' when the cache couldn't take it (storage full)
+ */
+async function cacheUrl(cache, url, { signal, onAnswer = () => {} } = {}) {
+  if (isPackaged(url) || await cache.match(url)) {
+    onAnswer('cached');
+    return 'cached';
+  }
+  let response;
+  try {
+    // CORS mode (the default): an opaque no-cors response can't be read back as a blob
+    response = await fetch(url, signal ? { signal } : undefined);
+  } catch (error) {
+    const status = error?.name === 'AbortError' ? 'aborted' : 'network';
+    onAnswer(status);
+    return status;
+  }
+  const status = !response.ok ? 'http' : isNotMedia(response) ? 'not-media' : 'answered';
+  onAnswer(status);
+  if (status !== 'answered') return status;
+  try {
+    // Reads the body: fails if the connection drops or the signal aborts
+    await cache.put(url, response);
+  } catch (error) {
+    if (error?.name === 'AbortError') return 'aborted';
+    if (error?.name === 'QuotaExceededError') return 'unavailable';
+    return 'network';
+  }
+  return 'cached';
 }
 
 /**
@@ -67,10 +108,32 @@ export async function cacheMediaFile(url) {
   if (!url) return false;
   try {
     const cache = await openCache();
-    return !!cache && await cacheUrl(cache, url);
+    return !!cache && await cacheUrl(cache, url) === 'cached';
   } catch (error) {
     log(`Caching ${url} failed: ${error.message}`);
     return false;
+  }
+}
+
+/**
+ * Download one media file into the cache, saying why when it can't.
+ * @param {string} url
+ * @param {{ signal?: AbortSignal, onAnswer?: Function }} [options] - see cacheUrl
+ * @returns {Promise<'cached'|'network'|'http'|'not-media'|'aborted'|'unavailable'>}
+ *   'unavailable' also when there's no Cache Storage
+ */
+export async function downloadMediaFile(url, { signal, onAnswer = () => {} } = {}) {
+  try {
+    const cache = url ? await openCache() : null;
+    if (!cache) {
+      onAnswer('unavailable');
+      return 'unavailable';
+    }
+    return await cacheUrl(cache, url, { signal, onAnswer });
+  } catch (error) {
+    log(`Caching ${url} failed: ${error.message}`);
+    onAnswer('unavailable');
+    return 'unavailable';
   }
 }
 
@@ -86,9 +149,9 @@ export async function cacheBirdMedia(bird) {
   try {
     const cache = await openCache();
     if (!cache) return result;
-    result.image = await cacheUrl(cache, bird.imageUrl);
+    result.image = await cacheUrl(cache, bird.imageUrl) === 'cached';
     if (result.image && bird.mediaUrl) {
-      result.audio = await cacheUrl(cache, bird.mediaUrl);
+      result.audio = await cacheUrl(cache, bird.mediaUrl) === 'cached';
     }
   } catch (error) {
     log(`Caching media for ${bird.speciesCode} failed: ${error.message}`);
@@ -145,6 +208,26 @@ export async function resolveMediaUrl(url) {
     return objectUrl;
   } catch {
     return url;
+  }
+}
+
+/**
+ * Drop a cached file that turned out unusable (a photo that won't decode), and
+ * the blob URL handed out for it, so the next try goes to the network.
+ * @param {string} url
+ * @returns {Promise<boolean>} whether a cached copy was removed
+ */
+export async function forgetCachedMedia(url) {
+  if (!url || isPackaged(url)) return false;
+  if (objectUrls.has(url)) {
+    URL.revokeObjectURL(objectUrls.get(url));
+    objectUrls.delete(url);
+  }
+  try {
+    const cache = await openCache();
+    return !!cache && await cache.delete(url);
+  } catch {
+    return false;
   }
 }
 

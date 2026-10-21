@@ -307,6 +307,9 @@ export function trackSessionStart(settings = {}, installTime = null) {
     // Content info
     species_code: settings.speciesCode || null,
     has_audio: settings.hasAudio || false,
+    // Another bird shown because the picked one's photo couldn't be had:
+    // 'offline' | 'unreachable' (photoFallback.js); null normally
+    photo_fallback: settings.photoFallback || null,
 
     // User tenure (for cohort analysis)
     // PostHog can bucket this value using breakdown bins

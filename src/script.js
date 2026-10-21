@@ -41,7 +41,8 @@ import { incrementNewTabCount } from './reviewPrompt.js';
 // import { initShareMenu, setupShareButton } from './shareMenu.js';
 import { setupInfoPopover } from './birdInfoPopover.js';
 import { shouldIgnoreGlobalShortcut } from './utils/keyboardShortcuts.js';
-import { resolveMediaUrl, revokeMediaUrls, isMediaCached } from './mediaCache.js';
+import { resolveMediaUrl, revokeMediaUrls, isMediaCached, forgetCachedMedia } from './mediaCache.js';
+import { resolveShownBird } from './photoFallback.js';
 import { setupCreditPopovers } from './creditPopover.js';
 import { truncateName } from './utils/escapeHtml.js';
 import { takeStoredBird, getBundledBird } from './mediaClient.js';
@@ -92,6 +93,8 @@ let birdInfo;
 let firstRun = false;
 // "10 different birds seen": passed to the guide, which shows it unless a tip has more to say
 let pendingMilestone = null;
+// Why this tab shows another bird than the one picked (photoFallback.js), or null
+let photoFallback = null;
 let quizMode;
 let saveVolumeTimeout = null;
 
@@ -232,20 +235,6 @@ async function loadBundledBird() {
   bird.autoPlay = autoPlay;
   log(`Nothing stored yet, using bundled bird: ${bird.name}`);
   return bird;
-}
-
-/**
- * A random bird from recent history whose photo is in the media cache, for
- * tabs opened offline.
- * @returns {Promise<Object|null>}
- */
-async function findCachedHistoryBird() {
-  const recent = (await getHistory()).slice(-20);
-  const cached = [];
-  for (const entry of recent) {
-    if (entry?.imageUrl && await isMediaCached(entry.imageUrl)) cached.push(entry);
-  }
-  return cached.length > 0 ? cached[Math.floor(Math.random() * cached.length)] : null;
 }
 
 /**
@@ -673,7 +662,8 @@ let _imageLoadTimeoutId = null;
 
 // Set image source and show it when loaded
 // Includes retry logic for transient network failures
-function setImageSource(imageUrl, retryCount = 0) {
+// download: the photo's download already under way (photoFallback.js), if any
+function setImageSource(imageUrl, retryCount = 0, download = null) {
   const img = document.querySelector('.background-image');
   if (!img) {
     log('setImageSource: .background-image element not found');
@@ -709,7 +699,18 @@ function setImageSource(imageUrl, retryCount = 0) {
     resolveImageLoaded();
   };
 
+  let fromCache = false;
   const onError = function () {
+    // A cached copy that won't decode: drop it and try the network, rather
+    // than retrying the same broken file
+    if (fromCache && retryCount < IMAGE_MAX_RETRIES) {
+      log('Cached photo failed to load, fetching it again');
+      img.onload = null;
+      img.onerror = null;
+      img.src = '';
+      forgetCachedMedia(imageUrl).finally(() => setImageSource(imageUrl, retryCount + 1));
+      return;
+    }
     // Retrying while offline only delays the offline notice
     if (retryCount < IMAGE_MAX_RETRIES && navigator.onLine !== false) {
       log(`Image load failed, retrying (${retryCount + 1}/${IMAGE_MAX_RETRIES})...`);
@@ -732,10 +733,32 @@ function setImageSource(imageUrl, retryCount = 0) {
   // The cached copy when there is one (works offline), else the network.
   // Handlers are attached with the source, so an error from the template's
   // empty src isn't taken for this image failing.
-  resolveMediaUrl(imageUrl).then(src => {
+  const load = () => resolveMediaUrl(imageUrl).then(src => {
+    fromCache = typeof src === 'string' && src.startsWith('blob:');
     img.onload = onLoad;
     img.onerror = onError;
     img.src = src;
+  });
+  if (!download) {
+    load();
+    return;
+  }
+  // The photo is still downloading (photoFallback.js): show it once it's in,
+  // without fetching it a second time. If the download failed, the network
+  // already said no: the notice and its Try Again, without more waiting.
+  download.then(result => {
+    if (result === 'cached' || result === 'unavailable') {
+      load();
+      return;
+    }
+    if (_imageLoadTimeoutId) {
+      clearTimeout(_imageLoadTimeoutId);
+      _imageLoadTimeoutId = null;
+    }
+    log(`Photo download failed (${result})`);
+    img.classList.add('hidden');
+    showImageLoadError(imageUrl);
+    resolveImageLoaded();
   });
 }
 
@@ -829,10 +852,10 @@ async function initializePage() {
 
   try {
     // Load bird data entirely from chrome.storage.local and the extension package.
-    // Priority: pendingBirdInfo (history selection) → ready queue → manifest
-    // → (offline) cached history bird → bundled bird
+    // Priority: pendingBirdInfo (history selection) → held bird → ready queue
+    // → manifest; a bird whose photo can't be had gives way to a recent bird
+    // with a cached photo, else a bundled bird (photoFallback.js)
     let usedHistoryFallback = false;
-    const offline = navigator.onLine === false;
     revokeMediaUrls();
     resolvedAudio = { url: null, src: null };
     resolvedAudioReady = Promise.resolve();
@@ -863,15 +886,15 @@ async function initializePage() {
       birdInfo = await loadBirdFromStorage();
     }
 
-    // Offline, a bird whose photo isn't cached would leave an empty page:
-    // show a recently seen bird whose media is cached instead
-    if (offline && !pendingBird && !(birdInfo && await isMediaCached(birdInfo.imageUrl))) {
-      const cachedBird = await findCachedHistoryBird();
-      if (cachedBird) {
-        birdInfo = cachedBird;
-        usedHistoryFallback = true;
-        log(`Offline, using cached bird from history: ${birdInfo.name}`);
-      }
+    // A photo that can't be had would leave an empty page: download it now if
+    // it isn't cached, else show a bird whose photo is. The bird shown instead
+    // was seen before (or ships with the extension): it isn't counted again or
+    // held for the hour/day.
+    const shown = await resolveShownBird(birdInfo, { chosen: !!pendingBird });
+    photoFallback = shown.fallback;
+    if (photoFallback) {
+      birdInfo = shown.bird;
+      usedHistoryFallback = true;
     }
 
     // No manifest stored yet: the background is still downloading it (fresh
@@ -884,12 +907,12 @@ async function initializePage() {
       await addToHistory(birdInfo);
       pendingMilestone = await recordSighting(birdInfo);
     }
-    if (!heldBird) {
+    if (!heldBird && !photoFallback) {
       await rememberShownBird(birdInfo);
     }
 
-    // Offline without a cached recording: no audio controls that can't play
-    if (offline && birdInfo.mediaUrl && !(await isMediaCached(birdInfo.mediaUrl))) {
+    // Offline, or media out of reach: no audio controls for a recording that isn't cached
+    if (shown.mediaUnreachable && birdInfo.mediaUrl && !(await isMediaCached(birdInfo.mediaUrl))) {
       birdInfo = { ...birdInfo, mediaUrl: null };
     }
 
@@ -939,6 +962,7 @@ async function initializePage() {
         clockDisplayMode: settings.clockDisplayMode || 'off',
         speciesCode: birdInfo.speciesCode || null,
         hasAudio: !!birdInfo.mediaUrl,
+        photoFallback,
       }, settings.installTime || null);
     } catch (analyticsError) {
       log(`Analytics error: ${analyticsError.message}`);
@@ -1124,7 +1148,7 @@ async function initializePage() {
       </button>
     `);
 
-    setImageSource(birdInfo.imageUrl);
+    setImageSource(birdInfo.imageUrl, 0, shown.photo);
 
     if (birdInfo.mediaUrl) {
       const audioPlayer = createAudioPlayer(birdInfo.mediaUrl);
