@@ -81,11 +81,16 @@ describe('what each browser gets', () => {
   });
 });
 
-test('the bird choices are a list, a sentence under each', async () => {
-  await setup();
-  const options = [...root().querySelectorAll('.pref-option')];
-  expect(options.map(o => o.querySelector('.pref-option-name').textContent)).toEqual(['One tab', 'An hour', 'A day']);
-  expect(options.every(o => o.querySelector('.pref-help').textContent.length > 0)).toBe(true);
+test('the bird choices are segments, the line under them says what the chosen one means', async () => {
+  await setup({ storage: { birdRotation: 'hourly' } });
+  const segments = [...root().querySelectorAll('.pref-segment')];
+  expect(segments.map(s => s.textContent.trim())).toEqual(['One tab', 'An hour', 'A day']);
+  expect(segments.map(s => s.classList.contains('selected'))).toEqual([false, true, false]);
+  expect($('bird-rotation-caption').textContent).toBe('The same bird for an hour, then a new one.');
+
+  document.querySelector('input[name="bird-rotation"][value="daily"]').click();
+  expect($('bird-rotation-caption').textContent).toBe('One bird for the whole day.');
+  expect(segments[2].classList.contains('selected')).toBe(true);
 });
 
 test('shows what is stored and saves a change', async () => {

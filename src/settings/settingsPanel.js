@@ -16,7 +16,7 @@ import { announce } from '../loadingIndicators.js';
 import { html, insertHtml } from '../utils/html.js';
 import { setNewTabMode, isPinnedToToolbar } from '../newTabMode.js';
 import { showPinCoach } from '../pinCoach.js';
-import { settingsSections, footerHtml } from './settingsRows.js';
+import { settingsSections, footerHtml, rotationCaption } from './settingsRows.js';
 import { RegionSelector } from './regionSelector.js';
 import { RegionPicker } from './regionPicker.js';
 import { debugSection, bindDebugSection } from './settingsDebug.js';
@@ -94,6 +94,7 @@ class SettingsPanel {
     this.quickGuessCheckbox = $('modal-quick-guess');
     this.newTabModeRadios = [...this.root.querySelectorAll('input[name="new-tab-mode"]')];
     this.birdRotationRadios = [...this.root.querySelectorAll('input[name="bird-rotation"]')];
+    this.birdRotationCaption = $('bird-rotation-caption');
     this.newTabCaption = $('modal-new-tab-caption');
     this.pinRow = this.root.querySelector('.pin-row');
     this.keywordTip = this.root.querySelector('.keyword-tip');
@@ -214,7 +215,10 @@ class SettingsPanel {
     }
     this.enableProductivityCheckbox?.addEventListener('change', (e) => this.handleProductivityToggle(e.target.checked), { signal });
     for (const radio of this.birdRotationRadios) {
-      radio.addEventListener('change', () => this.saveSettings(), { signal });
+      radio.addEventListener('change', () => {
+        this.syncRotationCaption();
+        this.saveSettings();
+      }, { signal });
     }
     for (const radio of this.newTabModeRadios) {
       radio.addEventListener('change', async () => {
@@ -275,6 +279,7 @@ class SettingsPanel {
       this.syncNewTabNote();
       const birdRotation = result.birdRotation || CONFIG.STORAGE_DEFAULTS.birdRotation;
       this.birdRotationRadios.forEach(r => { r.checked = r.value === birdRotation; });
+      this.syncRotationCaption();
       if (this.quickGuessCheckbox) {
         this.quickGuessCheckbox.checked = result.quickGuess === true;
       }
@@ -362,6 +367,14 @@ class SettingsPanel {
       onRevert: () => { this.enableProductivityCheckbox.checked = !isEnabled; },
       component: 'settingsPanel'
     });
+  }
+
+  /** The chosen bird segment, marked, and the line under them saying what it means. */
+  syncRotationCaption() {
+    const value = this.birdRotationRadios.find(r => r.checked)?.value;
+    // Also as a class: :has() needs Chrome 105
+    this.birdRotationRadios.forEach(r => r.closest('.pref-segment')?.classList.toggle('selected', r.checked));
+    if (this.birdRotationCaption && value) this.birdRotationCaption.textContent = rotationCaption(value);
   }
 
   /**

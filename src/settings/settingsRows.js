@@ -52,7 +52,7 @@ const ROTATION = [
   { value: 'daily', labelKey: 'birdRotationKeepDay', label: 'A day', helpKey: 'birdRotationDayHelp', help: 'One bird for the whole day.' },
 ];
 
-/** How long a bird stays: a choice per line, each with a sentence saying what it means. */
+/** How long a bird stays: three segments in a row, and a line under them saying what the chosen one means. */
 function rotationRow() {
   return html`
     <div class="pref-row pref-stack">
@@ -60,17 +60,21 @@ function rotationRow() {
         <span class="pref-label" id="bird-rotation-label" data-i18n="birdRotationKeepLabel">Keep each bird for</span>
         <span class="pref-help" id="bird-rotation-help" data-i18n="birdRotationHelp">The refresh button always brings a new bird.</span>
       </span>
-      <div class="pref-options" role="radiogroup" aria-labelledby="bird-rotation-label" aria-describedby="bird-rotation-help">
+      <div class="pref-segments" role="radiogroup" aria-labelledby="bird-rotation-label" aria-describedby="bird-rotation-help bird-rotation-caption">
         ${ROTATION.map(o => html`
-        <label class="pref-option">
+        <label class="pref-segment">
           <input type="radio" name="bird-rotation" value="${o.value}">
-          <span class="pref-option-text">
-            <span class="pref-option-name" data-i18n="${o.labelKey}">${o.label}</span>
-            <span class="pref-help" data-i18n="${o.helpKey}">${o.help}</span>
-          </span>
+          <span data-i18n="${o.labelKey}">${o.label}</span>
         </label>`)}
       </div>
+      <p id="bird-rotation-caption" class="pref-help" aria-live="polite"></p>
     </div>`;
+}
+
+/** The sentence under the bird choices for one of them ('every', 'hourly', 'daily'). */
+export function rotationCaption(value) {
+  const o = ROTATION.find(r => r.value === value) || ROTATION[0];
+  return chrome.i18n.getMessage(o.helpKey) || o.help;
 }
 
 function newTabModeRow() {

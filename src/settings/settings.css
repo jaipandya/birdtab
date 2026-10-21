@@ -181,6 +181,8 @@
 .pref-section {
   display: flex;
   flex-direction: column;
+  /* Space, not lines, between rows; enough that two hovered rows don't touch */
+  gap: 4px;
   max-width: 560px;
 }
 
@@ -223,6 +225,7 @@
   .sp-nav .pref-footer {
     order: 1;
     padding: 12px 20px 16px;
+    box-shadow: inset 0 1px 0 var(--settings-row-divider);
   }
 }
 
@@ -233,25 +236,6 @@
   padding: 12px 10px;
   margin-inline: -10px;
   border-radius: 10px;
-}
-
-/* A hairline between rows that follow one another, as wide as their text */
-:where(.pref-region, .pref-row, .quiet-hours-setting) + :where(.pref-row, .quiet-hours-setting) {
-  position: relative;
-}
-
-:where(.pref-region, .pref-row, .quiet-hours-setting) + :where(.pref-row, .quiet-hours-setting)::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
-  height: 1px;
-  background: var(--settings-row-divider);
-}
-
-/* Rows reach 10px past their text (for the hover), the line doesn't */
-:where(.pref-region, .pref-row, .quiet-hours-setting) + :is(.pref-row, .quiet-hours-setting)::before {
-  inset-inline: 10px;
 }
 
 .pref-toggle {
@@ -334,7 +318,7 @@ html[dir="rtl"] .pref-switch:checked::before {
   transform: translateX(-18px);
 }
 
-/* ── A few-way choice: one per line, a sentence under each ── */
+/* ── A few-way choice: one per line, a sentence under each (the welcome card) ── */
 
 .pref-options {
   display: flex;
@@ -393,6 +377,58 @@ html[dir="rtl"] .pref-switch:checked::before {
   font-weight: 600;
 }
 
+/* ── A short choice: segments in a row, the chosen one filled ── */
+
+.pref-segments {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 11px;
+  background: var(--white-6);
+}
+
+.pref-segment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--white-70);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pref-segment:hover {
+  color: var(--white-100);
+  background: var(--white-4);
+}
+
+.pref-segment input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pref-segment.selected,
+.pref-segment:has(input:checked) {
+  background: var(--settings-chosen-bg);
+  color: var(--settings-chosen-fg);
+  font-weight: 600;
+}
+
+.pref-segment:has(input:focus-visible) {
+  outline: 2px solid var(--modal-focus-outline);
+  outline-offset: 0;
+}
+
 /* ── Region: the lead row. The card opens a search over the list (regionPicker.js) ── */
 
 .pref-region {
@@ -410,7 +446,6 @@ html[dir="rtl"] .pref-switch:checked::before {
   border: none;
   border-radius: 14px;
   background: var(--white-6);
-  box-shadow: inset 0 0 0 1px var(--white-12);
   color: var(--modal-text-primary);
   font: inherit;
   text-align: start;
@@ -496,7 +531,6 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
   padding: 0 12px;
   border-radius: 11px;
   background: var(--white-6);
-  box-shadow: inset 0 0 0 1px var(--white-15);
 }
 
 .region-search:focus-within {
@@ -556,8 +590,7 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
   overscroll-behavior: contain;
   list-style: none;
   border-radius: 12px;
-  background: var(--white-3);
-  box-shadow: inset 0 0 0 1px var(--white-8);
+  background: var(--white-4);
   scrollbar-width: thin;
   scrollbar-color: var(--white-20) transparent;
 }
@@ -665,15 +698,14 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
   gap: 8px;
   padding: 10px 6px 9px;
   border-radius: 12px;
-  border: 1.5px solid var(--white-10);
-  background: var(--white-3);
+  border: 1.5px solid transparent;
+  background: var(--white-4);
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .mode-card:hover {
-  border-color: var(--white-25);
-  background: var(--white-6);
+  background: var(--white-8);
 }
 
 .mode-card input {
@@ -879,9 +911,9 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
 .quiet-hours-select {
   padding: 6px 28px 6px 10px;
   border-radius: 8px;
-  border: 1px solid var(--modal-border);
+  border: none;
   appearance: none;
-  background-color: var(--white-6);
+  background-color: var(--white-8);
   background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
   background-repeat: no-repeat;
   background-position: right 10px top 50%;
@@ -895,7 +927,7 @@ html[dir="rtl"] .pref-region-card[aria-expanded="true"] .pref-region-chevron {
 }
 
 .quiet-hours-select:hover {
-  background-color: var(--white-10);
+  background-color: var(--white-12);
 }
 
 /* The line clips its overflow (for the animation): a ring hugging the menu stays visible */
@@ -915,7 +947,6 @@ html[dir="rtl"] .quiet-hours-select {
   flex-direction: column;
   gap: 6px;
   padding-top: 16px;
-  box-shadow: inset 0 1px 0 var(--settings-row-divider);
 }
 
 .pref-feedback {
