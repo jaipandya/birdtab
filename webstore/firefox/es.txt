@@ -10,7 +10,7 @@ SUMMARY (250 characters max)
 Convierte la página de nueva pestaña de Firefox en un respiro natural: un nuevo fondo de pantalla de aves en cada pestaña, con su canto y datos de la especie. Aves de más de 250 países, quiz, reloj, temporizador y búsqueda.
 
 VERSION RELEASE NOTES
-BirdTab ya está disponible para Firefox: un nuevo fondo de pantalla de aves, su canto y datos de la especie en cada nueva pestaña.
+Nombres de aves en tu idioma, y BirdTab ya está disponible en chino tradicional y portugués europeo. Tus aves: todas las aves que has visto en un solo lugar, con favoritas, búsqueda y un quiz con tus propias aves. Una breve bienvenida en tu primera pestaña, una nueva ventana de ajustes con búsqueda de regiones y Horas Silenciosas en el horario que elijas. Elige cada cuánto cambia el ave, prueba Adivina el ave y escribe «bird» en la barra de direcciones para encontrar cualquier ave. Las pestañas nuevas muestran un ave incluso sin conexión o cuando las fotos no cargan.
 
 DESCRIPTION
 Fondos de pantalla de aves, cantos de aves y datos de la naturaleza en cada nueva pestaña de Firefox.

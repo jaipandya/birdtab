@@ -10,7 +10,7 @@ SUMMARY (250 characters max)
 Transforme a página de nova aba do Firefox em uma pausa na natureza: um novo papel de parede de aves a cada aba, com o canto da ave e curiosidades sobre a espécie. Aves de mais de 250 países, quiz, relógio, timer e busca.
 
 VERSION RELEASE NOTES
-O BirdTab agora está disponível para Firefox: um novo papel de parede de aves, o canto e curiosidades sobre a espécie a cada nova aba.
+Nomes das aves no seu idioma, e o BirdTab agora também em chinês tradicional e português europeu. Suas aves: todas as aves que você já viu em um só lugar, com favoritas, busca e um quiz com as suas próprias aves. Boas-vindas rápidas na sua primeira aba, uma nova janela de configurações com busca de regiões e Horas Silenciosas no horário que você escolher. Escolha com que frequência a ave muda, experimente Adivinhe a ave e digite “bird” na barra de endereços para encontrar qualquer ave. As novas abas mostram uma ave mesmo quando você está offline ou as fotos não carregam.
 
 DESCRIPTION
 Papéis de parede de aves, cantos de pássaros e curiosidades da natureza a cada nova aba do Firefox.

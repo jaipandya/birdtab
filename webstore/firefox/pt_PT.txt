@@ -10,7 +10,7 @@ SUMMARY (250 characters max)
 Transforme o novo separador do Firefox numa pausa na natureza: uma nova imagem de fundo de ave em cada separador, com o canto da ave e curiosidades sobre a espécie. Aves de mais de 250 países, quiz, relógio, temporizador e pesquisa.
 
 VERSION RELEASE NOTES
-O BirdTab já está disponível para o Firefox: uma nova imagem de fundo de ave, o canto e curiosidades sobre a espécie em cada novo separador.
+Nomes das aves no seu idioma, e o BirdTab agora também em chinês tradicional e português europeu. As suas aves: todas as aves que já viu num só lugar, com favoritos, pesquisa e um quiz com as suas próprias aves. Umas breves boas-vindas no seu primeiro separador, uma nova janela de definições com pesquisa de regiões e Horas de silêncio no horário que escolher. Escolha com que frequência a ave muda, experimente Adivinhe a ave e escreva “bird” na barra de endereço para encontrar qualquer ave. Os novos separadores mostram uma ave mesmo sem ligação à internet ou quando as fotos não carregam.
 
 DESCRIPTION
 Imagens de fundo de aves, cantos de aves e curiosidades da natureza em cada novo separador do Firefox.

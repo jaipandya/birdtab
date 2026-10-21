@@ -1,7 +1,8 @@
 # Firefox Add-ons (AMO) product page
 
 What is entered on https://addons.mozilla.org/developers/addon/birdtab/edit,
-field by field. Last updated 2026-10-15 (version 2.1.2, listing awaiting review).
+field by field. Last updated 2026-10-21 (version 2.3.0 submitted, awaiting review;
+2.1.2 is the live version).
 
 Name, summary and description per language live in `<lang>.txt` next to this
 file. This note covers everything else on the product page.
@@ -46,8 +47,8 @@ see the English listing.
 - Screenshots: one set for all languages. AMO does not allow per-language
   images, only per-language captions.
   - Files: `extension/screenshots/firefox/amo/feature-image-1..5.jpg`
-    (1280x800, English). Regenerated on 2026-10-18 for 2.2.0: slide 3 shows
-    favorites and slide 5 Your Birds. Upload them with 2.2.0 to replace the earlier set.
+    (1280x800, English). Slide 3 shows favorites and slide 5 Your Birds.
+    Uploaded on 2026-10-21 with 2.3.0 (ids 431073-431077).
   - Source design: `birdtab-marketing/pencil-documents/birdtab-marketing-edge.pen`,
     frames "Firefox · <Language>" (copies of the Edge frames with a Firefox
     eyebrow and no top-right shortcut, which Firefox doesn't have). How to
@@ -56,7 +57,8 @@ see the English listing.
     and `.../light-1280x800/<Language>/` (JPG). Only English is used on AMO.
     Dark variants and promo tiles were not made for Firefox: AMO has no slot
     for them.
-  - The previous five purple screenshots (ids 426755-426759) were removed.
+  - Removed earlier: the five purple screenshots (ids 426755-426759), then the
+    2.1.2 set with bird calls and quiz slides (ids 426783-426787).
 
 ### Screenshot captions
 
@@ -66,79 +68,79 @@ Taken from each frame's subline, so they match the image text.
 | --- | --- | --- |
 | 1 | New bird in every tab | See a stunning new bird photo every time you open a tab. |
 | 2 | Birds from around the world | Discover species from every continent with stunning high-resolution photography. |
-| 3 | Bird calls and nature sounds | Hear real bird calls and ambient nature audio as you browse. |
+| 3 | Favorites | Click the heart on any bird to save it to your favorites. |
 | 4 | Search, shortcuts, clock, timer | Stay focused with search, shortcuts, clock, and timer in one tab. |
-| 5 | Bird quiz | Challenge yourself with fun quizzes and discover new species daily. |
+| 5 | Your Birds | Search them, revisit your favorites, and quiz yourself on your own birds. |
 
 **de**
 1. Sieh jedes Mal ein beeindruckendes neues Vogelfoto, wenn du einen Tab öffnest.
 2. Entdecke Arten von allen Kontinenten mit beeindruckender hochauflösender Fotografie.
-3. Höre beim Surfen echte Vogelrufe und stimmungsvolle Naturgeräusche.
+3. Klicke auf das Herz, um einen Vogel zu deinen Favoriten hinzuzufügen.
 4. Bleib fokussiert mit Suche, Kurzbefehlen, Uhr und Timer in einem Tab.
-5. Fordere dich mit unterhaltsamen Quizzen heraus und entdecke täglich neue Arten.
+5. Durchsuche sie, finde deine Favoriten wieder und mach ein Quiz mit deinen eigenen Vögeln.
 
 **es-es**
 1. Ve una foto espectacular de un ave nueva cada vez que abras una pestaña.
 2. Descubre especies de todos los continentes con impresionantes fotografías en alta resolución.
-3. Oye cantos reales y audio ambiental de la naturaleza mientras navegas.
+3. Haz clic en el corazón de cualquier ave para guardarla en tus favoritos.
 4. Mantente enfocado con búsqueda, accesos directos, reloj y temporizador en una sola pestaña.
-5. Ponte a prueba con quizzes divertidos y descubre nuevas especies cada día.
+5. Búscalas, vuelve a tus favoritas y ponte a prueba con tus propias aves.
 
 **fr**
 1. Admirez une nouvelle photo d'oiseau spectaculaire chaque fois que vous ouvrez un onglet.
 2. Découvrez des espèces de tous les continents grâce à de superbes photos haute résolution.
-3. Écoutez de vrais chants d'oiseaux et l'ambiance de la nature pendant votre navigation.
+3. Cliquez sur le cœur d'un oiseau pour l'ajouter à vos favoris.
 4. Restez concentré avec la recherche, les raccourcis, l'horloge et le minuteur dans un seul onglet.
-5. Relevez le défi avec des quiz amusants et découvrez de nouvelles espèces chaque jour.
+5. Recherchez-les, retrouvez vos favoris et faites un quiz sur vos propres oiseaux.
 
 **ja**
 1. タブを開くたびに、魅力的な新しい鳥の写真が表示されます。
 2. 美しい高解像度の写真で、すべての大陸に暮らす種を見つけよう。
-3. ブラウジングしながら、本物の鳥の声や自然の環境音を楽しめます。
+3. ハートをクリックするだけで、気に入った鳥をお気に入りに保存できます。
 4. 検索、ショートカット、時計、タイマーを1つのタブにまとめて集中できます。
-5. 楽しいクイズに挑戦して、毎日新しい種を発見しましょう。
+5. 検索したり、お気に入りを見返したり、自分の鳥だけでクイズに挑戦したりできます。
 
 **pl**
 1. Zobacz zachwycające zdjęcie nowego ptaka za każdym razem, gdy otwierasz kartę.
 2. Poznawaj gatunki ze wszystkich kontynentów dzięki zachwycającym fotografiom w wysokiej rozdzielczości.
-3. Słuchaj autentycznych ptasich śpiewów i odgłosów natury podczas przeglądania.
+3. Kliknij serce przy dowolnym ptaku, aby dodać go do ulubionych.
 4. Skup się dzięki wyszukiwaniu, skrótom, zegarowi i timerowi w jednej karcie.
-5. Rzuć sobie wyzwanie w ciekawych quizach i codziennie odkrywaj nowe gatunki.
+5. Wyszukuj je, wracaj do ulubionych i rozwiązuj quiz ze swoich ptaków.
 
 **pt-br**
 1. Veja uma foto impressionante de um novo pássaro toda vez que abrir uma aba.
 2. Descubra espécies de todos os continentes com fotografias impressionantes em alta resolução.
-3. Ouça cantos reais de pássaros e áudio ambiente da natureza enquanto navega.
+3. Clique no coração de qualquer pássaro para salvá-lo nos seus favoritos.
 4. Mantenha o foco com pesquisa, atalhos, relógio e timer em uma única aba.
-5. Desafie-se com quizzes divertidos e descubra novas espécies todos os dias.
+5. Pesquise, reveja seus favoritos e faça um quiz com os seus próprios pássaros.
 
 **pt-pt**
 1. Veja uma fotografia impressionante de uma nova ave sempre que abrir um separador.
 2. Descubra espécies de todos os continentes em fotografias impressionantes de alta resolução.
-3. Ouça cantos reais de aves e sons ambientes da natureza enquanto navega.
+3. Clique no coração de qualquer ave para a guardar nos seus favoritos.
 4. Mantenha a concentração com pesquisa, atalhos, relógio e temporizador num único separador.
-5. Desafie-se com quizzes divertidos e descubra novas espécies todos os dias.
+5. Pesquise-as, reveja os seus favoritos e faça um quiz com as suas próprias aves.
 
 **ru**
 1. Видьте новое потрясающее фото птицы каждый раз, когда открываете вкладку.
 2. Открывайте виды со всех континентов благодаря потрясающим фотографиям в высоком разрешении.
-3. Слушайте настоящие птичьи голоса и природную атмосферу во время просмотра.
+3. Нажмите на сердечко, чтобы добавить птицу в избранное.
 4. Сохраняйте фокус с поиском, ярлыками, часами и таймером в одной вкладке.
-5. Бросьте себе вызов с увлекательными викторинами и каждый день открывайте новые виды.
+5. Ищите их, возвращайтесь к избранным и проходите викторину по своим птицам.
 
 **zh-cn**
 1. 每次打开标签页，都能看到一张惊艳的全新鸟类照片。
 2. 通过惊艳的高分辨率摄影，发现来自各大洲的鸟类物种。
-3. 浏览网页时聆听真实的鸟鸣和环境自然音。
+3. 点击任意鸟旁的爱心，即可加入收藏。
 4. 在一个标签页中专注使用搜索、快捷方式、时钟和计时器。
-5. 通过有趣的问答挑战自己，每天发现新物种。
+5. 搜索、回顾收藏，还能用你自己的鸟来做测验。
 
 **zh-tw**
 1. 每次開啟分頁，都能看到一張驚豔的全新鳥類照片。
 2. 透過驚豔的高解析度攝影，認識來自各大洲的鳥種。
-3. 瀏覽網頁時聆聽真實的鳥鳴與大自然環境音。
+3. 點選任何一隻鳥旁的愛心，就能加入收藏。
 4. 在同一個分頁中專心使用搜尋、捷徑、時鐘和計時器。
-5. 用有趣的測驗挑戰自己，每天認識新的鳥種。
+5. 搜尋、回顧收藏，還能用你自己的鳥來出題測驗。
 
 ## Additional Details
 
@@ -176,5 +178,12 @@ Privacy policy: set (English, 812 characters).
 
 ## Not on this page
 
-Release notes and notes to reviewer (see `en.txt`) go on the version page
-(Manage Status & Versions), not the product page.
+Release notes and notes to reviewer go on the version page (Manage Status &
+Versions), not the product page. Release notes are translatable: VERSION
+RELEASE NOTES in each `<lang>.txt` (its "what's new" line for the version) goes
+into that locale. Notes to reviewer are English only (`en.txt`).
+
+On "Submit a New Version", answer the source code question (Yes, with the
+`-source.zip`) before the version details page. Jumping between steps can
+submit the version without notes; they can be added afterwards with
+"Edit version".

@@ -29,10 +29,10 @@ PRIVACY POLICY
 https://birdtab.app/privacy
 
 NOTES TO REVIEWER
-Built with webpack; the source code and build steps are in the source zip (BUILD-FIREFOX.md). Analytics (PostHog) and error reports (Sentry) only run when the user allows technical and interaction data; see hasDataCollectionConsent() in src/browserInfo.js. No account or credentials are needed to test: install, open a new tab and finish the one-screen welcome page.
+Built with webpack; the source code and build steps are in the source zip (BUILD-FIREFOX.md). Analytics (PostHog) and error reports (Sentry) only run when the user allows technical and interaction data; see hasDataCollectionConsent() in src/browserInfo.js. No account or credentials are needed to test: install, open a new tab and close the short welcome card on the first bird.
 
 VERSION RELEASE NOTES
-BirdTab is now available for Firefox: a new bird wallpaper, bird song and species facts on every new tab page.
+Bird names in your language, and BirdTab now in Traditional Chinese and European Portuguese. Your Birds: every bird you've seen in one place, with favorites, search and a quiz on your own birds. A short welcome on your first tab, a new settings window with region search, and Quiet Hours at the hours you choose. Choose how often the bird changes, try Guess the Bird, and type “bird” in the address bar to find any bird. New tabs now show a bird even when you're offline or photos can't load.
 
 DESCRIPTION
 Bird wallpapers, bird songs and nature facts on every new tab page in Firefox.

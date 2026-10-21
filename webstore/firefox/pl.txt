@@ -10,7 +10,7 @@ SUMMARY (250 characters max)
 Zmień stronę nowej karty w Firefoksie w chwilę z naturą: na każdej karcie nowa tapeta z ptakiem, jego śpiew i ciekawostki o gatunku. Ptaki z ponad 250 krajów, a do tego quiz o ptakach, zegar, minutnik i wyszukiwarka.
 
 VERSION RELEASE NOTES
-BirdTab jest już dostępny dla Firefoksa: na każdej nowej karcie nowa tapeta z ptakiem, jego śpiew i ciekawostki o gatunku.
+Nazwy ptaków w Twoim języku, a BirdTab jest teraz dostępny także po chińsku (tradycyjnym) i portugalsku (europejskim). Twoje ptaki: wszystkie ptaki, które widziałeś, w jednym miejscu, z ulubionymi, wyszukiwaniem i quizem z Twoich ptaków. Krótkie powitanie w pierwszej karcie, nowe okno ustawień z wyszukiwaniem regionu i Ciche godziny w wybranych przez Ciebie godzinach. Wybierz, jak często zmienia się ptak, wypróbuj „Zgadnij ptaka” i wpisz „bird” w pasku adresu, aby znaleźć dowolnego ptaka. Nowe karty pokazują ptaka nawet bez internetu lub gdy zdjęcia się nie wczytują.
 
 DESCRIPTION
 Tapety z ptakami, śpiew ptaków i ciekawostki o przyrodzie na każdej nowej karcie w Firefoksie.
